@@ -1,0 +1,22 @@
+<div class="caption t_pad">
+    <nav>
+		<div class="bar">
+            <a class="back" reference="{%lastReference%}">Назад</a>
+        </div>
+        <div class="text">
+            <span><%- checklist.name %></span>
+            <em>Журнал работ</em>
+        </div>
+        <% if (checklist.type !== 'folder') { %>
+        <a class="close" reference=":ChecklistEvents/Topic/New" title="Добавить событие" data-params='{ "checklistId": <%= checklist.id %>, "group": { "id": <%= group.id %>, "name": "<%- group.name %>", "description": "<%- group.description %>"}}'>Создать</a>
+        <% } %>
+    </nav>
+    <div class="full">
+        <h1 class="lr_pad"><%- checklist.name %></h1>
+        <h2 class="lr_pad">Журнал работ</h2>
+    </div>
+</div>
+
+<div class="pref_delimiter_min"></div>
+<div class="topic_list">
+</div>

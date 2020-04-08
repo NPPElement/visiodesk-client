@@ -1,0 +1,60 @@
+<div title="{%title%}">
+    <div class="tab-obj">
+        <label for="object-identifier"><%= I18N.get("attr.75") %>:</label>
+        <input type="text" id="object-identifier">
+        <div id="object-identifier-validation" style="display: none; color: #bf9696;"><%= I18N.get("window.create.object.id.validation") %></div>
+    </div>
+
+    <div class="tab-obj">
+        <label for="object-name"><%= I18N.get("attr.77") %></label>
+        <input type="text" id="object-name" required>
+        <div id="object-name-validation" style="display: none; color: #bf9696;"><%= I18N.get("window.create.object.name.validation") %></div>
+    </div>
+
+    <div class="tab-obj-type">
+        <div class="line">
+            <div><label for="object-type"><%= I18N.get("attr.79") %>:</label></div>
+            <div><select id="object-type">
+                <% for (var i = 0; i < types.length; ++i) { %>
+                <option value=<%= types[i].type %>><%= types[i].text %></option>
+                <% } %>
+            </select>
+            </div>
+        </div>
+        <div id="object-type-validation" style="display: none; color: #bf9696;"><%= I18N.get("window.create.object.type.validation") %></div>
+
+        <div class="line">
+            <div><label for="authorization-mode"><%= I18N.get("vocab.group") %>:</label></div>
+            <div>
+                <select id="authorization-mode">
+                    <% for (var i = 0; i < authorizationModes.length; ++i) { %>
+                    <option value=<%= authorizationModes[i].type %>><%= authorizationModes[i].text %></option>
+                    <% } %>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(() => {
+
+//            //only digits allow to put into object-identifier
+//            $("#object-identifier").on("keyup", (event) => {
+//               let val = $(event.target).val().replace(/[^0-9]/g, "");
+//               $(event.target).val(val);
+//            });
+//
+//            //only en chars allowed to put into object-name
+//            $("#object-name").on("keyup", (event) => {
+//                let val = $(event.target).val().replace(/[а-яА-Я]/g, "");
+//                $(event.target).val(val);
+//            });
+//
+//            //when user change object name, auto change object property reference
+//            let parent = $("#object-property-reference").val();
+//            $("#object-name").on("keyup", (event) => {
+//                $("#object-property-reference").val(parent + $(event.target).val());
+//            });
+        });
+    </script>
+</div>

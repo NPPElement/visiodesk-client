@@ -1,0 +1,14 @@
+<svg width="12" height="19" viewBox="0 0 12 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Dictation Glyph</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(1212 10325)">
+<g id="Bars/Search Bar/_Resources/Dictation Glyph">
+<g id="Dictation">
+<use xlink:href="#path0_fill" transform="translate(-1212 -10325)" fill="#8C8C8C"/>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" fill-rule="evenodd" d="M 6 0C 7.65685 0 9 1.34315 9 3L 9 10C 9 11.6569 7.65685 13 6 13C 4.34315 13 3 11.6569 3 10L 3 3C 3 1.34315 4.34315 0 6 0ZM 11.25 6.5C 10.8358 6.5 10.5 6.83579 10.5 7.25L 10.5 10C 10.5 12.4853 8.48528 14.5 6 14.5C 3.51472 14.5 1.5 12.4853 1.5 10L 1.5 7.25C 1.5 6.83579 1.16421 6.5 0.75 6.5C 0.335786 6.5 0 6.83579 0 7.25L 0 10C 0.00148134 13.0226 2.25111 15.5722 5.25 15.95L 5.25 17.5L 3.25 17.5C 2.83579 17.5 2.5 17.8358 2.5 18.25C 2.5 18.6642 2.83579 19 3.25 19L 8.75 19C 9.16421 19 9.5 18.6642 9.5 18.25C 9.5 17.8358 9.16421 17.5 8.75 17.5L 6.75 17.5L 6.75 15.95C 9.74889 15.5722 11.9985 13.0226 12 10L 12 7.25C 12 6.83579 11.6642 6.5 11.25 6.5Z"/>
+</defs>
+</svg>

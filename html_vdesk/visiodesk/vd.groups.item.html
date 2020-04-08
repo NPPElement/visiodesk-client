@@ -1,0 +1,20 @@
+<a class="group_item" id="group-<%= item.id %>" reference=":Events/<%= item.id %>">
+    <div class="header">
+        <div class="name"><span class="crop"><%- item.name %></span></div>
+        <!--<div class="time">11:15</div>-->
+    </div>
+    <div class="desc">
+        <div class="text">
+            <%- item.description %>
+        </div>
+        <div class="taskbar">
+            <% for (let status_id in item.status_types) {
+                let status_name = item.status_types[status_id];
+                let counter = item[status_id] || 0;
+            %>
+                <em class="<%= !counter ? 'hide' : '' %> <%= status_name %>"><%= counter %></em>
+            <% } %>
+        </div>
+    </div>
+    <div class="line"><div></div></div>
+</a>

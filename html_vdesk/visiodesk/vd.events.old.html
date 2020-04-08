@@ -1,0 +1,161 @@
+<% if (isAdminUsersView) { %>
+<div class="caption t_pad">
+    <nav>
+        <a reference="{%lastReference%}" class="back"></a>
+        <div class="text">
+            <span>Лента</span>
+            <em>Фамилия Имя Отчество</em>
+        </div>
+        <a class="search"></a>
+    </nav>
+</div>
+<% } else if (isReportsView) { %>
+<div class="caption t_pad">
+    <nav>
+        <a reference="{%lastReference%}" class="back"></a>
+        <div class="text">
+            <span>Гостевая Зона (этаж 3)</span>
+            <em>Главный вход</em>
+        </div>
+        <a class="search"></a>
+    </nav>
+</div>
+<% } else if (!group.id) { %>
+<div class="caption t_pad">
+    <nav>
+		<div class="bar">            
+            <a class="list"></a>            
+        </div>
+        <div class="text">
+            <span>Лента</span>
+            <em>Фамилия Имя Отчество</em>
+        </div>
+        <a class="search"></a>
+    </nav>
+</div>
+<% } else { %>
+<div class="caption t_pad">
+    <nav>
+        <a class="back" reference="{%lastReference%}"></a>
+        <div class="text">
+            <span><%= group.name %></span>
+            <em>все события</em>
+        </div>
+        <!--<a class="search"></a>-->
+        <!--Кнопка новое сообщение-->
+        <a class="new_message" reference=":Events/<%= group.id %>/Topic/New"></a>
+    </nav>
+</div>
+<% } %>
+
+<div class="topic_list">
+    <div class="pref_delimiter_min"></div>
+    <div class="topic_item" reference=":Events/12363/TopicDemo">
+        <div class="header">
+            <div class="unread"><em></em></div>
+            <div class="name">
+                <span class="priority norm"></span>
+                <span class="detail">
+                    <span class="tcaption crop">Заголовок задачи</span>
+                    <span class="location crop">Коридор 3го этажа</span>
+                </span>
+            </div>
+            <div class="num">
+                <span>#23456</span>
+                <span class="status new">Новое</span>
+            </div>
+        </div>
+        <div class="slider">
+            <div class="images">
+                <div style="background-image: url('{%imgDir%}/list-placeholder2.png')"></div>
+                <div style="background-image: url('{%imgDir%}/list-placeholder1.png')"></div>
+                <div><video controls src="https://www.w3schools.com/html/mov_bbb.mp4"></video></div>
+                <div style="background-image: url('{%imgDir%}/list-placeholder4.jpeg')"></div>
+                <div style="background-image: url('{%imgDir%}/list-placeholder3.jpeg')"></div>
+                <div class="spacer"></div>
+            </div>
+            <nav>
+                <a class="active"></a>
+                <a></a>
+                <a></a>
+                <a></a>
+                <a></a>
+            </nav>
+        </div>
+        <div class="messages_list">
+            <div class="item first">
+                <div class="header">
+                    <!--<div class="unread"><em></em></div>-->
+                    <div class="name">Фамилия Имя Отчество</div>
+                    <div class="data">12:27</div>
+                </div>
+                <div class="body">
+                    <div class="cont">
+                        <div class="text">
+                            <span>Часть текста описания инцидента в две строки остальное скрыть...</span>
+                            <em></em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item hide">
+                <div class="topic">
+                    <div class="message reply">
+                        <div class="name">Фамилия Имя Отчество</div>
+                        <div class="body">
+                            <div class="cont">
+                                <div class="icon status work"></div>
+                                <div class="text">
+                                    <span>Принят в работу</span>
+                                    <em>Вчера 13:32</em>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="body">
+                            <div class="cont">
+                                <div class="text">
+                                    <span>Там надолго</span>
+                                    <em>12:15</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message">
+                        <div class="name">Фамилия Имя Отчество</div>
+                        <div class="body">
+                            <div class="cont">
+                                <div class="icon priority heed"></div>
+                                <div class="text">
+                                    <span>Изменен приоритет.</span>
+                                    <em>18:21</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message reply">
+                        <div class="name">Фамилия Имя Отчество</div>
+                        <div class="body">
+                            <div class="cont">
+                                <div class="icon status done"></div>
+                                <div class="text">
+                                    <span>Выполнено.</span>
+                                    <div class="cssload">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="more">
+            <a class="msg">ещё (6)</a>
+            <div class="notification norm"></div>
+        </div>
+    </div>
+
+    <div class="pref_delimiter"></div>
+    <div class="pref_delimiter"></div>
+    
+</div>

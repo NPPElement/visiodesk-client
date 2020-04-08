@@ -1,0 +1,57 @@
+<div class="modal fade" id="admin-panel-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title pull-left">Visiobas admin panel</h5>
+            </div>
+            <div class="modal-body">
+                <div class="visiobas-bacnet-rpc-service">
+                    <img src="/css/images/loading.gif" class="loading-spinner hide">
+                    <span>Status: </span><span class="status status-unknown">[unknown]</span>
+                    <span>Visiobas remote procedure call (RPC) service status</span>
+                    <div class="status-error status-unavailable hide"></div>
+                    <div>
+                        <button class="check-status" type="button">Request status</button>
+                    </div>
+                </div>
+                <br/>
+                <div class="visiobas-bacnet-data-slicer-service">
+                    <img src="/css/images/loading.gif" class="loading-spinner hide">
+                    <span>Status: </span><span class="status status-unknown">[unknown]</span>
+                    <span>Visiobas BACnet data slicer service status</span>
+                    <div class="status-error status-unavailable hide"></div>
+                    <div>
+                        <button class="check-status" type="button">Request status</button>
+                        <button class="restart" type="button">Restart</button>
+                    </div>
+                </div>
+                <br/>
+                <div class="visiobas-bacnet-bacrpm-service">
+                    <div>
+                        <img src="/html_vdesk/template/images/preloader.svg" class="loading-spinner hide">
+                        <span>Request bacnet properties</span>
+                    </div>
+                    <div>
+                        <label style="display: block" for="visiobas-object-reference">Reference</label>
+                        <input class="reference form-control" placeholder="Site:Parameters\AHU1.AI_20314" id="visiobas-object-reference">
+                    </div>
+                    <div>
+                        <label style="display: block;" for="visiobas-bacnet-properties">Properties</label>
+                        <input class="properties form-control" type="text" id="visiobas-bacnet-properties" value="8" style="width: 100%;">
+                    </div>
+                    <div>
+                        <button class="request" type="button">Request properties</button>
+                    </div>
+                    <div>
+                        <label style="display: block;" for="visiobas-bacnet-properties-response">Response</label>
+                        <div id="visiobas-bacnet-properties-response"></div>
+                    </div>
+                    <div class="status-error status-unavailable hide"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

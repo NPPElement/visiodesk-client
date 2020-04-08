@@ -1,0 +1,33 @@
+<%
+if (author.id !== last_user_id && index > 0) {
+%>
+</div>
+<%
+}
+
+if (author.id !== last_user_id) {
+%>
+<div class="message <%= is_reply ? 'reply' : '' %>">
+    <div class="name"><%- author.last_name %> <%- author.first_name %> <%- author.middle_name %></div>
+<%
+}
+
+let icon = (type.name === "status" || type.name === "priority") ? _.escape(text) : "empty";
+let message = (type.name === "status" || type.name === "priority") ? VD.HtmlFromBBCode(_.escape(name)) : VD.HtmlFromBBCode(_.escape(text));
+%>
+    <div class="body">
+        <div class="cont">
+            <div class="icon <%= type.name %> <%= icon %>"></div>
+            <div class="text">
+                <span><%= message %></span>
+                <em><%= created_date %></em>
+                <!--<div class="cssload">
+                    <a class="spinner_icon"></a>
+                </div>-->
+            </div>
+        </div>
+    </div>
+
+<% if (index === length - 1) { %>
+</div>
+<% } %>

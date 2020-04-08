@@ -1,0 +1,16 @@
+<div class="dropdown" id="checklist-import-dropdown">
+    <input type="file" id="checklist-import-files" style="display: none" accept="text/csv">
+    <ul class="confirm">
+        <li class="head">
+            <em><%= I18N.get("window.import.from.csv") %></em>
+        </li>
+        <li>
+            <em id="checklist-import-selected-file"><%= I18N.get("window.import.select.file") %></em>
+        </li>
+        <li id="checklist-import-button" class="active">
+            <span id="checklist-import-button-text"><%= I18N.get("vocab.import") %></span>
+            <span id="checklist-import-loading-spinner" class="spinner_icon hide"></span>
+        </li>
+        <li id="checklist-import-close"><%= I18N.get("vocab.close") %></li>
+    </ul>
+</div>

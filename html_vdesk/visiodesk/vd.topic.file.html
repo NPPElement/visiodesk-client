@@ -1,0 +1,41 @@
+<%
+if (author.id !== last_user_id && index > 0) {
+%>
+</div>
+<%
+}
+
+if (author.id !== last_user_id) {
+%>
+<div class="message <%= is_reply ? 'reply' : '' %>">
+    <div class="name"><%- author.last_name %> <%- author.first_name %> <%- author.middle_name %></div>
+<%
+}
+
+%>
+    <div class="body">
+        <div class="cont" id="<%= text %>">
+            <div class="icon <%= uploading || !is_media ? 'file' : 'empty' %>"></div>
+            <div class="text">
+                <span>
+                    <% if (!uploading) { %>
+                        <% if (is_media) { %>
+                            <a class="download_link" target="_blank"></a>
+                        <% } else { %>
+                            <a class="download_link" target="_blank"><%- name %></a>
+                        <% } %>
+                    <% } else { %>
+                        <%- name %>
+                    <% } %>
+                </span>
+                <div class="cssload <%= uploading ? '': 'hide' %>">
+                    <a class="spinner_icon"></a>
+                </div>
+                <em class="<%= uploading ? 'hide': '' %>"><%= created_date %></em>
+            </div>
+        </div>
+    </div>
+
+<% if (index === length - 1) { %>
+</div>
+<% } %>

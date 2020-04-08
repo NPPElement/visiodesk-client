@@ -1,0 +1,19 @@
+<div class="item <%= status_code %>" id="sticker-<%= id %>" reference=":Events/<%= group.id %>/Topic/<%= id %>" href="#main-container">
+    <div class="img">
+        <div class="status"></div>
+    </div>
+    <div class="body">
+        <div class="header">
+            <div class="group_name">
+                <%- group.name %>
+            </div>
+            <a class="close_icon"></a>
+        </div>
+        <div class="topic_name">
+            <span><%- name %></span>
+        </div>
+        <div class="message_text">
+            <span><%= VD.HtmlFromBBCode(_.escape(description)) %></span>
+        </div>
+    </div>
+</div>

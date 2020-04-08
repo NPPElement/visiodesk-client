@@ -1,0 +1,52 @@
+<div class="caption t_pad">
+    <nav>
+        <a reference=":GroupsAdmin" class="back">Назад</a>
+        <% if (createGroup) { %>
+        <div class="text">
+            <span>{%caption%}</span>
+            <em></em>
+        </div>
+        <% } else { %>
+        <div class="flags">
+            <span class="false" data-value=".user_list_all">Все</span>
+            <span class="true" data-value=".user_list_binded">Группа</span>
+        </div>
+        <% } %>
+        <a class="save_icon" title="Сохранить"></a>
+    </nav>
+    <div class="full">
+        <h1 class="lr_pad">{%caption%}</h1>
+        <div class="search1">
+            <div class="search_field">
+                <input type="text" value="Имя пользователя" data-placeholder="Имя пользователя">
+                <!--<a class="voice"></a>-->
+                <a class="clear"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pref_delimiter"></div>
+
+<div class="opt_item">
+    <div class="field">
+        <input type="text" class="left_align" value="" id="group-name">
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="line1"><div></div></div>
+
+<div class="opt_item">
+    <div class="field">
+        <input type="text" class="left_align" value="" id="group-description">
+        <div class="clear"></div>
+    </div>
+</div>
+
+<div class="pref_delimiter"></div>
+
+<div class="user_list_all switch_layer">
+</div>
+
+<div class="user_list_binded switch_layer">
+</div>

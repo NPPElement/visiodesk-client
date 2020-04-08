@@ -1,0 +1,10 @@
+<ol class="breadcrumb">
+    <% for (let i in refNodes) { %>
+    <% const node = refNodes[i]; %>
+    <% if (node == {%active%}) { %>
+    <li class="breadcrumb-item active" aria-current="page"><%= node %></li>
+    <% } else { %>
+    <li class="breadcrumb-item"><a href="#" reference="<%= refs[i] %>"><%= node %></a></li>
+    <% } %>
+    <% } %>
+</ol>

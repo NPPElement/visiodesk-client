@@ -1,0 +1,38 @@
+<div class="process">
+    <!-- Спинер включить во время процесса -->
+    <ul id="process-spinner" class="">
+        <li class="spinner">
+            <span id="process-spinner-waiting" class="spinner_waiting_icon"></span>
+            <span id="process-spinner-loading" class="spinner_loading_icon hide"></span>
+            <span id="process-spinner-done" class="spinner_done_icon hide"></span>
+        </li>
+    </ul>
+    <!-- Кнопки при процессе скрыть -->
+    <ul id="process-button" class="">
+        <% if (hasTitle) { %>
+        <li class="disabled">
+            <span>{%title%}</span>
+            <em>{%caption%}</em>
+        </li>
+        <% } %>
+        <% for (let i = 0; i < buttons.length; ++i) {%>
+        <% const button = buttons[i]; %>
+        <% const buttonTitle = button.title || ""; %>
+        <% const buttonCaption = button.caption || ""; %>
+        <% const buttonClass = button.class || ""; %>
+        <% const buttonAction = button.action || ""; %>
+        <li class="<%= buttonClass %> process-button" data-action="<%= buttonAction %>">
+            <span><%= buttonTitle %></span>
+            <em><%= buttonCaption %></em>
+        </li>
+        <% } %>
+    </ul>
+    <% if (hasCancel) { %>
+    <!-- Кнопка "base" отменяет действие нужна почти всегда -->
+    <ul id="process-base-button" class="process-button" data-action="cancel">
+        <li class="base">
+            <span><%= I18N.get("vocab.cancel") %></span>
+            <em class="process-percent"></em> <!-- Используем для вывода процентов -->
+    </ul>
+    <% } %>
+</div>

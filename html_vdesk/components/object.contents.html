@@ -1,0 +1,38 @@
+<table id="table-object-contents" class="contents">
+    <tr>
+        <th>Значение</th>
+        <th>Статус</th>
+        <th>Имя</th>
+        <th>Описание</th>
+    </tr>
+
+    <% for(let i = 0; i < children.length; ++i) { %>
+    <% let object = children[i]; %>
+    <% let inAlarm = object.status[0]; %>
+    <% let fault = object.status[1]; %>
+    <% let overridden = object.status[2]; %>
+    <% let outOfService = object.status[3]; %>
+    <% let statusClass = $.trim([inAlarm ? "in-alarm" : "", fault ? "fault" : "", overridden ? "overridden" :
+    "", outOfService ? "out-of-service" : ""].join(" ")); %>
+    <% let id = object.normReference; %>
+    <% let type = object.type; %>
+    <% statusClass = statusClass || "normal" %>
+
+    <tr id="<%= id %>" reference="<%= object.reference %>" class="<%= statusClass %>">
+        <td class="object-value">
+            <div>
+            <% if(type == "analog-output" || type == "binary-output" || type == "multi-state-output") { %>
+            <a class="icon-object-value"></a>
+            <% } else { %>
+            <span></span>
+            <% } %>
+            <em><%= object.value %></em>
+            </div>
+        </td>
+        <td class="object-status"><%= statusClass %></td>
+        <td class="object-name"><%= object.name %></td>
+        <td class="object-description"><%= object.description %></td>
+    </tr>
+
+    <% } %>
+</table>

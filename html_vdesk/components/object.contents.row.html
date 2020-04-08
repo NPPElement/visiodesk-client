@@ -1,0 +1,19 @@
+<td class="object-value">
+    <div>
+        <% if("{%type%}" == "analog-output" ||
+         	  "{%type%}" == "analog-value"  || 
+        	  "{%type%}" == "binary-output" || 
+        	  "{%type%}" == "binary-value"  || 
+        	  "{%type%}" == "multi-state-output" ||
+        	  "{%type%}" == "multi-state-value"  ||
+        	  ) { %>
+        <span class="clickable icon-object-value icon-Settings"></span>
+        <% } else { %>
+        <span></span>
+        <% } %>
+        <em>{%value%}</em>
+    </div>
+</td>
+<td class="object-status">{%status%}</td>
+<td class="object-name">{%name%}</td>
+<td class="object-description">{%description%}</td>

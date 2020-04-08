@@ -1,0 +1,21 @@
+<!-- Modal window "import" -->
+<div class="modal fade" id="dashboard-modal-worklog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title pull-left">{%title%}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="logs"></div>
+                <div class="paging">
+                    <% for(let i = 0; i < tabs.length; ++i) { %>
+                    <a class="worklog-tab" href="javascript:void(0)"><%= tabs[i].caption %></a>
+                    <% } %>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

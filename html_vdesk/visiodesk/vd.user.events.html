@@ -1,0 +1,35 @@
+<div class="caption t_pad">
+    <nav>
+        <div class="bar">
+            <a class="back" reference="{%lastReference%}">Назад</a>
+            <a></a>
+        </div>
+        <div class="flags">
+            <span class="true" data-value="">Все</span>
+            <span class="false" data-value="new">Новые</span>
+        </div>
+        <a class="close"
+           reference=":UserEvents/<%= user.id %>/Topic/New"
+           title="Добавить событие"
+           data-params='{"user": {"id": <%= user.id %>, "first_name": "<%= user.first_name %>", "middle_name": "<%= user.middle_name %>", "last_name": "<%= user.last_name %>", "position": "<%= user.position %>"}}'>Создать</a>
+    </nav>
+    <div class="full">
+        <h1 class="lr_pad"><%= user.last_name %>&nbsp;<%= user.first_name %></h1>
+        <div class="calendar_wrapper">
+            <a class="calendar" id="calendar-icon"></a>
+            <span>
+                <span class="range"></span>&nbsp;<span class="clear-range" style="cursor: pointer; display: none"></span>
+            </span>
+        </div>
+        <div class="search1">
+            <div class="search_field">
+                <input type="text" value="Введите текст" data-placeholder="Введите текст">
+                <a class="filtr"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pref_delimiter_min"></div>
+<div class="topic_list">
+</div>

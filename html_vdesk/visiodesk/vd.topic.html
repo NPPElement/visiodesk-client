@@ -1,0 +1,81 @@
+<div class="caption t_pad">
+    <nav>
+        <a reference="{%lastReference%}" class="back" data-params='{ "lastTopicId": {%topicId%} }'>Назад</a>
+        <div class="text">
+            <span>{%topicCaption%}</span><!--TODO topic_type_name -->
+            <em></em>
+        </div>
+        <a reference=":Topic/{%topicId%}/TopicSettings" class="close <%= createTopic.create ? 'hide': '' %>">Настроить</a>
+    </nav>
+    <div class="full">
+        <h1 class="lr_pad">{%topicCaption%}</h1><!--TODO topic_type_name -->
+        <h2 class="lr_pad"></h2>
+    </div>
+</div>
+
+<div class="topic"></div>
+
+<!--отправить сообщение-->
+<div class="tabbar abs" id="visiodesk-tabbar">
+    <div class="changed_list">
+    <% if (createTopic.create) { %>
+        <div class="item select topic_header">
+            <input name="topicType" type="hidden" class="result_field" value="<%= createTopic.defaultTypeValue %>">
+            <span class="label">
+                <div class="text">
+                    <span class="name">Тип:</span>
+                </div>
+            </span>
+            <a><%= createTopic.defaultTypeName %></a>
+        </div>
+        <div class="item topic_header">
+            <span class="label nogrow">
+                <div class="text">
+                    <span class="name">Тема:</span>
+                </div>
+            </span>
+            <div class="field">
+                <input name="topicName" type="text" value="">
+            </div>
+        </div>
+    <% } %>
+    </div>
+    <div class="message_bar">
+        <div class="send">
+            <a class="marker"></a>
+            <div class="field">
+                <div class="editor" id="ckeditor"></div>
+                <a class="attachment"></a>
+                <a class="button"></a>
+            </div>
+            <a class="voice"></a>
+            <a class="push hide"></a>
+        </div>
+        <div class="icon_list b_pad hide">
+            <div class="type">Прикрепить</div>
+            <div class="delimiter2"></div>
+            <a class="camera"></a>
+            <a class="change_group"></a>
+            <a class="change_user"></a>
+            <a class="change_place last"></a>
+            <div class="type">Статус</div>
+            <div class="delimiter"></div>
+            <a class="status new" data-value="1"></a>
+            <a class="status in_progress" data-value="3"></a>
+            <a class="status on_hold" data-value="4"></a>
+            <a class="status resolved" data-value="5"></a>
+            <a class="status closed last" data-value="6"></a>
+            <div class="type">Приоритет</div>
+            <div class="delimiter"></div>
+            <a class="priority norm" data-value="2">Штатный</a>
+            <a class="priority top" data-value="4">Высший</a>
+            <a class="priority heed" data-value="3">Внимание</a>
+            <a class="priority low last" data-value="1">Низкий</a>
+            <div class="delimiter2"></div>
+        </div>
+    </div>
+</div>
+
+<div class="multiselect_list hide">
+
+</div>

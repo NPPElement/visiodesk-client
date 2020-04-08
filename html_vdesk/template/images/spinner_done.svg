@@ -1,0 +1,47 @@
+<svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<style>
+			.circle {
+				opacity: 0;
+    			transform: scale(0.9);
+    			transform-origin: center;
+
+    			animation: circle-animation 0.5s ease-out forwards;
+			}
+		
+			.checkmark {
+				stroke-dasharray: 400;
+    			stroke-dashoffset: 400;
+    			transform-origin: center;
+    			stroke: #cfd8dc;
+
+    			animation: checkmark-animation 1s ease-out forwards;
+				animation-delay: 0.25s;
+			}
+			
+			@keyframes circle-animation {
+				100% {
+					opacity: 1;
+					transform: scale(1);
+				}
+			}
+			@keyframes checkmark-animation {
+				40% {
+					transform: scale(1);
+				}
+				55% {
+					stroke: #cfd8dc;
+					transform: scale(1.2);
+				}
+				70% {
+					transform: scale(1);
+				}
+				100% {
+					stroke-dashoffset: 0;
+					transform: scale(1);
+					stroke: #007AFF;
+				}
+			}
+	</style>
+<circle class="circle" cx="50" cy="50" r="35" style="fill:none;stroke:#007AFF;stroke-miterlimit:10;stroke-width:5px"/>
+<polyline class="checkmark" points="29 50 45 64 70 38" style="fill:none;stroke:#cfd8dc;stroke-linecap:round;stroke-linejoin:round;stroke-width:5px"/>
+</svg>

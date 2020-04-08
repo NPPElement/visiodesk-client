@@ -1,0 +1,57 @@
+<% if (!group.id) { %>
+<div class="caption t_pad">
+    <nav>
+		<div class="bar">
+            <a class="list"></a>
+        </div>
+        <div class="text">
+            <span>Лента</span>
+            <em>Пользователя</em>
+        </div>
+        <a class="search"></a>
+    </nav>
+</div>
+<% } else { %>
+<div class="caption t_pad">
+    <nav>
+        <div class="bar">
+            <a class="back" reference="{%lastReference%}">Назад</a>
+            <a></a>
+        </div>
+        <!--<div class="text">
+            <span><%= group.name %></span>
+            <em>все события</em>
+        </div>-->
+        <div class="flags">
+            <span class="true" data-value="">Все</span>
+            <span class="false" data-value="new">Новые</span>
+        </div>
+        <a class="close" reference=":Events/<%= group.id %>/Topic/New" title="Добавить событие">Создать</a>
+        <!--
+        <div class="bar">
+        </div>
+        -->
+    </nav>
+    <div class="full">
+        <h1 class="lr_pad"><%- group.name %></h1>
+        <div class="calendar_wrapper">
+            <a class="calendar" id="calendar-icon"></a>
+            <span>
+                <span class="range"></span>&nbsp;<span class="clear-range" style="cursor: pointer; display: none"></span>
+            </span>
+        </div>
+        <div class="search1">
+            <div class="search_field">
+                <input type="text" value="Введите текст" data-placeholder="Введите текст">
+                <!--<a class="voice"></a>-->
+                <!--<a class="clear"></a>-->
+                <a class="filtr"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<div class="pref_delimiter_min"></div>
+<div class="topic_list">
+</div>

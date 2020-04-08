@@ -1,0 +1,30 @@
+<svg width="60" height="74" viewBox="0 0 60 74" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Pin</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(2160 8941)">
+<g id="Pin">
+<g id="Dot">
+<use xlink:href="#path0_fill" transform="translate(-2133 -8873)" fill="#007AFF"/>
+</g>
+<g id="Shadow">
+<use xlink:href="#path1_fill" transform="translate(-2160 -8903)" fill="url(#paint1_linear)" fill-opacity="0.3"/>
+</g>
+<g id="Oval">
+<use xlink:href="#path2_fill" transform="translate(-2160 -8941)" fill="#007AFF"/>
+</g>
+<g id="+">
+<use xlink:href="#path3_fill" transform="translate(-2141 -8925)" fill="#FFFFFF"/>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint1_linear" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 53.303 -110.282 0 30 11.9022)">
+<stop offset="0" stop-color="#000000" stop-opacity="0.01"/>
+<stop offset="1"/>
+</linearGradient>
+<path id="path0_fill" fill-rule="evenodd" d="M 3 6C 4.65685 6 6 4.65685 6 3C 6 1.34315 4.65685 0 3 0C 1.34315 0 0 1.34315 0 3C 0 4.65685 1.34315 6 3 6Z"/>
+<path id="path1_fill" fill-rule="evenodd" d="M 34.9082 26.188C 49.1418 25.1587 60 19.7275 60 13.1816C 60 5.90186 46.5686 0 30 0C 13.4314 0 0 5.90186 0 13.1816C 0 19.7466 10.9211 25.1904 25.2156 26.1973C 28.1064 26.6431 30 29 30 29C 30 29 30.7466 27.041 34.9082 26.188Z"/>
+<path id="path2_fill" fill-rule="evenodd" d="M 34.9099 59.6001C 49.1428 57.2568 60 44.8965 60 30C 60 13.4316 46.5686 0 30 0C 13.4314 0 0 13.4316 0 30C 0 44.939 10.9199 57.3281 25.2131 59.6201C 28.1052 60.6328 30 66 30 66C 30 66 30.7468 61.542 34.9099 59.6001Z"/>
+<path id="path3_fill" d="M 12.7078 15.4219L 12.7078 23.4727L 9.86017 23.4727L 9.86017 15.4219L 2.35431 15.4219L 2.35431 12.5742L 9.86017 12.5742L 9.86017 4.7168L 12.7078 4.7168L 12.7078 12.5742L 20.2137 12.5742L 20.2137 15.4219L 12.7078 15.4219Z"/>
+</defs>
+</svg>

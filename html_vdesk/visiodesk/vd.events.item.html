@@ -1,0 +1,53 @@
+<div class="topic_item" id="topic-<%= id %>" reference=":Events/<%= group_id %>/Topic/<%= id %>">
+    <div class="header">
+        <% if (unread) { %>
+            <div class="unread"><em></em></div>
+        <% } %>
+        <div class="name">
+            <span class="priority <%= priority_code %>"></span>
+            <span class="detail">
+                <span class="tcaption crop"><%- name %></span>
+                <span class="location"><%- author.last_name %> <%- author.first_name %> <%- author.middle_name %></span>
+            </span>
+        </div>
+        <div class="num">
+            <span>#<%= id %></span>
+            <span class="status <%= status_code %>"><%= status_name %></span>
+        </div>
+    </div>
+    <div class="slider">
+        <div class="images hide"></div>
+        <!--<div class="place_holder">
+            <div>
+                <span class="text"><%- name %></span>
+            </div>
+        </div>-->
+    </div>
+    <div class="messages_list">
+        <div class="item first">
+            <div class="body">
+                <div class="cont">
+                    <div class="text">
+                        <span><%= VD.HtmlFromBBCode(_.escape(description)) %></span>
+                        <em></em>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item hide">
+            <div class="topic">
+            </div>
+        </div>
+    </div>
+    <div class="more">
+        <a class="msg"><%= created_date %></a>
+        <div class="icons">
+            <% if (unread) { %>
+                <div class="check"><div></div></div>
+            <% } %>
+            <div class="next_messages" title="показать ещё (<%= messages_number %>) сообщений"></div>
+            <div class="notification dnd"></div>
+            <div class="settings"></div>
+        </div>
+    </div>
+</div>

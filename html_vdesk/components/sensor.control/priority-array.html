@@ -1,0 +1,18 @@
+<div class="sensor_admin b_pad">
+    <div class="text">Приоритет</div>
+    <% for(let i = 0; i < priorityArray.length; ++i) { %>
+    <% const priority = priorityArray[i]; %>
+    <div id="<%= `priority-item-${priority.index}`%>">
+        <div class="item">
+            <div class="field">
+                <div class="name"><%= `${I18N.get("vocab.priority")} ${priority.index+1}`%></div>
+                <input readonly type="text" value="<%= priority.value %>">
+                <a data-priority-index="<%= priority.index %>" class="clear"></a>
+            </div>
+        </div>
+        <div class="line">
+            <div></div>
+        </div>
+    </div>
+    <% } %>
+</div>

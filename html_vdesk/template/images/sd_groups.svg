@@ -1,0 +1,16 @@
+<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Categories</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(1128 10336)">
+<g id="Categories">
+<use xlink:href="#path0_fill" transform="translate(-1127.5 -10335.5)" fill="#FFFFFF"/>
+<use xlink:href="#path1_fill" transform="translate(-1127.5 -10335.5)" fill="#FFFFFF"/>
+<use xlink:href="#path2_fill" transform="translate(-1127.5 -10335.5)" fill="#FFFFFF"/>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 4.5 0L 4 0L 4 0.5L 4 2L 5 2L 5 1L 18 1L 18 2L 19 2L 19 0.5L 19 0L 18.5 0L 4.5 0Z"/>
+<path id="path1_fill" d="M 2.5 2.5L 2 2.5L 2 3L 2 4.5L 3 4.5L 3 3.5L 20 3.5L 20 4.5L 21 4.5L 21 3L 21 2.5L 20.5 2.5L 2.5 2.5Z"/>
+<path id="path2_fill" fill-rule="evenodd" d="M 0.5 5L 0 5L 0 5.5L 0 22.5L 0 23L 0.5 23L 22.5 23L 23 23L 23 22.5L 23 5.5L 23 5L 22.5 5L 0.5 5ZM 1 22L 1 6L 22 6L 22 22L 1 22Z"/>
+</defs>
+</svg>

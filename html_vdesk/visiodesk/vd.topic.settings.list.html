@@ -1,0 +1,74 @@
+<div class="item select change_type">
+    <input name="topicType" type="hidden" class="result_field" value="<%= topic_type_id %>">
+    <span class="label">
+            <div class="text">
+                <span class="name">Тип</span>
+            </div>
+        </span>
+    <a><%= topic_type_name %></a>
+</div>
+<div class="item">
+        <span class="label nogrow">
+            <div class="text">
+                <span class="name">Тема</span>
+            </div>
+        </span>
+    <div class="field">
+        <input name="topicName" type="text" value="<%- name %>" readonly>
+    </div>
+</div>
+<div class="first_message"><%= VD.HtmlFromBBCode(_.escape(description)) %></div>
+
+<div class="pref_delimiter_min"></div>
+
+<div class="item select change_status">
+    <input type="hidden" class="result_field" value="<%= status_id %>">
+    <span class="label">
+            <div class="text">
+                <span class="name">Статус</span>
+            </div>
+        </span>
+    <a><%= status_name %></a>
+</div>
+<div class="item select change_priority">
+    <input type="hidden" class="result_field" value="<%= priority_id %>">
+    <span class="label">
+            <div class="text">
+                <span class="name">Приоритет</span>
+            </div>
+        </span>
+    <a><%= priority_name %></a>
+</div>
+<div class="item select change_terminated_to">
+    <input type="hidden" class="result_field" value="<%= terminated_to %>">
+    <span class="label">
+            <div class="text">
+                <span class="name">Выполнить до</span>
+            </div>
+        </span>
+    <a><%= VD.GetFormatedDate(terminated_to) %></a>
+</div>
+
+<div class="pref_delimiter_min"></div>
+
+<div class="item multiselect change_group">
+    <span class="label">
+        <div class="text">
+            <span class="name">Группы</span>
+        </div>
+    </span>
+    <a>Добавить</a>
+</div>
+<div class="changed_group"></div>
+
+<div class="pref_delimiter_min"></div>
+
+<div class="item multiselect change_user">
+    <span class="label">
+        <div class="text">
+            <span class="name">Пользователи</span>
+        </div>
+    </span>
+    <a>Добавить</a>
+</div>
+<div class="changed_user"></div>

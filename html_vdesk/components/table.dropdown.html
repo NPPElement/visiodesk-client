@@ -1,0 +1,9 @@
+<div class="submenu">
+    <div class="header"></div>
+    <div class="body">
+        <% for (let i in dropdown) { %>
+        <% const item = dropdown[i]; %>
+        <a class="<%= item.action %>" action="<%= item.action %>"><%= item.name %></a>
+        <% } %>
+    </div>
+</div>

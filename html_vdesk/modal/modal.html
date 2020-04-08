@@ -1,0 +1,18 @@
+<div class="modal fade" id="dashboard-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title pull-left">{%title%}</h5>
+            </div>
+            <div class="modal-body">
+                {%content%}
+            </div>
+            <div class="modal-footer">
+                <% for (let i in buttons) {%>
+                <button id="<%= buttons[i].id %>" type="button" class="btn btn-link"><%= buttons[i].caption %></button>
+                <% } %>
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

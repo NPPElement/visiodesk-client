@@ -1,0 +1,18 @@
+<svg width="30" height="25" viewBox="0 0 30 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>send-button</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(2046 6061)">
+<g id="send-button">
+<g id="Group">
+<g id="send">
+<g id="Vector">
+<use xlink:href="#path0_fill" transform="translate(-2046 -6061)" fill="#2D9CDB"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 0 25L 29.2254 12.5L 0 0L 0 9.72222L 20.8753 12.5L 0 15.2778L 0 25Z"/>
+</defs>
+</svg>

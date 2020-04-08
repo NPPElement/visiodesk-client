@@ -1,0 +1,19 @@
+<div ng-app="objectContentsApp" ng-controller="SimpleController">
+    {{value}}
+    <table id="table-object-contents">
+        <thead>
+        <tr>
+            <th><%= I18N.get("vocab.status") %></th>
+            <th><%= I18N.get("vocab.object") %></th>
+            <th><%= I18N.get("vocab.value") %></th>
+            <th><%= I18N.get("vocab.description") %></th>
+        </tr>
+        </thead>
+        <tr ng-repeat="o in contents">
+            <td>{{o.status}}</td>
+            <td>{{o.object}}</td>
+            <td>{{o.value}}</td>
+            <td>{{o.description}}</td>
+        </tr>
+    </table>
+</div>

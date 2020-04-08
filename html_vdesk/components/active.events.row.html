@@ -1,0 +1,25 @@
+<div class="group_chain buttons2" id="{%objectStrId%}">
+    <a class="group_item">
+        <div class="header">
+            <div class="unread {%statusClass%}"><em></em></div>
+            <div class="name"><span class="crop">{%objectName%}</span></div>
+            <div class="time">{%presentValue%}</div>
+        </div>
+        <div class="desc">
+            <div class="text">
+                {%messageText%}
+            </div>
+        </div>
+        <div class="timestamp">{%timestamp%}</div>
+        <div class="line"><div></div></div>
+    </a>
+
+    <a class="to_history chain_button" data-device-id="{%deviceId%}" data-object-id="{%objectId%}">
+        <span>История</span>
+    </a>
+
+    <!-- переход к паренту данного элемента в дереве -->
+    <a class="to_settings chain_button" data-reference="{%parentReference%}">
+        <span>Перейти</span>
+    </a>
+</div>

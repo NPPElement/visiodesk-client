@@ -1,0 +1,20 @@
+<%
+    let temp_id_attr = temp_id ? 'id="' + temp_id + '"' : '';
+    let icon = item_type_code === "status" || item_type_code === "priority" ? text : "";
+%>
+<div class="item <%= item_type_code %> <%= icon %>" <%= temp_id_attr %>>
+    <div class="label">
+        <div class="icon <%= item_type_code %> <%= icon %>"></div>
+        <div class="text">
+            <span class="name"><%- name %></span>
+            <span class="desc"><%- description %></span>
+            <% if (icon === "on_hold") {%>
+                <div class="calendar_wrapper">
+                    <span>До:&nbsp;</span>
+                    <a></a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <a class="clear"></a>
+</div>

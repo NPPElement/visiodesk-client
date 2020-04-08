@@ -1,0 +1,32 @@
+<div title="Импорт из CSV">
+    <div class="tab-import">
+        <input type="file" id="files"/>
+    </div>
+    <div>
+        <textarea id="import-text-content" style="display:none;"></textarea>
+    </div>
+    <img id="import-ajax-loader" src="/img/ajax-loader.gif" style="display:none;">
+    <script>
+        $(document).ready(() => {
+
+            /** parent object reference, where need to put  */
+            let parent = "{%parent%}";
+
+            //create file handler
+            let fileReader = new FileReaderHelper();
+            //read file and parse it
+            fileReader.registerHandler("#files").done((files) => {
+                $("#import-ajax-loader").css("display", "block");
+
+                _.each(files, (text) => {
+                    //TODO update jstree with visiobas objects
+                    let parser = VisiobaseDeviceCsvParser();
+                    let objects = parser.parse(text);
+
+                    $("#import-text-content").val(JSON.stringify(objects));
+                    $("#import-ajax-loader").css("display", "none");
+                });
+            });
+        });
+    </script>
+</div>

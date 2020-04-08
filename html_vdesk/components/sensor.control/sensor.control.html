@@ -1,0 +1,47 @@
+<div class="caption t_pad">
+    <nav>
+        <a class="back">Назад</a>
+        <div class="bar">
+            <a class="update"></a>
+            <a class="search"></a>
+        </div>
+    </nav>
+</div>
+
+<div class="sensor_control">
+    <div class="info">
+        <div class="res">{%valueStr%}</div>
+        <div class="checkbox <%= overridenStatus ? '' : 'checked' %>" id="overriden-status">
+            <input type="hidden" class="result_field" value="<%= overridenStatus %>">
+            <span><%= I18N.get("vocab.object.control.auto") %></span>
+        </div>
+    </div>
+    <div class="name">{%description%}</div>
+    <div class="rating">
+        <!--<div class="stars">
+            <img src="/html_vdesk/template/images/star_full.svg">
+            <img src="/html_vdesk/template/images/star_full.svg">
+            <img src="/html_vdesk/template/images/star_full.svg">
+            <img src="/html_vdesk/template/images/star_full.svg">
+            <img src="/html_vdesk/template/images/star_empty.svg">
+        </div>-->
+        <span id="sensor-control-operation-result"></span>
+    </div>
+</div>
+
+<div class="sensor_data">
+    <a class="button cancel hide" id="sensor-control-cancel">
+        <div>Отменить</div>
+        <span>оставить как есть</span>
+    </a>
+    <a class="button apply hide" id="sensor-control-apply">
+        <div>Применить</div>
+        <span>новое значение</span>
+    </a>
+    <!--<a class="button open">
+        <div>Открыть</div>
+        <span>показать визуализацию</span>
+    </a>-->
+</div>
+
+<div id="priority-array"></div>

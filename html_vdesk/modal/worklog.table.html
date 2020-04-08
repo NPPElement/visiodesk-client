@@ -1,0 +1,23 @@
+<table id="table-object-event-logs" class="table table-striped rwd-table">
+    <thead>
+    <tr>
+        <th>Дата/Время</th>
+        <th>Объект</th>
+        <th>Состояние</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <% for(let i = 0; i < worklog.length; ++i) { %>
+    <% let log = worklog[i]; %>
+
+    <tr>
+        <td><%= log.timestamp %></td>
+        <td><%= log.objectName %></td>
+        <td><%= log.fromState%>&nbsp; <%= log.toState %></td>
+    </tr>
+
+    <% } %>
+
+    </tbody>
+</table>

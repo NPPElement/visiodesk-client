@@ -1,0 +1,13 @@
+<div class="user_item">
+    <input name="user_<%= id %>" type="hidden" class="result_field" value="<%= support_id %>">
+    <div class="userpic"><img src="<%= imgDir %>/userpic.png"></div>
+    <div class="info">
+        <span class="name"><%- last_name %> <%- first_name %> <%- middle_name %></span>
+        <span class="post"><%- position %></span>
+    </div>
+    <% if (!support_id) { %>
+    <div class="result_block arrow"></div>
+    <% } else { %>
+    <div class="result_block"><%= support_id %></div>
+    <% } %>
+</div>
