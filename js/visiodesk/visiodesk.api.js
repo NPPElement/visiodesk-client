@@ -1749,8 +1749,8 @@ window.VD_API = (function VisiodeskApi() {
             contentType: "application/json;charset=UTF-8"
         }).done(function (response) {
             if (response.success) {
-                docCookies.setItem("user.token", response.data.token);
-                docCookies.setItem("user.user_id", response.data.user_id);
+                docCookies.setItem("user.token", response.data.token, 60*60*24*30);
+                docCookies.setItem("user.user_id", response.data.user_id, 60*60*24*30);
                 def.resolve();
                 window.location = VB_SETTINGS.htmlDir + "/";
             } else {
