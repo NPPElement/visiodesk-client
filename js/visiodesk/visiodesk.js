@@ -621,7 +621,8 @@ window.VD = (function Visiodesk() {
                             //is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
                             is_double_border = is_incedent, //is_not_linked,
                             is_long_sound = is_new && is_incedent,
-                            class_sound_switcher = is_long_sound ? " sound_switcher" :"",
+                            //class_sound_switcher = is_long_sound ? " sound_switcher" :"",
+                            class_sound_switcher = " sound_switcher",
                             class_double_border = is_double_border ? " double_border" :""
                         ;
 
