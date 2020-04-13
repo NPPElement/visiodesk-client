@@ -620,7 +620,31 @@ window.VD = (function Visiodesk() {
                             //is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
                             is_double_border = is_incedent, //is_not_linked,
                             is_long_sound = is_new && is_incedent,
-                            sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + ( is_long_sound ? 'R-Event.mp3' : 'R-Task.mp3'),
+
+                            switch(topic['status_id']) {
+                                case 1:  // Новая
+                                    is_sound = ( is_incedent ? 'R-Event.mp3' : 'R-Task.mp3' );
+                                    break;
+                                case 2:  // Назначенный
+                                    is_sound = 'R-Message.mp3';
+                                    break;
+                                case 3:  // В работе
+                                    is_sound = 'R-Work.mp3';
+                                    break;
+                                case 4:  // Отложено
+                                    is_sound = 'R-Transfer.mp3';
+                                    break;
+                                case 5:  // Выполнено
+                                    is_sound = 'R-Done.mp3';
+                                    break;
+                                case 6:  // Закрыто
+                                    is_sound = 'R-Closed.mp3';
+                                    break;
+                                default:
+                                    is_sound = 'R-Message.mp3'; 
+                                }
+
+                            sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + is_sound,
                             class_sound_switcher = is_long_sound ? " sound_switcher" :"",
                             class_double_border = is_double_border ? " double_border" :""
                         ;
