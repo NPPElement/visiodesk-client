@@ -617,10 +617,10 @@ window.VD = (function Visiodesk() {
 
                         let is_new = topic['status_id']===1, // new
                             is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
-                            is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
-                            is_double_border = is_not_linked,
-                            is_long_sound = is_new || is_incedent,
-                            sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + ( is_long_sound ? 'R-Event.mp3' : 'R-Message.mp3'),
+                            //is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
+                            is_double_border = is_incedent, //is_not_linked,
+                            is_long_sound = is_new && is_incedent,
+                            sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + ( is_long_sound ? 'R-Event.mp3' : 'R-Task.mp3'),
                             class_sound_switcher = is_long_sound ? " sound_switcher" :"",
                             class_double_border = is_double_border ? " double_border" :""
                         ;
