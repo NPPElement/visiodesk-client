@@ -615,9 +615,19 @@ window.VD = (function Visiodesk() {
                             return;
                         }
 
+                        let is_new = topic['status_id']===1, // new
+                            is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
+                            is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
+                            is_double_border = is_not_linked,
+                            is_long_sound = is_new || is_incedent,
+                            sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + ( is_long_sound ? 'R-Event.mp3' : 'R-Message.mp3'),
+                            class_sound_switcher = is_long_sound ? " sound_switcher" :"",
+                            class_double_border = is_double_border ? " double_border" :""
+                        ;
+
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',
-                            'status_code': VD_SETTINGS['STATUS_TYPES'][topic['status_id']],
+                            'status_code': VD_SETTINGS['STATUS_TYPES'][topic['status_id']] + class_sound_switcher + class_double_border,
                             'status_item_id': statusItemId,
                             'group': {
                                 'id': topic['groups'][0]['id'],
@@ -628,9 +638,22 @@ window.VD = (function Visiodesk() {
                         $('#sticker-' + topic['id']).remove();
                         $stickers.prepend(itemTemplateExec);
 
+                        let sticker_sound = new Audio(sound_url);
+                        sticker_sound.play();
+
+                        if(is_long_sound) {
+                            $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
+                                $(this).removeClass("sound_on_icon");
+                                $(this).addClass("sound_off_icon");
+                                event.stopPropagation();
+                                sticker_sound.pause();
+                            });
+                        }
+
                         let stickerSelector = '#sticker-' + topic['id'];
                         ReferenceBindClick(wrapperSelector, stickerSelector);
                         $(`${stickerSelector}, ${stickerSelector} .close_icon`).click((event) => {
+                            sticker_sound.pause();
                             event.stopPropagation();
                             $(stickerSelector).remove();
                         });

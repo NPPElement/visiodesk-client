@@ -6250,3 +6250,37 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 #cameraInput {
     display: none;
 }
+
+/* stickers sound and double border */
+.stickers .item .sound_on_icon,
+.stickers .item .sound_off_icon {
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+}
+
+.stickers .item .sound_on_icon svg,
+.stickers .item .sound_off_icon svg {
+    width: 20px;
+}
+
+.stickers .item .sound_on_icon svg * {
+    fill: orange;
+    color: orange;
+}
+
+
+.stickers .item .sound_off_icon svg * {
+    fill: #aaa;
+    color: #aaa;
+}
+
+.stickers :not(.sound_switcher) .sound_on_icon,
+.stickers :not(.sound_switcher) .sound_off_icon {
+    display: none;
+}
+
+.stickers .double_border {
+    border: 7px double red;
+}
+
