@@ -621,8 +621,11 @@ window.VD = (function Visiodesk() {
                             //is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
                             is_double_border = is_incedent, //is_not_linked,
                             is_long_sound = is_new && is_incedent,
+                            class_sound_switcher = is_long_sound ? " sound_switcher" :"",
+                            class_double_border = is_double_border ? " double_border" :""
+                        ;
 
-                            switch(is_status) {
+                        switch(is_status) {
                                 case 1:  // Новая
                                     is_sound = ( is_incedent ? 'R-Event.mp3' : 'R-Task.mp3' );
                                     break;
@@ -644,11 +647,8 @@ window.VD = (function Visiodesk() {
                                 default:
                                     is_sound = 'R-Message.mp3'; 
                                 }
-
-                            sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + is_sound,
-                            class_sound_switcher = is_long_sound ? " sound_switcher" :"",
-                            class_double_border = is_double_border ? " double_border" :""
-                        ;
+                                
+                        let sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + is_sound;
 
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',
