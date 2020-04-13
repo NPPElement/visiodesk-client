@@ -647,7 +647,7 @@ window.VD = (function Visiodesk() {
                                 default:
                                     is_sound = 'R-Message.mp3'; 
                                 }
-                                
+
                         let sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + is_sound;
 
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
@@ -666,14 +666,14 @@ window.VD = (function Visiodesk() {
                         let sticker_sound = new Audio(sound_url);
                         sticker_sound.play();
 
-                        if(is_long_sound) {
+                        //if(is_long_sound) {
                             $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
                                 $(this).removeClass("sound_on_icon");
                                 $(this).addClass("sound_off_icon");
                                 event.stopPropagation();
                                 sticker_sound.pause();
                             });
-                        }
+                        //}
 
                         let stickerSelector = '#sticker-' + topic['id'];
                         ReferenceBindClick(wrapperSelector, stickerSelector);
