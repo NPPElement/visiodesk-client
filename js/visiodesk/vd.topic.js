@@ -996,6 +996,8 @@ window.VD_Topic = (function () {
         }
         sendItemsBlock = true;
 
+        VD_API.FileUploader._clearFilenames();
+
         //при создании топика, проверяем проставлен или нет статус с приоритетом
         if (!topicId) {
             var hasStatus = false;

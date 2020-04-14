@@ -6256,7 +6256,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 .stickers .item .sound_off_icon {
     position: absolute;
     right: 20px;
-    bottom: 10px;
+    margin-top: 50px;
 }
 
 .stickers .item .sound_on_icon svg,

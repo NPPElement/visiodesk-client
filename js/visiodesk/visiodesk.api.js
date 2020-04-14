@@ -78,12 +78,27 @@ window.VD_API = (function VisiodeskApi() {
     function FileUploader() {
         let uploadQueue = new Map();
 
+        let filenames = {};
+        function correctFilename(filename) {
+            if(filenames[filename]===undefined) {
+                filenames[filename] = 1;
+                return filename;
+            }
+            filenames[filename]++;
+            let last = filename.lastIndexOf(".");
+            if(last===-1) return filename + "_"+filenames[filename];
+            return filename.substr(0, last-1) + "_" + filenames[filename] + filename.substr(last);
+        }
+
         return {
+            _clearFilenames: () => { filenames = {}; },
+
             /**
              * @param {string} uploaderSelector
              */
             init: (uploaderSelector) => {
                 $(uploaderSelector).fileupload({
+                    pasteZone: $("body"),
                     url: apiContext + '/upload',
                     dataType: 'json',
                     autoUpload: false,
@@ -108,6 +123,9 @@ window.VD_API = (function VisiodeskApi() {
                         let fileName = data['files'][0]['name'];
                         let fileSize = data['files'][0]['size'];
 
+                        fileName = correctFilename(fileName);
+                        data['files'][0]['name_2'] = fileName;
+
                         if (!uploadQueue.has(fileName)) {
                             VD_Topic.selectFile(fileName, fileSize);
                             uploadQueue.set(fileName, data);
@@ -115,7 +133,7 @@ window.VD_API = (function VisiodeskApi() {
                     }
                 }).on('fileuploadprocessalways', function (e, data) {
                     let file = data['files'][0];
-                    let fileName = file['name'];
+                    let fileName = file['name_2'];
                     let tempId = VD.EscapeSpecialCssChars(VD_SETTINGS['ITEM_TYPES'][2] + '_' + fileName);
 
                     if (file['preview']) {
@@ -147,7 +165,7 @@ window.VD_API = (function VisiodeskApi() {
                     //TODO: оформить вывод ошибки при загрузке файлов
                     console.error(data);
                 }).on('fileuploaddone', function (e, data) {
-                    let fileName = data['files'][0]['name'];
+                    let fileName = data['files'][0]['name_2'];
                     let uploadName = data['files'][0]['uploadName'];
                     let contId = VD.EscapeSpecialCssChars(uploadName);
 
