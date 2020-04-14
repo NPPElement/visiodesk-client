@@ -616,44 +616,44 @@ window.VD = (function Visiodesk() {
                         }
 
                         let is_new = topic['status_id']===1, // new
-                            is_status = topic['status_id'],
                             is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
-                            //is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
-                            is_double_border = is_incedent, //is_not_linked,
-                            is_long_sound = is_new && is_incedent,
-                            //class_sound_switcher = is_long_sound ? " sound_switcher" :"",
-                            class_sound_switcher = " sound_switcher",
+                            is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
+                            is_double_border = is_not_linked,
+                            is_long_sound = is_new || is_incedent,
                             class_double_border = is_double_border ? " double_border" :""
                         ;
 
-                        switch(is_status) {
-                                case 1:  // Новая
-                                    is_sound = ( is_incedent ? 'R-Event.mp3' : 'R-Task.mp3' );
-                                    break;
-                                case 2:  // Назначенный
-                                    is_sound = 'R-Message.mp3';
-                                    break;
-                                case 3:  // В работе
-                                    is_sound = 'R-Work.mp3';
-                                    break;
-                                case 4:  // Отложено
-                                    is_sound = 'R-Transfer.mp3';
-                                    break;
-                                case 5:  // Выполнено
-                                    is_sound = 'R-Done.mp3';
-                                    break;
-                                case 6:  // Закрыто
-                                    is_sound = 'R-Closed.mp3';
-                                    break;
-                                default:
-                                    is_sound = 'R-Message.mp3'; 
-                                }
+                        let sound_fn = "";
+                        switch(topic['status_id']) {
+                            case 1:  // Новая
+                                sound_fn = ( is_incedent ? 'R-Event' : 'R-Task' );
+                                break;
+                            case 2:  // Назначенный
+                                sound_fn = 'R-Message';
+                                break;
+                            case 3:  // В работе
+                                sound_fn = 'R-Work';
+                                break;
+                            case 4:  // Отложено
+                                sound_fn = 'R-Transfer';
+                                break;
+                            case 5:  // Выполнено
+                                sound_fn = 'R-Done';
+                                break;
+                            case 6:  // Закрыто
+                                sound_fn = 'R-Closed';
+                                break;
+                            default:
+                                sound_fn = 'R-Message';
+                        }
 
-                        let sound_url = VB_SETTINGS.htmlDir + '/template/sound/' + is_sound;
+                        sound_fn = VB_SETTINGS.htmlDir + '/template/sound/' + sound_fn;
+                        let audoi_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
 
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',
-                            'status_code': VD_SETTINGS['STATUS_TYPES'][topic['status_id']] + class_sound_switcher + class_double_border,
+                            'audio': audoi_html,
+                            'status_code': VD_SETTINGS['STATUS_TYPES'][topic['status_id']] + class_double_border,
                             'status_item_id': statusItemId,
                             'group': {
                                 'id': topic['groups'][0]['id'],
@@ -664,22 +664,16 @@ window.VD = (function Visiodesk() {
                         $('#sticker-' + topic['id']).remove();
                         $stickers.prepend(itemTemplateExec);
 
-                        let sticker_sound = new Audio(sound_url);
-                        sticker_sound.play();
-
-                        //if(is_long_sound) {
-                            $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
-                                $(this).removeClass("sound_on_icon");
-                                $(this).addClass("sound_off_icon");
-                                event.stopPropagation();
-                                sticker_sound.pause();
-                            });
-                        //}
+                        $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
+                            $(this).removeClass("sound_on_icon");
+                            $(this).addClass("sound_off_icon");
+                            $(this).find("audio")[0].pause();
+                            event.stopPropagation();
+                        });
 
                         let stickerSelector = '#sticker-' + topic['id'];
                         ReferenceBindClick(wrapperSelector, stickerSelector);
                         $(`${stickerSelector}, ${stickerSelector} .close_icon`).click((event) => {
-                            sticker_sound.pause();
                             event.stopPropagation();
                             $(stickerSelector).remove();
                         });
