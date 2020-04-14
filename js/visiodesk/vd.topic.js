@@ -1414,11 +1414,13 @@ window.VD_Topic = (function () {
                             });
                         }
                     }
+
+                    if (data.domEvent.key === "Enter" && data.domEvent.shiftKey===false && data.domEvent.ctrlKey===false ) {
+                        __sendItems();
+                    }
+
                 } );
 
-                if (data.domEvent.key === "Enter" && data.domEvent.shiftKey===false && data.domEvent.ctrlKey===false ) {
-                    __sendItems();
-                }
 
                 editor.listenTo( viewDocument, 'keyup', () => {
                     var root = modelDocument.getRoot();
