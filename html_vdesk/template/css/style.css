@@ -6281,21 +6281,37 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 
 #assortment_tools {
     position: fixed;
-    right: 0;
+    right: 2px;
     max-height: 400px;
     overflow-y: auto;
-    background: #E2E7E9;
-    min-height: 100px;
-    max-width: 375px;
+    background: white;
+    min-height: 26px;
+    max-width: 366px;
     padding: 0;
+    height: min-content!important;
+    vertical-align: bottom;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: -3px 1px 0;
+    border: 1px solid rgba(0,0,0,.2);
+    border-bottom-color: rgba(0,0,0,.25);
 }
 
 #assortment_tools .item {
     width: 100%;
     height: 24px;
     vertical-align: center;
+    border: none;
 }
 
 #assortment_tools .item.hide {
     display: none;
 }
+
+#assortment_tools .not_found {
+    font-family: 'SF-PRO-Regular';
+    color: #FF3B30;
+}
+
+
