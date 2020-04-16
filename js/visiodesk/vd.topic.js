@@ -61,6 +61,137 @@ window.VD_Topic = (function () {
 
     var videoList = [];
 
+
+    var assortmentTools = {
+        editor: null,
+        countFinded: 0,
+        items: [],
+        search : '',
+        mode: 'none',
+        selected_id: false,
+
+        clear: function() {
+            assortmentTools.items = [];
+            assortmentTools.search = '';
+            assortmentTools.selected_id = false;
+            $("#assortment_tools").html('');
+        },
+
+        itemIdent: function(id) {
+            return assortmentTools.mode+"_"+id;
+        },
+
+        getUserLogin: function(id) {
+            for(var i=0;i<assortmentTools.items.length;i++) if(assortmentTools.items[i].id===id) return assortmentTools.items[i].login;
+        },
+
+        checkItem: function(value) {
+            value = value.toLowerCase();
+            if(!assortmentTools.search) return true; // Не введено - подходит, может установить ограничение на 1-2-3 символа
+            var si = assortmentTools.search.toLowerCase().split(" ");
+            for(let wi in si) {
+                if(value.indexOf(si[wi])===-1) return false;
+            }
+            return true;
+        },
+
+        isOpen: function() {
+            return $("#assortment_tools").length>0 && !$("#assortment_tools").hasClass("hide");
+        },
+
+        _setItems: function() {
+            $t = $("#assortment_tools");
+            $t.innerHTML = '';
+            assortmentTools.items.forEach( item => {
+                $t.append('<div class="item" id="'+ assortmentTools.itemIdent(item.id)+'">'+item.display+'</div>');
+            });
+        },
+
+        filter: function(search) {
+            assortmentTools.countFinded = 0;
+            if(!search || search.length<2) return;
+            assortmentTools.search = search.substr(1);
+            assortmentTools.items.forEach( item => {
+                var ok = assortmentTools.checkItem(item.search_string);
+                if(ok) assortmentTools.countFinded++;
+                $("#assortment_tools").find("[data-id='"+item.id+"']").toggleClass("hide", !ok);
+            });
+        },
+
+        _setUsersMode: function() {
+            assortmentTools.mode = 'user';
+
+
+
+
+            VD_API.GetUsers().done((userItems) => {
+                let itemTemplate = serviceTemplatesData['vd.topic.selected.item.html'];
+                $t = $("#assortment_tools");
+                $t.innerHTML = '';
+                assortmentTools.items = [];
+
+                userItems.forEach((item) => {
+                    let checked = false;
+
+                    let name = (item['last_name'] || '') + ' ' + (item['first_name'] || '') + ' ' + (item['middle_name'] || '');
+
+                    var position =  item['position'] || '';
+                    var user_info = {
+                        'item_type_code': 'user',
+                        'name': name,
+                        'description': position,
+                        'checked': checked ? 'checked': '',
+                        'id': item['id'],
+                        'login': item['login'],
+                        'search_string': name + ' ' +  position + item['login']
+                    };
+
+                    assortmentTools.items.push(user_info);
+                    let itemTemplateExec = _.template(itemTemplate)($.extend({}, emptyUserObject, user_info , item));
+                    $t.append(itemTemplateExec);
+                });
+
+                $t.find(".item").click((event) => {
+                    event.stopPropagation();
+                    let $item = $(event.currentTarget);
+                    let user_id = parseInt($item.data('id'));
+                    let selectedUserName = $item.data('name');
+                    let selectedUserDesc = $item.data('desc');
+                    assortmentTools.selected_id = user_id;
+
+                    assortmentTools.editor.model.change( writer => {
+                        var selection = assortmentTools.editor.model.document.selection;
+                        writer.remove(selection.focus.nodeBefore);
+                        writer.insertText('@'+assortmentTools.getUserLogin(user_id), {'highlight': 'redPen'}, selection.getFirstPosition());
+                        assortmentTools.editor.fire('break_highlight', selection.getFirstPosition());
+                        assortmentTools.editor.editing.view.focus()
+                    });
+
+                    assortmentTools.close();
+                    let fullItemObject = __selectUser(user_id, selectedUserName, selectedUserDesc);
+                    __appendChangedList(fullItemObject);
+                });
+            });
+
+        },
+
+
+        open: function (editor) {
+            assortmentTools.editor = editor;
+            if(assortmentTools.isOpen()) return;
+            $("#assortment_tools")
+                .removeClass("hide")
+                .width($("#visiodesk-tabbar").width())
+                .css("bottom", $("#visiodesk-tabbar").height() + "px");
+            assortmentTools._setUsersMode();
+        },
+
+        close: function () {
+            $("#assortment_tools").addClass("hide");
+            assortmentTools.clear();
+        }
+    };
+
     return {
         "run": run,
         "unload": unload,
@@ -1388,7 +1519,10 @@ window.VD_Topic = (function () {
                     if (data.domEvent.key === ' ') {
                         if (selection.hasAttribute('highlight')) {
                             var breakPosition = selection.getFirstPosition();
-                            editor.fire('break_highlight', breakPosition);
+                            if(assortmentTools.countFinded==0) {
+                                editor.fire('break_highlight', breakPosition);
+                                assortmentTools.close();
+                            }
                         }
                     }
 
@@ -1404,19 +1538,36 @@ window.VD_Topic = (function () {
                         }
                     }
 
+                    if (data.domEvent.key === 'Backspace' && selection.hasAttribute('highlight') && selection.focus.nodeBefore ) {
+                        if(!assortmentTools.isOpen()) {
+                            editorModel.change(writer => {
+                                if(selection.focus.nodeBefore) writer.remove(selection.focus.nodeBefore);
+                                assortmentTools.close();
+                            });
+                        } else {
+                            window.setTimeout( () => { if(selection.focus.nodeBefore) assortmentTools.filter( selection.focus.nodeBefore.data); }, 10);
+                        }
+                    }
+
                     if (data.domEvent.key === '@') {
                         if (!selection.hasAttribute('highlight')) {
                             editorModel.change(writer => {
                                 writer.insertText('', {
-                                    //'bold': true,
-                                    'highlight': 'redPen'
+                                    'highlight': 'redPen',
                                 }, selection.getFirstPosition());
+                                if(!assortmentTools.isOpen()) assortmentTools.open(editor);
                             });
                         }
-                    }
+                    };
 
                     if (data.domEvent.key === "Enter" && data.domEvent.shiftKey===false && data.domEvent.ctrlKey===false ) {
                         __sendItems();
+                    };
+
+                    if (selection.hasAttribute('highlight')) { // && !_hl_cleared
+                        if (assortmentTools.isOpen()) {
+                            window.setTimeout( () => { if(selection.focus.nodeBefore) assortmentTools.filter( selection.focus.nodeBefore.data); }, 10);
+                        }
                     }
 
                 } );

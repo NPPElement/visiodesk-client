@@ -6279,3 +6279,23 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     border: 7px double red;
 }
 
+#assortment_tools {
+    position: fixed;
+    right: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #E2E7E9;
+    min-height: 100px;
+    max-width: 375px;
+    padding: 0;
+}
+
+#assortment_tools .item {
+    width: 100%;
+    height: 24px;
+    vertical-align: center;
+}
+
+#assortment_tools .item.hide {
+    display: none;
+}
