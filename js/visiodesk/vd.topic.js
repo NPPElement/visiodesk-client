@@ -76,7 +76,7 @@ window.VD_Topic = (function () {
             assortmentTools.items = [];
             assortmentTools.search = '';
             assortmentTools.selected_id = false;
-            $("#assortment_tools").html('');
+            $("#assortment_tools").html('<div class="item hide not_found">Не найдено</div>');
         },
 
         itemIdent: function(id) {
