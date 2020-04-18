@@ -979,8 +979,12 @@ window.VD_Topic = (function () {
         if (fullItemObject['type']['id'] === 6 || fullItemObject['type']['id'] === 5) {
             __removeItem(fullItemObject['type']['id']);
         }
-
         itemsForSend.push(fullItemObject);
+        itemsForSend.sort((a,b)=>{
+            if(a.type.id===VD_SETTINGS.ITEM_TYPE_ID.user && b.type.id===VD_SETTINGS.ITEM_TYPE_ID.removed_from_user) return -1;
+            if(a.type.id===VD_SETTINGS.ITEM_TYPE_ID.removed_from_user && b.type.id===VD_SETTINGS.ITEM_TYPE_ID.user) return 1;
+            return 0;
+        });
         return fullItemObject;
     }
 
