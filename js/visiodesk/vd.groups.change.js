@@ -23,7 +23,8 @@ window.VD_GroupsChange = (function () {
     ]);
 
     return {
-        "run": run
+        "run": run,
+        "SUPPORT_TYPES": SUPPORT_TYPES
     };
 
     function run(reference, selector, params) {

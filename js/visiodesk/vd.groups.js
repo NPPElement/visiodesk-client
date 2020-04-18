@@ -40,17 +40,32 @@ window.VD_Groups = (function () {
                 groupItems.forEach((item) => {
                     let itemId = item['id'];
 
+                    __updateSupportId(itemId);
+
                     if (isSeanceStarted) {
                         //на старте отрисовываем полностью список групп
                         let itemExtended = $.extend({}, emptyGroupObject, {
                             'status_types': statusTypes
-                        }, item);
+                        }, {level: 0}, item);
 
                         let itemTemplateExec = _.template(itemTemplate)({
                             'item': itemExtended
                         });
 
                         $('.groups_list').append(itemTemplateExec);
+
+                        $('.groups_list #group-'+itemId+' .level').click( function (event) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            let $item = $(event.currentTarget);
+                            let changed = VD.CreateDropdownDialog($item, VD_GroupsChange.SUPPORT_TYPES, 'Уровень поддержки');
+                            changed.subscribe((result) => {
+                                VD_API.SetUserGroupSupportId(item, parseInt(result['value'])).done( function (res) { __updateSupportId(itemId); } );
+                            });
+                            return false;
+                        });
+
+
                         groupElementsCache[itemId] = $('#group-' + itemId).find('.taskbar');
                     } else {
                         //в дальнейшем меняем только индикаторы статуса топиков
@@ -87,6 +102,16 @@ window.VD_Groups = (function () {
 
     function unload() {
         _subscription && _subscription.completed();
+    }
+
+    function __setSupportId(groupId, supportId) {
+        $("#group-"+groupId+" .level")
+            .attr("data-id", supportId)
+            .find(".result_field").val(supportId);
+    }
+
+    function __updateSupportId(groupId) {
+        VD_API.GetUserGroupSupportId(groupId).done(res => __setSupportId(groupId, res.support_id) );
     }
 
     function __getStatusValues(item) {

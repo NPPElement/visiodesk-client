@@ -1,6 +1,7 @@
 <a class="group_item" id="group-<%= item.id %>" reference=":Events/<%= item.id %>">
     <div class="header">
         <div class="name"><span class="crop"><%- item.name %></span></div>
+        <div class="level" data-id="<%- item.level %>"><input class="result_field" type="hidden" value="<%- item.level %>"></div>
         <!--<div class="time">11:15</div>-->
     </div>
     <div class="desc">

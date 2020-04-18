@@ -6314,4 +6314,29 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     color: #FF3B30;
 }
 
+.group_item .header .level {
+    flex-shrink: 0;
+    padding-top: 3px;
+    width: 18px;
+    height: 28px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.group_item .header .level[data-id="0"] {
+    background-image: url('../images/level0.svg');
+}
+
+.group_item .header .level[data-id="1"] {
+    background-image: url('../images/level1.svg');
+}
+
+.group_item .header .level[data-id="2"] {
+    background-image: url('../images/level2.svg');
+}
+
+.group_item .header .level[data-id="3"] {
+    background-image: url('../images/level3.svg');
+}
 

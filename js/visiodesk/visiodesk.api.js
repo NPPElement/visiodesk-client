@@ -59,7 +59,11 @@ window.VD_API = (function VisiodeskApi() {
         "DownloadTopicsAsCsv": DownloadTopicsAsCsv,
         "DownloadAsCsvFile": DownloadAsCsvFile,
 
-        "GetUserTopics": GetUserTopics
+        "GetUserTopics": GetUserTopics,
+
+        "GetUserGroupSupportId": GetUserGroupSupportId,
+        "SetUserGroupSupportId": SetUserGroupSupportId,
+
     };
 
     /**
@@ -2284,4 +2288,71 @@ window.VD_API = (function VisiodeskApi() {
                 console.error(`Failed export topics as csv: ${response.error}`);
             });
     }
+
+
+    function GetUserGroupSupportId(groupId) {
+        let def = $.Deferred();
+        GetUsersByGroup(groupId)
+            .done((usersInfo) => {
+                var result = {support_id: 0};
+                usersInfo.forEach( (user) => { if(user.id===authorizedUserId) result = {support_id:user.support_id}; });
+                def.resolve(result);
+            });
+        return def;
+    }
+
+
+    function SetUserGroupSupportId(group, support_id) {
+        let def = $.Deferred();
+
+
+        function __showErrorIfRight(response) {
+            if(response.status!==401 && response.status!==403) return false;
+            VD.ShowErrorMessage({
+                'caption': 'Не достаточно прав',
+                'description': 'Отменить',
+                'timer': 3000
+            });
+            return true;
+        }
+
+        var data = { id: group.id, name: group.name };
+        if(support_id>0)
+            data['binded_users'] = [{
+                group_id: group.id,
+                support_id: support_id,
+                user_id: authorizedUserId
+            }];
+        else
+            data['unbinded_users'] = [{
+                group_id: group.id,
+                user_id: authorizedUserId
+            }];
+
+        let url = apiContext + '/addGroup';
+        let query = JSON.stringify(data);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: query,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            if (response.success) {
+                def.resolve(true);
+            } else {
+                if(!__showErrorIfRight(response)) VD.ErrorHandler('SERVER', response, url);
+                def.resolve(false);
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if(!__showErrorIfRight(jqXHR)) VD.ErrorHandler('HTTP', jqXHR, url);
+            def.resolve(false);
+        });
+        return def;
+    }
+
 })();

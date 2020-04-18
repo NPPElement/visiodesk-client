@@ -50,7 +50,8 @@ window.VD = (function Visiodesk() {
 
         /*Errors processing*/
         "RemoveErrorMessage": RemoveErrorMessage,
-        "ErrorHandler": ErrorHandler
+        "ErrorHandler": ErrorHandler,
+        "ShowErrorMessage": __errorShowMessage
     };
 
     /**
