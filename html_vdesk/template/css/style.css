@@ -6340,3 +6340,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     background-image: url('../images/level3.svg');
 }
 
+.export-group-list-box {
+    text-align: right;
+    margin: 12px 0;
+}

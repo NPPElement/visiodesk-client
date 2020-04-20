@@ -266,9 +266,9 @@
             '</div>' +
             '<div class="drp-buttons">' +
             '<span class="drp-selected"></span>' +
-            '<button class="cancelBtn" type="button"></button>' +
-            '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
-            '<select id="export-group-list" multiple></select>' +
+            '<div class="export-group-list-box"><select id="export-group-list" data-placeholder="Выберите группы..." multiple></select></div>' +
+            '<div><button class="cancelBtn" type="button"></button>' +
+            '<button class="applyBtn" disabled="disabled" type="button"></button>' +
             '</div>' +
             '</div>';
 
@@ -361,6 +361,7 @@
                     groups.forEach((group) => {
                         $select.append(`<option value="${group.id}">${group.name}</option>`);
                     });
+                    $("#export-group-list").chosen({width: "100%"});
                 })
                 .fail((response) => {
                     console.error("Failed get groups: ${response}");
