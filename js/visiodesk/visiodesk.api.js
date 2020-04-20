@@ -1331,6 +1331,12 @@ window.VD_API = (function VisiodeskApi() {
             return def;
         }
 
+        items.sort((a,b)=> {
+            if(a.type.id===VD_SETTINGS.ITEM_TYPE_ID.group && b.type.id===VD_SETTINGS.ITEM_TYPE_ID.removed_from_group) return -1;
+            if(a.type.id===VD_SETTINGS.ITEM_TYPE_ID.removed_from_group && b.type.id===VD_SETTINGS.ITEM_TYPE_ID.group) return 1;
+            return 0;
+        });
+
         let url = apiContext + '/addTopicItems';
         let query = JSON.stringify(items);
 
