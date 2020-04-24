@@ -33,7 +33,7 @@ window.VD_GroupTable = (function () {
         window.setTimeout( () => {
             $("#topic_back_back").toggleClass("hide", opened);
             $("#topic_back_group").toggleClass("hide", !opened);
-            if($("#gt-topic-"+topicId).length>0) $("#gt-topic-"+topicId)[0].scrollIntoView({behavior: "smooth"});
+            if(opened && $("#gt-topic-"+topicId).length>0) $("#gt-topic-"+topicId)[0].scrollIntoView({behavior: "smooth"});
         }, 300);
     }
 
@@ -57,13 +57,35 @@ window.VD_GroupTable = (function () {
 
         VD_API.GetClosedInfo({group_id:groupId, group_param: "group", time_interval:{from:getFrom()}}).then(detail_info => {for(var k in detail_info) $("#delail_t_"+k).html(detail_info[k])});
     }
+    
+    
+    function blockGroupItem_handler() {
+        $(".group_item").off("click");
+        $(".group_item").click(function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            let reference = $(event.target).closest("a[reference]").attr("reference");
+            goReference(reference);
+            return false;
+        });
+    }
 
-    VD.ref$.subscribe((data) => {
-        let new_groupId = 1;
+    function blockGroupItem() {
+        window.setTimeout(blockGroupItem_handler, 100);
+        window.setTimeout(blockGroupItem_handler, 400);
+    }
+
+    function restoreGroupItem() {
+        $(".group_item").off("click");
+        VD.ReferenceBindClick("#main-container");
+    }
+
+    function goReference(reference) {
+        let new_groupId = groupId > 0 ? groupId : 1;
         let new_topicId = 0;
         let need_reload;
         let need_select;
-        let ref = data.reference.split("/");
+        let ref = reference.split("/");
         if(ref[0]===":Events") {
             new_groupId = parseInt(ref[1]);
             if(ref.length===4 && ref[2]==="Topic") new_topicId = parseInt(ref[3]);
@@ -76,9 +98,13 @@ window.VD_GroupTable = (function () {
         topicId = new_topicId;
         if(need_reload && opened) open();
         if(need_select) $("#gt-topic-"+topicId).addClass("selected_topic");
-
+        if(opened) blockGroupItem();
         afterHtml();
+    }
 
+    VD.ref$.subscribe((data) => {
+        if(data.reference===":Groups" && opened) blockGroupItem();
+        goReference(data.reference);
     });
 
 
@@ -160,7 +186,6 @@ window.VD_GroupTable = (function () {
         $tbody.find("a").attr("target", "_blank");
         $("#change_period_select").chosen({width: "100%"}).change( (event) => {
             period = $("#change_period_select").val();
-            console.log("period: "+ period);
             updatePeriod();
         });
         VD.ReferenceBindClick(selector);
@@ -176,6 +201,7 @@ window.VD_GroupTable = (function () {
 
         loadTable(groupId,topicId).done( (result) => {
             setHtml();
+            blockGroupItem();
             opened = true;
         });
     }
@@ -184,9 +210,11 @@ window.VD_GroupTable = (function () {
         opened = false;
         $table.hide();
         afterHtml();
+        restoreGroupItem();
     }
 
 
+    blockGroupItem();
     $("#group_table_control").click(open);
 
 
