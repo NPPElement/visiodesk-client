@@ -1,0 +1,30 @@
+<div class="row_t<%= selected %>" id="gt-topic-<%= id %>" reference=":Events/<%= group_id %>/Topic/<%= id %>" href="#main-container"  data-params="{'setHistory':false}">
+        <div class="col_t1">
+                <div  class="num">
+                        <span class="priority <%= priority_code %>"></span>
+                        <div class="line_t2">#<%= id %></div>
+                        <div><%= created_date %></div>
+                </div>
+        </div>
+        <div>
+                <img src="template/images/workpic.png" width="44" height="44">
+        </div>
+        <div class="col_t_name">
+                <span class="status <%= status_code %>"><%= status_name %></span>
+                <div><%= name %></div>
+<!--                <div><a reference=":Events/<%= group_id %>/Topic/<%= id %>" href="#main-container"  data-params="{'setHistory':false}"><%= name %></a></div>-->
+        </div>
+        <div class="col_t_description">
+                <div class="topic_item">
+                        <div class="slider">
+                                <div class="images"></div>
+                        </div>
+                </div>
+                <div class="low_height_desc">
+                        <%= description %>
+                </div>
+        </div>
+        <div class="col_t_userpic">
+                <img src="template/images/userpic.png" width="44" height="44">
+        </div>
+</div>

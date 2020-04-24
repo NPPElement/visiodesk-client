@@ -1,0 +1,37 @@
+<div class="group_t">
+    <div class="row_t row_t_head">
+        <div class="col_t1">
+            <div class="group_item"><div class="desc"><div class="taskbar">
+                <% for (let status_id in group.status_types) {
+                let status_name = group.status_types[status_id];
+                let counter = group[status_id] || 0;
+                %>
+                <em class="<%= !counter ? 'hide' : '' %> <%= status_name %>"><%= counter %></em>
+                <% } %>
+            </div></div></div>
+        </div>
+        <div><img src="template/images/workpic.png" width="44" height="44"></div>
+        <div class="col_t2"><b><%= group.name %></b></div>
+        <div class="col_t3">
+            <div class="change_period">
+                <select class="chosen" data-placeholder="Период" id="change_period_select">
+                    <option value="today"<%= group.period.today_selected %>>Сегодня</option>
+                    <option value="week"<%= group.period.week_selected %>>Неделя</option>
+                    <option value="month"<%= group.period.month_selected %>>Месяц</option>
+                </select>
+            </div>
+            <br>
+            <div class="summary_text">
+                <span>Закрыто: <b id="delail_t_closed"><%= group.detail.closed %></b></span>
+                <span>Из них просрочено: <b id="delail_t_expired"><%= group.detail.expired %></b></span>
+                <span>Среднее время <b id="delail_t_avg_time"><%= group.detail.avg_time %></b>%</span>
+            </div>
+        </div>
+
+        <div class="col_th_control">
+            <a id="new_topin_in_group" reference=":Events/<%= group.id %>/Topic/New" title="Добавить тему (событие)" class="blue_button" href="#main-container">Новая</a>
+            <div class="close_t_btn"><a><i class="picto_img hide_table"></i></a></div>
+        </div>
+    </div>
+    <div class="body_t"></div>
+</div>

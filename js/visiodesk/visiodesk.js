@@ -7,6 +7,9 @@ window.VD = (function Visiodesk() {
 
     let urlsToRevoke = [];
 
+    let ref$ =  new Rx.Subject();
+
+
     return {
         "StaticFunctions": StaticFunctions,
 
@@ -51,7 +54,8 @@ window.VD = (function Visiodesk() {
         /*Errors processing*/
         "RemoveErrorMessage": RemoveErrorMessage,
         "ErrorHandler": ErrorHandler,
-        "ShowErrorMessage": __errorShowMessage
+        "ShowErrorMessage": __errorShowMessage,
+        "ref$": ref$
     };
 
     /**
@@ -755,6 +759,13 @@ window.VD = (function Visiodesk() {
                 }
 
                 VD.Controller(reference, parentSelector, params);
+
+                ref$.onNext({
+                    reference: reference,
+                    parentSelector: parentSelector,
+                    params: params
+                });
+
             });
         });
     }

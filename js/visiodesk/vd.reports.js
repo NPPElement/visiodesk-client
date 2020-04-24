@@ -115,7 +115,7 @@ window.VD_Reports = (function () {
                     break;
             }
         }
-
+        console.log("reportParams: ", reportParams);
         switch (source) {
             case 'report-detailed-info':
                 __buildDetailedInfo(reportParams);
