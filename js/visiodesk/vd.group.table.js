@@ -71,9 +71,12 @@ window.VD_GroupTable = (function () {
     }
 
     function blockGroupItem() {
+        // todo:  переделать
+        window.setTimeout(blockGroupItem_handler, 30);
         window.setTimeout(blockGroupItem_handler, 100);
         window.setTimeout(blockGroupItem_handler, 400);
         window.setTimeout(blockGroupItem_handler, 800);
+        window.setTimeout(blockGroupItem_handler, 2000);
     }
 
     function restoreGroupItem() {
