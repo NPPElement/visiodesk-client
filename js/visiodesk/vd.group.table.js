@@ -60,6 +60,7 @@ window.VD_GroupTable = (function () {
     
     
     function blockGroupItem_handler() {
+        if(!opened) return;
         $(".group_item").off("click");
         $(".group_item").click(function (event) {
             event.preventDefault();
@@ -72,6 +73,7 @@ window.VD_GroupTable = (function () {
 
     function blockGroupItem() {
         // todo:  переделать
+
         window.setTimeout(blockGroupItem_handler, 30);
         window.setTimeout(blockGroupItem_handler, 100);
         window.setTimeout(blockGroupItem_handler, 400);
