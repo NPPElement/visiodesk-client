@@ -6385,7 +6385,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 }
 
 .body_t .row_t > div {
-    height: 96px; /*65px*/
+    height: 76px;
 }
 
 
@@ -6552,13 +6552,15 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     font-weight: bold;
     margin-bottom: 6px;
     color: #444;
+    overflow: hidden;
+    height: 48px;
 }
 
 .row_t > div.col_t_description {
     vertical-align: top;
     font-size: 13px;
     color: #333;
-    width: 52%;
+    width: 46%;
 }
 
 .low_height_desc {
@@ -6598,13 +6600,13 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 }
 
 #group_table .topic_item .slider .images {
-    height: 70px;
+    height: 50px;
 }
 #group_table .topic_item .slider .images .frame DIV {
     background-size: cover;
 }
 #group_table .topic_item .slider .place_holder > DIV {
-    height: 70px;
+    height: 50px;
 }
 
 #group_table .topic_item .slider .images .left,
@@ -6618,6 +6620,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     width: 100px;
     margin: 6px 8px 6px 0;
     float: left;
+    min-height: 56px;
 }
 
 #group_table .detail .created {
