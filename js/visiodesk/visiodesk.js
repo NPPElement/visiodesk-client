@@ -733,6 +733,16 @@ window.VD = (function Visiodesk() {
                 }
 
                 __afterLoadSettings(reference, selector, params);
+
+                ref$.onNext({
+                    type: "after.run.done",
+                    data: {
+                        reference: reference,
+                        parentSelector: selector,
+                        params: params
+                    }
+                });
+
             });
         } else {
             console.error(`Undefined visiodesk module resolved by reference: "${reference}"`);
@@ -761,9 +771,12 @@ window.VD = (function Visiodesk() {
                 VD.Controller(reference, parentSelector, params);
 
                 ref$.onNext({
-                    reference: reference,
-                    parentSelector: parentSelector,
-                    params: params
+                    type: "after.reference",
+                    data: {
+                        reference: reference,
+                        parentSelector: parentSelector,
+                        params: params
+                    }
                 });
 
             });

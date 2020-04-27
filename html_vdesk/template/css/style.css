@@ -6381,16 +6381,19 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     display: table-cell;
     padding: 2px 12px;
     font-family: 'SF-PRO-Regular';
-    height: 65px;
     vertical-align: middle;
+}
+
+.body_t .row_t > div {
+    height: 96px; /*65px*/
 }
 
 
 #group_table_control {
     z-index: 11;
     position: fixed;
-    left: calc(100% - 434px);
-    top: 18px;
+    left: calc(100% - 414px);
+    top: calc(50% - 30px);
 }
 #group_table_control a {
     width: 44px;
@@ -6429,9 +6432,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 
 
 #group_table .priority {
-    float: right;
-    display: block;
-    margin: 0 15px 0 0;
+    display: inline-block;
     width: 29px;
     height: 29px;
 }
@@ -6462,8 +6463,8 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     font-size: 13px;
     letter-spacing: -0.04em;
     margin: 3px 0;
-
 }
+
 #group_table .status.new {
     color: #FF3B30;
 }
@@ -6480,6 +6481,68 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     color: #979797;
 }
 
+#group_table .item_info {
+    width: 100%;
+    text-align: center;
+}
+
+#group_table .col_t1 {
+    width: 120px;
+}
+
+#group_table .item_info div.line_t2 {
+    font-family: 'SF-PRO-Regular';
+    line-height: 20px;
+    font-size: 14px;
+    letter-spacing: -0.0466667em;
+    color: #666666;
+    margin-bottom: 7px;
+}
+
+#group_table .item_info div.line_t3 {
+    font-family: 'SF-PRO-Regular';
+    line-height: normal;
+    font-size: 11px;
+    letter-spacing: -0.016em;
+    color: #666666;
+    margin-top: 7px;
+}
+
+#group_table .col_t_userpic img {
+    width: 44px;
+    height: 44px;
+}
+
+#group_table .col_t_userpic img:first-child {
+    margin-right: -20px;
+}
+
+#group_table .col_t_userpic img:first-child {
+    margin-right: 12px;
+}
+
+
+#group_table .col_t_userpic img {
+    margin-top: 12px;
+}
+
+
+#group_table .col_t_userpic .popup_user_name {
+    position: relative;
+    left: -10px;
+    top: 5px;
+    display: none;
+    height: 0px;
+    font-family: 'SF-PRO-Regular';
+    line-height: normal;
+    font-size: 11px;
+}
+
+#group_table .col_t_userpic:hover .popup_user_name {
+    display: block;
+}
+
+
 .row_t > div.col_t_name {
     vertical-align: top;
 }
@@ -6495,7 +6558,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     vertical-align: top;
     font-size: 13px;
     color: #333;
-    width: 45%;
+    width: 52%;
 }
 
 .low_height_desc {
@@ -6504,15 +6567,10 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     overflow-x: hidden;
 }
 
-.line_t2 {
-    margin-top: 4px;
-    margin-bottom: 18px;
-
-}
 
 
 .close_t_btn {
-    padding-top: 18px;
+    /*padding-top: 2px;*/
     float: right;
 }
 .picto_img {
@@ -6538,8 +6596,6 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 #group_table .col_th_control {
     width: 250px;
 }
-.col_t_userpic {
-}
 
 #group_table .topic_item .slider .images {
     height: 70px;
@@ -6551,11 +6607,17 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     height: 70px;
 }
 
+#group_table .topic_item .slider .images .left,
+#group_table .topic_item .slider .images .right {
+    display: none!important;
+}
+
+
+
 #group_table .topic_item {
-    width: 200px;
-    margin-top: 6px;
+    width: 100px;
+    margin: 6px 8px 6px 0;
     float: left;
-    margin-right: 8px;
 }
 
 #group_table .detail .created {
@@ -6595,20 +6657,18 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 
 
 .blue_button {
-    height: 40px;
-    border-radius: 8px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 4px;
     display: inline-block;
-    margin-bottom: 15px;
     color: #FFFFFF;
-    background: #007AFF;
+    background: #157EFB;
     text-align: center;
-    padding-top: 10px;
-    width: 140px;
+    padding: 0 12px;
+    font-family: 'SF-PRO-Regular';
+    font-size: 14px;
 }
 
-.col_th_control .blue_button {
-    margin-top: 12px;
-}
 
 
 #group_table .selected_topic {
@@ -6649,5 +6709,33 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 
 #topic_back_group.hide {
     display: none!important;
+}
+
+.row_t_head >div {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background: white;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    height: 52px!important;
+}
+
+
+
+.ui-tooltip {
+    padding: 8px;
+    position: absolute;
+    z-index: 9999;
+    max-width: 300px;
+    -webkit-box-shadow: 0 0 2px #aaa;
+    box-shadow: 0 0 2px #aaa;
+    background: white;
+    font-family: 'SF-PRO-Regular';
+    font-size: 14px;
+}
+
+body .ui-tooltip {
+    border-width: 2px;
 }
 

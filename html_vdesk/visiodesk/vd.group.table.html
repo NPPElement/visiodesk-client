@@ -10,7 +10,7 @@
                 <% } %>
             </div></div></div>
         </div>
-        <div><img src="template/images/workpic.png" width="44" height="44"></div>
+<!--        <div><img src="template/images/workpic.png" width="44" height="44"></div>-->
         <div class="col_t2"><b><%= group.name %></b></div>
         <div class="col_t3">
             <div class="change_period">
@@ -20,7 +20,6 @@
                     <option value="month"<%= group.period.month_selected %>>Месяц</option>
                 </select>
             </div>
-            <br>
             <div class="summary_text">
                 <span>Закрыто: <b id="delail_t_closed"><%= group.detail.closed %></b></span>
                 <span>Из них просрочено: <b id="delail_t_expired"><%= group.detail.expired %></b></span>
@@ -29,7 +28,7 @@
         </div>
 
         <div class="col_th_control">
-            <a id="new_topin_in_group" reference=":Events/<%= group.id %>/Topic/New" title="Добавить тему (событие)" class="blue_button" href="#main-container">Новая</a>
+            <a reference=":Events/<%= group.id %>/Topic/New" title="Добавить тему (событие)" class="blue_button" href="#main-container">Новая</a>
             <div class="close_t_btn"><a><i class="picto_img hide_table"></i></a></div>
         </div>
     </div>

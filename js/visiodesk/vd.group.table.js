@@ -16,6 +16,15 @@ window.VD_GroupTable = (function () {
         _TPL_TABLE_ROW,
     ];
 
+    const emptyUserObject = {
+        'id': 0,
+        'last_name': '',
+        'first_name': '',
+        'middle_name': '',
+        'position': '',
+    };
+
+    let users = [];
     let serviceTemplatesData = {};
 
     let template$ = VB.LoadTemplatesList(serviceTemplatesList, VD_SETTINGS['TEMPLATE_DIR']).then( templates => serviceTemplatesData = templates);
@@ -30,11 +39,17 @@ window.VD_GroupTable = (function () {
     };
 
     function afterHtml() {
-        window.setTimeout( () => {
+        // window.setTimeout( () => {
             $("#topic_back_back").toggleClass("hide", opened);
             $("#topic_back_group").toggleClass("hide", !opened);
             if(opened && $("#gt-topic-"+topicId).length>0) $("#gt-topic-"+topicId)[0].scrollIntoView({behavior: "smooth"});
-        }, 300);
+        // }, 300);
+
+        $(".col_t_userpic img").tooltip({
+            content: function () {
+                return $(this).prop('title');
+            }
+        });
     }
 
     function getFrom() {
@@ -73,7 +88,8 @@ window.VD_GroupTable = (function () {
 
     function blockGroupItem() {
         // todo:  переделать
-
+        // return
+        blockGroupItem_handler();
         window.setTimeout(blockGroupItem_handler, 30);
         window.setTimeout(blockGroupItem_handler, 100);
         window.setTimeout(blockGroupItem_handler, 400);
@@ -108,11 +124,69 @@ window.VD_GroupTable = (function () {
         afterHtml();
     }
 
-    VD.ref$.subscribe((data) => {
-        if(data.reference===":Groups" && opened) blockGroupItem();
+
+    var last_control_position = false;
+    function moveControlPosition(right) {
+        last_control_position = right;
+        console.log("moveControlPosition: "+right);
+
+        if(right) {
+            $("#group_table_control").hide();
+            if(right) close();
+        } else {
+            $("#group_table_control").show();
+        }
+
+        return;
+
+        $("#group_table_control").css("left",
+            right
+                ? $("body").width() - 40
+                : $("body").width() - 409
+        );
+        $("#group_table").css("width",
+            right
+                ? $("body").width()
+                : $("body").width() - 375
+        );
+
+    }
+
+    $( window ).resize( ()=> {
+        moveControlPosition(last_control_position);
+    } );
+
+    VD.ref$.subscribe((ref_event) => {
+
+        if(ref_event.type==="after.run.done" && ref_event.data.reference===":Map") {
+            moveControlPosition(true);
+            return;
+        }
+
+        // after.run.done, after.reference
+        if(ref_event.type==="after.run.done") moveControlPosition(false);
+        if(ref_event.type==="after.run.done" && ref_event.data.reference===":Groups" && opened) {
+            blockGroupItem();
+        }
+
         afterHtml();
-        goReference(data.reference);
+        goReference(ref_event.data.reference);
     });
+
+    function getUserInfo(id) {
+        for(let i=0;i<users.length;i++) if(users[i].id===id) return users[i];
+        return emptyUserObject;
+    }
+
+    function topicAttachedUsers(items) {
+        let user_ids = [];
+        items.forEach( item => {
+            if(item.type.id===3) user_ids.push(item.user_id);
+            if(item.type.id===16) user_ids = _.without(user_ids, item.user_id);
+        });
+        return user_ids.map( getUserInfo );
+
+    }
 
 
     function loadTable() {
@@ -122,10 +196,12 @@ window.VD_GroupTable = (function () {
         var result = $.Deferred();
         let gr$ = VD_API.GetGroups(group_id);
         let ev$ = VD_API.GetTopicsByGroup(group_id);
+        let us$ = VD_API.GetUsers();
         let di$ = VD_API.GetClosedInfo({group_id:group_id, group_param: "group", time_interval:{from:getFrom()}});
 
-        $.when(gr$, ev$, di$, template$)
-            .done( (group, topics, detail_info) => {
+        $.when(gr$, ev$, di$, us$, template$)
+            .done( (group, topics, detail_info, all_users) => {
+                users = all_users;
                 data.group = group;
                 data.group.status_types = statusTypes;
                 data.group.detail = detail_info;
@@ -135,14 +211,16 @@ window.VD_GroupTable = (function () {
                     month_selected: period==="month" ? " selected" : "",
                 };
 
-                topics.forEach((t, i) => {
 
+
+                topics.forEach((t, i) => {
                     let images = t.items.filter((item) => {
                         return item['type']['id'] === 2 &&
                             VD.IsImage(item['text']) &&
                             item['file_client_size'] > 0 &&
                             item['file_size'] > 0
                     });
+
 
                     topics[i].selected = t.id===topic_id ? " selected_topic" : "";
                     topics[i].description = VD.HtmlFromBBCode(topics[i].description);
@@ -152,6 +230,10 @@ window.VD_GroupTable = (function () {
                     topics[i].status_name = I18N.get(`vdesk.topic.status.${t.status_id}`);
                     topics[i].group_id = groupId;
                     topics[i].images = images;
+                    topics[i].author = $.extend({}, emptyUserObject, t.items[0].author);
+                    topics[i].users = topicAttachedUsers(t.items);
+
+
                 });
                 data.topics = topics;
                 result.resolve({group: group, event: topics});

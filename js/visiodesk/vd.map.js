@@ -15,7 +15,7 @@ window.VD_Map = (function () {
             $('#screen').addClass('map');
             $('#gray-bg').addClass('map');
             $('.leaflet-right').addClass('map');
-
+            
             var $mapSearch = $('#map-search').clone();
             $('#map-search').remove();
             $('#wrapper').append($mapSearch);
