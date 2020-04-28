@@ -185,8 +185,8 @@ window.VD_GroupTable = (function () {
             if(item.type.id===3) user_ids.push(item.user_id);
             if(item.type.id===16) user_ids = _.without(user_ids, item.user_id);
             if(item.type.id===6) {
-                if(!_.contains(user_ids, item.user_id)) user_ids.push(item.author.id);
-                if(!_.contains(in_progress, item.user_id)) in_progress.push(item.author.id);
+                if(!_.contains(user_ids, item.author.id)) user_ids.push(item.author.id);
+                if(!_.contains(in_progress, item.author.id)) in_progress.push(item.author.id);
             }
         });
         let users =  user_ids.map( getUserInfo );
