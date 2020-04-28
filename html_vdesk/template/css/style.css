@@ -6570,7 +6570,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 }
 
 .low_height_desc {
-    height: 49px;
+    height: 60px;
     overflow: hidden;
     overflow-x: hidden;
 }
