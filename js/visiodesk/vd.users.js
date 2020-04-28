@@ -184,6 +184,8 @@ window.VD_Users = (function () {
                     const reference = $(event.currentTarget).attr("reference");
                     VD.Controller(reference, selector);
                 })
+
+                __initSearch();
             })
             .then(() => {
                 //return empty selector to prevent default handler of 'reference' elements click
@@ -196,6 +198,28 @@ window.VD_Users = (function () {
                 console.error(`Failed to display users list, error: ${response.error}`);
             });
     }
+    
+    
+    function __setFilter() {
+        let value = $(".search1 .search_field").find("input").val().toLowerCase();
+        $.each( $(".group_list > .group_chain[id]"), function(i, user) {
+            $user = $(user);
+            var text = $user.find(".header .name .crop").text().toLowerCase();
+                text+= "  " + $user.find(".desc .text").text().toLowerCase();
+            if(text.indexOf(value)!==-1) $user.show();
+            else $user.hide();
+        });
+
+    }
+    
+    
+    function __initSearch() {
+        const $searchField = $(".search1 .search_field").find("input");
+        $searchField.on("change paste keyup",()=>{
+            __setFilter();
+        })
+    }
+    
 
     function unload() {
         window.clearInterval(handleUpdateTopics);
