@@ -6483,7 +6483,11 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 
 #group_table .item_info {
     width: 100%;
-    text-align: center;
+    text-align: left;
+    font-size: 14px;
+    letter-spacing: -0.0466667em;
+    color: #666666;
+    font-family: 'SF-PRO-Regular';
 }
 
 #group_table .col_t1 {
@@ -6505,7 +6509,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     font-size: 11px;
     letter-spacing: -0.016em;
     color: #666666;
-    margin-top: 7px;
+    margin-top: 25px;
 }
 
 #group_table .col_t_userpic img {
