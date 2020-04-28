@@ -39,7 +39,7 @@
                 </span>
 
                 <% for (let i in users) { %>
-                <span class="tooltip">
+                <span class="tooltip user_status <%= users[i].status.name %>">
                 <img class="img_att_users" src="template/images/<%- users[i].userpic %>" title="<%- users[i].last_name %> <%- users[i].first_name %> <%- users[i].middle_name %>, <%- users[i].position%>">
                         <div class="tooltip-content">
                                 <div class="tooltip-arrow"></div>

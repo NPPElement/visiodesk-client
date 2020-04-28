@@ -129,7 +129,6 @@ window.VD_GroupTable = (function () {
     var last_control_position = false;
     function moveControlPosition(right) {
         last_control_position = right;
-        console.log("moveControlPosition: "+right);
 
         if(right) {
             $("#group_table_control").hide();
@@ -180,18 +179,22 @@ window.VD_GroupTable = (function () {
     }
 
     function topicAttachedUsers(items) {
-        let user_ids = [], in_progress = [];
+        let user_ids = [], in_progress = [], user_statuses = {};
         items.forEach( item => {
             if(item.type.id===3) user_ids.push(item.user_id);
             if(item.type.id===16) user_ids = _.without(user_ids, item.user_id);
-            if(item.type.id===6) {
+            if(item.type.id===VD_SETTINGS.ITEM_TYPE_ID.status) {
                 if(!_.contains(user_ids, item.author.id)) user_ids.push(item.author.id);
+                user_statuses[item.author.id] = item.status;
                 if(!_.contains(in_progress, item.author.id)) in_progress.push(item.author.id);
             }
         });
         let users =  user_ids.map( getUserInfo );
-        users.forEach( (item, i) => { users[i].userpic = _.contains(in_progress, item.id) ? "userpic_blue.png" : "userpic.png"; });
-        console.log(users);
+        users.forEach( (item, i) => {
+            // users[i].userpic = _.contains(in_progress, item.id) ? "userpic_blue.png" : "userpic.png";
+            users[i].userpic = "userpic.png";
+            users[i].status = user_statuses[users[i].id] ?  user_statuses[users[i].id] : { id:0, "name": "", title:"" };
+        });
         return users;
 
     }
@@ -283,7 +286,6 @@ window.VD_GroupTable = (function () {
         $tbody.find("a").attr("target", "_blank");
         $("#change_period_select").chosen({width: "100%"}).change( (event) => {
             period = $("#change_period_select").val();
-            console.log("period: "+ period);
             updatePeriod();
         });
         VD.ReferenceBindClick(selector);
