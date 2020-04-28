@@ -6515,20 +6515,15 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 #group_table .col_t_userpic img {
     width: 44px;
     height: 44px;
+    margin-top: 12px;
 }
 
-#group_table .col_t_userpic img:first-child {
+
+#group_table .col_t_userpic img.img_att_users {
     margin-right: -20px;
 }
 
-#group_table .col_t_userpic img:first-child {
-    margin-right: 12px;
-}
 
-
-#group_table .col_t_userpic img {
-    margin-top: 12px;
-}
 
 
 #group_table .col_t_userpic .popup_user_name {
@@ -6732,21 +6727,6 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 
 
 
-.ui-tooltip {
-    padding: 8px;
-    position: absolute;
-    z-index: 9999;
-    max-width: 300px;
-    -webkit-box-shadow: 0 0 2px #aaa;
-    box-shadow: 0 0 2px #aaa;
-    background: white;
-    font-family: 'SF-PRO-Regular';
-    font-size: 14px;
-}
-
-body .ui-tooltip {
-    border-width: 2px;
-}
 
 
 
@@ -6773,30 +6753,20 @@ body .ui-tooltip {
 
 
 
-
-
-.tooltip {
+#group_table .tooltip {
     position: relative;
-    /*
-    width: 100%;
-    max-width: 200px;
-    height: 50px;
-    margin: 200px auto;
-    border: 1px solid #808080;
-
-     */
     cursor: pointer;
 }
-.tooltip:hover .tooltip-content {
+#group_table .tooltip:hover .tooltip-content {
     display: block;
     animation: tooltip 0.7s ease forwards;
 }
-.tooltip-content {
+#group_table .tooltip-content {
     display: none;
     opacity: 0;
     position: absolute;
     bottom: calc(100% + 50px);
-    left: 50%;
+    left: 45%;
     transform: translateX(-50%);
     width: 100%;
     max-width: 350px;
@@ -6810,21 +6780,24 @@ body .ui-tooltip {
     border-radius: 3px!important;
 }
 
-.tooltip-content p {
-
-
+#group_table .tooltip-content p {
 }
-.tooltip-arrow {
+
+
+#group_table .tooltip-arrow {
     position: absolute;
     z-index: 1;
     bottom: -15px;
-    left: 50%;
+    left: 45%;
     transform: translateX(-50%);
     width: 20px;
     height: 25px;
     overflow: hidden;
 }
-.tooltip-arrow:before {
+
+
+
+#group_table .tooltip-arrow:before {
     content: '';
     position: absolute;
     top: -4px;
@@ -6835,6 +6808,12 @@ body .ui-tooltip {
     transform: translateX(-50%) rotate(45deg);
     box-shadow: 8px 8px 9px -4px rgba(0,0,0,0.15);
 }
+
+#group_table img.img_att_users + .tooltip-content .tooltip-arrow,
+#group_table img.img_att_users + .tooltip-content {
+    left: 54%;
+}
+
 @-moz-keyframes tooltip {
     100% {
         opacity: 1;

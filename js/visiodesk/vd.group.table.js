@@ -180,12 +180,19 @@ window.VD_GroupTable = (function () {
     }
 
     function topicAttachedUsers(items) {
-        let user_ids = [];
+        let user_ids = [], in_progress = [];
         items.forEach( item => {
             if(item.type.id===3) user_ids.push(item.user_id);
             if(item.type.id===16) user_ids = _.without(user_ids, item.user_id);
+            if(item.type.id===6) {
+                if(!_.contains(user_ids, item.user_id)) user_ids.push(item.author.id);
+                if(!_.contains(in_progress, item.user_id)) in_progress.push(item.author.id);
+            }
         });
-        return user_ids.map( getUserInfo );
+        let users =  user_ids.map( getUserInfo );
+        users.forEach( (item, i) => { users[i].userpic = _.contains(in_progress, item.id) ? "userpic_blue.png" : "userpic.png"; });
+        console.log(users);
+        return users;
 
     }
 
