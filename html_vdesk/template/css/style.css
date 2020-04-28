@@ -6366,7 +6366,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     margin-top: -4px;
     display: table;
     border-collapse: separate;
-    border-spacing: 0 4px;
+    border-spacing: 0 2px;
     width: 100%;
 }
 
@@ -6398,7 +6398,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 #group_table_control a {
     width: 44px;
     height: 44px;
-    background: white url(../images/back.svg) 0 0 no-repeat;
+    background: transparent url(../images/slide.svg) 0 0 no-repeat;
     background-position: center;
     border-radius: 3px;
     display: block;
@@ -6435,6 +6435,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     display: inline-block;
     width: 29px;
     height: 29px;
+    margin-right: 5px;
 }
 
 #group_table .priority.top {
@@ -6459,10 +6460,9 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 #group_table .status {
     display: block;
     font-family: 'SF-PRO-Regular';
-    line-height: 15px;
+    line-height: 27px;
     font-size: 13px;
     letter-spacing: -0.04em;
-    margin: 3px 0;
 }
 
 #group_table .status.new {
@@ -6550,10 +6550,11 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 .row_t > div.col_t_name div {
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 6px;
     color: #444;
     overflow: hidden;
-    height: 48px;
+    height: 38px;
+    clear: both;
+    line-height: 18px;
 }
 
 .row_t > div.col_t_description {
@@ -6564,7 +6565,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 }
 
 .low_height_desc {
-    height: 48px;
+    height: 49px;
     overflow: hidden;
     overflow-x: hidden;
 }
@@ -6688,21 +6689,21 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 }
 
 #group_table .row_t > div {
-    border-top: 2px solid transparent;
-    border-bottom: 2px solid transparent;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
 }
 #group_table .selected_topic > div {
-    border-top: 2px solid #007AFF;
-    border-bottom: 2px solid #007AFF;
+    border-top: 1px solid #007AFF;
+    border-bottom: 1px solid #007AFF;
 
 }
 
 #group_table .selected_topic > div:first-child {
-    border-left: 3px solid #007AFF;
+    border-left: 1px solid #007AFF;
 }
 
 #group_table .selected_topic > div:last-child {
-    border-right: 2px solid #007AFF;
+    border-right: 1px solid #007AFF;
 }
 
 
@@ -6742,3 +6743,114 @@ body .ui-tooltip {
     border-width: 2px;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.tooltip {
+    position: relative;
+    /*
+    width: 100%;
+    max-width: 200px;
+    height: 50px;
+    margin: 200px auto;
+    border: 1px solid #808080;
+
+     */
+    cursor: pointer;
+}
+.tooltip:hover .tooltip-content {
+    display: block;
+    animation: tooltip 0.7s ease forwards;
+}
+.tooltip-content {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    bottom: calc(100% + 50px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 350px;
+    min-width: 200px;
+    border: 1px solid #e9e9e9;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.15);
+    background: white;
+    z-index: 2;
+    font-size: 13px;
+    padding: 12px;
+    border-radius: 3px!important;
+}
+
+.tooltip-content p {
+
+
+}
+.tooltip-arrow {
+    position: absolute;
+    z-index: 1;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 25px;
+    overflow: hidden;
+}
+.tooltip-arrow:before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    transform: translateX(-50%) rotate(45deg);
+    box-shadow: 8px 8px 9px -4px rgba(0,0,0,0.15);
+}
+@-moz-keyframes tooltip {
+    100% {
+        opacity: 1;
+        bottom: calc(100% + 30px);
+    }
+}
+@-webkit-keyframes tooltip {
+    100% {
+        opacity: 1;
+        bottom: calc(100% + 30px);
+    }
+}
+@-o-keyframes tooltip {
+    100% {
+        opacity: 1;
+        bottom: calc(100% + 30px);
+    }
+}
+@keyframes tooltip {
+    100% {
+        opacity: 1;
+        bottom: calc(100% + 30px);
+    }
+}

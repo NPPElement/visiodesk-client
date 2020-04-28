@@ -44,12 +44,13 @@ window.VD_GroupTable = (function () {
             $("#topic_back_group").toggleClass("hide", !opened);
             if(opened && $("#gt-topic-"+topicId).length>0) $("#gt-topic-"+topicId)[0].scrollIntoView({behavior: "smooth"});
         // }, 300);
-
+        /*
         $(".col_t_userpic img").tooltip({
             content: function () {
                 return $(this).prop('title');
             }
         });
+         */
     }
 
     function getFrom() {
