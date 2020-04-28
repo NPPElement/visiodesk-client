@@ -6549,6 +6549,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
 
 .row_t > div.col_t_name {
     vertical-align: top;
+    min-width: 230px;
 }
 
 .row_t > div.col_t_name div {
@@ -6565,7 +6566,7 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     vertical-align: top;
     font-size: 13px;
     color: #333;
-    width: 46%;
+    width: 40%;
 }
 
 .low_height_desc {
