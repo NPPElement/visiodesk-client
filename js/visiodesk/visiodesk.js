@@ -742,22 +742,27 @@ window.VD = (function Visiodesk() {
                 }
 
                 __afterLoadSettings(reference, selector, params);
+                let state_data =  {
+                    reference: reference,
+                    parentSelector: selector,
+                    params: params
+                };
+
+                let title = "visioDESK - visioBAS-menu";
+
+                window.setTimeout(function () {
+                    if($("h1").length>0) title = "visioDESK: "  + $("h1").html();
+                    else "visioDESK : " + reference.replace(":","");
+                    window.document.title = title;
+                }, 300);
 
                 ref$.onNext({
                     type: "after.run.done",
-                    data: {
-                        reference: reference,
-                        parentSelector: selector,
-                        params: params
-                    }
+                    data: state_data
                 });
-
+                if(!history.state || !history.state.reference || history.state.reference!==reference) window.history.pushState(state_data, '', reference.replace(":", "/html_vdesk/#"));
             });
-            if(!history.state || !history.state.reference || history.state.reference!==reference) window.history.pushState({
-                                                                                                                        reference: reference,
-                                                                                                                        parentSelector: selector,
-                                                                                                                        params: params
-                                                                                                                    }, '', reference.replace(":", "/html_vdesk/#"));
+
         } else {
             console.error(`Undefined visiodesk module resolved by reference: "${reference}"`);
         }
