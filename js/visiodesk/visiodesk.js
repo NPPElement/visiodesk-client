@@ -754,7 +754,7 @@ window.VD = (function Visiodesk() {
                     if($("h1").length>0) title = "visioDESK: "  + $("h1").html();
                     else "visioDESK : " + reference.replace(":","");
                     window.document.title = title;
-                }, 300);
+                }, 1300);
 
                 ref$.onNext({
                     type: "after.run.done",
