@@ -705,7 +705,7 @@ window.VD = (function Visiodesk() {
 
     function GetHistory(step) {
         step = _.isNumber(step) ? step : 0;
-        return _history[step];
+        return _history[step] ? _history[step] : ":Groups";
     }
 
     function Controller(reference, selector, params) {
@@ -744,6 +744,11 @@ window.VD = (function Visiodesk() {
                 });
 
             });
+            if(!history.state || !history.state.reference || history.state.reference!==reference) window.history.pushState({
+                                                                                                                        reference: reference,
+                                                                                                                        parentSelector: selector,
+                                                                                                                        params: params
+                                                                                                                    }, '', reference.replace(":", "/html_vdesk/#"));
         } else {
             console.error(`Undefined visiodesk module resolved by reference: "${reference}"`);
         }
