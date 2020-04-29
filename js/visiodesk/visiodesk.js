@@ -702,10 +702,19 @@ window.VD = (function Visiodesk() {
     function SetHistory(reference) {
         _history.unshift(reference);
     }
+    
+    function __getHistoryBack() {
+        if(!_history.length) return ":Groups";
+        let h = _history[0];
+        h = h.split("/Topic/");
+        if(h.length>1) return h[0];
+        return ":Groups";
+    }
 
     function GetHistory(step) {
         step = _.isNumber(step) ? step : 0;
-        return _history[step] ? _history[step] : ":Groups";
+        if(step===1 &&  ! _history[step]) return __getHistoryBack();
+        return _history[step];
     }
 
     function Controller(reference, selector, params) {
