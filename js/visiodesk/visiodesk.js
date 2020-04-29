@@ -750,11 +750,16 @@ window.VD = (function Visiodesk() {
 
                 let title = "visioDESK - visioBAS-menu";
 
-                window.setTimeout(function () {
+                let __setTitle = function () {
                     if($("h1").length>0) title = "visioDESK: "  + $("h1").html();
                     else "visioDESK : " + reference.replace(":","");
                     window.document.title = title;
-                }, 1300);
+                };
+                __setTitle(); // todo: найти окончание события.
+                window.setTimeout( __setTitle, 300);
+                window.setTimeout( __setTitle, 1300);
+                window.setTimeout( __setTitle, 5300);
+                console.log(":onNext");
 
                 ref$.onNext({
                     type: "after.run.done",
