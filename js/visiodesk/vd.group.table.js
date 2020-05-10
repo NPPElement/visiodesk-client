@@ -176,28 +176,39 @@ window.VD_GroupTable = (function () {
     function getUserInfo(id) {
         for(let i=0;i<users.length;i++) if(users[i].id===id) return users[i];
         return emptyUserObject;
-    }
+    };
 
     function topicAttachedUsers(items) {
-        let user_ids = [], in_progress = [], user_statuses = {};
+        let status_by_user = [];
         items.forEach( item => {
-            if(item.type.id===3) user_ids.push(item.user_id);
-            if(item.type.id===16) user_ids = _.without(user_ids, item.user_id);
-            if(item.type.id===VD_SETTINGS.ITEM_TYPE_ID.status) {
-                if(!_.contains(user_ids, item.author.id)) user_ids.push(item.author.id);
-                user_statuses[item.author.id] = item.status;
-                if(!_.contains(in_progress, item.author.id)) in_progress.push(item.author.id);
+            switch (item.type.id) {
+                // прикреплён пользователь
+                case VD_SETTINGS.ITEM_TYPE_ID.user:
+                    if(!status_by_user["u"+item.user_id]) status_by_user["u"+item.user_id] = 0; // 0 просто прикреплён, если есть статус - не менять
+                    break;
+                // откреплён пользователь
+                case VD_SETTINGS.ITEM_TYPE_ID.removed_from_user:
+                    if(!status_by_user["u"+item.user_id]) delete status_by_user["u"+item.user_id];
+                    break;
+                // Пользтватель (автор итема) поменял статус
+                case VD_SETTINGS.ITEM_TYPE_ID.status:
+                    status_by_user["u"+item.author.id] = item.status;
+                    break;
             }
         });
-        let users =  user_ids.map( getUserInfo );
-        users.forEach( (item, i) => {
-            // users[i].userpic = _.contains(in_progress, item.id) ? "userpic_blue.png" : "userpic.png";
-            users[i].userpic = "userpic.png";
-            users[i].status = user_statuses[users[i].id] ?  user_statuses[users[i].id] : { id:0, "name": "", title:"" };
-        });
-        return users;
-
+        var result = [];
+        for(let user_id in status_by_user) {
+            user_id = parseInt(user_id.substr(1));
+            var ui = getUserInfo(user_id);
+            ui.userpic = "userpic.png";
+            ui.status = status_by_user["u"+user_id];
+            if(!ui.status) ui.status = { id:0, "name": "", title:"" };
+            result.push(ui);
+        }
+        return result;
     }
+
+
 
 
     function loadTable() {
