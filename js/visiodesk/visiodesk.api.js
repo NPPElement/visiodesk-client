@@ -2,7 +2,8 @@ window.VD_API = (function VisiodeskApi() {
     /** @const {string} apiContext - базоваый url для отправки запросов на сервер */
     const apiContext = VD_SETTINGS['API_CONTEXT'];
     /** @const {string} token - хеш авторизованного пользователя */
-    const token = docCookies.getItem("user.token");
+    // const token = docCookies.getItem("user.token");
+    window.token = docCookies.getItem("user.token");
     /** @const {int} authorizedUserId - id текущего пользователя */
     const authorizedUserId = parseInt(docCookies.getItem("user.user_id"));
 
@@ -53,6 +54,7 @@ window.VD_API = (function VisiodeskApi() {
 
         "Login": Login,
         "CheckAuthToken": CheckAuthToken,
+        "LoadUserSettings": LoadUserSettings,
         "Logout": Logout,
 
         "ExportTopicList": ExportTopicList,
@@ -61,7 +63,7 @@ window.VD_API = (function VisiodeskApi() {
 
         "GetUserTopics": GetUserTopics,
 
-        "GetUserGroupSupportId": GetUserGroupSupportId,
+        //"GetUserGroupSupportId": GetUserGroupSupportId, переделано АПИ теперь выдаёт вместе с группой
         "SetUserGroupSupportId": SetUserGroupSupportId,
 
     };
@@ -1828,6 +1830,40 @@ window.VD_API = (function VisiodeskApi() {
         return def;
     }
 
+
+
+    function LoadUserSettings() {
+        let def = $.Deferred();
+
+        if (_.isEmpty(token)) {
+            def.reject(0);
+            return def;
+        }
+
+        let url = VD_SETTINGS['AUTH_CONTEXT'] + '/secure/getSettings';
+
+        $.ajax({
+            method: "GET",
+            url: url,
+            type: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            if (response.success) {
+                def.resolve(response.data);
+            } else {
+                def.reject(0);
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+            def.reject(jqXHR['status']);
+        });
+
+        return def;
+    }
+
     /**
      * Выход
      * @return {Deferred}
@@ -2296,6 +2332,9 @@ window.VD_API = (function VisiodeskApi() {
     }
 
 
+
+    // Не нужен, удалить
+    /*
     function GetUserGroupSupportId(groupId) {
         let def = $.Deferred();
         GetUsersByGroup(groupId)
@@ -2305,10 +2344,58 @@ window.VD_API = (function VisiodeskApi() {
                 def.resolve(result);
             });
         return def;
+    }SetUserGroupSupportId
+    */
+
+
+    function SetUserGroupSupportId(group_id, support_id) {
+
+        console.log("SetUserGroupSupportId(", group_id, support_id+")");
+        let def = $.Deferred();
+        if(!_.contains([0,1,2,3], support_id)) {
+            def.reject();
+            return def;
+        }
+        let url = apiContext + '/setGroupSupport/'+support_id;
+        let query = JSON.stringify({group_id: group_id});
+
+        function __showErrorIfRight(response) {
+            if(response.status!==401 && response.status!==403) return false;
+            VD.ShowErrorMessage({
+                'caption': 'Не достаточно прав',
+                'description': 'Отменить',
+                'timer': 3000
+            });
+            return true;
+        }
+
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: query,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            console.log("SetUserGroupSupportId: ", response);
+            if (response.success) {
+                def.resolve(response.data);
+            } else {
+                if(!__showErrorIfRight(response)) VD.ErrorHandler('SERVER', response, url);
+                def.resolve(false);
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.log("SetUserGroupSupportId: ", textStatus, errorThrown);
+            if(!__showErrorIfRight(jqXHR)) VD.ErrorHandler('HTTP', jqXHR, url);
+            def.resolve(false);
+        });
+        return def;
     }
 
-
-    function SetUserGroupSupportId(group, support_id) {
+    function ___SetUserGroupSupportId_____(group, support_id) {
         let def = $.Deferred();
 
 

@@ -10,6 +10,8 @@ window.VD = (function Visiodesk() {
     let ref$ =  new Rx.Subject();
 
 
+
+
     return {
         "StaticFunctions": StaticFunctions,
 
@@ -55,7 +57,9 @@ window.VD = (function Visiodesk() {
         "RemoveErrorMessage": RemoveErrorMessage,
         "ErrorHandler": ErrorHandler,
         "ShowErrorMessage": __errorShowMessage,
-        "ref$": ref$
+
+        "ref$": ref$,
+        "SettingsManager": GetSettingsManager()
     };
 
     /**
@@ -1165,5 +1169,69 @@ window.VD = (function Visiodesk() {
         }
         urlsToRevoke = [];
     }
+    
+    
+    function GetSettingsManager() {
+        var old_values = {};
+        var values = {};
+        var updates$ =  new Rx.Subject();
+        Reload();
+        return {
+            "Reload": Reload,
+            "Get": Get,
+            "IsValue": IsValue,
+            "Subscribe" :Subscribe
+        };
+        
+        function __checkToken() {
+            let new_token = Get("token");
+            if(new_token && docCookies.getItem("user.token")!==new_token) {
+                docCookies.removeItem("user.token", '/');
+                docCookies.setItem("user.token", new_token, 60*60*24*30, '/');
+                window.token = new_token;
+                console.log("CHANGE TOKEN:"+new_token);
+            }
+
+        }
+
+        function Reload() {
+            VD_API.LoadUserSettings().done(new_value => {
+                old_values = $.extend(values);
+                values = new_value;
+                updates$.onNext(true);
+                console.log("new settings",new_value);
+                __checkToken();
+            })
+        }
+
+        function Get(index, for_old) {
+            let val = for_old ? old_values : values;
+            if(!index) return val;
+            return val[index] ? val[index] : null;
+        }
+        
+        function IsValue(index, value) {
+            if(!values[index]) return false;
+            if(!Array.isArray(value)) return value===values[index];
+            if(!Array.isArray(values[index])) return false;
+            return _.difference(value, values[index]).length===0;
+        }
+
+        function LastChanged(index) {
+            if(!index) return true;
+            var v1 = Get(index);
+            var v2 = Get(index, true);
+            if(Array.isArray(v1) && Array.isArray(v2)) return _.difference(v1,v2).length===0 && _.difference(v2,v1).length===0;
+            return v1===v2;
+        }
+
+        function Subscribe(callback, index) {
+            callback(Get(index));
+            updates$.subscribe(()=>{
+                if(LastChanged(index)) callback(Get(index));
+            });
+        }
+    }
+    
 
 })();

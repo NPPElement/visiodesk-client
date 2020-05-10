@@ -401,6 +401,7 @@
         VD.SetTabBarNav();
         VD.SetTabBarCounters();
         VD.SetStickers();
+        VD_API.LoadUserSettings();
         VB.LoadTemplatesList([
            'photoswipe.html'
         ], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {

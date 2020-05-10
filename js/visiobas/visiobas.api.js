@@ -7,7 +7,9 @@
     let OBJECT_REFERENCE = BACNET_PROPERTY_ID["object-property-reference"];
 
     /** @const {string} token - хеш авторизованного пользователя */
-    const token = docCookies.getItem("user.token");
+    // const token = docCookies.getItem("user.token");
+
+    window.token = docCookies.getItem("user.token");
 
     function VisiobasApi() {
         return {

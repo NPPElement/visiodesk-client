@@ -40,7 +40,7 @@ window.VD_Groups = (function () {
                 groupItems.forEach((item) => {
                     let itemId = item['id'];
 
-                    __updateSupportId(itemId);
+                    // __updateSupportId(itemId);
 
                     if (isSeanceStarted) {
                         //на старте отрисовываем полностью список групп
@@ -58,9 +58,32 @@ window.VD_Groups = (function () {
                             event.preventDefault();
                             event.stopPropagation();
                             let $item = $(event.currentTarget);
-                            let changed = VD.CreateDropdownDialog($item, VD_GroupsChange.SUPPORT_TYPES, 'Уровень поддержки');
+                            let support_levels = [];
+
+                            let current_supportId = parseInt($(this).attr("data-id"));
+    1
+                            if(current_supportId!==1 && VD.SettingsManager.IsValue("user_roles",["supportLevel1"])) support_levels.push([1,1]);
+                            if(current_supportId!==2 && VD.SettingsManager.IsValue("user_roles",["supportLevel2"])) support_levels.push([2,2]);
+                            if(current_supportId!==3 && VD.SettingsManager.IsValue("user_roles",["supportLevel3"])) support_levels.push([3,3]);
+                            if(current_supportId!==0 && VD.SettingsManager.IsValue("user_roles",["supportLevel0"])) support_levels.push([0,"Удалить"]);
+                            if(support_levels.length===0) {
+                                VD.ShowErrorMessage({
+                                    'caption': 'Недостаточно прав',
+                                    'description': ' для изменения уровня поддержки',
+                                    'timer': 3000
+                                });
+                                return false;
+                            }
+                            let changed = VD.CreateDropdownDialog($item, new Map(support_levels), 'Уровень поддержки');
                             changed.subscribe((result) => {
-                                VD_API.SetUserGroupSupportId(item, parseInt(result['value'])).done( function (res) { __updateSupportId(itemId); } );
+                                VD_API.SetUserGroupSupportId(itemId, parseInt(result['value'])).done( function (res) {
+                                    console.log("RES: ", res);
+                                    if(res>=0 && res<=3) __setSupportId(itemId, res);
+                                    else {
+                                        console.error("Ошибка, ", res);
+                                    }
+
+                                } );
                             });
                             return false;
                         });
@@ -85,6 +108,10 @@ window.VD_Groups = (function () {
                                     .html(counter);
                             }
                         }
+
+                        $('#group-' + itemId)
+                            .find(".level").attr("data-id", item['support_id'])
+                            .find(".result_field").val(item['support_id']);
                     }
                 });
 

@@ -358,6 +358,11 @@
 
         function __ping() {
             VB_API.getEventsPingLog().done((response) => {
+
+                if(response && response.data && response.data.settings_changed==="NEED") {
+                    VD.SettingsManager.Reload();
+                }
+
                 if (!_.isEmpty(response.data['timestamp'])) {
 
                     //TODO: Костыль. нужна правка на сервере
