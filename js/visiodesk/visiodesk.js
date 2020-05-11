@@ -223,6 +223,8 @@ window.VD = (function Visiodesk() {
             $list.append($headItem);
         }
 
+        let $lastItem = null;
+
         listValues.forEach((valueStr, value) => {
             let className = '';
             if(Array.isArray(valueStr)) {
@@ -243,9 +245,15 @@ window.VD = (function Visiodesk() {
 
             if (className) {
                 $item.addClass(className);
+
+                if(className==="cancel") {
+                    $lastItem.addClass("btn-radius");
+                    $item.addClass("top-radius");
+                }
             }
 
             $list.append($item);
+            $lastItem = $item;
         });
 
         $list.children('LI').click((event) => {

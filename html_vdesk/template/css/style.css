@@ -6883,5 +6883,21 @@ label.input_group_title {
 }
 
 .dropdown ul li.cancel {
-    margin-top: 4px;
+    margin-top: 6px;
 }
+
+.dropdown ul li.btn-radius {
+    border-bottom-right-radius: 14px;
+    border-bottom-left-radius: 14px;
+    -moz-border-radius-bottomleft: 14px;
+    -moz-border-radius-bottomright: 14px;
+}
+
+.dropdown ul li.top-radius {
+    border-top-right-radius: 14px;
+    border-top-left-radius: 14px;
+    -moz-top-radius-bottomleft: 14px;
+    -moz-top-radius-bottomright: 14px;
+}
+
+
