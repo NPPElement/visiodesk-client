@@ -224,15 +224,25 @@ window.VD = (function Visiodesk() {
         }
 
         listValues.forEach((valueStr, value) => {
+            let className = '';
+            if(Array.isArray(valueStr)) {
+                className = valueStr[1];
+                valueStr = valueStr[0];
+            }
+
             let dataObj = {
                 'value': value,
                 'valueStr': valueStr
             };
 
-            let $item = $('<li></li>');
+            let $item =  $('<li></li>');
             $item.data(dataObj).html(valueStr);
             if (value == currentValue) {
                 $item.addClass('active');
+            }
+
+            if (className) {
+                $item.addClass(className);
             }
 
             $list.append($item);

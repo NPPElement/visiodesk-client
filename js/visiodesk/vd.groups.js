@@ -61,11 +61,11 @@ window.VD_Groups = (function () {
                             let support_levels = [];
 
                             let current_supportId = parseInt($(this).attr("data-id"));
-    1
+
+                            if(current_supportId!==0 && VD.SettingsManager.IsValue("user_roles",["supportLevel0"])) support_levels.push([0,["Удалить поддержку", "ok active"]]);
                             if(current_supportId!==1 && VD.SettingsManager.IsValue("user_roles",["supportLevel1"])) support_levels.push([1,1]);
                             if(current_supportId!==2 && VD.SettingsManager.IsValue("user_roles",["supportLevel2"])) support_levels.push([2,2]);
                             if(current_supportId!==3 && VD.SettingsManager.IsValue("user_roles",["supportLevel3"])) support_levels.push([3,3]);
-                            if(current_supportId!==0 && VD.SettingsManager.IsValue("user_roles",["supportLevel0"])) support_levels.push([0,"Удалить"]);
                             if(support_levels.length===0) {
                                 VD.ShowErrorMessage({
                                     'caption': 'Недостаточно прав',
@@ -74,6 +74,8 @@ window.VD_Groups = (function () {
                                 });
                                 return false;
                             }
+
+                            support_levels.push([-1,["Отменить", "cancel"]]);
                             let changed = VD.CreateDropdownDialog($item, new Map(support_levels), 'Уровень поддержки');
                             changed.subscribe((result) => {
                                 VD_API.SetUserGroupSupportId(itemId, parseInt(result['value'])).done( function (res) {

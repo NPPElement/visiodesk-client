@@ -6877,3 +6877,11 @@ label.input_group_title {
     color: #333333;
     white-space: nowrap;
 }
+
+.dropdown ul {
+    background: #999;
+}
+
+.dropdown ul li.cancel {
+    margin-top: 4px;
+}
