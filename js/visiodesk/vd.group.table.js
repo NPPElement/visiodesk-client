@@ -179,7 +179,8 @@ window.VD_GroupTable = (function () {
     };
 
     function topicAttachedUsers(items) {
-        let status_by_user = [];
+        let status_by_user = {};
+        status_by_user["u"+items[0].author.id] = 1;
         items.forEach( item => {
             switch (item.type.id) {
                 // прикреплён пользователь

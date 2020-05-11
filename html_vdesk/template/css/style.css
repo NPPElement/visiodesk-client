@@ -7,7 +7,7 @@ P { margin: 0 }
 IMG { border: 0; }
 A { cursor: pointer; text-decoration: none }
 EM { font-style: normal }
-INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: none }
+INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; padding: 0; outline: none }
 
 @media (max-device-width: 812px) {
     #vbas-widget{
@@ -6518,6 +6518,10 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
     margin-top: 12px;
 }
 
+#group_table .col_t_userpic .user_status:first-child img {
+    margin-right: 4px;
+}
+
 
 #group_table .col_t_userpic img.img_att_users {
     margin-right: -20px;
@@ -6849,4 +6853,27 @@ INPUT[type='text'], INPUT[type='password'] { border: 0; padding: 0; outline: non
         opacity: 1;
         bottom: calc(100% + 30px);
     }
+}
+
+
+label.input_group_title {
+    display: block;
+    white-space: nowrap;
+    margin-bottom: 5px;
+    font-family: 'SF-PRO-Semibold';
+    line-height: normal;
+    font-size: 17px;
+    letter-spacing: 0.0175em;
+    color: #333333;
+    text-overflow: ellipsis;
+    padding: 12px 22px 4px 22px ;
+}
+
+.label_level {
+    font-family: 'SF-PRO-Regular';
+    line-height: 18px;
+    font-size: 14px;
+    letter-spacing: -0.016em;
+    color: #333333;
+    white-space: nowrap;
 }
