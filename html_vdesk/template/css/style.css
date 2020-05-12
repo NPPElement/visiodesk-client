@@ -6925,3 +6925,19 @@ label.input_group_title {
 .level_k_group .opt_item .field INPUT {
     color: #333;
 }
+
+.level_term_group select {
+    border: none;
+    padding: 2px 5px;
+    font-family: 'SF-PRO-Regular';
+    line-height: 22px;
+    font-size: 17px;
+    text-align: right;
+    letter-spacing: -0.0141176em;
+    outline: none;
+    color: #333;
+}
+
+.level_term_group select {
+    text-align: right;
+}
