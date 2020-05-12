@@ -16,6 +16,7 @@
  * @property {number} alias 'alias' column index
  * @property {number} template 'template' column index
  * @property {number} replace 'replace' column index
+ * @property {number} update_interval 'Update Interval' column index
  * @extends HeaderInfo
  */
 
@@ -201,7 +202,8 @@ function VisiobaseDeviceCsvParser() {
             name: "371",
             alias: -1,
             template: -1,
-            replace: -1
+            replace: -1,
+            update_interval: -1
         };
         headerInfo.columns.push(column371);
 
@@ -215,7 +217,8 @@ function VisiobaseDeviceCsvParser() {
             const codeName = code.toLowerCase();
             if (codeName === "alias" ||
                 codeName === "template" ||
-                codeName === "replace") {
+                codeName === "replace" ||
+                codeName === "update_interval") {
                 //find out special columns column indexes (alias, template, replace)
                 column371[codeName] = c;
             } else {
@@ -568,6 +571,11 @@ function VisiobaseDeviceCsvParser() {
                 }
             }
 
+            //parse update interval value, 0 - default update interval defined by data collection subsystem
+            let updateInterval = parseInt($.trim(data[header371.update_interval] || ""));
+            updateInterval = _.isNaN(updateInterval) ? 0 : updateInterval;
+            updateInterval = Math.max(updateInterval, 0);
+
             //column 371 exist in csv... content can be valid json objects
             let data371 = null;
             if (header.index !== 0) {
@@ -579,6 +587,9 @@ function VisiobaseDeviceCsvParser() {
                 "alias": alias,
                 "replace": replace
             };
+            if (updateInterval > 0) {
+                visualization["update_interval"] = updateInterval;
+            }
 
             if (data371 !== null) {
                 visualization["data"] = data371;
@@ -737,6 +748,112 @@ function VisiobaseDeviceCsvParser() {
                     result = {
                         severity: "error",
                         message: "event-detection-enable (353) boolean value expected (true or false)"
+                    }
+                }
+            }
+            return result;
+        };
+        objectParseHandler[BACNET_CODE["configuration-files"]] = (object, header, value) => {
+            let result = {};
+            if (typeof value !== "undefined" && !_.isEmpty(value)) {
+                try {
+                    if (value.startsWith("\"") && value.endsWith("\"")) {
+                        value = value.substring(1, value.length - 1);
+                    }
+                    const trimmed = $.trim(value).replace(/""/g, "\"");
+                    object[header.code] = JSON.stringify(JSON.parse(trimmed));
+                } catch (e) {
+                    const example = {host: "127.0.0.1", port: 80, read: "bacrp", write: "bacwp"};
+                    result = {
+                        severity: "error",
+                        message: "configuration-files (154) json object expected, usage example:\n" + JSON.stringify(example, void 0, 4)
+                    };
+                }
+            }
+            return result;
+        };
+        objectParseHandler[BACNET_CODE["low-limit"]] = (object, header, value) => {
+            let result = {};
+            if (typeof value !== "undefined" && !_.isEmpty(value)) {
+                let isLowLimit = false;
+                let lowLimit;
+                try {
+                    lowLimit = parseFloat(value);
+                    isLowLimit = _.isNumber(lowLimit) && !_.isNaN(lowLimit);
+                } catch (e) {
+                    isLowLimit = false;
+                }
+                if (isLowLimit) {
+                    object[header.code] = lowLimit;
+                } else {
+                    result = {
+                        severity: "error",
+                        message: "low-limit (59) number value expected"
+                    }
+                }
+            }
+            return result;
+        };
+        objectParseHandler[BACNET_CODE["high-limit"]] = (object, header, value) => {
+            let result = {};
+            if (typeof value !== "undefined" && !_.isEmpty(value)) {
+                let isHighLimit = false;
+                let highLimit;
+                try {
+                    highLimit = parseFloat(value);
+                    isHighLimit = _.isNumber(highLimit) && !_.isNaN(highLimit);
+                } catch (e) {
+                    isHighLimit = false;
+                }
+                if (isHighLimit) {
+                    object[header.code] = highLimit;
+                } else {
+                    result = {
+                        severity: "error",
+                        message: "high-limit (45) number value expected"
+                    }
+                }
+            }
+            return result;
+        };
+        objectParseHandler[BACNET_CODE["alarm-value"]] = (object, header, value) => {
+            let result = {};
+            if (typeof value !== "undefined" && !_.isEmpty(value)) {
+                // alarm value used only for binary object, so correct value value should be 'active' or 'inactive'
+                let alarmValue = (value === "active" || value === "inactive") ? value : void 0;
+                if (alarmValue) {
+                    object[header.code] = alarmValue;
+                } else {
+                    result = {
+                        severity: "error",
+                        message: "alarm-value (6) 'active' or 'inactive' value expected"
+                    }
+                }
+            }
+            return result;
+        };
+        objectParseHandler[BACNET_CODE["alarm-values"]] = (object, header, value) => {
+            let result = {};
+            if (typeof value !== "undefined" && !_.isEmpty(value)) {
+                // alarm value used only for binary object, so correct value value should be 'active' or 'inactive'
+                let isAlarmValues = false;
+                let alarmValues = void 0;
+                try {
+                    if (_.isString(value)) {
+                        alarmValues = value.split(",").map((v) => {
+                            return $.trim(v);
+                        });
+                        isAlarmValues = true;
+                    }
+                } catch (e) {
+                    isAlarmValues = false;
+                }
+                if (isAlarmValues) {
+                    object[header.code] = alarmValues
+                } else {
+                    result = {
+                        severity: "error",
+                        message: "alarm-values (7) string value expected (values separated by comma)"
                     }
                 }
             }

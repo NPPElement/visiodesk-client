@@ -89,7 +89,7 @@ function VisiobasObjectFactory(object) {
     } else if (type === "multi-state-input") {
         return new VisiobasObjectMultiStateInput(object);
 
-    }  else if (type === "multi-state-output") {
+    } else if (type === "multi-state-output") {
         return new VisiobasObjectMultiStateOutput(object);
 
     } else if (type === "multi-state-value") {
@@ -97,8 +97,7 @@ function VisiobasObjectFactory(object) {
 
     } else if (type === "notification-class") {
         return new VisiobasObjectNotivicationClass(object);
-    }
-    else {
+    } else {
         throw new Error("unsupported visiobas object type: " + type);
     }
 }
@@ -114,7 +113,7 @@ function VisiobasObject(object) {
  * and so on...
  * @return {Promise} when it will done with (visiobas object) arguments
  */
-VisiobasObject.prototype.updateChilds = function() {
+VisiobasObject.prototype.updateChilds = function () {
     let self = this;
     return $.Deferred().resolve(self);
 };
@@ -122,7 +121,7 @@ VisiobasObject.prototype.updateChilds = function() {
 /**
  * return required object properties names
  */
-VisiobasObject.prototype.getRequired = function() {
+VisiobasObject.prototype.getRequired = function () {
     return this.required || [];
 };
 
@@ -131,7 +130,7 @@ VisiobasObject.prototype.getRequired = function() {
  * @returns {Array<number>}
  * @static
  */
-VisiobasObject.propertiesToCodes = function(properties) {
+VisiobasObject.propertiesToCodes = function (properties) {
     return properties.map((name) => {
         return BACNET_PROPERTY_ID[name]
     });
@@ -139,11 +138,11 @@ VisiobasObject.propertiesToCodes = function(properties) {
 
 /**
  * convert object with codes to object with properties
- * @param {object} bacnet object with codes
+ * @param {object} object object with codes
  * @return {Object} bacnet object with property names
  * @static
  */
-VisiobasObject.createObjectWithProperty = function(object) {
+VisiobasObject.createObjectWithProperty = function (object) {
     let o = {};
     for (let code in object) {
         if (!object.hasOwnProperty(code)) {
@@ -163,14 +162,14 @@ VisiobasObject.createObjectWithProperty = function(object) {
 /**
  * return optional object properties names
  */
-VisiobasObject.prototype.getOptions = function() {
+VisiobasObject.prototype.getOptions = function () {
     return this.optional || [];
 };
 
 /**
  * return list of object properties names
  */
-VisiobasObject.prototype.getProperties = function() {
+VisiobasObject.prototype.getProperties = function () {
     return this.getRequired().concat(this.getOptions());
 };
 
@@ -295,6 +294,7 @@ function VisiobasObjectSite(object) {
     this.parents = [];
     this.childs = ["folder", "device", "graphic"];
 }
+
 VisiobasObjectSite.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectSite.prototype.constructor = VisiobasObjectSite;
 
@@ -309,12 +309,12 @@ function VisiobasObjectDevice() {
         "vendor-identifier", "model-name", "firmware-revision", "application-software-version", "protocol-version",
         "protocol-revision", "protocol-services-supported", "protocol-object-types-supported", "object-list",
         "max-apdu-length-accepted", "segmentation-supported", "apdu-timeout", "number-of-apdu-retries",
-        "device-address-binding", "database-revision"];
+        "device-address-binding", "database-revision", "configuration-files"];
 
     this.optional = ["location", "description", "structured-object-list", "max-segments-accepted",
         "vt-classes-supported", "active-vt-sessions", "local-time", "local-date", "utc-offset",
         "daylight-savings-status", "apdu-segment-timeout", "time-synchronization-recipients", "max-master",
-        "max-info-frames", "configuration-files", "last-restore-time", "backup-failure-timeout",
+        "max-info-frames", "last-restore-time", "backup-failure-timeout",
         "backup-preparation-time", "restore-preparation-time", "restore-completion-time", "backup-and-restore-state",
         "active-cov-subscriptions", "slave-proxy-enable", "manual-slave-address-binding", "auto-slave-discovery",
         "slave-address-binding", "last-restart-reason", "time-of-device-restart", "restart-notification-recipients",
@@ -322,6 +322,7 @@ function VisiobasObjectDevice() {
         "profile-name"
     ];
 }
+
 VisiobasObjectDevice.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectDevice.prototype.constructor = VisiobasObjectDevice;
 
@@ -333,6 +334,7 @@ function VisiobasObjectGraphic() {
     this.parents = ["site"];
     this.childs = ["graphic"];
 }
+
 VisiobasObjectGraphic.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectGraphic.prototype.constructor = VisiobasObjectGraphic;
 
@@ -345,10 +347,11 @@ function VisiobasObjectFolder(object) {
     this.childs = ["device", "folder", "calendar", "command", "program", "schedule", "event-enrollment", "analog-input", "analog-output", "binary-input", "binary-output",
         "access_user", "access_credential", "access_point", "authentication_factor", "access_rule", "access_zone", "access_event"];
 }
+
 VisiobasObjectFolder.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectFolder.prototype.constructor = VisiobasObjectFolder;
 
-VisiobasObjectFolder.prototype.updateChilds = function() {
+VisiobasObjectFolder.prototype.updateChilds = function () {
     let def = $.Deferred();
     let self = this;
 
@@ -388,6 +391,7 @@ function VisiobasObjectAccessEvent() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAccessEvent.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAccessEvent.prototype.constructor = VisiobasObjectAccessEvent;
 
@@ -397,6 +401,7 @@ function VisiobasObjectAccessZone() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAccessZone.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAccessZone.prototype.constructor = VisiobasObjectAccessZone;
 
@@ -406,6 +411,7 @@ function VisiobasObjectAccessRule() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAccessRule.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAccessRule.prototype.constructor = VisiobasObjectAccessRule;
 
@@ -415,6 +421,7 @@ function VisiobasObjectAuthenticationFactor() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAuthenticationFactor.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAuthenticationFactor.prototype.constructor = VisiobasObjectAuthenticationFactor;
 
@@ -424,6 +431,7 @@ function VisiobasObjectAccessPoint() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAccessPoint.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAccessPoint.prototype.constructor = VisiobasObjectAccessPoint;
 
@@ -433,6 +441,7 @@ function VisiobasObjectAccessCredential() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAccessCredential.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAccessCredential.prototype.constructor = VisiobasObjectAccessCredential;
 
@@ -442,6 +451,7 @@ function VisiobasObjectAccessUser() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAccessUser.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAccessUser.prototype.constructor = VisiobasObjectAccessUser;
 
@@ -451,6 +461,7 @@ function VisiobasObjectBinaryOutput() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectBinaryOutput.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectBinaryOutput.prototype.constructor = VisiobasObjectBinaryOutput;
 
@@ -461,6 +472,7 @@ function VisiobasObjectBinaryValue() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectBinaryValue.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectBinaryValue.prototype.constructor = VisiobasObjectBinaryValue;
 
@@ -470,6 +482,7 @@ function VisiobasObjectBinaryInput() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectBinaryInput.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectBinaryInput.prototype.constructor = VisiobasObjectBinaryInput;
 
@@ -484,6 +497,7 @@ function VisiobasObjectAccumulator() {
     //TODO need to verify
     this.optional = ["description"];
 }
+
 VisiobasObjectAccumulator.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAccumulator.prototype.constructor = VisiobasObjectAccumulator;
 
@@ -498,6 +512,7 @@ function VisiobasObjectMultiStateInput() {
     //TODO need to verify
     this.optional = ["description"];
 }
+
 VisiobasObjectMultiStateInput.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectMultiStateInput.prototype.constructor = VisiobasObjectMultiStateInput;
 
@@ -512,6 +527,7 @@ function VisiobasObjectMultiStateOutput() {
     //TODO need to verify
     this.optional = ["description"];
 }
+
 VisiobasObjectMultiStateOutput.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectMultiStateOutput.prototype.constructor = VisiobasObjectMultiStateOutput;
 
@@ -526,6 +542,7 @@ function VisiobasObjectMultiStateValue() {
     //TODO need to verify
     this.optional = ["description"];
 }
+
 VisiobasObjectMultiStateValue.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectMultiStateValue.prototype.constructor = VisiobasObjectMultiStateValue;
 
@@ -535,16 +552,17 @@ function VisiobasObjectAnalogInput() {
     this.parents = ["folder"];
     this.childs = [];
     this.required = ["object identifier", "object-name", "object type", "present value", "status-flags", "event-state",
-        "out-of-service", "units"];
+        "out-of-service", "units", "event-message-texts"];
 
     //TODO "RELIABILITY" - can't be found in json
 
     this.optional = ["description", "device-type", "update-interval", "min-pres-value", "max-pres-value", "resolution",
         "cov-increment", "time-delay", "notification-class", "high-limit", "low-limit", "deadband", "limit-enable",
-        "event-enable", "acked-transitions", "notify-type", "event-time-stamps", "event-message-texts",
+        "event-enable", "acked-transitions", "notify-type", "event-time-stamps",
         "reliability-evaluation-inhibit", "profile-name"
     ];
 }
+
 VisiobasObjectAnalogInput.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAnalogInput.prototype.constructor = VisiobasObjectAnalogInput;
 
@@ -554,6 +572,7 @@ function VisiobasObjectAnalogOutput() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAnalogOutput.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAnalogOutput.prototype.constructor = VisiobasObjectAnalogOutput;
 
@@ -563,6 +582,7 @@ function VisiobasObjectAnalogValue() {
     this.parents = ["folder"];
     this.childs = [];
 }
+
 VisiobasObjectAnalogValue.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectAnalogValue.prototype.constructor = VisiobasObjectAnalogValue;
 
@@ -572,6 +592,7 @@ function VisiobasObjectCalendar() {
     this.parents = ["device", "folder"];
     this.childs = [];
 }
+
 VisiobasObjectCalendar.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectCalendar.prototype.constructor = VisiobasObjectCalendar;
 
@@ -581,6 +602,7 @@ function VisiobasObjectCommand() {
     this.parents = ["device", "folder"];
     this.childs = [];
 }
+
 VisiobasObjectCommand.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectCommand.prototype.constructor = VisiobasObjectCommand;
 
@@ -590,6 +612,7 @@ function VisiobasObjectProgram() {
     this.parents = ["device", "folder"];
     this.childs = [];
 }
+
 VisiobasObjectProgram.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectProgram.prototype.constructor = VisiobasObjectProgram;
 
@@ -599,6 +622,7 @@ function VisiobasObjectSchedule() {
     this.parents = ["device", "folder"];
     this.childs = [];
 }
+
 VisiobasObjectSchedule.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectSchedule.prototype.constructor = VisiobasObjectSchedule;
 
@@ -608,6 +632,7 @@ function VisiobasObjectEventEnrollment() {
     this.parents = ["device", "folder"];
     this.childs = [];
 }
+
 VisiobasObjectEventEnrollment.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectEventEnrollment.prototype.constructor = VisiobasObjectEventEnrollment;
 
@@ -617,6 +642,7 @@ function VisiobasObjectTrunk() {
     this.parents = ["device"];
     this.childs = ["device"];
 }
+
 VisiobasObjectTrunk.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectTrunk.prototype.constructor = VisiobasObjectTrunk;
 
@@ -626,6 +652,7 @@ function VisiobasObjectTrendLogMultiple() {
     this.parents = ["device"];
     this.childs = ["device"];
 }
+
 VisiobasObjectTrendLogMultiple.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectTrendLogMultiple.prototype.constructor = VisiobasObjectTrendLogMultiple;
 
@@ -635,6 +662,7 @@ function VisiobasEventLog() {
     this.parent = [];
     this.childs = [];
 }
+
 VisiobasEventLog.prototype = Object.create(VisiobasObject.prototype);
 VisiobasEventLog.prototype.constructor = VisiobasEventLog;
 
@@ -644,5 +672,6 @@ function VisiobasObjectNotivicationClass() {
     this.parent = [];
     this.childs = [];
 }
+
 VisiobasObjectNotivicationClass.prototype = Object.create(VisiobasObject.prototype);
 VisiobasObjectNotivicationClass.prototype.constructor = VisiobasObjectNotivicationClass;

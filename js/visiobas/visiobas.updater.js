@@ -227,6 +227,7 @@
                     } else {
                         objects = update;
                     }
+                    console.log(sprintf("notify '%s' updating %d objects", subscriber.subscriber.id, objects.length));
                     subscriber.subscriber.callback.call(null, objects);
                 }
             }
@@ -252,6 +253,8 @@
             if (!chunk.length) {
                 return
             }
+
+            console.log(sprintf("request chink %d objects", chunk.length));
 
             VB_API.getObjects(chunk).done((response) => {
                 const refCode = BACNET_CODE["object-property-reference"];
