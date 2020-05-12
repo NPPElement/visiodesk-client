@@ -45,7 +45,8 @@ window.VD_GroupsChange = (function () {
             "{%caption%}": changeCaption,
             "createGroup": createGroup
         }).done(() => {
-            var $groupFields = $(selector).find('.opt_item').find('INPUT');
+            // var $groupFields = $(selector).find('.opt_item').find('INPUT');
+            var $groupFields = $(selector).find('.opt_item').find('INPUT[placeholder]');
 
             //placeholder для поля ввода текста
             $groupFields.focus((event) => {

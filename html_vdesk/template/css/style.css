@@ -6869,13 +6869,20 @@ label.input_group_title {
     padding: 12px 22px 4px 22px ;
 }
 
-.label_level {
+.label_level, .level_term_group .field {
     font-family: 'SF-PRO-Regular';
     line-height: 18px;
     font-size: 14px;
     letter-spacing: -0.016em;
     color: #333333;
     white-space: nowrap;
+}
+
+.label_level_k {
+    width: 15em;
+}
+.label_level_time {
+    width: 8em;
 }
 
 .dropdown ul {
@@ -6901,3 +6908,20 @@ label.input_group_title {
 }
 
 
+
+.level_term_group input {
+    width: 60px!important;
+}
+
+.level_term_group .opt_item .field {
+    flex-grow: unset;
+}
+.level_term_group .opt_item .field INPUT {
+    padding: 2px 5px;
+    text-align: right;
+    color: #333;
+}
+
+.level_k_group .opt_item .field INPUT {
+    color: #333;
+}
