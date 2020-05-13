@@ -1,3 +1,6 @@
+/**
+ * Component for display settings of bacnet object (sensor, device, e.t.c)
+ */
 (function () {
     function SensorSettings() {
         const OBJECT_REFERENCE = BACNET_PROPERTY_ID["object-property-reference"];
@@ -43,9 +46,7 @@
              * update device-identifier select component to display all available devices
              */
             VB_API.getDevices().done((response) => {
-
                 defDevices.resolve(response.data);
-
             }).fail((response) => {
                 console.warn(response.error);
                 defDevices.reject(response);
@@ -53,7 +54,6 @@
 
             VB_API.getObjectDevice(object[OBJECT_REFERENCE]).done((response) => {
                 defObjectDevice.resolve(response.data);
-
             }).fail((response) => {
                 //there no necessary object has device reference
                 defObjectDevice.resolve({

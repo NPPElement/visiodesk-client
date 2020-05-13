@@ -7,7 +7,6 @@
         function create(selector) {
             VB.Load(VB_SETTINGS.htmlDir + "/components/ajs.object.contents.html", selector).done(() => {
                 let app = angular.module("objectContentsApp", []);
-                debugger;
                 app.controller("SimpleController", function() {
                     this.value = "!!1";
                     this.contents = [
