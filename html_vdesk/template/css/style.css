@@ -6937,6 +6937,9 @@ label.input_group_title {
     letter-spacing: -0.0141176em;
     outline: none;
     color: #333;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .level_term_group select {
