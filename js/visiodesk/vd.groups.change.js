@@ -50,6 +50,7 @@ window.VD_GroupsChange = (function () {
             // var $groupFields = $(selector).find('.opt_item').find('INPUT');
             var $groupFields = $(selector).find('.opt_item').find('INPUT[id]');
             var $search = $(".search1 input");
+            var $clear = $(".search1 .clear");
             var $not_user_control = $(".not_user_control");
             var is_user_edit = false;
 
@@ -59,6 +60,11 @@ window.VD_GroupsChange = (function () {
                     is_user_edit = false;
                 }}, 200);
             };
+
+            $clear.click((e)=>{
+                $search.val("");
+                $not_user_control.slideDown(250);
+            });
 
             let doFilterUsers = (search) => {
                 $(".user_compact .user_item").each((index, item)=>{
@@ -79,6 +85,7 @@ window.VD_GroupsChange = (function () {
                 .focusout(will_exit_user_mode)
                 .on("keyup change input cut paste",function (event) { //focus blur
                     var val = $(this).val();
+                    $clear.toggleClass("hide", val.length===0);
                     if(val.length>2) {
                         $(".user_list_all").show();
                         $(".user_list_binded").hide();
