@@ -112,7 +112,14 @@ window.VD_GroupTable = (function () {
         if(ref[0]===":Events") {
             new_groupId = parseInt(ref[1]);
             if(ref.length===4 && ref[2]==="Topic") new_topicId = parseInt(ref[3]);
+            // if(!new_topicId) {
+            //     $("#group_table_control").hide();
+            //     return;
+            // }
         }
+
+        if(new_topicId>0 && !new_groupId) return;
+
         need_reload = groupId!==new_groupId && new_groupId>0;
         need_select = topicId!==new_topicId && !need_reload;
 
@@ -162,6 +169,18 @@ window.VD_GroupTable = (function () {
             moveControlPosition(true);
             return;
         }
+
+
+        console.log("ref_event.data.reference= "+ref_event.data.reference);
+        /*
+        if(ref_event.data.reference.indexOf("Events/0")!==-1) {
+            $("#group_table_control").hide();
+            return;
+        } else {
+            $("#group_table_control").show();
+        }
+         */
+
 
         // after.run.done, after.reference
         if(ref_event.type==="after.run.done") moveControlPosition(false);

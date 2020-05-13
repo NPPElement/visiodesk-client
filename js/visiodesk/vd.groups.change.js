@@ -16,10 +16,12 @@ window.VD_GroupsChange = (function () {
         'description':  'Описание'
     };
     const SUPPORT_TYPES = new Map([
-        [1, 1],
-        [2, 2],
-        [3, 3],
-        [0, "Удалить"]
+        [1, "1 уровень"],
+        [2, "2 уровень"],
+        [3, "3 уровень"],
+        [0, ["Удалить поддержку", "red"]],
+        [-1,["Отменить", "cancel"]]
+
     ]);
 
     return {
@@ -47,6 +49,51 @@ window.VD_GroupsChange = (function () {
         }).done(() => {
             // var $groupFields = $(selector).find('.opt_item').find('INPUT');
             var $groupFields = $(selector).find('.opt_item').find('INPUT[id]');
+            var $search = $(".search1 input");
+            var $not_user_control = $(".not_user_control");
+            var is_user_edit = false;
+
+            let will_exit_user_mode = () => {
+                window.setTimeout(()=>{ if(!is_user_edit) {
+                    $not_user_control.slideDown(250);
+                    is_user_edit = false;
+                }}, 200);
+            };
+
+            let doFilterUsers = (search) => {
+                $(".user_compact .user_item").each((index, item)=>{
+                    let txt = $(item).text().toLowerCase().trim();
+                    search = search.toLowerCase();
+                    if(txt.indexOf(search)>-1) {
+                        $(item).show();
+                    } else {
+                        $(item).hide();
+                    }
+                });
+            };
+
+            $search
+                .focusin(()=>{
+                    $not_user_control.slideUp(250);
+                })
+                .focusout(will_exit_user_mode)
+                .on("keyup change input cut paste",function (event) { //focus blur
+                    var val = $(this).val();
+                    if(val.length>2) {
+                        $(".user_list_all").show();
+                        $(".user_list_binded").hide();
+                        doFilterUsers(val);
+                    } else {
+                        $(".user_list_all").hide();
+                        $(".user_list_binded").show();
+                        doFilterUsers(val);
+                    }
+                });
+
+            $(".pref_delimiter").click(()=>{
+                is_user_edit = false;
+                will_exit_user_mode();
+            });
 
             //placeholder для поля ввода текста
             $groupFields.focus((event) => {
@@ -112,32 +159,45 @@ window.VD_GroupsChange = (function () {
                         let itemTemplateExec = _.template(itemTemplate)($.extend({}, emptyUserObject, item));
                         $('.user_list_binded').append(itemTemplateExec);
 
+
                         userByGroupIds.push(item['id']);
                     });
 
+
                     let userWithoutGroupItems = [];
                     userItems.forEach((item) => {
+                        item.support_id = 0 ;
+                        userByGroupItems.forEach(u=>{ if(u.id===item.id) item.support_id = u.support_id; })
+
+                        userWithoutGroupItems.push(item); // Всех пользователей показываем
+                        /*
                         if (userByGroupIds.indexOf(item['id']) === -1) {
                             userWithoutGroupItems.push(item);
                         }
+                        */
+
                     });
+
+                    console.log("userByGroupItems: ", userByGroupItems);
+                    console.log("userWithoutGroupItems: ", userWithoutGroupItems);
 
                     userWithoutGroupItems.forEach((item) => {
                         item['imgDir'] = VD_SETTINGS['IMG_DIR'];
-                        item['support_id'] = 0;
+                        // item['support_id'] = 0;
                         let itemTemplateExec = _.template(itemTemplate)($.extend({}, emptyUserObject, item));
                         $('.user_list_all').append(itemTemplateExec);
                     });
 
                     $('.user_list_all, .user_list_binded').children('.user_item').click((event) => {
+                        is_user_edit = true;
                         event.stopPropagation();
                         let $item = $(event.currentTarget);
                         let changed = VD.CreateDropdownDialog($item, SUPPORT_TYPES, 'Уровень поддержки');
                         changed.subscribe((result) => {
                             let value = parseInt(result['value']);
-                            if (value !== 0) {
+                            if (value > 0) {
                                 $item.find('.result_block').removeClass('arrow').html(value);
-                            } else {
+                            } else if(value === 0){
                                 $item.find('.result_block').html('').addClass('arrow');
                             }
                         });

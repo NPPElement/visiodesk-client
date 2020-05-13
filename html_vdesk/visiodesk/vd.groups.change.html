@@ -7,10 +7,12 @@
             <em></em>
         </div>
         <% } else { %>
+        <!--
         <div class="flags">
             <span class="false" data-value=".user_list_all">Все</span>
             <span class="true" data-value=".user_list_binded">Группа</span>
         </div>
+        -->
         <% } %>
         <a class="save_icon" title="Сохранить"></a>
     </nav>
@@ -30,7 +32,7 @@
 
 
 
-
+<div id="group_support_settings" class="not_user_control">
 <div class="level_term_group">
     <label class="input_group_title">Время для низкого приоритета</label>
     <div class="opt_item">
@@ -1063,10 +1065,10 @@
     </div>
 </div>
 
+</div>
 
 
-
-
+<div class="not_user_control">
 
 <div class="pref_delimiter"></div>
 
@@ -1086,11 +1088,11 @@
         <div class="clear"></div>
     </div>
 </div>
-
+</div>
 <div class="pref_delimiter"></div>
 
-<div class="user_list_all switch_layer">
+<div class="user_list_all switch_layer user_compact">
 </div>
 
-<div class="user_list_binded switch_layer">
+<div class="user_list_binded switch_layer user_compact">
 </div>

@@ -297,9 +297,9 @@ window.VD_API = (function VisiodeskApi() {
                 'Authorization': 'Bearer ' + token
             }
         }).done(function (response) {
-
             if (response.success) {
-                VD.Controller(':GroupsAdmin', '#main-container');
+                // VD.Controller(':GroupsAdmin', '#main-container');
+                VD.Controller(':GroupsChange/'+response.data.id, '#main-container');
             } else {
                 VD.ErrorHandler('SERVER', response, url);
             }

@@ -849,7 +849,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 }
 .user_item .info {
     flex-grow: 1;
-    padding: 4px 13px 0 15px;
+    padding: 0 13px 0 15px;
     overflow: hidden;
 }
 .user_item .info .name {
@@ -857,14 +857,10 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     overflow: hidden;
     white-space: nowrap;
     margin-bottom: 5px;
-    /*font-family: 'SF-PRO-Regular';*/
     font-family: 'SF-PRO-Semibold';
     line-height: normal;
-    /*font-size: 22px;*/
     font-size: 17px;
-    /*letter-spacing: 0.0175em;*/
     letter-spacing: -0.0241176em;
-    /*color: #333333;*/
     color: #000000;
     text-overflow: ellipsis;
 }
@@ -5753,7 +5749,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     line-height: 24px;
     font-size: 20px;
     letter-spacing: 0.019em;
-    color: #007AFF;
+    /*color: #007AFF;*/
+    color: #333;
     cursor: pointer;
 }
 .dropdown UL LI:first-child {
@@ -5766,8 +5763,13 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     border-bottom-right-radius: 14px;
 }
 .dropdown UL LI.active {
+    /*color: #FF3B30;*/
+    color: #007AFF;
+}
+.dropdown UL LI.red {
     color: #FF3B30;
 }
+
 .dropdown UL LI:hover {
     background: rgba(248, 248, 248, 0.92);
 }
@@ -6941,3 +6943,93 @@ label.input_group_title {
 .level_term_group select {
     text-align: right;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Копия со стилем выше, после утверждения - свести в один блок, вроде больше нигде не используется */
+.user_item {
+    display: flex;
+    margin: 1px 0;
+    box-shadow: 0px -0.5px 0px rgba(0, 0, 0, 0.16), 0px 0.5px 0px rgba(0, 0, 0, 0.16);
+    cursor: pointer;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    min-height: 44px;
+
+}
+.userpic {
+    font-size: 0;
+}
+.userpic IMG {
+    width: 29px;
+    height: 29px;
+}
+.user_item .info {
+    flex-grow: 1;
+    padding: 4px 13px 0 15px;
+    overflow: hidden;
+}
+.user_item .info .name {
+    font-family: 'SF-PRO-Regular';
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 0;
+    text-overflow: ellipsis;
+    line-height: 22px;
+    font-size: 16px;
+    letter-spacing: -0.0241176em;
+    color: #000;
+
+}
+.user_item .info .post {
+
+    font-family: 'SF-PRO-Regular';
+    line-height: 14px;
+    font-size: 12px;
+    color: #666666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+.user_item .arrow {
+    width: 38px;
+    background: url("../images/Arrow_Right_Grey.svg") 15px 50% no-repeat;
+}
+.user_item .result_block {
+    width: 38px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 15px;
+    font-family: 'SF-PRO-Regular';
+    line-height: normal;
+    font-size: 16px;
+    letter-spacing: 0.0175em;
+    color: #007AFF;
+}
+
+
+/*
+.dropdown UL LI {
+    color: #000;
+}
+
+.dropdown UL LI.active {
+    color: #007AFF;
+}
+*/
