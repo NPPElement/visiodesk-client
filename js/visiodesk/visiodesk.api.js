@@ -13,6 +13,8 @@ window.VD_API = (function VisiodeskApi() {
 
         "AddGroup": AddGroup,
         "GetGroups": GetGroups,
+        "GetPriorityGroup": GetPriorityGroup,
+        "SetPriorityGroup": SetPriorityGroup,
         "DelGroup": DelGroup,
 
         "AddUser": AddUser,
@@ -364,6 +366,90 @@ window.VD_API = (function VisiodeskApi() {
 
         return def;
     }
+
+
+
+    /**
+     * Получение настроек группы по приоритетам
+     * @param {int} id идентификатор группы
+     * @return {Deferred}
+     */
+    function GetPriorityGroup(id = 0) {
+        let def = $.Deferred();
+
+        let url = apiContext + '/getGroupPriority/' + id;
+        // let url = apiContext + '/getGroupPriority';
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+
+            if (response.success) {
+                console.log("GetPriorityGroup: ",response.data);
+                def.resolve(response.data);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject();
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject();
+        });
+
+        return def;
+    }
+
+
+
+
+
+    /**
+     * Получение настроек группы по приоритетам
+     * @param {int} id идентификатор группы
+     * @return {Deferred}
+     */
+    function SetPriorityGroup(id = 0, priorities) {
+        let def = $.Deferred();
+
+        let url = apiContext + '/setGroupPriority';
+
+        let query = JSON.stringify(priorities);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: query,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+
+            if (response.success) {
+                console.log("SetPriorityGroup: ",response.data);
+                def.resolve(response.data);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject();
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject();
+        });
+
+        return def;
+    }
+
+
+
+
 
     /**
      * Удаление группы пользователей

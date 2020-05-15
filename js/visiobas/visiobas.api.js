@@ -1026,8 +1026,8 @@
             let url = VISIOBAS_SETTINGS.apiContext +
                 "getByFields";
 
-            console.log("POST " + url);
-            console.log(JSON.stringify(req));
+            // console.log("POST " + url);
+            // console.log(JSON.stringify(req));
 
             $.ajax({
                 method: "POST",
