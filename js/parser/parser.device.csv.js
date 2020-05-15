@@ -533,8 +533,51 @@ function VisiobaseDeviceCsvParser() {
             let result = {};
             if (!_.isEmpty(value)) {
                 const recipientList = parseExcelCellStringAsJson(value);
+                let formatVerificationError = "";
                 if (_.isArray(recipientList)) {
-                    object[header.code] = recipientList;
+                    // verify all element in array for correct format
+                    for (let i = 0; i < recipientList.length; ++i) {
+                        const recipient = recipientList[i];
+                        try {
+                            if (!recipient.hasOwnProperty("recipient")) {
+                                formatVerificationError = "Expected \"recipient\" key";
+                            } else {
+                                const groupName = recipient["recipient"];
+                                if (!_.isString(groupName)) {
+                                    formatVerificationError = "\"recipient\" required string value";
+                                }
+                            }
+
+                            if (!recipient.hasOwnProperty("transitions")) {
+                                formatVerificationError = "Expected \"transitions\" key";
+                            } else {
+                                const transitions = recipient["transitions"];
+                                if (!_.isArray(transitions)) {
+                                    formatVerificationError = "\"transitions\" requires array value";
+                                }
+                            }
+
+                            if (recipient.hasOwnProperty("topic_type")) {
+                                const topicType = recipient["topic_type"];
+                                if (!_.isArray(topicType)) {
+                                    formatVerificationError = "\"topic_type\" requires array values of integer topic types";
+                                }
+                            }
+                        } catch (e) {
+                            formatVerificationError = e.message();
+                        }
+                        if (formatVerificationError !== "") {
+                            break;
+                        }
+                    }
+                    if (formatVerificationError === "") {
+                        object[header.code] = recipientList;
+                    } else {
+                        result = {
+                            severity: "error",
+                            message: "object recipient-list (102) is invalid " + formatVerificationError
+                        };
+                    }
                 } else {
                     result = {
                         severity: "error",
