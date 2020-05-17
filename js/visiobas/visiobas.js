@@ -96,7 +96,7 @@ window.VB = (function Visiobas() {
      * @param {Addr} addr
      */
     function addHistory(addr) {
-        _history.push(addr);
+        if(!_.isEqual(lastHistory(),addr)) _history.push(addr);
     }
 
     /**
