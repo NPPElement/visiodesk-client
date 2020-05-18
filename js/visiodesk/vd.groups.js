@@ -75,7 +75,7 @@ window.VD_Groups = (function () {
                                 return false;
                             }
 
-                            support_levels.push([-1,["Отменить", "cancel"]]);
+                            support_levels.push([-1,["Отменить", "cancel blue"]]);
                             let changed = VD.CreateDropdownDialog($item, new Map(support_levels), 'Уровень поддержки');
                             changed.subscribe((result) => {
                                 VD_API.SetUserGroupSupportId(itemId, parseInt(result['value'])).done( function (res) {

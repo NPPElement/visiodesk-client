@@ -20,7 +20,7 @@ window.VD_GroupsChange = (function () {
         [2, "2 уровень"],
         [3, "3 уровень"],
         [0, ["Удалить поддержку", "red"]],
-        [-1,["Отменить", "cancel"]]
+        [-1,["Отменить", "cancel blue"]]
     ]);
 
     const PROIRITY_DEFAULT = new Map([
@@ -382,17 +382,19 @@ window.VD_GroupsChange = (function () {
                         }
                     });
 
-                    VD_API.AddGroup(fields, groupId, bindedUsers, unbindedUsers);
-                    var prioritiesObject = __prepareGroupPriorityForServer();
-                    var priorities = [];
-                    for(var idx in prioritiesObject) {
-                        prioritiesObject[idx].group_id = groupId;
-                        priorities.push(prioritiesObject[idx]);
-                    }
+                    VD_API.AddGroup(fields, groupId, bindedUsers, unbindedUsers).done((result)=>{
+                        var prioritiesObject = __prepareGroupPriorityForServer();
+                        var priorities = [];
+                        var group_id = groupId>0 ? groupId: result.id;
+                        for(var idx in prioritiesObject) {
+                            prioritiesObject[idx].group_id = group_id;
+                            priorities.push(prioritiesObject[idx]);
+                        }
 
-                    console.log("priorities: ", priorities);
-                    VD_API.SetPriorityGroup(groupId, priorities).done(()=>{
-                        VD.Controller(reference, selector, params);
+                        console.log("priorities: ", priorities);
+                        VD_API.SetPriorityGroup(group_id, priorities).done(()=>{
+                            VD.Controller(reference, selector, params);
+                        });
                     });
                 });
 

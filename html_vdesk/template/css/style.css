@@ -5762,6 +5762,10 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     border-bottom-right-radius: 14px;
 }
 .dropdown UL LI.active {
+    font-weight: bold;
+}
+
+.dropdown UL LI.blue {
     /*color: #FF3B30;*/
     color: #007AFF;
 }
