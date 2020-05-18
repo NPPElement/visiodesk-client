@@ -246,7 +246,7 @@ window.VD = (function Visiodesk() {
             if (className) {
                 $item.addClass(className);
 
-                if(className==="cancel") {
+                if(className.indexOf("cancel")!==-1) {
                     $lastItem.addClass("btn-radius");
                     $item.addClass("top-radius");
                 }
@@ -741,7 +741,7 @@ window.VD = (function Visiodesk() {
 
     function Controller(reference, selector, params) {
         params = params || {};
-
+        console.log("Controller: ", reference, selector);
         var refName = 'VD_' + VB_API.extractName(reference);
         var refParent = 'VD_' + VB_API.extractName(VB_API.parentReference(reference));
         var moduleName = '';
@@ -792,6 +792,7 @@ window.VD = (function Visiodesk() {
 
         } else {
             console.error(`Undefined visiodesk module resolved by reference: "${reference}"`);
+            window.setTimeout(()=>{VD.Controller(":Groups","#main-container")}, 2000);
         }
     }
 
