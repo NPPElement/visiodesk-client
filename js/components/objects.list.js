@@ -222,7 +222,7 @@
             });
 
             VB_API.getChildren(reference).done((response) => {
-                console.log("update objects list, got " + response.data.length + " nodes");
+                console.log("update objects list, got " + response.data.length + " nodes, reference: "+reference);
 
                 VB_UPDATER.register(response.data,
                     [
@@ -261,6 +261,8 @@
                     return 0;
                 });
 
+                console.log("objects: ", objects);
+
                 VB.Load(VB_SETTINGS.htmlDir + "/components/objects.list.html", _parent, {
                     "editableObjectTypes": editableObjectTypes,
                     "objects": objects,
@@ -298,9 +300,11 @@
                             } else {
                                 const $parent = $(e).parent();
                                 const reference = $(e).attr("data-reference");
+                                console.log("Hummer reference = ", reference);
 
                                 if ($(e).hasClass("back")) {
-                                    VB.redirect(VB.popHistory());
+                                    // VB.redirect(VB.popHistory());
+                                    VB.goBack();
                                 } else if ($parent.hasClass('name') || $(e).hasClass("navigate")) {
                                     VB.addHistory({
                                         reference: VB_API.parentReference(reference)
@@ -309,6 +313,7 @@
                                         reference: reference
                                     });
                                 } else if ($parent.hasClass('contextmenu') || $parent.hasClass('group_chain')) {
+                                    console.log("__select.reference = ", reference);
                                     __select(reference, e);
                                     __logWindowOpen($(e).attr("href"), $(e).data());
                                 }

@@ -177,7 +177,8 @@
                         //TODO make clear history for all app (visiobas, visiodesk)
                         $sensorWrapper.children(".caption").find(".back").click(() => {
                             $sensorWrapper.hide();
-                            VB.redirect(VB.popHistory());
+                            // VB.redirect(VB.popHistory());
+                            VB.goBack();
                         });
 
                         VD.SetVisiobasAdminSubmenu(_parentSelector);

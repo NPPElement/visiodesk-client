@@ -403,15 +403,16 @@
         VD.SetStickers();
         VD_API.LoadUserSettings();
         VB.LoadTemplatesList([
-           'photoswipe.html'
+            'photoswipe.html'
         ], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
             $('BODY').append(templatesContent['photoswipe.html'])
         });
         if(!window.location.hash) VD.Controller(':Groups', '#main-container');
         else VD.Controller(window.location.hash.replace("#", ":"), '#main-container');
+
         window.onpopstate = function(e){
             if(e.state && e.state.reference) VD.Controller(e.state.reference, e.state.parentSelector, e.state.params);
-        }
+        };
 
         initializeExportTopicCalendar();
     });

@@ -10,6 +10,8 @@ window.VB = (function Visiobas() {
         reference: ":Groups"
     }];
 
+    window._location = "Site";
+
     //local cache data, requested from server
     let cache = {};
 
@@ -48,7 +50,8 @@ window.VB = (function Visiobas() {
 
         "CreateForMapControllers": CreateForMapControllers,
 
-        "redirect": redirect
+        "redirect": redirect,
+        "goBack": goBack
     };
 
     /**
@@ -58,11 +61,16 @@ window.VB = (function Visiobas() {
      * @property {object} [param] optional additional parameters necessary to perform redirection by address
      */
 
+
+
     /**
      * Redirect by certain address
      * @param {Addr} addr
      */
     function redirect(addr) {
+        window._location = addr.reference;
+
+        console.log("VB.redirect: ", addr);
         if (typeof addr === "undefined") {
             return;
         }
@@ -81,6 +89,7 @@ window.VB = (function Visiobas() {
         }
 
         if (addr.reference.startsWith("Site")) {
+            // window.history.pushState(addr, '', addr.reference.replace("Site", "/html_vdesk/#Site")) // k+
             showVisiobas();
             EVENTS.onNext({
                 type: EVENTS.DASHBOARD_OBJECTS_LIST_OPEN,
@@ -92,17 +101,28 @@ window.VB = (function Visiobas() {
         }
     }
 
+    function goBack() {
+        var reference = VB_API.parentReference(window._location);
+        redirect({reference: reference});
+    }
+    
     /**
      * @param {Addr} addr
      */
     function addHistory(addr) {
-        if(!_.isEqual(lastHistory(),addr)) _history.push(addr);
+        window._history = _history;
+        if(!_.isEqual(lastHistory(),addr)) {
+            console.log("addHistory: ", addr);
+            _history.push(addr);
+        }
     }
 
     /**
      * @return {Addr|undefined} pop last history address or undefined
      */
     function popHistory() {
+        // console.log("_history[0].reference: ", _history[0].reference);
+        // return { reference: VB_API.parentReference(_history[0].reference) };
         return _history.length > 1 ? _history.pop() : _history[0];
     }
 

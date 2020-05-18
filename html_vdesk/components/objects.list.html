@@ -2,13 +2,13 @@
     <nav>
         <div class="bar">
             <% if (!_.isEmpty(parent.reference)) { %>
-            <a class="back navigate" data-reference="<%= parent.reference %>">Назад</a>
+            <a class="back navigate" data-reference="<%= parent.reference %>"><%= parent.name %></a>
             <% } else { %>
             <a class="list"></a>
             <% }  %>
         </div>
         <% if (!_.isEmpty(parent.reference)) { %>
-        <div class="text"><%= parent.name %></div>
+<!--        <div class="text"><%= parent.name %></div>-->
         <% } else { %>
         <div class="text">visioBAS</div>
         <% } %>

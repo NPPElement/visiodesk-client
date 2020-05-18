@@ -1104,8 +1104,8 @@
                     textStatus: textStatus,
                     jqXHR: jqXHR
                 }, obj);
-
-                if (obj.success == true) {
+                console.log("OBJ:", obj);
+                if (obj.data['77'] !=null && obj.success == true) { // todo: подправить сервер. если нет объекта должна быть ошибка, ане объект с NULL-ами!!!
                     //TODO temp, does data.presentValue still in response?
                     if (result.data.presentValue) {
                         result.data[85] = result.data.presentValue;
