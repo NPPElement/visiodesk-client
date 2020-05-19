@@ -103,6 +103,7 @@ window.VB = (function Visiobas() {
 
     function goBack() {
         var reference = VB_API.parentReference(window._location);
+        if(!reference) reference = "Site";
         redirect({reference: reference});
     }
     
