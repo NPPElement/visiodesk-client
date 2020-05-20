@@ -122,7 +122,7 @@ window.VD_Topic = (function () {
                 $("#assortment_tools").find("[data-id='"+item.id+"']").toggleClass("hide", !ok);
             });
             if(assortmentTools.countFinded===0) {
-                $("#assortment_tools .not_found").removeClassz("hide");
+                $("#assortment_tools .not_found").removeClass("hide");
             } else {
                 $("#assortment_tools .not_found").addClass("hide");
             }
@@ -295,6 +295,7 @@ window.VD_Topic = (function () {
                 var $marker = $messageBar.find('.marker');
                 $marker.click((event) => {
                     event.stopPropagation();
+                    assortmentTools.close();
                     if ($iconList.hasClass('hide')) {
                         $iconList.removeClass('hide');
                     } else {
@@ -348,6 +349,15 @@ window.VD_Topic = (function () {
                         $iconList.addClass('hide');
 
                         __showUsersList();
+                    });
+
+
+
+                    //Открыть окно с списком пользователей
+                    $iconList.find('.insert_user').click((event) => {
+                        event.stopPropagation();
+                        $iconList.addClass('hide');
+                        editorInstance.fire("insert_at")
                     });
 
                     //Открыть окно с списком пользователей
@@ -1523,6 +1533,27 @@ window.VD_Topic = (function () {
                         });
                     }
                 });
+
+                editor.on('insert_at', (event, position) => {
+
+                    if(editor.getData()=='<p><mark class="pen-gray">Введите текст</mark></p>') {
+                        editorModel.change(writer => {editor.setData('<p></p>'); });
+                        editorModel.change(writer => {
+                            console.log(modelDocument.selection.getLastPosition());
+                            writer.insertText('@', {'highlight': 'redPen'},  modelDocument.selection.getFirstPosition());
+                            writer.setSelection(editor.model.document.getRoot(), 'end');
+                            editor.editing.view.focus();
+                        });
+
+                    } else {
+                        editorModel.change(writer => {
+                            writer.insertText('@', {'highlight': 'redPen'},  modelDocument.selection.getLastPosition());
+                            editor.editing.view.focus();
+                        });
+                    }
+
+                });
+
 
                 editor.on('clear', () => {
                     editor.setData('<p></p>');
