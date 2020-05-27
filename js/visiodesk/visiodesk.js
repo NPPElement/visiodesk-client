@@ -618,7 +618,7 @@ window.VD = (function Visiodesk() {
             });
 
             VD_API.GetChangedSubscribesIds().done(ids=>{
-                $feedCounterEm.html($newsCounterEm.html()+":"+ids.length);
+                $feedCounterEm.html($feedCounterEm.html()+":"+ids.length);
                 ids.forEach(topicId=>{
                     let $t = $("#topic-"+topicId);
                     if($t.find(".header .unread").length===0) {
