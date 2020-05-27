@@ -594,6 +594,9 @@ window.VD = (function Visiodesk() {
                 } else {
                     $newsCounter.hide();
                 }
+
+
+
             });
 
             VD_FEED_UPDATER.get().then((topicsList) => {
@@ -612,6 +615,16 @@ window.VD = (function Visiodesk() {
                 } else {
                     $feedCounter.hide();
                 }
+            });
+            VD_API.GetChangedSubscribesIds().done(ids=>{
+                $newsCounterEm.html($newsCounterEm.html()+":"+ids.length);
+                ids.forEach(topicId=>{
+                    let $t = $("#topic-"+topicId);
+                    if($t.find(".header .unread").length===0) {
+                        $t.find(".header").prepend('<div class="unread"><em></em></div>')
+                    }
+
+                });
             });
         });
     }

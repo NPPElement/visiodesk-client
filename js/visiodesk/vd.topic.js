@@ -1231,6 +1231,7 @@ window.VD_Topic = (function () {
             __saveLoadTopic(newTopicParams).then((resultTopicParams) => {
                 __updateTopicParams(resultTopicParams);
                 topicId = resultTopicParams['id'];
+                window.location.hash = window.location.hash.replace("Topic/New","Topic/"+topicId);
 
                 __clearChangedList();
                 __applyTopicParams(resultTopicParams);

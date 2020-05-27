@@ -1,4 +1,4 @@
-window.VD_API = (function VisiodeskApi() {
+let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     /** @const {string} apiContext - базоваый url для отправки запросов на сервер */
     const apiContext = VD_SETTINGS['API_CONTEXT'];
     /** @const {string} token - хеш авторизованного пользователя */
@@ -31,6 +31,7 @@ window.VD_API = (function VisiodeskApi() {
         "GetTopicsByGroup": GetTopicsByGroup,
         "GetAllTopicsByGroup": GetAllTopicsByGroup,
         "GetTopicsByUser": GetTopicsByUser,
+        "GetChangedSubscribesIds": GetChangedSubscribesIds,
         "GetTopicById": GetTopicById,
         "GetTopics": GetTopics,
         "AddTopic": AddTopic,
@@ -256,15 +257,18 @@ window.VD_API = (function VisiodeskApi() {
      * @param {int} id идентификатор группы
      * @param {array} bindedUsers массив (объектов) пользователей добавляемых в группу
      * @param {array} unbindedUsers массив (объектов) пользователей исключаемых из группы
-     * @return {void}
+     * @return {Deferred}
      */
     function AddGroup(fields, id = 0, bindedUsers = [], unbindedUsers = []) {
+        let def = $.Deferred();
+
         if (_.isEmpty(fields)) {
             VD.ErrorHandler('INFO', {
                 'caption': 'Ошибка',
                 'description': 'не заданы параметры группы'
             });
-            return;
+            def.reject();
+            return def;
         }
 
         if (!fields['name']) {
@@ -272,7 +276,8 @@ window.VD_API = (function VisiodeskApi() {
                 'caption': 'Ошибка',
                 'description': 'не задано название группы'
             });
-            return;
+            def.reject();
+            return def;
         }
 
         if (id) {
@@ -302,13 +307,18 @@ window.VD_API = (function VisiodeskApi() {
             if (response.success) {
                 // VD.Controller(':GroupsAdmin', '#main-container');
                 VD.Controller(':GroupsChange/'+response.data.id, '#main-container');
+                def.resolve(response.data);
             } else {
                 VD.ErrorHandler('SERVER', response, url);
+                def.reject();
             }
+
 
         }).fail(function (jqXHR, textStatus, errorThrown) {
             VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject();
         });
+        return def;
     }
 
     /**
@@ -378,7 +388,6 @@ window.VD_API = (function VisiodeskApi() {
         let def = $.Deferred();
 
         let url = apiContext + '/getGroupPriority/' + id;
-        // let url = apiContext + '/getGroupPriority';
 
         $.ajax({
             type: "GET",
@@ -1138,6 +1147,39 @@ window.VD_API = (function VisiodeskApi() {
                 def.resolve(response.data);
             } else {
                 VD.ErrorHandler('SERVER', response, url);
+                def.reject(response.error);
+            }
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject(errorThrown);
+        });
+
+        return def;
+    }
+
+    /**
+     * Get  ids topics of subscribes user
+     * @returns {Deferred}
+     */
+    function GetChangedSubscribesIds() {
+        const def = $.Deferred();
+        const url = apiContext + '/getChangedSubscribesIds';
+        const token = docCookies.getItem("user.token");
+
+        $.ajax({
+            method: "GET",
+            url: url,
+            type: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done((response) => {
+            if (response.success) {
+                console.log("GetChangedSubscribesIds.response: ", response );
+                def.resolve(response.data);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                console.log("GetChangedSubscribesIds.response: ", response );
                 def.reject(response.error);
             }
         }).fail((jqXHR, textStatus, errorThrown) => {

@@ -23,19 +23,8 @@ window.VD_GroupsChange = (function () {
         [-1,["Отменить", "cancel blue"]]
     ]);
 
-    const PROIRITY_DEFAULT = new Map([
-        [1, {name: "Низкий",        name_for: "низкого",        plan_inwork: 60*60, plan_ready: 22*60, plan_verify: 60}],
-        [2, {name: "Нормальный",    name_for: "нормального",    plan_inwork: 60*60, plan_ready: 22*60, plan_verify: 60}],
-        [3, {name: "Особый",        name_for: "особого",        plan_inwork: 60, plan_ready: 22*60, plan_verify: 60}],
-        [4, {name: "Высокий",       name_for: "высокого",       plan_inwork: 60, plan_ready: 22*60, plan_verify: 60}],
-    ]);
 
-    const var2 = [
-        [1, {name: "Низкий",        name_for: "низкого",        plan_inwork: 60, plan_ready: 22*60, plan_verify: 60}],
-        [2, {name: "Нормальный",    name_for: "нормального",    plan_inwork: 60, plan_ready: 22*60, plan_verify: 60}],
-        [3, {name: "Особый",        name_for: "особого",        plan_inwork: 60, plan_ready: 22*60, plan_verify: 60}],
-        [4, {name: "Высокий",       name_for: "высокого",       plan_inwork: 60, plan_ready: 22*60, plan_verify: 60}],
-    ];
+
     const PRIORITY_INFO = {
         1: {name: "Низкий",        name_for: "низкого",        plan_inwork: 60*30, plan_ready: 22*60, plan_verify: 60},
         2: {name: "Нормальный",    name_for: "нормального",    plan_inwork: 60*25, plan_ready: 22*60, plan_verify: 60},
