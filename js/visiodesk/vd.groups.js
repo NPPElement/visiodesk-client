@@ -28,7 +28,7 @@ window.VD_Groups = (function () {
 
     function run(reference, selector, params) {
         let status = $.Deferred();
-
+        ready_loading=true;
         let isSeanceStarted = true;
         let groupElementsCache = {};
 
