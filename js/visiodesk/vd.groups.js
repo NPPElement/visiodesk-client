@@ -12,9 +12,13 @@ window.VD_Groups = (function () {
 
     const statusTypes = VD_SETTINGS['STATUS_TYPES'];
 
-    let source$ = Rx.Observable.timer(0, 5000).flatMap(() => {
+    let ready_loading = true;
+    let source$ = Rx.Observable.timer(0, 1000).flatMap(() => {
+        if(!ready_loading) return  $.Deferred().resolve(false);
+        ready_loading = false;
         return Rx.Observable.fromPromise(VD_API.GetGroups());
     });
+
     let _subscription;
 
     return {
@@ -37,6 +41,9 @@ window.VD_Groups = (function () {
             let itemTemplate = templatesContent['vd.groups.item.html'];
 
             _subscription = source$.subscribe((groupItems) => {
+                if(groupItems===false) return;
+                window.setTimeout(()=>ready_loading=true, 5000);
+
                 groupItems.forEach((item) => {
                     let itemId = item['id'];
 

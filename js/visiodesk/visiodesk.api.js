@@ -7,6 +7,10 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     /** @const {int} authorizedUserId - id текущего пользователя */
     const authorizedUserId = parseInt(docCookies.getItem("user.user_id"));
 
+    let _topicsByUser = [];
+    let _topicIdsUpdates = [];
+    let _needReloadTopicsByUsers = true;
+
     return {
         "FileUploader": FileUploader(),
         "GetDownloadUrl": GetDownloadUrl,
@@ -1065,6 +1069,12 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         });
 
         return def;
+    };
+
+    function _updateTopicIds(topicIds) {
+        topicIds = topicIds.sort();
+        _needReloadTopicsByUsers = !_.isEqual(_topicIdsUpdates, topicIds);
+        _topicIdsUpdates = topicIds;
     }
 
     /**
@@ -1074,6 +1084,21 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
      */
     function GetTopicsByUser(userId) {
         let def = $.Deferred();
+
+        // GetChangedSubscribesIds().done(topicIds=>_updateTopicIds(topicIds));
+
+        console.log("GetTopicsByUser: ", userId);
+
+        if(!userId && !_needReloadTopicsByUsers) {
+            console.log("GetTopicsByUser: return count =  " + _topicsByUser.length);
+            def.resolve(_topicsByUser);
+            return def;
+        }
+
+
+
+
+
 
         if (!userId) {
             let url = apiContext + '/getTopicsByUser';
@@ -1087,6 +1112,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 }
             }).done(function (response) {
                 if (response.success) {
+                    _topicsByUser = response.data;
                     def.resolve(response.data);
                 } else {
                     VD.ErrorHandler('SERVER', response, url);
@@ -1175,11 +1201,10 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             }
         }).done((response) => {
             if (response.success) {
-                console.log("GetChangedSubscribesIds.response: ", response );
+                _updateTopicIds(response.data);
                 def.resolve(response.data);
             } else {
                 VD.ErrorHandler('SERVER', response, url);
-                console.log("GetChangedSubscribesIds.response: ", response );
                 def.reject(response.error);
             }
         }).fail((jqXHR, textStatus, errorThrown) => {

@@ -24,9 +24,20 @@ window.VD_Checklist = (function () {
      * Обновление в режиме реального времени
      * @var {object} source$
      */
+    /*
     let source$ = Rx.Observable.timer(0, 5000).flatMap(() => {
         return Rx.Observable.fromPromise(VD_API.GetChecklist(parentId));
     });
+
+     */
+
+    let ready_loading = true;
+    let source$ = Rx.Observable.timer(0, 1000).flatMap(() => {
+        if(!ready_loading) return  $.Deferred().resolve(false);
+        ready_loading = false;
+        return Rx.Observable.fromPromise(VD_API.GetChecklist(parentId));
+    });
+
     let _subscription;
 
     return {
@@ -80,6 +91,8 @@ window.VD_Checklist = (function () {
 
             //обновление индикаторов на папках/опциях журнала работ
             _subscription = source$.subscribe((updatedItems) => {
+                if(groupItems===false) return;
+                window.setTimeout(()=>ready_loading=true, 5000);
                 updatedItems.forEach((item) => {
                     let itemId = item['id'];
 

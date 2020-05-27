@@ -5151,7 +5151,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 .stickers .item {
     display: flex;
     width: 375px;
-    height: 81px;
+    height: 88px;
     margin: 0 11px 11px 0;
     cursor: pointer;
 }
