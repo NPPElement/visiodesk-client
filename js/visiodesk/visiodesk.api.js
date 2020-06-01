@@ -1085,12 +1085,18 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     function GetTopicsByUser(userId) {
         let def = $.Deferred();
 
-        // GetChangedSubscribesIds().done(topicIds=>_updateTopicIds(topicIds));
+        GetChangedSubscribesIds().done(topicIds=>{
+            _updateTopicIds(topicIds);
+            window.setTimeout(()=>{
+                topicIds.forEach(topicId=>{
+                    let $t = $("#topic-"+topicId);
+                    if($t.find(".header .unread").length===0) $t.find(".header").prepend('<div class="unread"><em></em></div>')
+                });
+            },1500);
 
-        console.log("GetTopicsByUser: ", userId);
+        });
 
         if(!userId && !_needReloadTopicsByUsers) {
-            console.log("GetTopicsByUser: return count =  " + _topicsByUser.length);
             def.resolve(_topicsByUser);
             return def;
         }
@@ -1101,7 +1107,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
 
         if (!userId) {
-            let url = apiContext + '/getTopicsByUser';
+            let url = apiContext + '/getTopicsByUser2';
 
             $.ajax({
                 method: "GET",
@@ -1124,7 +1130,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 def.reject(errorThrown);
             });
         } else {
-            const url = `${apiContext}/getUserTopics`;
+            const url = `${apiContext}/getUserTopics2`;
             const token = docCookies.getItem("user.token");
 
             $.ajax({
