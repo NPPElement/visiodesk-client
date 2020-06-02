@@ -410,7 +410,7 @@
         if(!window.location.hash) VD.Controller(':Groups', '#main-container');
         else VD.Controller(window.location.hash.replace("#", ":"), '#main-container');
 
-        if ("onhashchange" in window) $(window).bind( 'hashchange', ()=> {
+        $(window).on('hashchange', ()=> {
             VD.Controller(window.location.hash.replace("#", ":"), '#main-container');
         });
 
