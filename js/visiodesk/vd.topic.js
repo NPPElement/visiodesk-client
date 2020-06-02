@@ -26,7 +26,8 @@ window.VD_Topic = (function () {
         'name': '',
         'description': ''
     };
-    
+
+
     //TODO: Дополнительные параметры итемов
     const extendedParams = {
         "like": 0
@@ -219,7 +220,8 @@ window.VD_Topic = (function () {
         "unload": unload,
         "check": check,
         "selectFile": selectFile,
-        "setDownloadLink": setDownloadLink
+        "setDownloadLink": setDownloadLink,
+        "reload": reload
     };
 
 
@@ -375,7 +377,6 @@ window.VD_Topic = (function () {
                     });
 
                     if (topicId) {
-
                         VD_API.GetTopicById(topicId).done((resultTopicParams) => {
                             __updateTopicParams(resultTopicParams);
 
@@ -1670,6 +1671,22 @@ window.VD_Topic = (function () {
 
         return def;
     }
+    
+    
+    function reload(topicId) {
+        if($("#topic_back_back").length===1 && $("#topic_back_back").data("params") && $("#topic_back_back").data("params").lastTopicId===topicId) {
+            var editorData = editorInstance.getData();
+            VD_API.GetTopicById(topicId).done((resultTopicParams) => {
+                __updateTopicParams(resultTopicParams);
+
+                __applyTopicParams(resultTopicParams);
+                __showItems(resultTopicParams['items']);
+                check(topicId);
+                editorInstance.setData(editorData);
+            });
+        }
+    }
+    
 
     /**
      * Вставка картинок с буфера обмена

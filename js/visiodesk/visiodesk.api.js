@@ -1075,6 +1075,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         topicIds = topicIds.sort();
         _needReloadTopicsByUsers = !_.isEqual(_topicIdsUpdates, topicIds);
         _topicIdsUpdates = topicIds;
+        topicIds.forEach(topicId=>VD_Topic.reload(topicId));
     }
 
     /**
