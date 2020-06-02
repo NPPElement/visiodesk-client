@@ -410,6 +410,11 @@
         if(!window.location.hash) VD.Controller(':Groups', '#main-container');
         else VD.Controller(window.location.hash.replace("#", ":"), '#main-container');
 
+        if ("onhashchange" in window) $(window).bind( 'hashchange', ()=> {
+            VD.Controller(window.location.hash.replace("#", ":"), '#main-container');
+        });
+
+
         window.onpopstate = function(e){
             if(e.state && e.state.reference) VD.Controller(e.state.reference, e.state.parentSelector, e.state.params);
         };

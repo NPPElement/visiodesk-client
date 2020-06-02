@@ -617,21 +617,6 @@ window.VD = (function Visiodesk() {
                 }
             });
 
-            /*
-            VD_API.GetChangedSubscribesIds().done(ids=>{
-                $feedCounterEm.html($feedCounterEm.html()+":"+ids.length);
-                ids.forEach(topicId=>{
-                    let $t = $("#topic-"+topicId);
-                    if($t.find(".header .unread").length===0) {
-                        $t.find(".header").prepend('<div class="unread"><em></em></div>')
-                    }
-
-                });
-            });
-             */
-            
-
-
         });
     }
 
