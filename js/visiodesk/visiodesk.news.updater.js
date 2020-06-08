@@ -11,7 +11,11 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
     let stream$ = new Rx.Subject();
     let pending = $.Deferred();
 
+    let changed = [];
+    let checked = [];
+
     let source$ = Rx.Observable.timer(0, 10000).flatMap(() => {
+        console.log("CNT: flatMap: GetLastItemId: "+lastTopics.size);
         return Rx.Observable.fromPromise(VD_API.GetLastItemId());
     }).flatMap((id) => {
         previosLastId = lastItemId;
@@ -61,6 +65,11 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
             let output$ = new Rx.Subject();
             stream$.subscribe(output$);
             return output$;
+        },
+
+        setChanged: (_changed) => {
+            changed = _changed;
+            checked = [];
         },
 
         ready: () => {
@@ -115,12 +124,14 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
         },
 
         check: (topicId) => {
+            if(!checked.includes(topicId)) checked.push(topicId);
             if (lastTopics.has(topicId)) {
                 checkedTopics.set(topicId, topicId);
             }
         },
 
         deleteCheckedItems: () => {
+            checked = [];
             checkedTopics.forEach((topicId) => {
                 lastTopics.delete(topicId);
             });
@@ -133,7 +144,10 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
 
         getNewsCounter: () => {
             return pending.then(() => {
-                return lastTopics.size - checkedTopics.size;
+
+                console.log("CNT: lastTopics:", lastTopics, "checkedTopics: ", checkedTopics, "changed: "+changed.length, "checked: ", checked);
+                return _.difference(changed, checked).length;
+                // return lastTopics.size - checkedTopics.size;
             });
         }
     }

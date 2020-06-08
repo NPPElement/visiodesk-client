@@ -1087,6 +1087,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         let def = $.Deferred();
 
         GetChangedSubscribesIds().done(topicIds=>{
+            VD_NEWS_UPDATER.setChanged(topicIds);
             _updateTopicIds(topicIds);
             window.setTimeout(()=>{
                 topicIds.forEach(topicId=>{

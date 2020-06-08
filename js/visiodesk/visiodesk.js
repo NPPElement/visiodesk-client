@@ -587,7 +587,9 @@ window.VD = (function Visiodesk() {
         const $feedCounterEm = $feedCounter.find('EM');
 
         VD_NEWS_UPDATER.listen().subscribe(() => {
+            console.log("CNT: VD_NEWS_UPDATER.listen().subscribe");
             VD_NEWS_UPDATER.getNewsCounter().then((size) => {
+                console.log("CNT: VD_NEWS_UPDATER.listen().subscribe: " + size)
                 if (size) {
                     $newsCounterEm.html(size);
                     $newsCounter.show();
@@ -627,6 +629,7 @@ window.VD = (function Visiodesk() {
         VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
             let stickerTemplate = templatesContent['stickers.item.html'];
             VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {
+                console.log("CNT: topicsList: ", topicsList);
                 if (topicsList.length && itemId > 1) {
                     topicsList.forEach((topic) => {
                         let statusItemId = 0;
