@@ -1680,6 +1680,7 @@ window.VD_Topic = (function () {
                 __updateTopicParams(resultTopicParams);
 
                 __applyTopicParams(resultTopicParams);
+                $(".topic").html('');
                 __showItems(resultTopicParams['items']);
                 check(topicId);
                 editorInstance.setData(editorData);
