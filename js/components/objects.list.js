@@ -91,7 +91,7 @@
                     object: response.data
                 });
             }).fail((response) => {
-                console.error(response.error);
+                console.error(response);
             });
         }
 
@@ -218,7 +218,7 @@
                     object: object
                 });
             }).fail((response) => {
-                console.error(response.error);
+                console.error(response);
             });
 
             VB_API.getChildren(reference).done((response) => {

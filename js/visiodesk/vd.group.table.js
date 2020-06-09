@@ -87,15 +87,21 @@ window.VD_GroupTable = (function () {
         });
     }
 
+    $("body").bind("DOMSubtreeModified", ".group_item", function() {
+        blockGroupItem_handler();
+    });
+
     function blockGroupItem() {
+        return;
         // todo:  переделать
-        // return
+        /*
         blockGroupItem_handler();
         window.setTimeout(blockGroupItem_handler, 30);
         window.setTimeout(blockGroupItem_handler, 100);
         window.setTimeout(blockGroupItem_handler, 400);
         window.setTimeout(blockGroupItem_handler, 800);
         window.setTimeout(blockGroupItem_handler, 2000);
+         */
     }
 
     function restoreGroupItem() {
