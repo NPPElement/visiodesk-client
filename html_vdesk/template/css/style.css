@@ -7042,3 +7042,19 @@ label.input_group_title {
     color: #007AFF;
 }
 */
+
+
+.sidebar .userinfo {
+    font-family: 'SF-PRO-Regular';
+    line-height: 24px;
+    font-size: 14px;
+    /*letter-spacing: -0.0241176em;*/
+    color: #ccc;
+}
+
+.sidebar .userinfo b {
+    font-family: 'SF-PRO-Regular';
+    font-size: 15px;
+    color: #FFFFFF;
+    font-weight: normal;
+}

@@ -587,9 +587,7 @@ window.VD = (function Visiodesk() {
         const $feedCounterEm = $feedCounter.find('EM');
 
         VD_NEWS_UPDATER.listen().subscribe(() => {
-            console.log("CNT: VD_NEWS_UPDATER.listen().subscribe");
             VD_NEWS_UPDATER.getNewsCounter().then((size) => {
-                console.log("CNT: VD_NEWS_UPDATER.listen().subscribe: " + size)
                 if (size) {
                     $newsCounterEm.html(size);
                     $newsCounter.show();
@@ -629,7 +627,6 @@ window.VD = (function Visiodesk() {
         VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
             let stickerTemplate = templatesContent['stickers.item.html'];
             VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {
-                console.log("CNT: topicsList: ", topicsList);
                 if (topicsList.length && itemId > 1) {
                     topicsList.forEach((topic) => {
                         let statusItemId = 0;
@@ -788,7 +785,6 @@ window.VD = (function Visiodesk() {
                 window.setTimeout( __setTitle, 300);
                 window.setTimeout( __setTitle, 1300);
                 window.setTimeout( __setTitle, 5300);
-                console.log(":onNext");
 
                 ref$.onNext({
                     type: "after.run.done",
@@ -1217,7 +1213,13 @@ window.VD = (function Visiodesk() {
                 window.token = new_token;
                 console.log("CHANGE TOKEN:"+new_token);
             }
-
+        }
+        
+        function __inline_update() {
+            _.each(values, (val, index)=>{
+                $("[settings-txt-val='"+index+"']").text(val);
+                $("[settings-value-val='"+index+"']").val(val);
+            })
         }
 
         function Reload() {
@@ -1227,6 +1229,7 @@ window.VD = (function Visiodesk() {
                 updates$.onNext(true);
                 console.log("new settings",new_value);
                 __checkToken();
+                __inline_update();
             })
         }
 

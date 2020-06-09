@@ -15,7 +15,6 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
     let checked = [];
 
     let source$ = Rx.Observable.timer(0, 10000).flatMap(() => {
-        console.log("CNT: flatMap: GetLastItemId: "+lastTopics.size);
         return Rx.Observable.fromPromise(VD_API.GetLastItemId());
     }).flatMap((id) => {
         previosLastId = lastItemId;
@@ -144,8 +143,6 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
 
         getNewsCounter: () => {
             return pending.then(() => {
-
-                console.log("CNT: lastTopics:", lastTopics, "checkedTopics: ", checkedTopics, "changed: "+changed.length, "checked: ", checked);
                 return _.difference(changed, checked).length;
                 // return lastTopics.size - checkedTopics.size;
             });

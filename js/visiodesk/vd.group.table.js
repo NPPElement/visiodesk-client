@@ -171,16 +171,6 @@ window.VD_GroupTable = (function () {
         }
 
 
-        console.log("ref_event.data.reference= "+ref_event.data.reference);
-        /*
-        if(ref_event.data.reference.indexOf("Events/0")!==-1) {
-            $("#group_table_control").hide();
-            return;
-        } else {
-            $("#group_table_control").show();
-        }
-         */
-
 
         // after.run.done, after.reference
         if(ref_event.type==="after.run.done") moveControlPosition(false);
