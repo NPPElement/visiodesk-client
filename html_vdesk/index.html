@@ -431,6 +431,8 @@
         };
 
         initializeExportTopicCalendar();
+        $("body").bind("DOMSubtreeModified", "h1", function() { window.document.title = "visioDESK: "  + $("h1").text() })
+
     });
 </script>
 
