@@ -70,9 +70,8 @@ window.VD_ChecklistEvents = (function () {
         let checklistObject = {};
 
         VD_API.GetChecklistById(checklistId).then((checklist) => {
-            checklistObject = $.extend({}, {
-                'group_id': 0
-            }, checklist);
+            // checklistObject = $.extend({}, {'group_id': 0}, checklist);
+            checklistObject = $.extend({}, checklist);
             return checklistObject['group_id'] ? VD_API.GetGroups(checklistObject['group_id']) : emptyGroupObject
         }).then((group) => {
             return VB.Load(VD_SETTINGS['TEMPLATE_DIR'] + "/vd.checklist.events.html", selector, {

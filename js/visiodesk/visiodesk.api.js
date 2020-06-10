@@ -753,6 +753,13 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             }
         }).done(function (response) {
             if (response.success) {
+                response.data.roles = response.data.roles.sort((r1, r2)=>{
+                    let a = r1.description.toLocaleString();
+                    let b = r2.description.toLocaleString();
+                    if(a<b) return -1;
+                    if(a>b) return 1;
+                    return 0;
+                });
                 def.resolve(response.data);
             } else {
                 if (response.error === 'User not found') {

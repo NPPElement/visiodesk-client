@@ -91,8 +91,8 @@ window.VD_Checklist = (function () {
 
             //обновление индикаторов на папках/опциях журнала работ
             _subscription = source$.subscribe((updatedItems) => {
-                if(groupItems===false) return;
                 window.setTimeout(()=>ready_loading=true, 5000);
+                if(!updatedItems) return;
                 updatedItems.forEach((item) => {
                     let itemId = item['id'];
 
