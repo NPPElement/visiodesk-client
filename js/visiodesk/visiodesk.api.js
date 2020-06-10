@@ -1224,6 +1224,15 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         return def;
     }
 
+    function __updateTopicInfos(topicList) {
+        topicList.forEach(topic=>{
+            let $t = $("#topic-"+topic.id);
+            if(!$t.length) return;
+            $t.find(".status").replaceWith("<span class='status "+VD_SETTINGS["STATUS_TYPES"][topic["status_id"]]+"'>"+I18N.get(`vdesk.topic.status.${topic["status_id"]}`)+"</span>");
+            $t.find(".priority").replaceWith("<span class='priority "+VD_SETTINGS["PRIORITY_TYPES"][topic["priority_id"]]+"'></span>");
+        });
+    }
+
     /**
      * Запрос новых топиков, на которые подписан юзер (является автором или входит в группы топика), а также топиков, которые на него назначены
      * @param {int} lastItemId - id последнего загруженного итема
@@ -1263,6 +1272,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                     'itemId': lastItemId,
                     'topicsList': response.data
                 });
+                __updateTopicInfos(response.data);
             } else {
                 VD.ErrorHandler('SERVER', response, url);
                 def.reject();
