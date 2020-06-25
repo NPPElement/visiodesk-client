@@ -7058,3 +7058,15 @@ label.input_group_title {
     color: #FFFFFF;
     font-weight: normal;
 }
+
+.avatar_upload {
+    background-image: url('../images/userpic.png');
+    width: 150px;
+    height: 150px;
+}
+
+
+.avatar_upload img {
+    width: 150px;
+    height: 150px;
+}

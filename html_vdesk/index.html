@@ -64,13 +64,19 @@
                         <b settings-txt-val='middle_name'></b>
                         <br>
                         Должность: <b settings-txt-val='position'></b><br>
-                        Логин: <b settings-txt-val='user_name'></b><br>
+                        Логин: <b settings-txt-val='login'></b><br>
+                        <a class="avatar_upload"><img width="100%" settings-img-download="avatar"></a>
                     </div>
+
+
+
 
                 </ul>
                 <div class="copyright"><span>© Company NPP "Element" LLC</span></div>
             </div>
         </div>
+
+
 
         <!--Меню-->
         <div class="tabbar" id="visiobas-tabbar">
@@ -432,6 +438,51 @@
 
         initializeExportTopicCalendar();
         $("body").bind("DOMSubtreeModified", "h1", function() { window.document.title = "visioDESK: "  + $("h1").text() })
+
+        // $("#avatar_upload_href").click(() => {$(VD_SETTINGS['UPLOADER_SELECTOR']).click();  })
+
+        $(".avatar_upload")
+            .fileupload({
+                pasteZone: $("body"),
+                url: VD_SETTINGS['API_CONTEXT'] + '/upload_avatar', // _avatar
+                dataType: 'json',
+                autoUpload: true,
+                acceptFileTypes: /(\.|\/)*$/i,
+                maxFileSize: 30000000,
+                maxChunkSize: 3000000,
+                disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+                previewMaxWidth: 74,
+                previewMaxHeight: 74,
+                messages: {
+                    maxNumberOfFiles: 'Превышено максимальное количество файлов',
+                    acceptFileTypes: 'Файл данного типа не поддерживается',
+                    maxFileSize: 'Превышен максимальный размер файла',
+                    minFileSize: 'Размер файла меньше допустимого значения'
+                }
+            })
+            .on('fileuploaddone', function (e, data) {
+                console.log("fileuploaddone: ",  e, data);
+                // console.log(data._response.result);
+
+                    // $(".avatar_upload img").attr("src","vdesk/image/download/"+data._response.result.data[0].name);
+
+            })
+
+            .on('fileuploadadd', (e, data) => {
+
+                let fileToSendSize = data['files'][0]['size'];
+                data['files'][0]['name'] = "avatar_uploaded_file___" + data['files'][0]['name'];
+                data['headers'] = data['headers'] || {};
+                data['headers']['Content-Range'] = `bytes 0-${fileToSendSize - 1}/${fileToSendSize}`;
+                data['headers']['Authorization'] = 'Bearer ' + window.token;
+                // data['headers']['X-ID'] = window.authorizedUserId;
+                data['headers']['Avatar-ID'] = VD.SettingsManager.Get("id");
+                console.log("fileuploadadd: ", data);
+                data.submit();
+            })
+
+
 
     });
 </script>

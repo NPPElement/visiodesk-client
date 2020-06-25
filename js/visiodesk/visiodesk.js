@@ -1209,6 +1209,7 @@ window.VD = (function Visiodesk() {
             _.each(values, (val, index)=>{
                 $("[settings-txt-val='"+index+"']").text(val);
                 $("[settings-value-val='"+index+"']").val(val);
+                $("[settings-img-download='"+index+"']").attr("src","/vdesk/image/download/"+val);
             })
         }
 

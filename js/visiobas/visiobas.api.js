@@ -46,7 +46,9 @@
             "extractName": extractName,
             "parsePropertyList": parsePropertyList,
 
-            "getLibrary": getLibrary
+            "getLibrary": getLibrary,
+
+            "Test": Test,
         };
 
         /**
@@ -1704,6 +1706,17 @@
                 return null;
             }
         }
+    }
+
+    function Test() {
+        $.ajax({
+            type: "GET",
+            url: "/vbas/gate/test",
+            dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(console.log);
     }
 
     window.VISIOBAS_API = VisiobasApi();

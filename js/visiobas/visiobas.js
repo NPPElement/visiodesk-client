@@ -51,7 +51,8 @@ window.VB = (function Visiobas() {
         "CreateForMapControllers": CreateForMapControllers,
 
         "redirect": redirect,
-        "goBack": goBack
+        "goBack": goBack,
+
     };
 
     /**
