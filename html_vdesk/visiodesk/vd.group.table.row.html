@@ -30,20 +30,11 @@
                 </div>
         </div>
         <div class="col_t_userpic">
-                <!--
-                <span class="tooltip">
-                        <img src="template/images/userpic.png" title="<%- author.last_name %> <%- author.first_name %> <%- author.middle_name %>, <%- author.position%>" style="margin-right: 20px;">
-                        <div class="tooltip-content">
-                                <div class="tooltip-arrow"></div>
-                        <p><b><%- author.last_name %></b> <%- author.first_name %> <%- author.middle_name %><br><u><%- author.position%></u></p>
-                        </div>
-                </span>
-
-                -->
 
                 <% for (let i in users) { %>
                 <span class="tooltip user_status <%= users[i].status.name %>">
-                        <img class="img_att_users" src="<%- users[i].avatar_href %>" title="<%- users[i].last_name %> <%- users[i].first_name %> <%- users[i].middle_name %>, <%- users[i].position%>" />
+
+                        <div class="img_att_users" style="background-image: url('<%- users[i].avatar_href %>')"></div>
                         <div class="tooltip-content">
                                 <div class="tooltip-arrow"></div>
                                 <p><b><%- users[i].last_name %></b> <%- users[i].first_name %> <%- users[i].middle_name %><br><u><%- users[i].position%></u></p>

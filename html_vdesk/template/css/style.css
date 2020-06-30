@@ -6523,20 +6523,52 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     margin-top: 25px;
 }
 
-#group_table .col_t_userpic img {
+#group_table .col_t_userpic  .img_att_users {
+    width: 44px;
+    height: 44px;
+    margin-top: 12px;
+}
+/*#group_table .col_t_userpic img {
     width: 44px;
     height: 44px;
     margin-top: 12px;
 }
 
+ */
+
+#group_table .col_t_userpic .user_status:first-child .img_att_users {
+    margin-right: 4px;
+}
+/*
 #group_table .col_t_userpic .user_status:first-child img {
     margin-right: 4px;
 }
+ */
 
 
-#group_table .col_t_userpic img.img_att_users {
-    margin-right: -20px;
+
+#group_table .col_t_userpic .img_att_users {
+    background-size: cover;
 }
+
+#group_table .col_t_userpic .img_att_users {
+    margin-right: -20px;
+    display: inline-block;
+    overflow: hidden;
+    height: 44px;
+}
+
+#group_table .col_t_userpic .img_att_users img {
+    width: 44px;
+
+    height: auto;
+}
+
+
+
+/*#group_table .col_t_userpic img.img_att_users {
+    margin-right: -20px;
+}*/
 
 
 
@@ -6742,28 +6774,29 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 
 
 
-#group_table .user_status img {
+#group_table .user_status .img_att_users {
     border: 3px solid transparent;
     border-radius: 22px;
+    background-repeat: no-repeat;
 }
 
-#group_table .user_status.new img {
+#group_table .user_status.new .img_att_users {
     border-color: #FF3B30;
 }
 
-#group_table .user_status.in_progress img {
+#group_table .user_status.in_progress .img_att_users {
     border-color: #007AFF;
 }
 
-#group_table .user_status.on_hold img {
+#group_table .user_status.on_hold .img_att_users {
     border-color: #FFCC00;
 }
 
-#group_table .user_status.resolved img {
+#group_table .user_status.resolved .img_att_users {
     border-color: #4CD964;
 }
 
-#group_table .user_status.closed img {
+#group_table .user_status.closed .img_att_users {
     border-color: #979797;
 }
 
@@ -6836,10 +6869,17 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     box-shadow: 8px 8px 9px -4px rgba(0,0,0,0.15);
 }
 
-#group_table img.img_att_users + .tooltip-content .tooltip-arrow,
-#group_table img.img_att_users + .tooltip-content {
+#group_table .img_att_users + .tooltip-content .tooltip-arrow,
+#group_table .img_att_users + .tooltip-content {
     left: 54%;
 }
+
+
+/*#group_table img.img_att_users + .tooltip-content .tooltip-arrow,
+#group_table img.img_att_users + .tooltip-content {
+    left: 54%;
+}*/
+
 
 @-moz-keyframes tooltip {
     100% {
