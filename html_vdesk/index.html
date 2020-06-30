@@ -40,6 +40,7 @@
         <!-- File Uploader -->
         <input type="file" accept="video/*;capture=camcorder" id="cameraInput" name="files[]" multiple>
 
+
         <!--Sidebar-->
         <div id="sidebar-wrapper">
             <div class="sidebar t_pad">
@@ -65,7 +66,8 @@
                         <br>
                         Должность: <b settings-txt-val='position'></b><br>
                         Логин: <b settings-txt-val='login'></b><br>
-                        <a class="avatar_upload"><img width="100%" settings-img-download="avatar"></a>
+                        <a class="avatar_upload" settings-data-val="id"><img width="100%" settings-img-download="avatar"></a>
+                        <input type="file" accept="image/*" id="avatar_upload" name="files[]" settings-data-val="id">
                     </div>
 
 
@@ -439,9 +441,10 @@
         initializeExportTopicCalendar();
         $("body").bind("DOMSubtreeModified", "h1", function() { window.document.title = "visioDESK: "  + $("h1").text() })
 
-        // $("#avatar_upload_href").click(() => {$(VD_SETTINGS['UPLOADER_SELECTOR']).click();  })
-
-        $(".avatar_upload")
+        $(".avatar_upload").click(() => { $("#avatar_upload").click(); });
+        // $(".user-avatar_upload").click(() => { $("#avatar_upload").click(); });
+// .avatar_upload,
+        $("#avatar_upload")
             .fileupload({
                 pasteZone: $("body"),
                 url: VD_SETTINGS['API_CONTEXT'] + '/upload_avatar', // _avatar
@@ -462,24 +465,24 @@
                 }
             })
             .on('fileuploaddone', function (e, data) {
-                console.log("fileuploaddone: ",  e, data);
-                // console.log(data._response.result);
-
-                    // $(".avatar_upload img").attr("src","vdesk/image/download/"+data._response.result.data[0].name);
-
+                VD.SettingsManager.Reload();
             })
 
             .on('fileuploadadd', (e, data) => {
-
+                console.log("fileuploadadd", e);
+                let avatar_user_id = $(e).attr("data-id");
+                console.log("avatar_user_id 1 = " , avatar_user_id);
+                if(!avatar_user_id) avatar_user_id = VD.SettingsManager.Get("id");
+                console.log("avatar_user_id 2 = " , avatar_user_id);
                 let fileToSendSize = data['files'][0]['size'];
                 data['files'][0]['name'] = "avatar_uploaded_file___" + data['files'][0]['name'];
                 data['headers'] = data['headers'] || {};
                 data['headers']['Content-Range'] = `bytes 0-${fileToSendSize - 1}/${fileToSendSize}`;
                 data['headers']['Authorization'] = 'Bearer ' + window.token;
                 // data['headers']['X-ID'] = window.authorizedUserId;
-                data['headers']['Avatar-ID'] = VD.SettingsManager.Get("id");
+                data['headers']['Avatar-ID'] = avatar_user_id; //VD.SettingsManager.Get("id");
                 console.log("fileuploadadd: ", data);
-                data.submit();
+                // data.submit();
             })
 
 

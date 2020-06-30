@@ -780,6 +780,15 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         return def;
     }
 
+    function __setAvatarHref(userlist) {
+        function _getHref(user) {
+            return user.avatar ? "/vdesk/image/download/"+user.avatar : "/html_vdesk/template/images/userpic.png"
+        }
+        if(userlist[0]) for(var i=0;i<userlist.length;i++) userlist[i].avatar_href = _getHref(userlist[i]);
+        else userlist.avatar_href = _getHref(userlist);
+    }
+
+
     /**
      * Получение списка всех пользователей
      * @param {int} id идентификатор пользователя
@@ -801,6 +810,8 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
             if (response.success) {
                 let usersList = response.data;
+                __setAvatarHref(usersList);
+                console.log("usersList: ", usersList);
                 if (id) {
                     for (let i = 0; i < usersList.length; i++) {
                         if (usersList[i]['id'] === id) {

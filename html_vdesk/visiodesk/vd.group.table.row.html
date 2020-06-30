@@ -38,11 +38,12 @@
                         <p><b><%- author.last_name %></b> <%- author.first_name %> <%- author.middle_name %><br><u><%- author.position%></u></p>
                         </div>
                 </span>
+
                 -->
 
                 <% for (let i in users) { %>
                 <span class="tooltip user_status <%= users[i].status.name %>">
-                <img class="img_att_users" src="template/images/<%- users[i].userpic %>" title="<%- users[i].last_name %> <%- users[i].first_name %> <%- users[i].middle_name %>, <%- users[i].position%>">
+                        <img class="img_att_users" src="<%- users[i].avatar_href %>" title="<%- users[i].last_name %> <%- users[i].first_name %> <%- users[i].middle_name %>, <%- users[i].position%>" />
                         <div class="tooltip-content">
                                 <div class="tooltip-arrow"></div>
                                 <p><b><%- users[i].last_name %></b> <%- users[i].first_name %> <%- users[i].middle_name %><br><u><%- users[i].position%></u></p>

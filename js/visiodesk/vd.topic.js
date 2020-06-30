@@ -797,6 +797,7 @@ window.VD_Topic = (function () {
                     'checked': checked ? 'checked': ''
                 }, item));
                 $multiselectList.append(itemTemplateExec);
+                $(".item[data-id='"+item['id']+"']").find(".icon.user").css('background-image', `url(${item.avatar_href})`);
             });
 
             $multiselectList.find('.item').click((event) => {

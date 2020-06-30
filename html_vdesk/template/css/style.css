@@ -2941,6 +2941,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 .multiselect_list .item .label .icon.user {
     background-image: url('../images/userpic.png');
     background-size: contain;
+    border-radius: 50%;
 }
 .multiselect_list .item .label .icon.group {
     background-image: url('../images/workpic.png');
@@ -6255,7 +6256,9 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 }
 
 /*File Uploader*/
-#cameraInput {
+#cameraInput,
+#avatar_upload,
+#user-avatar_upload{
     display: none;
 }
 
@@ -7068,5 +7071,4 @@ label.input_group_title {
 
 .avatar_upload img {
     width: 150px;
-    height: 150px;
 }

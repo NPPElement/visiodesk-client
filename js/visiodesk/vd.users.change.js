@@ -114,23 +114,68 @@ window.VD_UsersChange = (function () {
                             .val(PLACEHOLDER_TEXT[fieldName]);
                 });
             } else if (userId) {
+                __loadUser(userId);
+            }
+            $(".user-avatar_upload").click(() => { $("#user-avatar_upload").click(); });
+
+            $("#user-avatar_upload")
+                .fileupload({
+                    pasteZone: $("body"),
+                    url: VD_SETTINGS['API_CONTEXT'] + '/upload_avatar', // _avatar
+                    dataType: 'json',
+                    autoUpload: true,
+                    acceptFileTypes: /(\.|\/)*$/i,
+                    maxFileSize: 30000000,
+                    maxChunkSize: 3000000,
+                    disableImageResize: /Android(?!.*Chrome)|Opera/
+                        .test(window.navigator.userAgent),
+                    previewMaxWidth: 74,
+                    previewMaxHeight: 74,
+                    messages: {
+                        maxNumberOfFiles: 'Превышено максимальное количество файлов',
+                        acceptFileTypes: 'Файл данного типа не поддерживается',
+                        maxFileSize: 'Превышен максимальный размер файла',
+                        minFileSize: 'Размер файла меньше допустимого значения'
+                    }
+                })
+                .on('fileuploaddone', function (e, data) {
+                    __loadUser(userId);
+                })
+
+                .on('fileuploadadd', (e, data) => {
+                    let fileToSendSize = data['files'][0]['size'];
+                    data['files'][0]['name'] = "avatar_uploaded_file___" + data['files'][0]['name'];
+                    data['headers'] = data['headers'] || {};
+                    data['headers']['Content-Range'] = `bytes 0-${fileToSendSize - 1}/${fileToSendSize}`;
+                    data['headers']['Authorization'] = 'Bearer ' + window.token;
+                    data['headers']['Avatar-ID'] = userId;
+                    // data.submit();
+                })
+
+
+            function __loadUser(userId) {
                 VD_API.GetUsers(userId).done((userObject) => {
                     $userFields.each((index, item) => {
                         let fieldName = $(item).attr('id').replace('user-', '');
                         if (userObject[fieldName]) {
                             $(item)
                                 .removeClass('place_holder')
-                                    .val(_.escape(userObject[fieldName]));
+                                .val(_.escape(userObject[fieldName]));
                         } else {
                             $(item)
                                 .addClass('place_holder')
-                                    .val(PLACEHOLDER_TEXT[fieldName]);
+                                .val(PLACEHOLDER_TEXT[fieldName]);
                         }
                     });
+                    $("#user-avatar").attr("src", userObject.avatar_href);
+
+
+
                 }).fail((errorMessage) => {
                     //TODO: редирект в список групп
                 });
             }
+
 
             //сохранение пользователя
             let $saveIcon = $(selector).find('.save_icon');
@@ -208,6 +253,8 @@ window.VD_UsersChange = (function () {
 
         return status;
     }
+
+
 
     /**
      * Отрисовка ролей в списке .changed_list

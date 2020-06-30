@@ -1201,7 +1201,6 @@ window.VD = (function Visiodesk() {
                 docCookies.removeItem("user.token", '/');
                 docCookies.setItem("user.token", new_token, 60*60*24*30, '/');
                 window.token = new_token;
-                console.log("CHANGE TOKEN:"+new_token);
             }
         }
         
@@ -1209,6 +1208,7 @@ window.VD = (function Visiodesk() {
             _.each(values, (val, index)=>{
                 $("[settings-txt-val='"+index+"']").text(val);
                 $("[settings-value-val='"+index+"']").val(val);
+                $("[settings-data-val='"+index+"']").attr("data-id",val);
                 $("[settings-img-download='"+index+"']").attr("src","/vdesk/image/download/"+val);
             })
         }
