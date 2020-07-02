@@ -1187,7 +1187,16 @@ window.VD = (function Visiodesk() {
         var old_values = {};
         var values = {};
         var updates$ =  new Rx.Subject();
+        var timer_role = false;
+
         Reload();
+
+
+        $('body').on("DOMNodeInserted", function (event) {
+            if(timer_role!=false) window.clearTimeout(timer_role);
+            timer_role = setTimeout(__setRoleVisibles, 100);
+        });
+
         return {
             "Reload": Reload,
             "Get": Get,
@@ -1213,6 +1222,25 @@ window.VD = (function Visiodesk() {
             })
         }
 
+
+        function __setRoleVisibles() {
+            timer_role = false;
+            $('[user-role]').each((i, e)=>{
+                let $e = $(e);
+                console.log("setRoleVisibles", $e.attr("user-role"));
+                if(!$e.attr("user-role")) return;
+                if(VD.SettingsManager.IsValue("user_roles",[$e.attr("user-role")]))
+                    $e.show();
+                else
+                    $e.hide();
+            })
+        }
+
+
+
+
+
+
         function Reload() {
             VD_API.LoadUserSettings().done(new_value => {
                 old_values = $.extend(values);
@@ -1221,6 +1249,7 @@ window.VD = (function Visiodesk() {
                 console.log("new settings",new_value);
                 __checkToken();
                 __inline_update();
+                __setRoleVisibles();
             })
         }
 

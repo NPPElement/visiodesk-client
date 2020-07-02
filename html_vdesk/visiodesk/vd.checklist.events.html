@@ -8,7 +8,7 @@
             <em>Журнал работ</em>
         </div>
         <% if (checklist.type !== 'folder') { %>
-        <a class="close" reference=":ChecklistEvents/Topic/New" title="Добавить событие" data-params='{ "checklistId": <%= checklist.id %>, "group": { "id": <%= group.id %>, "name": "<%- group.name %>", "description": "<%- group.description %>"}}'>Создать</a>
+        <a class="close" reference=":ChecklistEvents/Topic/New" title="Добавить событие" data-params='{ "checklistId": <%= checklist.id %>, "group": { "id": <%= group.id %>, "name": "<%- group.name %>", "description": "<%- group.description %>"}}' user-role="addCheckList">Создать</a>
         <% } %>
     </nav>
     <div class="full">
