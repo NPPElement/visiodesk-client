@@ -23,9 +23,6 @@ window.VD_Groups = (function () {
 
     let subscribeOnly = docCookies.getItem("group_subscribe_mode")==="subscribe";
 
-    let __inited_sas = false;
-
-
 
     return {
         "run": run,
@@ -175,8 +172,6 @@ window.VD_Groups = (function () {
 
 
     function __init_subscribe_all_switcher() {
-        if(__inited_sas) return;
-        __inited_sas = true;
         $flags = $("#group_subscribe_all_switcher span");
         $flags.click(function (e) {
             e.stopPropagation();
