@@ -1227,7 +1227,6 @@ window.VD = (function Visiodesk() {
             timer_role = false;
             $('[user-role]').each((i, e)=>{
                 let $e = $(e);
-                console.log("setRoleVisibles", $e.attr("user-role"));
                 if(!$e.attr("user-role")) return;
                 if(VD.SettingsManager.IsValue("user_roles",[$e.attr("user-role")]))
                     $e.show();

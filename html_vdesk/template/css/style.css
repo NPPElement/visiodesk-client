@@ -7113,3 +7113,10 @@ label.input_group_title {
     width: 150px;
 }
 
+
+
+.caption .flags span[data-value="subscribe"] {
+    width: 80px;
+}
+
+

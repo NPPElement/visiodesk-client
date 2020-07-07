@@ -21,6 +21,12 @@ window.VD_Groups = (function () {
 
     let _subscription;
 
+    let subscribeOnly = docCookies.getItem("group_subscribe_mode")==="subscribe";
+
+    let __inited_sas = false;
+
+
+
     return {
         "run": run,
         "unload": unload
@@ -94,11 +100,14 @@ window.VD_Groups = (function () {
 
                                 } );
                             });
+
                             return false;
                         });
 
 
                         groupElementsCache[itemId] = $('#group-' + itemId).find('.taskbar');
+
+
                     } else {
                         //в дальнейшем меняем только индикаторы статуса топиков
                         let groupElement = groupElementsCache[itemId];
@@ -122,7 +131,10 @@ window.VD_Groups = (function () {
                             .find(".level").attr("data-id", item['support_id'])
                             .find(".result_field").val(item['support_id']);
                     }
+
                 });
+
+                __init_subscribe_all_switcher();
 
                 if (isSeanceStarted) {
                     status.resolve({
@@ -160,4 +172,45 @@ window.VD_Groups = (function () {
 
         return statusValues;
     }
+
+
+    function __init_subscribe_all_switcher() {
+        if(__inited_sas) return;
+        __inited_sas = true;
+        $flags = $("#group_subscribe_all_switcher span");
+        $flags.click(function (e) {
+            e.stopPropagation();
+            let $item = $(this);
+            if($item.hasClass("true")) return;
+            $flags.removeClass("true");
+            $item.addClass("true");
+            __setSubscribeMode($item.attr("data-value")==="subscribe");
+        });
+        __setSubscribeSwitcher();
+        __setSubscribeMode(subscribeOnly);
+    }
+    
+    function __setSubscribeMode(value) {
+        console.log("__setSubscribeMode("+value+")");
+        docCookies.setItem("group_subscribe_mode", value ? "subscribe" : false);
+        $(".groups_list").toggleClass("group_subscribe_mode", value);
+
+        if(value) {
+            $(".level[data-id='0']").closest(".group_item").hide();
+            $(".level:not([data-id='0'])").closest(".group_item").show();
+        } else {
+            $(".group_item").show();
+        }
+
+    }
+
+    function __setSubscribeSwitcher() {
+        $('#group_subscribe_all_switcher span[data-value="subscribe"]')
+            .removeClass(subscribeOnly ? "false" : "true")
+            .addClass(subscribeOnly ? "true" : "false");
+        $('#group_subscribe_all_switcher span[data-value="all"]')
+            .removeClass(subscribeOnly ? "true" : "false")
+            .addClass(subscribeOnly ? "false" : "true");
+    }
+
 })();
