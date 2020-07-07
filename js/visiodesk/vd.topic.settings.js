@@ -715,7 +715,8 @@ window.VD_TopicSettings = (function () {
             }
 
             //TODO: сделать translate через EVENTS.GLOBAL_I18N_LOADED
-            const STATUS_TYPES = VD_SETTINGS.translate('STATUS_TYPES_ALLOWED', 'vdesk.topic.status').set('', 'Отменить');
+            // const STATUS_TYPES = VD_SETTINGS.translate('STATUS_TYPES_ALLOWED', 'vdesk.topic.status').set('', 'Отменить');
+            const STATUS_TYPES = VD_SETTINGS.translate('STATUS_TYPES_ALLOWED', 'vdesk.topic.status').set(-1,["Отменить", "cancel blue"]);
             let changed$ = VD.CreateDropdownDialog($(event.currentTarget), STATUS_TYPES, 'Статус');
             changed$.subscribe((result) => {
                 if (result['value'] !== '') {
@@ -733,7 +734,7 @@ window.VD_TopicSettings = (function () {
             }
 
             //TODO: сделать translate через EVENTS.GLOBAL_I18N_LOADED
-            const PRIORITY_TYPES = VD_SETTINGS.translate('PRIORITY_TYPES', 'vdesk.topic.priority').set('', 'Отменить');
+            const PRIORITY_TYPES = VD_SETTINGS.translate('PRIORITY_TYPES', 'vdesk.topic.priority').set(-1,["Отменить", "cancel blue"]);
             let changed$ = VD.CreateDropdownDialog($(event.currentTarget), PRIORITY_TYPES, 'Приоритет');
             changed$.subscribe((result) => {
                 if (result['value'] !== '') {

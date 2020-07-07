@@ -745,7 +745,7 @@ window.VD = (function Visiodesk() {
 
     function Controller(reference, selector, params) {
         params = params || {};
-        console.log("Controller: ", reference, selector);
+        // console.log("Controller: ", reference, selector);
         var refName = 'VD_' + VB_API.extractName(reference);
         var refParent = 'VD_' + VB_API.extractName(VB_API.parentReference(reference));
         var moduleName = '';
