@@ -15,6 +15,8 @@ window.VB = (function Visiobas() {
     //local cache data, requested from server
     let cache = {};
 
+    let __timer_save_objects = {};
+
     _subscribe();
 
     return {
@@ -1003,8 +1005,32 @@ window.VB = (function Visiobas() {
         let loadedObjectsNumber = 0;
         let objects = [];
 
+
+        /*
+        Эксперимент, можно убирать
+        function __extractParentReference(items) {
+            let parents = {};
+            items.forEach(item => {
+                if(!item['reference']) return;
+                let parent_reference = item['reference'].substr(0, item['reference'].lastIndexOf("."));
+                if(!parents[parent_reference]) parents[parent_reference] = 1;
+                else parents[parent_reference]++;
+            });
+            let max = 0, max_ref = false;
+            for(let ref in parents) if(parents[ref]>max) {
+                max = parents[ref];
+                max_ref = ref;
+            }
+            return max_ref;
+        }
+
+        let parent_reference = __extractParentReference(items);
+        */
+
         items.forEach((item, index) => {
+            // console.log("items.forEach",item, index);
             let reference = item['reference'] || '';
+
             VB_API.getObject(reference).then((response) => {
                 let object = response.data;
                 switch (object[OBJECT_TYPE_CODE]) {
@@ -1012,6 +1038,7 @@ window.VB = (function Visiobas() {
                     case 'analog-value':
                     case 'binary-output':
                     case 'binary-value':
+                    // case 'folder':
                         //case "multi-state-output":
                         //case "multi-state-value":
                         objects[index] = object;
@@ -1020,7 +1047,7 @@ window.VB = (function Visiobas() {
                         return false;
                 }
             }).catch((response) => {
-                console.error("Can't get object by reference", response.error);
+                console.error("Can't get object by reference", response);
                 return false;
             }).done(() => {
                 loadedObjectsNumber++;
@@ -1037,8 +1064,12 @@ window.VB = (function Visiobas() {
                     __createForMapController(item, object, $wrapper);
                 }
             });
+            // Эксперимент, уже не нужно
+            // if(parent_reference) $wrapper.children("div").append("<div class='icon_item' style='padding: 15px;'><a class='parent_reference' reference='"+parent_reference+"' href='javascript:void(0)'><img src='template/images/Arrow_Right_Grey.png' width='40' height='40'></a></div>");
             controllersReady.resolve($wrapper);
         });
+
+
 
         return controllersReady;
     }
@@ -1122,10 +1153,12 @@ window.VB = (function Visiobas() {
                         __saveForMapController(object, curValue);
                     }
 
+                    /*
                     if (!inThrottle) {
                         inThrottle = true;
                         setTimeout(() => inThrottle = false, 250);
                     }
+                     */
                 });
 
                 $item = $(`<div class="slider_item" id="${uniqId}"></div>`);
@@ -1193,7 +1226,22 @@ window.VB = (function Visiobas() {
         $parent.append($item);
     }
 
+
+
     function __saveForMapController(object, resultValue = '') {
+        const deviceId = object[BACNET_CODE["device-id"]];
+        const objectId = object[BACNET_CODE["object-identifier"]];
+        const idx = "timer_"+deviceId+"_"+objectId;
+        if(__timer_save_objects[idx]) window.clearTimeout(__timer_save_objects[idx]);
+        __timer_save_objects[idx] = window.setTimeout(function () {
+            delete __timer_save_objects[idx];
+            __saveForMapController__request(object, resultValue);
+
+        }, 333);
+
+    }
+
+    function __saveForMapController__request(object, resultValue = '') {
         const objectType = object[BACNET_CODE["object-type"]];
         const objectTypeCode = BACNET_OBJECT_TYPE_CODE[objectType];
         const deviceId = object[BACNET_CODE["device-id"]];
