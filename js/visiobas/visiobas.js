@@ -1038,9 +1038,9 @@ window.VB = (function Visiobas() {
                     case 'analog-value':
                     case 'binary-output':
                     case 'binary-value':
-                    // case 'folder':
-                        //case "multi-state-output":
-                        //case "multi-state-value":
+                    case 'folder':
+                    case "multi-state-output":
+                    case "multi-state-value":
                         objects[index] = object;
                         return true;
                     default:
@@ -1087,6 +1087,8 @@ window.VB = (function Visiobas() {
         const maxPresValue = object[BACNET_PROPERTY_ID["max-pres-value"]];
         const resolution = object[BACNET_PROPERTY_ID["resolution"]];
         const covIncrement = object[BACNET_PROPERTY_ID["cov-increment"]];
+        const description = object[BACNET_PROPERTY_ID["description"]];
+        const reference = object[BACNET_PROPERTY_ID["object-property-reference"]];
 
         /*let emptyCovIncrement = _.isNull(covIncrement) || _.isUndefined(covIncrement);
         if (emptyCovIncrement) {
@@ -1187,6 +1189,69 @@ window.VB = (function Visiobas() {
                 }
 
                 break;
+
+            case "multi-state-output":
+            case "multi-state-value":
+                $item = $(`<div class="multi-state_item" id="${uniqId}"></div>`);
+                $item.append();
+                let multiStates = object[BACNET_CODE["state-text"]];
+                if (!_.isEmpty(multiStates)) {
+                    multiStates = JSON.parse(multiStates);
+                } else {
+                    multiStates = [];
+                }
+                value = parseInt(presentValue) || 0;
+                if (text) {
+                    text = multiStates[value];
+                    let $text = $(`<div class="text" title="${description}">${text}</div>`);
+                    $item.append($text);
+                }
+
+
+                $item.click(function (e) {
+                    e.stopPropagation();
+                    let h = "<div class='dropdown'><ul>";
+                    multiStates.forEach((v,i)=>{
+                        let c = i===value ? "active " : "";
+                        if(multiStates.length-1===i) c+="btn-radius";
+                        h+="<li class='"+c+"' value='"+i+"'>"+v+"</li>";
+                    });
+
+                    h+="<li value='cancel' class='class top-radius cancel blue'>Отменить</li>";
+                    h+= "</ul></div>";
+                    $("#popup")
+                        .html(h)
+                        .css("left",""+(e.clientX-e.offsetX)+"px")
+                        .css("top",""+(e.clientY-e.offsetY-value*57)+"px")
+                        .show()
+                        .find("li").click(function () {
+                            console.log($(this).text())
+                            $("#popup").hide().html('');
+                            let val = $(this).attr("value");
+                            if(val==='cancel') return;
+                        val = parseInt(val);
+                        __saveForMapController__request(object, val);
+                        $("#"+uniqId).find(".text").html(multiStates[val]);
+                    });
+
+                });
+
+                console.log("multi-state.ITEM: ", object, $item.html());
+                break;
+
+            case "folder":
+                console.log("folder.ITEM: ", object, reference);
+                $item = $(`<div class="icon_item" id="${uniqId}"></div>`);
+                $item.css({ 'background-image': `url("${icon}")` });
+
+                $item.on('click', (event) => {
+                    event.stopPropagation();
+                    console.log("GO TO: ", reference, "from: ", object);
+                    VD.ShowVisiobasTabbar();
+                    VBasWidget.show("#visualization", reference);
+                });
+                break;
+
             case "binary-output":
             case "binary-value":
             default:
@@ -1236,9 +1301,7 @@ window.VB = (function Visiobas() {
         __timer_save_objects[idx] = window.setTimeout(function () {
             delete __timer_save_objects[idx];
             __saveForMapController__request(object, resultValue);
-
         }, 333);
-
     }
 
     function __saveForMapController__request(object, resultValue = '') {

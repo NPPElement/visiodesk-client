@@ -4151,6 +4151,29 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     display: none;
 }
 
+
+
+.formap_controllers_wrapper .multi-state_item {
+    position: relative;
+    width: 147px;
+    height: 69px;
+    margin-right: 10px;
+    margin-bottom: 14px;
+    border-radius: 18px;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.formap_controllers_wrapper .multi-state_item {
+    line-height: 69px;
+}
+
 /*Сетка для визуализации*/
 
 .grid {
@@ -7120,3 +7143,29 @@ label.input_group_title {
 }
 
 
+.popup {
+    position: absolute;
+    background: black;
+}
+
+.popup .dropdown {
+    display: block;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /*padding: 30px 10px;*/
+    background: none;
+    padding: 0;
+    z-index: 1002;
+}
+
+.popup .dropdown ul {
+    background: transparent;
+}
+
+.popup .dropdown li {
+    padding-left: 16px;
+    padding-right: 16px;
+}

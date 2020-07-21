@@ -176,6 +176,8 @@ window.VBasWidget = (function () {
                     return __objectDoesNotHaveVisualization(object);
                 }
 
+                // console.log("getObject: ", object);
+
                 const vis = VB_API.parsePropertyList(propertyList);
                 if (vis == null || _.isEmpty(vis.template)) {
                     return __objectDoesNotHaveVisualization(object);

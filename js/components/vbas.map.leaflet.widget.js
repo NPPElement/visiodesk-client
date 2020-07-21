@@ -151,8 +151,26 @@
         const _vbUpdaterId = "vbas.map.leaflet.widget";
 
         return {
-            create: create
+            create: create,
+            test: test,
+            findMarkerByReference: findMarkerByReference,
+            __selectLeafletLayer: _selectedLeafBaseLayer,
+            _selectedLeafBaseLayer: _get__leafBaseLayers,
+            _leafControlLayers: _get__leafControlLayers,
+            _leafBaseLayers: _get__leafBaseLayers
         };
+
+        function _get__selectedLeafBaseLayer() {
+            return _selectedLeafBaseLayer;
+        }
+
+        function _get__leafControlLayers() {
+            return _leafControlLayers;
+        }
+
+        function _get__leafBaseLayers() {
+            return _leafBaseLayers;
+        }
 
         /**
          * Load widget data from server
@@ -197,6 +215,7 @@
                     loadedLayersData.forEach((loadedData) => {
                         data.layers[loadedData.map.id] = loadedData;
                     });
+                    console.log("loadedLayersData:", data);
 
                     def.resolve(data);
                 });
@@ -282,6 +301,8 @@
                         const x = parsed[3];
                         const y = parsed[4];
 
+                        console.log("parsed: ", parsed);
+
                         for (let caption in _leafBaseLayers) {
                             const leafLayer = _leafBaseLayers[caption];
                             if (leafLayer.options.id === layerId) {
@@ -302,10 +323,12 @@
                     console.error(sprintf("Unknown reference format: %s", reference));
                 }
             });
+
             return L.popup().setContent(content);
         }
 
         function __createMarkerCustomPopupContent(marker) {
+            console.log("__createMarkerCustomPopupContent: ", marker);
             marker.replace = marker.replace ? marker.replace : {};
             const def = $.Deferred();
             const defObjects = (marker.items && marker.items.length > 0)
@@ -339,6 +362,7 @@
         }
 
         function __createMarkerMapControllerPopupContent(marker) {
+            console.log("__createMarkerMapControllerPopupContent.marker: ", marker);
             const def = $.Deferred();
             const content = L.DomUtil.create("div");
             VB.CreateForMapControllers(marker)
@@ -594,6 +618,10 @@
                 return "binary-output";
             } else if (objectType === "binary_value") {
                 return "binary-value";
+            } else if (objectType === "multi_state_input") { // проверить
+                return "multi-state-input";
+            } else if (objectType === "multi_state_output") {
+                return "multi-state-output";
             }
 
             return objectType;
@@ -688,6 +716,8 @@
                             } else if ($dom.is("g")) {
                                 $dom.find("text").html(sprintf(format || "%s", presentValueText));
                             }
+                        } else if (VB.isMultiState(objectType)) { // проверить
+                            console.log("Сделать тут - VB.isMultiState(objectType)");
                         }
                     });
                 }
@@ -723,6 +753,7 @@
             __createLayerGroups(layer).done((defLeafGroups, leafGroups) => {
                 let overlays = {};
                 leafGroups.forEach((leafGroup) => {
+                    console.log("leafGroup: ", leafGroup);
                     leafMap.addLayer(leafGroup);
                     overlays[leafGroup.options.caption] = leafGroup;
                 });
@@ -809,6 +840,7 @@
                         const state = defLeafMarkers[i].state();
                         if (state === "resolved" && leafMarkers[i] !== void 0) {
                             resolvedLeafMarkers.push(leafMarkers[i]);
+                            // console.log("leafMarkers["+i+"]", leafMarkers[i]);
                         }
                     }
 
@@ -873,6 +905,7 @@
 
             leafMap.on("baselayerchange", (e) => {
                 _selectedLeafBaseLayer = e.layer;
+                console.log("_selectedLeafBaseLayer: ", _selectedLeafBaseLayer);
                 __selectLeafletLayer(e.layer.options.id);
             });
 
@@ -911,11 +944,11 @@
          */
         function findMarkerByReference(reference) {
             const layers = _data && _data.layers || [];
-            for (let itLayer = 0; itLayer < layers.length; ++itLayer) {
+            for (let itLayer in layers) {
                 const layer = layers[itLayer];
                 const groups = layer && layer.groups || [];
                 for (let itGroup = 0; itGroup < groups.length; ++itGroup) {
-                    const group = groups[itLayer];
+                    const group = groups[itGroup];
                     const markers = group && group.markers || [];
                     for (let itMarker = 0; itMarker < markers.length; ++itMarker) {
                         const marker = markers[itMarker];
@@ -926,6 +959,10 @@
                 }
             }
         }
+    }
+
+    function test() {
+
     }
 
     window.VBasMapLeafletWidget = VBasMapLeafletWidget();

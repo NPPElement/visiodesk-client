@@ -29,7 +29,8 @@
 
         return {
             "create": create,
-            "update": update
+            "update": update,
+            "__logWindowOpen": __logWindowOpen
         };
 
         /**
@@ -199,6 +200,7 @@
          * @param {object} [options] additional options
          */
         function update(options) {
+            console.log("ObjectsList.update(options): ", options);
             const reference = options && options.reference || "Site";
             const logWindowHref = options && options.href || "";
 
@@ -260,8 +262,6 @@
                     else if (o1.name > o2.name) return 1;
                     return 0;
                 });
-
-                console.log("objects: ", objects);
 
                 VB.Load(VB_SETTINGS.htmlDir + "/components/objects.list.html", _parent, {
                     "editableObjectTypes": editableObjectTypes,
