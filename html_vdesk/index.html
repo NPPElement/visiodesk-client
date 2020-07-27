@@ -115,6 +115,7 @@
     <div class="stickers" id="stickers"></div>
 
     <div class="popup" id="popup"></div>
+    <div class="tools" id="tools"></div>
 
     <!--Parameters-->
     <div class="log custom" id="object-parameters-window">
@@ -226,8 +227,8 @@
 <script src="/js/chartlist/chartist.min.js"></script>
 
 <!-- leaflet -->
-<!--<script src="/js/leaflet/leaflet.js" type="text/javascript"></script>-->
-<script src="/js/leaflet/leaflet-src.js" type="text/javascript"></script><!-- На время отладки -->
+<script src="/js/leaflet/leaflet.js" type="text/javascript"></script>
+<!--<script src="/js/leaflet/leaflet-src.js" type="text/javascript"></script>&lt;!&ndash; На время отладки &ndash;&gt;-->
 <script src="/js/leaflet/plugins/coordinates/Leaflet.Coordinates-0.1.5.min.js"></script>
 <script src="/js/leaflet/plugins/Leaflet.MousePosition/L.Control.MousePosition.js"></script>
 
@@ -443,7 +444,13 @@
         };
 
         initializeExportTopicCalendar();
-        $("body").bind("DOMSubtreeModified", "h1", function() { window.document.title = "visioDESK: "  + $("h1").text() });
+
+        VD.ref$.subscribe((ref_event) => {
+            if (ref_event.type === "after.run.done") {
+                let need = "visioDESK: "  + $("h1").text();
+                if(need!==window.document.title) window.document.title = need;
+            }
+        });
 
         $("body").on("click",".parent_reference", function (e) {
             let reference = $(this).attr("reference");
@@ -495,6 +502,44 @@
                 // data.submit();
             });
     });
+
+
+    let MPoint = {
+        $point: null,
+        m: {},
+        p: {},
+        init: function ($point) {
+            MPoint.$point = $point;
+
+            MPoint.$point.mousedown = MPoint.mousedown;
+            MPoint.$point.mouseup = MPoint.mouseup;
+            MPoint.$point.mousemove = MPoint.mousemove;
+        },
+        
+        mousedown: function () {
+            MPoint.m
+        },
+
+        mouseup: function () {
+
+        },
+        mousemove: function () {
+
+        },
+
+    };
+
+    function init_mover($point) {
+        
+    }
+
+
+
+
+
+
+
+
 </script>
 
 

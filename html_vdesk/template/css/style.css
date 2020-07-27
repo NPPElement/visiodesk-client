@@ -7169,3 +7169,17 @@ label.input_group_title {
     padding-left: 16px;
     padding-right: 16px;
 }
+
+
+.tools {
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    background-color: rgba(255,255,255,0.6);
+    width: 150px;
+    height: 50px;
+    vertical-align: middle;
+    z-index: 12;
+    border: 2px solid white;
+    border-radius: 3px;
+}

@@ -244,7 +244,7 @@
 
                     }
                 }).fail((response) => {
-                    console.warn("can't update present values, error: " + response.error);
+                    console.warn("can't update present values, error: " + _.isObject(response) ? response.error : response);
                 });
             }, 5000);
         }

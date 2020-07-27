@@ -153,11 +153,13 @@
         return {
             create: create,
             test: test,
+
             findMarkerByReference: findMarkerByReference,
-            __selectLeafletLayer: _selectedLeafBaseLayer,
+            __selectLeafletLayer: ()=> _selectedLeafBaseLayer,
             _selectedLeafBaseLayer: _get__leafBaseLayers,
             _leafControlLayers: _get__leafControlLayers,
-            _leafBaseLayers: _get__leafBaseLayers
+            _leafBaseLayers: _get__leafBaseLayers,
+            map: ()=>{return leafMap}
         };
 
         function _get__selectedLeafBaseLayer() {
@@ -177,7 +179,7 @@
          * @private
          * @return {Deferred}
          */
-        function __load() {
+        function __load_old() {
             const def = $.Deferred();
 
             let data = {
@@ -221,6 +223,14 @@
                 });
             });
 
+            return def;
+        }
+        function __load() {
+            const def = $.Deferred();
+            VB_API.getMap().done(result=> {
+                console.log("result.data = ", result.data);
+                def.resolve(result.data);
+            });
             return def;
         }
 
@@ -393,6 +403,7 @@
          * @return deferred of leaflet marker
          */
         function __createDefaultLeafletMarker(marker) {
+            console.log("__createDefaultLeafletMarker: ", marker);
             const def = $.Deferred();
 
             let options = {};
@@ -894,7 +905,6 @@
                 layers: [_selectedLeafBaseLayer],
                 maxBoundsViscosity: 0.85
             });
-            window.leafMap = leafMap;
 
             __selectLeafletLayer(selectedLayerId);
 

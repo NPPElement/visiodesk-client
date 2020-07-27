@@ -383,6 +383,7 @@ window.VD_Topic = (function () {
                             __applyTopicParams(resultTopicParams);
                             __showItems(resultTopicParams['items']);
                             check(topicId);
+                            status.resolve({ 'selector': selector });
                         });
 
                         //TODO: функционал загрузки итемов из локальной базы
@@ -413,6 +414,7 @@ window.VD_Topic = (function () {
                                 __appendChangedList(fullItemObject);
                             }
                         }
+                        status.resolve({ 'selector': selector });
                     }
 
                     if (typeof defaultAssignedUser !== "undefined") {
@@ -427,9 +429,7 @@ window.VD_Topic = (function () {
                 });
             });
 
-            status.resolve({
-                'selector': selector
-            });
+            // status.resolve({ 'selector': selector });
         }).fail((response) => {
             status.reject();
             console.error(response.error);
@@ -1683,8 +1683,8 @@ window.VD_Topic = (function () {
                 __applyTopicParams(resultTopicParams);
                 $(".topic").html('');
                 __showItems(resultTopicParams['items']);
-                check(topicId);
-                editorInstance.setData(editorData);
+                check(topicId).done(()=>editorInstance.setData(editorData));
+
             });
         }
     }

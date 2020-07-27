@@ -1230,8 +1230,11 @@ window.VB = (function Visiobas() {
                             let val = $(this).attr("value");
                             if(val==='cancel') return;
                         val = parseInt(val);
-                        __saveForMapController__request(object, val);
-                        $("#"+uniqId).find(".text").html(multiStates[val]);
+                        if( val!==value) {
+                            __saveForMapController__request(object, val);
+                            $("#"+uniqId).find(".text").html(multiStates[val]);
+                        }
+
                     });
 
                 });

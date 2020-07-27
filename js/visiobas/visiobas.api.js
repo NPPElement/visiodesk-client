@@ -47,6 +47,7 @@
             "parsePropertyList": parsePropertyList,
 
             "getLibrary": getLibrary,
+            "getMap": getMap,
 
             "Test": Test,
         };
@@ -72,6 +73,37 @@
                     jqXHR: jqXHR
                 });
             }).fail((jqXHR, textStatus, errorThrown) => {
+                def.reject({
+                    success: false,
+                    jqXHR: jqXHR,
+                    textStatus: textStatus,
+                    error: errorThrown
+                });
+            });
+
+            return def;
+        }
+        /**
+         * Get from server library of all registered visual components
+         * @return {Deferred}
+         */
+        function getMap() {
+            let def = $.Deferred();
+
+            const url = "/vbas/arm/getMap";
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                type: "json",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }).done((map, textStatus, jqXHR) => {
+                console.log("getMap.Ok: ", map);
+                def.resolve(map);
+            }).fail((jqXHR, textStatus, errorThrown) => {
+                console.log("getMap.Error: ", textStatus);
                 def.reject({
                     success: false,
                     jqXHR: jqXHR,
