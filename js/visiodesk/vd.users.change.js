@@ -118,6 +118,7 @@ window.VD_UsersChange = (function () {
             }
             $(".user-avatar_upload").click(() => { $("#user-avatar_upload").click(); });
 
+            /*
             $("#user-avatar_upload")
                 .fileupload({
                     pasteZone: $("body"),
@@ -151,6 +152,10 @@ window.VD_UsersChange = (function () {
                     data['headers']['Avatar-ID'] = userId;
                     // data.submit();
                 })
+
+
+             */
+
 
 
             function __loadUser(userId) {

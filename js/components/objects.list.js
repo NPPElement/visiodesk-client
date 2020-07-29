@@ -200,6 +200,7 @@
          * @param {object} [options] additional options
          */
         function update(options) {
+            if(!options) return;
             console.log("ObjectsList.update(options): ", options);
             const reference = options && options.reference || "Site";
             const logWindowHref = options && options.href || "";

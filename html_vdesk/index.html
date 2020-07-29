@@ -66,8 +66,8 @@
                         <br>
                         Должность: <b settings-txt-val='position'></b><br>
                         Логин: <b settings-txt-val='login'></b><br>
-                        <a class="avatar_upload" settings-data-val="id"><img width="100%" settings-img-download="avatar"></a>
-                        <input type="file" accept="image/*" id="avatar_upload" name="files[]" settings-data-val="id">
+<!--                        <a class="avatar_upload" settings-data-val="id"><img width="100%" settings-img-download="avatar"></a>-->
+<!--                        <input type="file" accept="image/*" id="avatar_upload" name="files[]" settings-data-val="id">-->
                     </div>
 
 
@@ -114,7 +114,7 @@
     <!--visioDESK stickers -->
     <div class="stickers" id="stickers"></div>
 
-    <div class="popup" id="popup"></div>
+    <div class="popup" id="popup" style="display: none"></div>
     <div class="tools" id="tools"></div>
 
     <!--Parameters-->
@@ -154,7 +154,7 @@
 </div>
 
 
-<!-- todo: открыть, не было интернета <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>-->
+<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
 
 <!-- Firebase 
 <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
@@ -465,6 +465,7 @@
         $(".avatar_upload").click(() => { $("#avatar_upload").click(); });
         // $(".user-avatar_upload").click(() => { $("#avatar_upload").click(); });
 // .avatar_upload,
+        /*
         $("#avatar_upload")
             .fileupload({
                 pasteZone: $("body"),
@@ -501,6 +502,7 @@
                 data['headers']['Avatar-ID'] = avatar_user_id; //VD.SettingsManager.Get("id");
                 // data.submit();
             });
+         */
     });
 
 

@@ -523,8 +523,8 @@ window.VD_Topic = (function () {
                     $link.html(`<img src="${img['src']}">`);
                 }
             }, {
-                'meta': true,
-                'noRevoke': true
+                // 'meta': true,
+                // 'noRevoke': true
             }
         );
 
@@ -1160,6 +1160,8 @@ window.VD_Topic = (function () {
         }
         sendItemsBlock = true;
 
+        console.log("itemsForSend: ", itemsForSend); // ,,
+
         VD_API.FileUploader._clearFilenames();
 
         //при создании топика, проверяем проставлен или нет статус с приоритетом
@@ -1233,7 +1235,7 @@ window.VD_Topic = (function () {
             __saveLoadTopic(newTopicParams).then((resultTopicParams) => {
                 __updateTopicParams(resultTopicParams);
                 topicId = resultTopicParams['id'];
-                window.location.hash = window.location.hash.replace("Topic/New","Topic/"+topicId);
+                if(window.location.hash.indexOf("Topic/New")>-1) window.location.hash = window.location.hash.replace("Topic/New","Topic/"+topicId);
 
                 __clearChangedList();
                 __applyTopicParams(resultTopicParams);
@@ -1437,6 +1439,7 @@ window.VD_Topic = (function () {
                 let contId = VD.EscapeSpecialCssChars(uploadName);
                 let $cont = $('#' + contId);
                 let $link = $cont.find('.download_link');
+                console.log("__show items: ", contId, uploadName);
                 setDownloadLink($link, uploadName);
             });
         }
@@ -1448,6 +1451,7 @@ window.VD_Topic = (function () {
      * @private
      */
     function __startUploadFiles(items) {
+        console.log("__startUploadFiles: ", items);
         items.forEach((item) => {
             if (item['type']['id'] === 2) {
                 VD_API.FileUploader.submitFromQueue(item);

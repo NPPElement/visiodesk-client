@@ -93,14 +93,18 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         let filenames = {};
         function correctFilename(filename) {
+
             if(filenames[filename]===undefined) {
                 filenames[filename] = 1;
+                console.log("correctFilename("+filename+") = "+filename);
                 return filename;
             }
             filenames[filename]++;
             let last = filename.lastIndexOf(".");
             if(last===-1) return filename + "_"+filenames[filename];
-            return filename.substr(0, last-1) + "_" + filenames[filename] + filename.substr(last);
+            let result = filename.substr(0, last-1) + "_" + filenames[filename] + filename.substr(last);
+            console.log("correctFilename("+filename+") = " + result);
+            return result;
         }
 
         return {
@@ -110,6 +114,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
              * @param {string} uploaderSelector
              */
             init: (uploaderSelector) => {
+                console.log("uploaderSelector: "+uploaderSelector);
                 $(uploaderSelector).fileupload({
                     pasteZone: $("body"),
                     url: apiContext + '/upload',
@@ -130,12 +135,21 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                         acceptFileTypes: 'Файл данного типа не поддерживается',
                         maxFileSize: 'Превышен максимальный размер файла',
                         minFileSize: 'Размер файла меньше допустимого значения'
+                    },
+                    headers: {
+                        Authorization: 'Bearer ' + window.token
                     }
                 }).on('fileuploadadd', (e, data) => {
-                    if (!data['files']['error']) {
+
+
+                    if (!data['files'][0]['error']) {
                         let fileName = data['files'][0]['name'];
+                        let fileType = data['files'][0]['type'];
+                        fileType = fileType.split("/");
+                        fileType = fileType.length>1 ? fileType[1] : "dat";
                         let fileSize = data['files'][0]['size'];
 
+                        if(fileName===undefined) fileName = "image."+fileType;
                         fileName = correctFilename(fileName);
                         data['files'][0]['name_2'] = fileName;
 
@@ -144,7 +158,10 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                             uploadQueue.set(fileName, data);
                         }
                     }
+                    console.log("fileuploadadd+: ", data);
+
                 }).on('fileuploadprocessalways', function (e, data) {
+                    console.log("fileuploadprocessalways: ", data);
                     let file = data['files'][0];
                     let fileName = file['name_2'];
                     let tempId = VD.EscapeSpecialCssChars(VD_SETTINGS['ITEM_TYPES'][2] + '_' + fileName);
@@ -166,18 +183,21 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
                     //console.warn(data);
                 }).on('fileuploadprogress', function (e, data) {
+                    console.log("fileuploadprogress: ", data);
                     var progress = parseInt(data.loaded / data.total * 100, 10);
 
                     console.warn(progress);
                 }).on('fileuploadchunkdone', function (e, data) {
                     console.warn(data);
                 }).on('fileuploadchunkfail', function (e, data) {
+                    console.log("fileuploadchunkfail: ", data);
                     let fileName = data['files'][0]['name'];
                     uploadQueue.delete(fileName);
 
                     //TODO: оформить вывод ошибки при загрузке файлов
                     console.error(data);
                 }).on('fileuploaddone', function (e, data) {
+                    console.log("fileuploaddone: ", data);
                     let fileName = data['files'][0]['name_2'];
                     let uploadName = data['files'][0]['uploadName'];
                     let contId = VD.EscapeSpecialCssChars(uploadName);
@@ -196,9 +216,11 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
                     VD_Topic.setDownloadLink($text.find('.download_link'), uploadName);
 
+
                     uploadQueue.delete(fileName);
                     console.warn(data);
                 }).on('fileuploadfail', function (e, data) {
+                    console.log("fileuploadfail: ", data);
                     let fileName = data['files'][0]['name'];
                     uploadQueue.delete(fileName);
 
@@ -216,6 +238,9 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
              * @param {FileItem} fileItem
              */
             submitFromQueue: (fileItem) => {
+                // data['headers']['Authorization'] = 'Bearer ' + window.token;
+
+                console.log("uploaded.submitFromQueue");
                 let fileName = fileItem['name'];
 
                 if (fileItem['author']['id'] === authorizedUserId && uploadQueue.has(fileName)) {
@@ -226,13 +251,15 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
                         fileToSend['headers'] = fileToSend['headers'] || {};
                         fileToSend['headers']['Content-Range'] = `bytes 0-${fileToSendSize - 1}/${fileToSendSize}`;
-                        fileToSend['headers']['Authorization'] = 'Bearer ' + token;
+                        fileToSend['headers']['Authorization'] = 'Bearer ' + window.token;
 
-                        fileToSend['files'][0]['uploadName'] = fileItem['text'];
+                        fileToSend['files'][0]['uploadName'] = fileItem['text'] ? fileItem['text'] : fileItem['name_2'];
+
+                        // fileToSend['files'][0]['uploadName'] = fileItem['text'];
 
                         fileToSend['created_at'] = fileItem['created_at'];
                         uploadQueue.set(fileName, fileToSend);
-
+                        console.log("uploaded.fileToSend: ", fileToSend);
                         fileToSend.submit();
                     }
                 }
