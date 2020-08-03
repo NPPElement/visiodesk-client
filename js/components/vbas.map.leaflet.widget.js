@@ -728,7 +728,7 @@
                                 $dom.find("text").html(sprintf(format || "%s", presentValueText));
                             }
                         } else if (VB.isMultiState(objectType)) { // проверить
-                            console.log("Сделать тут - VB.isMultiState(objectType)");
+                            console.log("todo: Сделать тут - VB.isMultiState(objectType)");
                         }
                     });
                 }
@@ -764,7 +764,7 @@
             __createLayerGroups(layer).done((defLeafGroups, leafGroups) => {
                 let overlays = {};
                 leafGroups.forEach((leafGroup) => {
-                    console.log("leafGroup: ", leafGroup);
+                    // console.log("leafGroup: ", leafGroup);
                     leafMap.addLayer(leafGroup);
                     overlays[leafGroup.options.caption] = leafGroup;
                 });

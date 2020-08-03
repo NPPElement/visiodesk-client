@@ -115,7 +115,7 @@
     <div class="stickers" id="stickers"></div>
 
     <div class="popup" id="popup" style="display: none"></div>
-    <div class="tools" id="tools"></div>
+<!--    <div class="tools" id="tools"></div>-->
 
     <!--Parameters-->
     <div class="log custom" id="object-parameters-window">
@@ -457,15 +457,15 @@
             if(reference) VB.redirect({reference: reference});
         });
 
-        $("body").on("click","#tab-content-leaflet", e=>$("#popup").hide().html(''));
+        // $("body").on("click","#tab-content-leaflet", e=>$("#popup").hide().html(''));
         // $("body").on("mouseout","#popup > div", e=>$("#popup").hide().html(''));
 
 
 
         $(".avatar_upload").click(() => { $("#avatar_upload").click(); });
-        // $(".user-avatar_upload").click(() => { $("#avatar_upload").click(); });
+         $(".user-avatar_upload").click(() => { $("#avatar_upload").click(); });
 // .avatar_upload,
-        /*
+
         $("#avatar_upload")
             .fileupload({
                 pasteZone: $("body"),
@@ -502,7 +502,7 @@
                 data['headers']['Avatar-ID'] = avatar_user_id; //VD.SettingsManager.Get("id");
                 // data.submit();
             });
-         */
+
     });
 
 

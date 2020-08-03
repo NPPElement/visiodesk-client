@@ -100,10 +100,10 @@
                     'Authorization': 'Bearer ' + token
                 }
             }).done((map, textStatus, jqXHR) => {
-                console.log("getMap.Ok: ", map);
+                // console.log("getMap.Ok: ", map);
                 def.resolve(map);
             }).fail((jqXHR, textStatus, errorThrown) => {
-                console.log("getMap.Error: ", textStatus);
+                // console.log("getMap.Error: ", textStatus);
                 def.reject({
                     success: false,
                     jqXHR: jqXHR,
@@ -613,11 +613,12 @@
                 return null;
             }
 
-            if (_ref[0].toLowerCase() != "site") {
+            if (_ref[0].toLowerCase() != "site" && _ref[0].toLowerCase() != "map") {
                 _ref = ["Site"].concat(_ref);
             }
 
             if (_ref.length == 1) {
+                return _ref[0];
                 return "Site";
             }
 
@@ -1174,6 +1175,7 @@
          * return {Deferred} jquery deferred ajax result
          */
         function getChildren(reference) {
+            // console.log("getChildren: ", reference);
             let def = $.Deferred();
 
             let url = "";
@@ -1183,6 +1185,7 @@
                     "get/objects";
             } else {
                 let _reference = urlReference(reference);
+                // console.log("_reference("+reference+"): ", _reference);
                 if (_.isNull(_reference)) {
                     return def.reject({
                         success: false,

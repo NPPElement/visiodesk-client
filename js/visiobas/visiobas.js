@@ -12,6 +12,8 @@ window.VB = (function Visiobas() {
 
     window._location = "Site";
 
+
+
     //local cache data, requested from server
     let cache = {};
 
@@ -91,7 +93,7 @@ window.VB = (function Visiobas() {
             }
         }
 
-        if (addr.reference.startsWith("Site")) {
+        if (addr.reference.startsWith("Site") || addr.reference.startsWith("Map")) {
             // window.history.pushState(addr, '', addr.reference.replace("Site", "/html_vdesk/#Site")) // k+
             showVisiobas();
             EVENTS.onNext({
@@ -669,6 +671,8 @@ window.VB = (function Visiobas() {
      * @returns Promise
      */
     function Request(reference) {
+        console.log("Request: ", reference);
+
         let def = $.Deferred();
 
         VB_API.getObject(reference).done((response) => {

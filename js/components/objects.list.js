@@ -21,6 +21,15 @@
          */
         let _parent;
 
+
+        let _tree_current = "visioBAS";
+        let _tree_current_title = {
+            Site: "visioBAS",
+            Map: "Карты"
+        };
+
+
+
         /**
          * currently selected object in list
          * @type {object}
@@ -201,9 +210,11 @@
          */
         function update(options) {
             // if(!options) return;
-            console.log("ObjectsList.update(options): ", options);
-            const reference = options && options.reference || "Site";
+            // console.log("ObjectsList.update(options): ", options);
+            let reference = options && options.reference || "Site";
             const logWindowHref = options && options.href || "";
+
+            // reference = "Map";
 
             if (logWindowHref) {
                 __logWindowOpen(logWindowHref);
@@ -267,6 +278,10 @@
                 VB.Load(VB_SETTINGS.htmlDir + "/components/objects.list.html", _parent, {
                     "editableObjectTypes": editableObjectTypes,
                     "objects": objects,
+                    "folder": {
+                        items: _tree_current_title,
+                        current: _tree_current
+                    },
                     "object": {
                         "reference": reference
                     },
@@ -394,6 +409,8 @@
 
                     __registerIconObjectValueClick();
 
+                    __setRootFolderChangeListener();
+
                     VD.SetVisiobasAdminSubmenu(_parent);
                     VD.SideBarIconBindClick(_parent);
 
@@ -404,6 +421,20 @@
                 });
             }).fail((response) => {
                 console.error(response.error);
+            });
+        }
+        
+        
+        function __setRootFolderChangeListener() {
+            $(".root-change-arrow").click(function (event) {
+                let $item = $(event.currentTarget);
+                let list = [];
+                for(let k in _tree_current_title) list.push([k, _tree_current_title[k]]);
+                list.push([-1,["Отменить", "cancel blue"]]);
+                let changed = VD.CreateDropdownDialog($item, new Map(list), 'Корневой элемент');
+                changed.subscribe((result) => {
+                        console.log("RES: ", result);
+                });
             });
         }
 
