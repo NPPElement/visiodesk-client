@@ -1439,7 +1439,7 @@ window.VD_Topic = (function () {
                 let contId = VD.EscapeSpecialCssChars(uploadName);
                 let $cont = $('#' + contId);
                 let $link = $cont.find('.download_link');
-                console.log("__show items: ", contId, uploadName);
+                // console.log("__show items: ", contId, uploadName);
                 setDownloadLink($link, uploadName);
             });
         }

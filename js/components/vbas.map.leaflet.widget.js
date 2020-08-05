@@ -226,6 +226,7 @@
             return def;
         }
         function __load() {
+            // return __load_old();
             const def = $.Deferred();
             VB_API.getMap().done(result=> {
                 console.log("result.data = ", result.data);
@@ -728,7 +729,17 @@
                                 $dom.find("text").html(sprintf(format || "%s", presentValueText));
                             }
                         } else if (VB.isMultiState(objectType)) { // проверить
-                            console.log("todo: Сделать тут - VB.isMultiState(objectType)");
+
+                            let multiStates = object[BACNET_CODE["state-text"]];
+                            let displayValue = presentValue;
+                            if (!_.isEmpty(multiStates)) {
+                                multiStates = JSON.parse(multiStates);
+                                if (_.isObject(multiStates)  && multiStates.hasOwnProperty(presentValue)) {
+                                    displayValue = multiStates[presentValue];
+                                }
+                            }
+                            $dom.html(displayValue);
+                            // todo: Проверить, делал вслепую
                         }
                     });
                 }

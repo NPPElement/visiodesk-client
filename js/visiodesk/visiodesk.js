@@ -743,7 +743,10 @@ window.VD = (function Visiodesk() {
         return _history[step];
     }
 
+
     function Controller(reference, selector, params) {
+        if(reference===window._last_reference) return;
+        window._last_reference = reference;
         params = params || {};
         // console.log("Controller: ", reference, selector);
         var refName = 'VD_' + VB_API.extractName(reference);
