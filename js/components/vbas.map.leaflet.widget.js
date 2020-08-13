@@ -229,7 +229,6 @@
             return __load_old();
             const def = $.Deferred();
             VB_API.getMap().done(result=> {
-                console.log("result.data = ", result.data);
                 def.resolve(result.data);
             });
             return def;

@@ -187,6 +187,7 @@ window.VD_Groups = (function () {
     
     function __setSubscribeMode(value) {
         docCookies.setItem("group_subscribe_mode", value ? "subscribe" : false);
+        subscribeOnly = docCookies.getItem("group_subscribe_mode")==="subscribe";
         $(".groups_list").toggleClass("group_subscribe_mode", value);
 
         if(value) {

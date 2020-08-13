@@ -579,7 +579,14 @@ window.VD = (function Visiodesk() {
         });
     }
 
+    function SetTabBarCounters__NEW() {
+        const $feedCounter = $('#feed-counter');
+        const $feedCounterEm = $feedCounter.find('EM');
+
+    }
+
     function SetTabBarCounters() {
+
         const $newsCounter = $('#news-counter');
         const $newsCounterEm = $newsCounter.find('EM');
 

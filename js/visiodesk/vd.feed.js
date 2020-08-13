@@ -78,6 +78,7 @@ window.VD_Feed = (function () {
             serviceTemplatesData = templatesContent;
             return VD_FEED_UPDATER.get();
         }).then((feedTopics) => {
+            console.log("feedTopics: ", feedTopics);
             let resultCache = __extendTopics(feedTopics);
 
             //отрисовка
