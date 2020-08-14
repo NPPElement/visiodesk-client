@@ -667,7 +667,7 @@ window.VD = (function Visiodesk() {
                             return;
                         }
 
-                        // if(closed_last_id.includes(lastItemId)) return;
+                        if(closed_last_id.includes(lastItemId)) return;
 
                         let is_new = topic['status_id']===1, // new
                             is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
