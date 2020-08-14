@@ -630,28 +630,44 @@ window.VD = (function Visiodesk() {
     function SetStickers() {
         let wrapperSelector = '#stickers';
         let $stickers = $(wrapperSelector);
+        let closed_last_id = [];
 
         VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
             let stickerTemplate = templatesContent['stickers.item.html'];
             VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {
+
+                // console.log("subscribe", itemId, topicsList);
+
                 if (topicsList.length && itemId > 1) {
                     topicsList.forEach((topic) => {
                         let statusItemId = 0;
+                        let lastItemId = 0;
                         for (let i = topic['items'].length - 1; i >= 0; i--) {
                             let item = topic['items'][i];
 
+                            if (item['type']['id'] === 14) continue;
+
                             if (item['id'] <= itemId) {
-                                break;
+                             //   break;
                             }
+
+                            if(lastItemId<item['id']) lastItemId = item['id'];
 
                             if (item['type']['id'] === 6) {
                                 statusItemId = item['id'];
+                            } else {
+                               break;
                             }
+
                         }
+
+                        // console.log("statusItemId : ", statusItemId);
 
                         if (!statusItemId) {
                             return;
                         }
+
+                        // if(closed_last_id.includes(lastItemId)) return;
 
                         let is_new = topic['status_id']===1, // new
                             is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
@@ -686,11 +702,11 @@ window.VD = (function Visiodesk() {
                         }
 
                         sound_fn = VB_SETTINGS.htmlDir + '/template/sound/' + sound_fn;
-                        let audoi_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
+                        let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
 
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',
-                            'audio': audoi_html,
+                            'audio': audio_html,
                             'status_code': VD_SETTINGS['STATUS_TYPES'][topic['status_id']] + class_double_border,
                             'status_item_id': statusItemId,
                             'group': {
@@ -714,6 +730,7 @@ window.VD = (function Visiodesk() {
                         $(`${stickerSelector}, ${stickerSelector} .close_icon`).click((event) => {
                             event.stopPropagation();
                             $(stickerSelector).remove();
+                            closed_last_id.push(lastItemId);
                         });
                     });
                 }
