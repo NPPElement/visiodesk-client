@@ -703,6 +703,7 @@ window.VD = (function Visiodesk() {
 
                         sound_fn = VB_SETTINGS.htmlDir + '/template/sound/' + sound_fn;
                         let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
+                        if($('#sticker-' + topic['id']).length>0) audio_html = "";
 
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',
