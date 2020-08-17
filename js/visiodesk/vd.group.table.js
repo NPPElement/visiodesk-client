@@ -170,8 +170,6 @@ window.VD_GroupTable = (function () {
     } );
 
     VD.ref$.subscribe((ref_event) => {
-        console.log("ref_event",ref_event);
-        
 
         if(ref_event.type==="after.run.done" && ref_event.data.reference===":Map") {
             moveControlPosition(true);

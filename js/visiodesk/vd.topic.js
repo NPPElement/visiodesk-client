@@ -459,6 +459,7 @@ window.VD_Topic = (function () {
      * @public
      */
     function check(topicId) {
+
         let def = $.Deferred();
 
         let checkItem = __bindItemParams(__selectCheck(), {

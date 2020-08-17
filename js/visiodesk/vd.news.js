@@ -59,7 +59,8 @@ window.VD_News = (function () {
 
     return {
         "run": run,
-        "unload": unload
+        "unload": unload,
+        // "refresh": refresh
     };
 
     function run(reference, selector, params) {
@@ -140,6 +141,11 @@ window.VD_News = (function () {
 
         return status;
     }
+    
+    // function refresh() {
+    //     if(_last_reference!==":News") return;
+    //     VD.Controller(":News", "#main-container");
+    // }
 
     function unload() {
         source$ && source$.onCompleted();

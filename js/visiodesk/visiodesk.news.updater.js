@@ -78,7 +78,12 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
         get: () => {
             return pending.then(() => {
                 let lastTopicsIterator = lastTopics.values();
-                return Array.from(lastTopicsIterator).reverse();
+                let items = Array.from(lastTopicsIterator).reverse();
+                let result = [];
+                items.forEach(item=>{
+                    if(changed.includes(item.id) && !checked.includes(item.id)) result.push(item);
+                });
+                return result;
             })
         },
 
@@ -123,6 +128,7 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
         },
 
         check: (topicId) => {
+            $(".topic_list_news #topic-"+topicId).remove();
             if(!checked.includes(topicId)) checked.push(topicId);
             if (lastTopics.has(topicId)) {
                 checkedTopics.set(topicId, topicId);

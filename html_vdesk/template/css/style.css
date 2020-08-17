@@ -1624,7 +1624,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     flex-direction: column;
     justify-content: center;
     color: #FFFFFF;
-    background: #333333b5;
+    background: rgba(51, 51, 51, 0.7);
+    /*background: #333333b5;*/
     cursor: pointer;
 }
 .info_button.error_message A {

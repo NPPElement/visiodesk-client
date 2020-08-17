@@ -601,9 +601,6 @@ window.VD = (function Visiodesk() {
                 } else {
                     $newsCounter.hide();
                 }
-
-
-
             });
 
             VD_FEED_UPDATER.get().then((topicsList) => {
@@ -770,7 +767,7 @@ window.VD = (function Visiodesk() {
 
 
     function Controller(reference, selector, params) {
-        if(reference===window._last_reference) return;
+        if(reference===window._last_reference && reference!==":News") return;
         window._last_reference = reference;
         params = params || {};
         // console.log("Controller: ", reference, selector);
