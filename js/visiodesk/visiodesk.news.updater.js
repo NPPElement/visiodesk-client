@@ -67,6 +67,15 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
                 });
         },
 
+        topicUpdate: function(topicInfo) {
+            if(lastTopics.get(topicInfo.id)) {
+                let topic = lastTopics.get(topicInfo.id);
+                topic.priority_id = topicInfo.priority_id;
+                topic.status_id = topicInfo.status_id;
+                lastTopics.set(topic.id, topic);
+            }
+        },
+
         listen: () => {
             let output$ = new Rx.Subject();
             stream$.subscribe(output$);

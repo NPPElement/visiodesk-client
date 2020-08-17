@@ -40,7 +40,15 @@ window.VD_FEED_UPDATER = (function FeedUpdater() {
                     pending.resolve();
                 });
             }
+        },
 
+        topicUpdate: function(topicInfo) {
+            if(feedTopics.get(topicInfo.id)) {
+                let topic = feedTopics.get(topicInfo.id);
+                topic.priority_id = topicInfo.priority_id;
+                topic.status_id = topicInfo.status_id;
+                feedTopics.set(topic.id, topic);
+            }
         },
 
         listen: () => {

@@ -1272,9 +1272,15 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     function __updateTopicInfos(topicList) {
         topicList.forEach(topic=>{
             let $t = $("#topic-"+topic.id);
-            if(!$t.length) return;
+            if(!$t.length) {
+                console.log("!#topic-"+topic.id);
+                return;
+
+            }
             $t.find(".status").replaceWith("<span class='status "+VD_SETTINGS["STATUS_TYPES"][topic["status_id"]]+"'>"+I18N.get(`vdesk.topic.status.${topic["status_id"]}`)+"</span>");
             $t.find(".priority").replaceWith("<span class='priority "+VD_SETTINGS["PRIORITY_TYPES"][topic["priority_id"]]+"'></span>");
+            VD_FEED_UPDATER.topicUpdate(topic);
+            VD_NEWS_UPDATER.topicUpdate(topic);
         });
     }
 
