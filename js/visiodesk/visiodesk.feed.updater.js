@@ -33,6 +33,16 @@ window.VD_FEED_UPDATER = (function FeedUpdater() {
             source$.subscribe(stream$);
         },
 
+        topicChange: function(topicId) {
+            if(feedTopics.get(topicId)) {
+                VD_API.GetTopicById(topicId).done(topic=>{
+                    feedTopics.set(topic.id, topic);
+                    pending.resolve();
+                });
+            }
+
+        },
+
         listen: () => {
             let output$ = new Rx.Subject();
             stream$.subscribe(output$);

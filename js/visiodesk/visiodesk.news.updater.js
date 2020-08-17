@@ -60,6 +60,13 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
             source$.subscribe(stream$);
         },
 
+        topicChange: function(topicId) {
+            if(changed.includes(topicId) && !checked.includes(topicId))
+                VD_API.GetTopicById(topicId).done(topic=>{
+                    lastTopics.set(topicId, topic);
+                });
+        },
+
         listen: () => {
             let output$ = new Rx.Subject();
             stream$.subscribe(output$);

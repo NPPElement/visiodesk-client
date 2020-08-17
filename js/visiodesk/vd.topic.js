@@ -1250,7 +1250,6 @@ window.VD_Topic = (function () {
             }).then((resultFileItems) => {
                 __showItems(resultFileItems);
                 __startUploadFiles(resultFileItems);
-
                 itemsForSend = [];
                 sendItemsBlock = false;
             });
@@ -1267,6 +1266,9 @@ window.VD_Topic = (function () {
                 __startUploadFiles(resultItems);
                 itemsForSend = [];
                 sendItemsBlock = false;
+                VD_NEWS_UPDATER.topicChange(topicId);
+                VD_FEED_UPDATER.topicChange(topicId);
+
             });
         }
     }
