@@ -767,7 +767,7 @@ window.VD = (function Visiodesk() {
 
 
     function Controller(reference, selector, params) {
-        if(reference===window._last_reference && reference!==":News") return;
+        if(reference===window._last_reference && reference!==":News" &&  reference!==":Feed" ) return;
         window._last_reference = reference;
         params = params || {};
         // console.log("Controller: ", reference, selector);
@@ -1305,6 +1305,7 @@ window.VD = (function Visiodesk() {
             });
         }
     }
-    
+
+
 
 })();

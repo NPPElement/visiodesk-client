@@ -72,6 +72,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         //"GetUserGroupSupportId": GetUserGroupSupportId, переделано АПИ теперь выдаёт вместе с группой
         "SetUserGroupSupportId": SetUserGroupSupportId,
+        "RegistrationPushKey": RegistrationPushKey
 
     };
 
@@ -1273,7 +1274,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         topicList.forEach(topic=>{
             let $t = $("#topic-"+topic.id);
             if(!$t.length) {
-                console.log("!#topic-"+topic.id);
                 return;
 
             }
@@ -2669,6 +2669,27 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             def.resolve(false);
         });
         return def;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    function RegistrationPushKey(key) {
+        let result = false;
+        $.ajax({
+            type: "GET",
+            url: "/vdesk/arm/subscribePushDevice/" + key,
+            async: false,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: (response) => {
+                result = response.data === "Ok";
+            }
+        });
+        return result;
+
     }
 
 })();
