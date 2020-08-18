@@ -426,6 +426,7 @@
         VD.SetTabBarCounters();
         VD.SetStickers();
         VD_API.LoadUserSettings();
+        VD_API.CheckPushKey();
         VB.LoadTemplatesList([
             'photoswipe.html'
         ], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
@@ -520,7 +521,7 @@
         },
         
         mousedown: function () {
-            MPoint.m
+
         },
 
         mouseup: function () {

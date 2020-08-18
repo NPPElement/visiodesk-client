@@ -72,7 +72,8 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         //"GetUserGroupSupportId": GetUserGroupSupportId, переделано АПИ теперь выдаёт вместе с группой
         "SetUserGroupSupportId": SetUserGroupSupportId,
-        "RegistrationPushKey": RegistrationPushKey
+        "RegistrationPushKey": RegistrationPushKey,
+        "CheckPushKey": CheckPushKey
 
     };
 
@@ -2689,7 +2690,14 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             }
         });
         return result;
+    }
 
+
+    function CheckPushKey() {
+        if(window.androidBridge && androidBridge.getRegistrationId) androidBridge.getRegistrationId();
     }
 
 })();
+
+window.onGetRegistrationId = VD_API.RegistrationPushKey;
+
