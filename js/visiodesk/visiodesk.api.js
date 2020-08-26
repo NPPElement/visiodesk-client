@@ -73,7 +73,8 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         //"GetUserGroupSupportId": GetUserGroupSupportId, переделано АПИ теперь выдаёт вместе с группой
         "SetUserGroupSupportId": SetUserGroupSupportId,
         "RegistrationPushKey": RegistrationPushKey,
-        "CheckPushKey": CheckPushKey
+        "CheckPushKey": CheckPushKey,
+        "Test": Test,
 
     };
 
@@ -840,7 +841,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             if (response.success) {
                 let usersList = response.data;
                 __setAvatarHref(usersList);
-                console.log("usersList: ", usersList);
+                // console.log("usersList: ", usersList);
                 if (id) {
                     for (let i = 0; i < usersList.length; i++) {
                         if (usersList[i]['id'] === id) {
@@ -2695,6 +2696,28 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
     function CheckPushKey() {
         if(window.androidBridge && androidBridge.getRegistrationId) androidBridge.getRegistrationId();
+    }
+
+
+    /**
+     * @return {boolean}
+     */
+    function Test() {
+        let result = false;
+        $.ajax({
+            type: "GET",
+            url: apiContext + "/getTestString",
+            // url: "/external/getTestString",
+            async: false,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: (response) => {
+                result = response
+            }
+        });
+        return result;
     }
 
 })();

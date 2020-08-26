@@ -1161,7 +1161,42 @@ window.VD_Topic = (function () {
         }
         sendItemsBlock = true;
 
-        console.log("itemsForSend: ", itemsForSend); // ,,
+         console.log("itemsForSend: ", itemsForSend, itemsForSend.length); // ,,
+        /*
+        if(itemsForSend.length>0) window.itemsForSend = _.clone(itemsForSend);
+
+        itemsForSend.sort(function (a,b) {
+            const typePriority = [
+                VD_SETTINGS.ITEM_TYPE_ID.status,
+                VD_SETTINGS.ITEM_TYPE_ID.priority,
+                VD_SETTINGS.ITEM_TYPE_ID.group,
+                VD_SETTINGS.ITEM_TYPE_ID.message,
+                VD_SETTINGS.ITEM_TYPE_ID.description,
+                VD_SETTINGS.ITEM_TYPE_ID.img,
+                VD_SETTINGS.ITEM_TYPE_ID.file,
+                VD_SETTINGS.ITEM_TYPE_ID.user,
+                VD_SETTINGS.ITEM_TYPE_ID.problem,
+                VD_SETTINGS.ITEM_TYPE_ID.term_date_plan,
+                VD_SETTINGS.ITEM_TYPE_ID.term_date_fact,
+                VD_SETTINGS.ITEM_TYPE_ID.audio,
+                VD_SETTINGS.ITEM_TYPE_ID.location,
+                VD_SETTINGS.ITEM_TYPE_ID.venue,
+                VD_SETTINGS.ITEM_TYPE_ID.check,
+                VD_SETTINGS.ITEM_TYPE_ID.removed_from_group,
+                VD_SETTINGS.ITEM_TYPE_ID.removed_from_user,
+            ];
+            let cA =  typePriority.indexOf(a.type.id);
+            let cB = typePriority.indexOf(b.type.id);
+            console.log("c:"+cA+"~"+cB);
+            if(cA<cB) return 1;
+            if(cA>cB) return -1;
+            return 0;
+        });
+
+        console.log(itemsForSend);
+
+         */
+
 
         VD_API.FileUploader._clearFilenames();
 
