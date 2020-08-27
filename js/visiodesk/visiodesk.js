@@ -761,7 +761,7 @@ window.VD = (function Visiodesk() {
 
     function GetHistory(step) {
         step = _.isNumber(step) ? step : 0;
-        if(step===1 &&  ! _history[step]) return __getHistoryBack();
+        if(true || step===1 &&  ! _history[step]) return __getHistoryBack();
         return _history[step];
     }
 
