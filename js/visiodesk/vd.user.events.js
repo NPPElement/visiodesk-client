@@ -334,7 +334,7 @@ window.VD_UserEvents = ((function () {
             if (start && end && (start.isBefore(end) || start.isSame(end))) {
                 _filter.showClosed = true;
                 __setCalendarFilterDate(start, end);
-                VD.Controller(reference, _selector);
+                VD.Controller(reference, _selector, null, true);
             }
         });
 

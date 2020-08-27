@@ -766,8 +766,9 @@ window.VD = (function Visiodesk() {
     }
 
 
-    function Controller(reference, selector, params) {
-        if(reference===window._last_reference && reference!==":News" &&  reference!==":Feed" ) return;
+    function Controller(reference, selector, params, force_refresh) {
+        force_refresh = !!force_refresh;
+        if(reference===window._last_reference && reference!==":News" &&  reference!==":Feed" && !force_refresh) return;
         window._last_reference = reference;
         params = params || {};
         // console.log("Controller: ", reference, selector);
