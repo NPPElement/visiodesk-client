@@ -755,13 +755,16 @@ window.VD = (function Visiodesk() {
         if(!_history.length) return ":Groups";
         let h = _history[0];
         h = h.split("/Topic/");
-        if(h.length>1) return h[0];
+        if(h.length>1 && h[0].indexOf("Events/0")===-1) return h[0];
         return ":Groups";
     }
 
     function GetHistory(step) {
         step = _.isNumber(step) ? step : 0;
-        if(true || step===1 &&  ! _history[step]) return __getHistoryBack();
+        if(true || step===1 &&  ! _history[step]) {
+            let back = __getHistoryBack()
+            return back;
+        }
         return _history[step];
     }
 

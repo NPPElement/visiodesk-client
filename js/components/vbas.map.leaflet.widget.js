@@ -372,7 +372,6 @@
         }
 
         function __createMarkerMapControllerPopupContent(marker) {
-            console.log("__createMarkerMapControllerPopupContent.marker: ", marker);
             const def = $.Deferred();
             const content = L.DomUtil.create("div");
             VB.CreateForMapControllers(marker)
