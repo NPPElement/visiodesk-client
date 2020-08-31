@@ -239,7 +239,7 @@ window.VD_Topic = (function () {
 
         topicId = parseInt(refName) || 0;
 
-        $('#screen').addClass('hotels');
+        $('#screen').addClass('hotels');+
         $('#visiobas-tabbar').addClass('hide');
         $('#main-container').removeClass().addClass('extra_pad2');
 

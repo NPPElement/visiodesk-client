@@ -748,9 +748,10 @@ window.VD = (function Visiodesk() {
     }
 
     function SetHistory(reference) {
+        if(_history.length >0  && _history[0].replace(/\d+/g,"")===reference.replace(/\d+/g,"")) return;
         _history.unshift(reference);
     }
-    
+
     function __getHistoryBack() {
         if(!_history.length) return ":Groups";
         let h = _history[0];
@@ -761,7 +762,8 @@ window.VD = (function Visiodesk() {
 
     function GetHistory(step) {
         step = _.isNumber(step) ? step : 0;
-        if(true || step===1 &&  ! _history[step]) {
+        // true ||
+        if(step===1 &&  ! _history[step]) {
             let back = __getHistoryBack()
             return back;
         }
@@ -1137,7 +1139,8 @@ window.VD = (function Visiodesk() {
         //запись в "историю" отключается только когда setHistory === false
         //если params = {}, то запись в "историю" все равно делается
         if (params['setHistory'] !== false && reference !== VD.GetHistory()) {
-            _history.unshift(reference);
+            // _history.unshift(reference);
+            SetHistory(reference);
         }
 
         //удаление первой записи в "истории", если редирект
