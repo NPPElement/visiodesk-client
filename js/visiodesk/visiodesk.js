@@ -772,6 +772,16 @@ window.VD = (function Visiodesk() {
 
 
     function Controller(reference, selector, params, force_refresh) {
+        let state_data =  {
+            reference: reference,
+            parentSelector: selector,
+            params: params
+        };
+        ref$.onNext({
+            type: "after.run.before",
+            data: state_data
+        });
+
         force_refresh = !!force_refresh;
         if(reference===window._last_reference && reference!==":News" &&  reference!==":Feed" && !force_refresh) return;
         window._last_reference = reference;
@@ -799,11 +809,7 @@ window.VD = (function Visiodesk() {
                 }
 
                 __afterLoadSettings(reference, selector, params);
-                let state_data =  {
-                    reference: reference,
-                    parentSelector: selector,
-                    params: params
-                };
+
 
                 if(!$("h1").length) window.document.title = "visioDESK : " + reference.replace(":","");
 

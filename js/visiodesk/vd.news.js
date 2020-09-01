@@ -57,21 +57,41 @@ window.VD_News = (function () {
      */
     let source$;
 
+    let scrollTop = 0;
+
+    let scrollHandler = function () {
+        scrollTop = $("body").scrollTop();
+    };
+
+
+    VD.ref$.subscribe((ref_event) => {
+        if (ref_event.type === "after.run.before") {
+            $(window).off("scroll", scrollHandler);
+        }
+    });
+
     return {
         "run": run,
         "unload": unload,
         // "refresh": refresh
     };
 
+
+
+
+
     function run(reference, selector, params) {
         var status = $.Deferred();
 
+        console.log("scrollTop: "+scrollTop);
         let lastTopicId = parseInt(params['lastTopicId']) || 0;
         if (lastTopicId) {
             delete params['lastTopicId'];
         } else {
             VD_NEWS_UPDATER.deleteCheckedItems();
         }
+
+
 
         VB.Load(VD_SETTINGS['TEMPLATE_DIR'] + "/vd.news.html", selector, {
             "{%imgDir%}": VD_SETTINGS['IMG_DIR'],
@@ -95,7 +115,13 @@ window.VD_News = (function () {
                     __scrollIntoTopic(lastTopicId, selector);
                 }
                 loading = false;
+
             });
+
+            let prevScroll = 0+scrollTop;
+            window.setTimeout(()=>$("body").scrollTop(prevScroll), 50);
+
+            $(window).on("scroll", scrollHandler);
 
             let fwPosition = position + PAGE_SIZE;
             $(window).scroll(function() {
@@ -111,6 +137,7 @@ window.VD_News = (function () {
                         __loadAndUpdate(topicsRange, selector, 'append').then(() => {
                             fwPosition = fwPosition + PAGE_SIZE;
                             loading = false;
+
                         });
                     }
                 }

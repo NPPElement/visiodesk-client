@@ -443,7 +443,7 @@
         });
 
 
-        window.onpopstate = function(e){
+        window.onpopstate = function(e) {
             if(e.state && e.state.reference) VD.Controller(e.state.reference, e.state.parentSelector, e.state.params);
         };
 
