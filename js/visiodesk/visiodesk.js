@@ -860,6 +860,90 @@ window.VD = (function Visiodesk() {
         });
     }
 
+    function ShowLastItems($target, items, lastCheckedId) {
+
+        let showTypes = [2, 3, 4, 5, 6, 13, 15, 16];
+        let lastUserId = 0;
+        let itemsListExec = '';
+        let completeFileNames = [];
+
+        let serviceTemplatesData = {};
+        const serviceTemplatesList = [
+            'vd.topic.message.inline.html',
+            'vd.topic.file.html',
+        ];
+
+        const emptyUserObject = {
+            'id': 0,
+            'last_name': '',
+            'first_name': '',
+            'middle_name': '',
+            'position': '',
+        };
+
+        let _itemms = [];
+
+        console.log("LOOK AUTHOR: ", items);
+
+        items.reverse().forEach((item) => {
+            if (item.id>lastCheckedId && (showTypes.indexOf(item['type']['id']) > -1 || item['type']['id']===2)) _itemms.push(item);
+        });
+
+
+
+        function __showItems(items) {
+            items.forEach((item, index) => {
+                //только сообщения, статусы, приоритеты, пользователи, группы
+                if (showTypes.indexOf(item['type']['id']) > -1) {
+                    //для статуса "отложено"
+                    if (item['type']['id'] === 6 && item['status']['id'] === 4 && item['hold_millis']) {
+                        let holdTo = moment(item['hold_millis']).format('DD.MM.YYYY HH:mm');
+                        item['name'] = `${item['name']}[br][i]до ${holdTo}[/i]`;
+                    }
+
+                    let itemTemplate = serviceTemplatesData['vd.topic.message.inline.html'];
+                    let itemTemplateExec = _.template(itemTemplate)($.extend(true, {}, {
+                        'author': emptyUserObject,
+                        'last_user_id': lastUserId,
+                        'is_reply': item['author']['id'] === authorizedUserId,
+                        'index': index,
+                        'length': items.length,
+                        'created_date': VD.GetFormatedDate(item['created_at']),
+                        'text': ''
+                    }, item));
+                    lastUserId = item['author']['id'];
+                    itemsListExec += itemTemplateExec;
+                }
+
+            });
+
+            $($target).html(itemsListExec);
+
+            if (completeFileNames.length) {
+                completeFileNames.forEach((uploadName) => {
+                    let contId = VD.EscapeSpecialCssChars(uploadName);
+                    let $cont = $('#' + contId);
+                    let $link = $cont.find('.download_link');
+                    VD_Topic.setDownloadLink($link, uploadName);
+                });
+            }
+        }
+
+
+        VB.LoadTemplatesList(serviceTemplatesList, VD_SETTINGS['TEMPLATE_DIR'])
+            .done((templatesContent) => {
+                serviceTemplatesData = templatesContent;
+                __showItems(_itemms);
+            });
+
+
+
+
+
+
+        $target.show();
+    }
+
     function SetTopicSubmenu(selector, topicParams) {
         let $topic = $('#topic-' + topicParams['id']);
 
@@ -877,6 +961,16 @@ window.VD = (function Visiodesk() {
         $topic.find('.settings').click((event) => {
             event.stopPropagation();
             VD.Controller(`:Topic/${topicParams['id']}/TopicSettings`, selector);
+        });
+
+        $topic.find('.next_messages').click((event) => {
+            event.stopPropagation();
+            let $items = $topic.find(".last_items");
+            if($items.html().length>10) {
+                $items.html('');
+            } else {
+                ShowLastItems($items, topicParams.items, topicParams.last_checked_id);
+            }
         });
     }
 

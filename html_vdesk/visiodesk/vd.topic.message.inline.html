@@ -1,0 +1,29 @@
+<div class="topic_item_item">
+    <%
+    let icon = (type.id === 6 || type.id === 5) ? _.escape(text) : "empty";
+    let message = (type.name === "status" || type.name === "priority") ? VD.HtmlFromBBCode(_.escape(name)) : VD.HtmlFromBBCode(_.escape(text));
+    %>
+    <div class="header">
+        <div class="name">
+            <span class="icon <%= type.name %> <%= icon %>"></span>
+            <span class="detail">
+                <span class="tcaption crop"><%- name %></span>
+                <span class="location"><%- author.last_name %> <%- author.first_name %> <%- author.middle_name %></span>
+        </span>
+        </div>
+        <div class="num">
+            <span><%= created_date %></span>
+        </div>
+    </div>
+
+    <% if (type.id !==6 && type.id !== 5 && type.id !== 2) { %>
+    <div style="padding: 6px 10px 6px 16px;">
+        <div class="cont">
+            <div class="text">
+                <span class="item_message" ><%= message %></span>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+</div>

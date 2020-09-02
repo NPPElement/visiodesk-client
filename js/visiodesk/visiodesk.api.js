@@ -1138,10 +1138,10 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             VD_NEWS_UPDATER.setChanged(topicIds);
             _updateTopicIds(topicIds);
             window.setTimeout(()=>{
-                $(".topic_item .header .unread").remove();
+                $(".topic_item > .header .unread").remove();
                 topicIds.forEach(topicId=>{
                     let $t = $("#topic-"+topicId);
-                    if($t.find(".header .unread").length===0) $t.find(".header").prepend('<div class="unread"><em></em></div>')
+                    if($t.children(".header .unread").length===0) $t.children(".header").prepend('<div class="unread"><em></em></div>')
                 });
             },1500);
 

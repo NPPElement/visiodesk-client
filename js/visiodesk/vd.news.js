@@ -83,7 +83,6 @@ window.VD_News = (function () {
     function run(reference, selector, params) {
         var status = $.Deferred();
 
-        console.log("scrollTop: "+scrollTop);
         let lastTopicId = parseInt(params['lastTopicId']) || 0;
         if (lastTopicId) {
             delete params['lastTopicId'];
@@ -180,6 +179,7 @@ window.VD_News = (function () {
 
     function __loadAndUpdate(topicsRange, selector) {
         return VD_NEWS_UPDATER.load(topicsRange).then((topicsUpdated) => {
+            console.log("topicsUpdated: ", topicsUpdated);
             __updateTopicsList(topicsUpdated, selector);
             return true;
         });

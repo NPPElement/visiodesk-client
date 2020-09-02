@@ -57,7 +57,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     background: #fff;
 }
 
-#screen.hotels {
+/*#screen.hotels {*/
+.hotels {
     background-attachment: fixed;
     background-image: url('../images/hotels.svg');
 }
@@ -7196,3 +7197,87 @@ label.input_group_title {
 .root-change-arrow:hover {
     color: #FFCC00;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.topic_item_inline-row1 {
+    display: flex;
+    padding: 6px 10px 6px 16px;
+}
+
+
+.topic_item_inline-row1 > div {
+    display: flex;
+    flex-grow: 1;
+}
+
+.item_message {
+    flex-grow: 1;
+    height: 40px;
+    font-family: 'SF-PRO-Regular';
+    line-height: 20px;
+    font-size: 14px;
+    letter-spacing: -0.016em;
+    color: #505050;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.topic_item_item {
+    border-top: 1px solid #BCBBC1;
+}
+
+
+
+
+.topic_item_item .icon {
+    flex-shrink: 0;
+    width: 29px;
+    min-height: 29px;
+    margin-right: 9px;
+}
+.topic_item_item .icon.new {
+    background: url("../images/msg_status_new.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.in_progress {
+    background: url("../images/msg_status_in_progress.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.on_hold {
+    background: url("../images/msg_status_on_hold.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.resolved {
+    background: url("../images/msg_status_resolved.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.closed {
+    background: url("../images/msg_status_closed.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.top {
+    background: url("../images/msg_priority_top.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.heed {
+    background: url("../images/msg_priority_heed.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.norm {
+    background: url("../images/msg_priority_norm.svg") 0 0 no-repeat;
+}
+.topic_item_item .icon.low {
+    background: url("../images/msg_priority_low.svg") 0 0 no-repeat;
+}
+
+
+
+
