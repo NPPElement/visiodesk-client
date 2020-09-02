@@ -1161,8 +1161,8 @@ window.VD_Topic = (function () {
         }
         sendItemsBlock = true;
 
-         console.log("itemsForSend: ", itemsForSend, itemsForSend.length); // ,,
-        /*
+         // console.log("itemsForSend: ", itemsForSend, itemsForSend.length); // ,,
+
         if(itemsForSend.length>0) window.itemsForSend = _.clone(itemsForSend);
 
         itemsForSend.sort(function (a,b) {
@@ -1187,16 +1187,13 @@ window.VD_Topic = (function () {
             ];
             let cA =  typePriority.indexOf(a.type.id);
             let cB = typePriority.indexOf(b.type.id);
-            console.log("c:"+cA+"~"+cB);
+            // console.log("c:"+cA+"~"+cB);
             if(cA<cB) return 1;
             if(cA>cB) return -1;
             return 0;
         });
 
-        console.log(itemsForSend);
-
-         */
-
+        // console.log(itemsForSend);
 
         VD_API.FileUploader._clearFilenames();
 
