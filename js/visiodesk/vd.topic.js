@@ -1151,27 +1151,15 @@ window.VD_Topic = (function () {
 
     }
 
-    /**
-     * Подготовка itemsForSend для отправки на сервер + отправка
-     * @private
-     */
-    function __sendItems() {
-        if (sendItemsBlock) {
-            return;
-        }
-        sendItemsBlock = true;
 
-         // console.log("itemsForSend: ", itemsForSend, itemsForSend.length); // ,,
-
-        if(itemsForSend.length>0) window.itemsForSend = _.clone(itemsForSend);
-
-        itemsForSend.sort(function (a,b) {
+    function __sortItems(items) {
+        items.sort(function (a,b) {
             const typePriority = [
                 VD_SETTINGS.ITEM_TYPE_ID.status,
-                VD_SETTINGS.ITEM_TYPE_ID.priority,
                 VD_SETTINGS.ITEM_TYPE_ID.group,
                 VD_SETTINGS.ITEM_TYPE_ID.message,
                 VD_SETTINGS.ITEM_TYPE_ID.description,
+                VD_SETTINGS.ITEM_TYPE_ID.priority,
                 VD_SETTINGS.ITEM_TYPE_ID.img,
                 VD_SETTINGS.ITEM_TYPE_ID.file,
                 VD_SETTINGS.ITEM_TYPE_ID.user,
@@ -1188,12 +1176,26 @@ window.VD_Topic = (function () {
             let cA =  typePriority.indexOf(a.type.id);
             let cB = typePriority.indexOf(b.type.id);
             // console.log("c:"+cA+"~"+cB);
-            if(cA<cB) return 1;
-            if(cA>cB) return -1;
+            if(cA<cB) return -1;
+            if(cA>cB) return 1;
             return 0;
         });
+        return items;
+    }
 
-        // console.log(itemsForSend);
+
+    /**
+     * Подготовка itemsForSend для отправки на сервер + отправка
+     * @private
+     */
+    function __sendItems() {
+        if (sendItemsBlock) {
+            return;
+        }
+        sendItemsBlock = true;
+
+
+
 
         VD_API.FileUploader._clearFilenames();
 
@@ -1259,6 +1261,8 @@ window.VD_Topic = (function () {
                 'description': VD.HtmlToBBCode(_.unescape(message))
             };
 
+
+
             if (groupId) {
                 newTopicParams['groups'] = [
                     { 'id': groupId }
@@ -1268,7 +1272,9 @@ window.VD_Topic = (function () {
             __saveLoadTopic(newTopicParams).then((resultTopicParams) => {
                 __updateTopicParams(resultTopicParams);
                 topicId = resultTopicParams['id'];
-                if(window.location.hash.indexOf("Topic/New")>-1) window.location.hash = window.location.hash.replace("Topic/New","Topic/"+topicId);
+                if(window.location.hash.indexOf("Topic/New")>-1) {
+                    window.setTimeout(()=>{window.location.hash = window.location.hash.replace("Topic/New","Topic/"+topicId);}, 1000);
+                }
 
                 __clearChangedList();
                 __applyTopicParams(resultTopicParams);
@@ -1374,10 +1380,17 @@ window.VD_Topic = (function () {
     function __saveLoadTopic(newTopicParams) {
         let def = $.Deferred();
 
+        newTopicParams.items = __sortItems(newTopicParams.items);
+        console.log("newTopicParams.items: ", newTopicParams.items);
+        // def.reject();
+        // return def;
+
+
         if (!_.isEmpty(newTopicParams)) {
             VD_API.AddTopic(newTopicParams).done((resultTopicParams) => {
                 def.resolve(resultTopicParams);
             }).fail(() => {
+                def.reject();
                 //TODO: записывать недоставленный топик в локальное хранилище
                 /*IDB_STORAGE.insert('topicsUndelivered', newTopicParams).then(() => {
                     return IDB_STORAGE.lastInsertId('topicsUndelivered');
@@ -1409,8 +1422,15 @@ window.VD_Topic = (function () {
         let lastUserId = 0;
         let itemsListExec = '';
         let completeFileNames = [];
+        let skip_status = false;
         items.forEach((item, index) => {
             //только сообщения, статусы, приоритеты, пользователи, группы
+
+            if(!skip_status && item['type']['id']===6) {
+                skip_status = true;
+                return;
+            }
+
             if (showTypes.indexOf(item['type']['id']) > -1) {
                 //для статуса "отложено"
                 if (item['type']['id'] === 6 && item['status']['id'] === 4 && item['hold_millis']) {
