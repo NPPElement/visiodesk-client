@@ -32,6 +32,8 @@ window.VD_Topic = (function () {
         "like": 0
     };
 
+    let skip_status = false;
+
     /** @var {int} groupId - идентификатор группы текущего топика */
     var groupId = 0;
     /** @var {int} topicId - идентификатор текущего топика */
@@ -228,6 +230,7 @@ window.VD_Topic = (function () {
 
 
     function run(reference, selector, params) {
+        skip_status = false;
         //default assigned user from create event from user
         $btnEditDescription = $("<img title='Редактировать описание' class='btn_topic_edit_description' src='template/images/pencil_grey.png' />");
         const defaultAssignedUser = params["user"];
@@ -1447,15 +1450,16 @@ window.VD_Topic = (function () {
     function __showItems(items) {
         let showTypes = [3, 4, 5, 6, 13, 15, 16, 17];
 
+        console.log("__showItems: ", items);
         //отрисовка итемов
         let lastUserId = 0;
         let itemsListExec = '';
         let completeFileNames = [];
-        let skip_status = false;
+
         items.forEach((item, index) => {
             //только сообщения, статусы, приоритеты, пользователи, группы
 
-            if(!skip_status && item['type']['id']===6) {
+            if((!skip_status) && item['type']['id']===6) {
                 skip_status = true;
                 return;
             }
@@ -1766,8 +1770,8 @@ window.VD_Topic = (function () {
         if($("#topic_back_back").length===1 && $("#topic_back_back").data("params") && $("#topic_back_back").data("params").lastTopicId===topicId) {
             var editorData = editorInstance.getData();
             VD_API.GetTopicById(topicId).done((resultTopicParams) => {
+                skip_status = false;
                 __updateTopicParams(resultTopicParams);
-
                 __applyTopicParams(resultTopicParams);
                 $(".topic").html('');
                 __showItems(resultTopicParams['items']);
