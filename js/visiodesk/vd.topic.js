@@ -3,7 +3,6 @@ window.VD_Topic = (function () {
     const serviceTemplatesList = [
         'vd.topic.message.html',
         'vd.topic.changed.item.html',
-        'vd.topic.message.html',
         'vd.topic.file.html',
         'vd.topic.selected.item.html',
         'vd.topic.selected.func.html'
@@ -61,6 +60,9 @@ window.VD_Topic = (function () {
     var imagesListIndex = 0;
 
     var videoList = [];
+
+    var modeEditDescription = false;
+    var $btnEditDescription;
 
 
     var assortmentTools = {
@@ -227,6 +229,7 @@ window.VD_Topic = (function () {
 
     function run(reference, selector, params) {
         //default assigned user from create event from user
+        $btnEditDescription = $("<img title='Редактировать описание' class='btn_topic_edit_description' src='template/images/pencil_grey.png' />");
         const defaultAssignedUser = params["user"];
         var status = $.Deferred();
 
@@ -1088,6 +1091,13 @@ window.VD_Topic = (function () {
      * @private
      */
     function __updateTopicParams(resultParams) {
+        // stop editing
+        if(modeEditDescription) {
+            modeEditDescription = false;
+            $btnEditDescription.removeClass("blink");
+            editorInstance.setData('<p></p>');
+        }
+
         if (_.isArray(resultParams)) {
             resultParams.forEach(item => {
                 if (item['user_id']) {
@@ -1102,6 +1112,9 @@ window.VD_Topic = (function () {
                     } else if (item['type']['id'] === 15) {
                         topicParams['groups'] = _.without(topicParams['groups'], item['group_id']);
                     }
+                }
+                if (item['type']['id'] === 17) {
+                    reload(topicId);
                 }
             });
         } else if (_.isObject(resultParams)) {
@@ -1134,10 +1147,26 @@ window.VD_Topic = (function () {
             shortTopicDesc += '...';
         }
 
+
         $short.find('SPAN').html(topicName);
         $short.find('EM').html(shortTopicDesc);
         $full.find('H1').html(topicName);
         $full.find('H2').html(topicDesc);
+        if(topicId) {
+            $full.find('H2').prepend($btnEditDescription);
+            $btnEditDescription.click(()=>{
+                if(modeEditDescription) {
+                    modeEditDescription = false;
+                    editorInstance.setData('<p></p>');
+                    $btnEditDescription.removeClass("blink");
+                } else {
+                    modeEditDescription = true;
+                    editorInstance.setData(topicDesc);
+                    $btnEditDescription.addClass("blink");
+                }
+            });
+        }
+
 
         let $settingsLink = $caption.find('A.close');
         $settingsLink.attr('reference', `:Topic/${resultTopicParams['id']}/TopicSettings`).show();
@@ -1230,9 +1259,9 @@ window.VD_Topic = (function () {
         var messageText = $.trim($editorData.text());
         if (messageText !== '' && messageText !== I18N.get('vdesk.placeholder.default')) {
             var itemObject = {
-                "type": { 'id': 13 },
+                "type": { 'id': modeEditDescription ? 17 : 13 },
                 "text": VD.HtmlToBBCode(_.unescape(message)),
-                "name": I18N.get('vdesk.item.type.13')
+                "name": I18N.get('vdesk.item.type.'+(modeEditDescription ? '17' : '13'))
             };
             __changeItem(itemObject);
         } else if (!topicId) {
@@ -1416,7 +1445,7 @@ window.VD_Topic = (function () {
      * @private
      */
     function __showItems(items) {
-        let showTypes = [3, 4, 5, 6, 13, 15, 16];
+        let showTypes = [3, 4, 5, 6, 13, 15, 16, 17];
 
         //отрисовка итемов
         let lastUserId = 0;
@@ -1507,7 +1536,6 @@ window.VD_Topic = (function () {
      * @private
      */
     function __startUploadFiles(items) {
-        console.log("__startUploadFiles: ", items);
         items.forEach((item) => {
             if (item['type']['id'] === 2) {
                 VD_API.FileUploader.submitFromQueue(item);

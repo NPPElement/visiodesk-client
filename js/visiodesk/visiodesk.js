@@ -862,7 +862,7 @@ window.VD = (function Visiodesk() {
 
     function ShowLastItems($target, items, lastCheckedId) {
 
-        let showTypes = [2, 3, 4, 5, 6, 13, 15, 16];
+        let showTypes = [2, 3, 4, 5, 6, 13, 15, 16, 17];
         let lastUserId = 0;
         let itemsListExec = '';
         let completeFileNames = [];
