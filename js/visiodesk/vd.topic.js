@@ -1097,7 +1097,7 @@ window.VD_Topic = (function () {
         // stop editing
         if(modeEditDescription) {
             modeEditDescription = false;
-            $btnEditDescription.removeClass("blink");
+            $btnEditDescription.attr("src", $btnEditDescription.attr("src").replace("_blue","_grey"));
             editorInstance.setData('<p></p>');
         }
 
@@ -1161,11 +1161,11 @@ window.VD_Topic = (function () {
                 if(modeEditDescription) {
                     modeEditDescription = false;
                     editorInstance.setData('<p></p>');
-                    $btnEditDescription.removeClass("blink");
+                    $btnEditDescription.attr("src", $btnEditDescription.attr("src").replace("_blue","_grey"));
                 } else {
                     modeEditDescription = true;
                     editorInstance.setData(topicDesc);
-                    $btnEditDescription.addClass("blink");
+                    $btnEditDescription.attr("src", $btnEditDescription.attr("src").replace("_grey","_blue"));
                 }
             });
         }
