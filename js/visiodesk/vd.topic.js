@@ -1450,7 +1450,6 @@ window.VD_Topic = (function () {
     function __showItems(items) {
         let showTypes = [3, 4, 5, 6, 13, 15, 16, 17];
 
-        console.log("__showItems: ", items);
         //отрисовка итемов
         let lastUserId = 0;
         let itemsListExec = '';
