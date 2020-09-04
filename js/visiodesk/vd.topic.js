@@ -64,7 +64,6 @@ window.VD_Topic = (function () {
     var videoList = [];
 
     var modeEditDescription = false;
-    var $btnEditDescription;
 
 
     var assortmentTools = {
@@ -232,7 +231,6 @@ window.VD_Topic = (function () {
     function run(reference, selector, params) {
         skip_status = false;
         //default assigned user from create event from user
-        $btnEditDescription = $("<img title='Редактировать описание' class='btn_topic_edit_description' src='template/images/pencil_grey.png' />");
         const defaultAssignedUser = params["user"];
         var status = $.Deferred();
 
@@ -1097,7 +1095,7 @@ window.VD_Topic = (function () {
         // stop editing
         if(modeEditDescription) {
             modeEditDescription = false;
-            $btnEditDescription.attr("src", $btnEditDescription.attr("src").replace("_blue","_grey"));
+            $(".pencil").removeClass("active");
             editorInstance.setData('<p></p>');
         }
 
@@ -1156,18 +1154,21 @@ window.VD_Topic = (function () {
         $full.find('H1').html(topicName);
         $full.find('H2').html(topicDesc);
         if(topicId) {
-            $full.find('H2').prepend($btnEditDescription);
-            $btnEditDescription.click(()=>{
-                if(modeEditDescription) {
-                    modeEditDescription = false;
-                    editorInstance.setData('<p></p>');
-                    $btnEditDescription.attr("src", $btnEditDescription.attr("src").replace("_blue","_grey"));
-                } else {
-                    modeEditDescription = true;
-                    editorInstance.setData(topicDesc);
-                    $btnEditDescription.attr("src", $btnEditDescription.attr("src").replace("_grey","_blue"));
-                }
-            });
+            $(".pencil")
+                .show()
+                .click(()=>{
+                    if(modeEditDescription) {
+                        modeEditDescription = false;
+                        editorInstance.setData('<p></p>');
+                        $(".pencil").removeClass("active");
+                    } else {
+                        modeEditDescription = true;
+                        editorInstance.setData(topicDesc);
+                        $(".pencil").addClass("active");
+                    }
+                });
+        } else {
+            $(".pencil").hide();
         }
 
 

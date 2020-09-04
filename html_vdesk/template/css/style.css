@@ -1520,7 +1520,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     text-overflow: ellipsis;
 }
 
-.topic_item .more {
+/*.topic_item .more {*/
+.more {
     padding: 4px 10px 6px 16px;
     display: flex;
     justify-content: space-between;
@@ -1528,20 +1529,24 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     cursor: default;
 }
 
-.topic_item .more .msg {
+/*.topic_item .more .msg {*/
+.more .msg {
     font-family: 'SF-PRO-Regular';
     line-height: normal;
     font-size: 11px;
     letter-spacing: -0.016em;
     color: #666666;
 }
-.topic_item .more .msg:hover {
+/*.topic_item .more .msg:hover {*/
+.more .msg:hover {
     color: #000;
 }
-.topic_item .more .icons {
+/*.topic_item .more .icons {*/
+.more .icons {
     display: flex;
 }
-.topic_item .more .icons .notification {
+/*.topic_item .more .icons .notification {*/
+.icons .notification {
     flex-shrink: 0;
     display: block;
     width: 25px;
@@ -1550,13 +1555,16 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     cursor: pointer;
     margin-right: 27px;
 }
-.topic_item .more .icons .notification.norm {
+/*.topic_item .more .icons .notification.norm {*/
+.more .icons .notification.norm {
     background: url("../images/notification_norm.svg") 0 0 no-repeat;
 }
-.topic_item .more .icons .notification.dnd {
+/*.topic_item .more .icons .notification.dnd {*/
+.more .icons .notification.dnd {
     background: url("../images/notification_dnd.svg") 0 0 no-repeat;
 }
-.topic_item .more .icons .next_messages {
+/*.topic_item .more .icons .next_messages {*/
+.more .icons .next_messages {
     flex-shrink: 0;
     display: block;
     width: 25px;
@@ -1566,7 +1574,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     background: url("../images/next_messages.svg") 0 0 no-repeat;
     margin-right: 27px;
 }
-.topic_item .more .icons .check {
+/*.topic_item .more .icons .check {*/
+.more .icons .check {
     flex-shrink: 0;
     display: flex;
     justify-content: center;
@@ -1577,20 +1586,24 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     cursor: pointer;
     margin-right: 27px;
 }
-.topic_item .more .icons .check DIV {
+/*.topic_item .more .icons .check DIV {*/
+.more .icons .check DIV {
     width: 18px;
     height: 18px;
     border-radius: 100%;
     background: #007AFF;
 }
-.topic_item .more .icons .spinner_icon {
+/*.topic_item .more .icons .spinner_icon {*/
+.more .icons .spinner_icon {
     flex-shrink: 0;
     width: 25px;
     height: 25px;
     background: url('../images/loader.svg') 0 0 no-repeat;
     margin-right: 27px;
 }
-.topic_item .more .icons .settings {
+
+/*.topic_item .more .icons .settings*/
+.more .icons .settings {
     flex-shrink: 0;
     display: block;
     width: 25px;
@@ -1600,6 +1613,23 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     background: url("../images/topic_settings.svg") 0 0 no-repeat;
     margin-right: -1px;
 }
+
+.more .icons .pencil {
+    flex-shrink: 0;
+    display: block;
+    width: 25px;
+    height: 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    background: url("../images/pencil_grey.png") 0 0 no-repeat;
+    margin-right: -1px;
+}
+
+.more .icons .pencil.active,
+.more .icons .pencil:hover {
+    background-image: url("../images/pencil_blue.png");
+}
+
 
 .topic_item .line {
     padding-left: 16px;

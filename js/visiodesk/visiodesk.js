@@ -964,15 +964,16 @@ window.VD = (function Visiodesk() {
         });
 
 
-        if(topicParams.last_checked_id!==undefined) $topic.find('.next_messages').click((event) => {
-            event.stopPropagation();
-            let $items = $topic.find(".last_items");
-            if($items.html().length>10) {
-                $items.html('');
-            } else {
-                ShowLastItems($items, topicParams.items, topicParams.last_checked_id);
-            }
-        });
+        if(topicParams.last_checked_id!==undefined)
+            $topic.find('.next_messages').click((event) => {
+                event.stopPropagation();
+                let $items = $topic.find(".last_items");
+                if($items.html().length>10) {
+                    $items.html('');
+                } else {
+                    ShowLastItems($items, topicParams.items, topicParams.last_checked_id);
+                }
+            });
     }
 
     function SetTopicSlider(topicSelector, images) {
