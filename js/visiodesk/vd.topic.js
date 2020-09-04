@@ -271,6 +271,7 @@ window.VD_Topic = (function () {
             var $messageBar = $deskTabBar.find('.message_bar');
             var $send = $messageBar.find('.send');
 
+            $(".editor").css("max-height", $("body").height()/2-88);
             __loadEditor('#ckeditor').done(() => {
                 /*static events*/
                 //выпадающий список для типа топика

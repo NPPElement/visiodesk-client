@@ -1276,7 +1276,7 @@ window.VD = (function Visiodesk() {
         var isScrollTransformComplete = false;
         $(window).scroll(function() {
             var currentPos = $(this).scrollTop();
-            if (currentPos > 1) {
+            if (currentPos > 1+$(".t_pad .full").height()) {
                 if (!isScrollTransformComplete) {
                     $caption.find('.full').hide();
                     $caption.find('.text').show();
