@@ -883,7 +883,7 @@ window.VD = (function Visiodesk() {
 
         let _itemms = [];
 
-        console.log("LOOK AUTHOR: ", items);
+        // console.log("LOOK AUTHOR: ", items, lastCheckedId);
 
         items.reverse().forEach((item) => {
             if (item.id>lastCheckedId && (showTypes.indexOf(item['type']['id']) > -1 || item['type']['id']===2)) _itemms.push(item);
@@ -963,7 +963,8 @@ window.VD = (function Visiodesk() {
             VD.Controller(`:Topic/${topicParams['id']}/TopicSettings`, selector);
         });
 
-        $topic.find('.next_messages').click((event) => {
+
+        if(topicParams.last_checked_id!==undefined) $topic.find('.next_messages').click((event) => {
             event.stopPropagation();
             let $items = $topic.find(".last_items");
             if($items.html().length>10) {
