@@ -442,7 +442,8 @@ window.VD_Events = (function () {
                 author: topicAuthor,
                 unread: false,
                 messages_number: MAX_MESSAGES_NUMBER,
-                images: images
+                images: images,
+                items: topic['items']
             });
         });
 

@@ -1414,7 +1414,6 @@ window.VD_Topic = (function () {
         let def = $.Deferred();
 
         newTopicParams.items = __sortItems(newTopicParams.items);
-        console.log("newTopicParams.items: ", newTopicParams.items);
         // def.reject();
         // return def;
 

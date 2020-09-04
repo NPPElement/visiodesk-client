@@ -886,7 +886,10 @@ window.VD = (function Visiodesk() {
         // console.log("LOOK AUTHOR: ", items, lastCheckedId);
 
         items.reverse().forEach((item) => {
-            if (item.id>lastCheckedId && (showTypes.indexOf(item['type']['id']) > -1 || item['type']['id']===2)) _itemms.push(item);
+            if (
+                ((lastCheckedId && item.id>lastCheckedId) || (!lastCheckedId && _itemms.length<3))
+                && (showTypes.indexOf(item['type']['id']) > -1 || item['type']['id']===2)
+            ) _itemms.push(item);
         });
 
 
@@ -938,9 +941,6 @@ window.VD = (function Visiodesk() {
 
 
 
-
-
-
         $target.show();
     }
 
@@ -964,16 +964,19 @@ window.VD = (function Visiodesk() {
         });
 
 
-        if(topicParams.last_checked_id!==undefined)
-            $topic.find('.next_messages').click((event) => {
-                event.stopPropagation();
-                let $items = $topic.find(".last_items");
-                if($items.html().length>10) {
-                    $items.html('');
-                } else {
-                    ShowLastItems($items, topicParams.items, topicParams.last_checked_id);
-                }
-            });
+
+        $topic.find('.next_messages').click((event) => {
+            event.stopPropagation();
+            let $items = $topic.find(".last_items");
+            if($items.html().length>10) {
+                $items.html('');
+            } else {
+                console.log("topicParams:", topicParams);
+                ShowLastItems($items, topicParams.items, topicParams.last_checked_id);
+            }
+        });
+
+        if(topicParams.last_checked_id) ShowLastItems($topic.find(".last_items"), topicParams.items, topicParams.last_checked_id);
     }
 
     function SetTopicSlider(topicSelector, images) {
