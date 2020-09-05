@@ -860,9 +860,20 @@ window.VD = (function Visiodesk() {
         });
     }
 
+    function __getLastOrTreeItems(items, lastCheckedId) {
+        let result = [];
+        let showTypes = [2, 3, 4, 5, 6, 13, 15, 16, 17];
+        for(let i=items.length-1;i>=0;i--) {
+            if (
+                ((lastCheckedId && items[i].id>lastCheckedId) || (!lastCheckedId && result.length<3))
+                && (showTypes.indexOf(items[i]['type']['id']) > -1 || items[i]['type']['id']===2)
+            ) result.push(items[i]);
+        }
+        return result;
+    }
+
     function ShowLastItems($target, items, lastCheckedId) {
 
-        let showTypes = [2, 3, 4, 5, 6, 13, 15, 16, 17];
         let lastUserId = 0;
         let itemsListExec = '';
         let completeFileNames = [];
@@ -881,22 +892,15 @@ window.VD = (function Visiodesk() {
             'position': '',
         };
 
-        let _itemms = [];
 
         // console.log("LOOK AUTHOR: ", items, lastCheckedId);
 
-        items.reverse().forEach((item) => {
-            if (
-                ((lastCheckedId && item.id>lastCheckedId) || (!lastCheckedId && _itemms.length<3))
-                && (showTypes.indexOf(item['type']['id']) > -1 || item['type']['id']===2)
-            ) _itemms.push(item);
-        });
-
-        _itemms = _itemms.reverse();
 
 
-        function __showItems(items) {
-            items.forEach((item, index) => {
+
+        function __showItems(topicItems) {
+            let showTypes = [2, 3, 4, 5, 6, 13, 15, 16, 17];
+            topicItems.reverse().forEach((item, index) => {
                 //только сообщения, статусы, приоритеты, пользователи, группы
                 if (showTypes.indexOf(item['type']['id']) > -1) {
                     //для статуса "отложено"
@@ -911,7 +915,7 @@ window.VD = (function Visiodesk() {
                         'last_user_id': lastUserId,
                         'is_reply': item['author']['id'] === authorizedUserId,
                         'index': index,
-                        'length': items.length,
+                        'length': topicItems.length,
                         'created_date': VD.GetFormatedDate(item['created_at']),
                         'text': ''
                     }, item));
@@ -937,7 +941,7 @@ window.VD = (function Visiodesk() {
         VB.LoadTemplatesList(serviceTemplatesList, VD_SETTINGS['TEMPLATE_DIR'])
             .done((templatesContent) => {
                 serviceTemplatesData = templatesContent;
-                __showItems(_itemms);
+                __showItems(__getLastOrTreeItems(items, lastCheckedId));
             });
 
 
@@ -963,6 +967,7 @@ window.VD = (function Visiodesk() {
             event.stopPropagation();
             VD.Controller(`:Topic/${topicParams['id']}/TopicSettings`, selector);
         });
+
 
 
 
