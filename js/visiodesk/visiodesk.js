@@ -521,6 +521,7 @@ window.VD = (function Visiodesk() {
         ReferenceBindClick('.sidebar');
 
         $('.sidebar').find('A').click((event) => {
+            event.stopPropagation();
             var $item = $(event.currentTarget).parent();
             var $basTabBar = $('#visiobas-tabbar');
 
@@ -559,6 +560,7 @@ window.VD = (function Visiodesk() {
                     $('.modal_bar > .top').click();
                 }
             }
+			return false;
         });
     }
 
