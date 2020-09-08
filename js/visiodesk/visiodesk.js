@@ -1338,8 +1338,9 @@ window.VD = (function Visiodesk() {
 
 
         $('body').on("DOMNodeInserted", function (event) {
-            if(timer_role!=false) window.clearTimeout(timer_role);
-            timer_role = setTimeout(__setRoleVisibles, 100);
+            if(timer_role!==false) window.clearTimeout(timer_role);
+            timer_role = setTimeout(__setRoleVisibles, 350);
+
         });
 
         return {
