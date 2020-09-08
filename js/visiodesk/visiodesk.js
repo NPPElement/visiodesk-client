@@ -1371,10 +1371,11 @@ window.VD = (function Visiodesk() {
 
         function __setRoleVisibles() {
             timer_role = false;
+            if(!Get("user_roles")) return window.setTimeout(Reload, 1000);
             $('[user-role]').each((i, e)=>{
                 let $e = $(e);
                 if(!$e.attr("user-role")) return;
-                if(VD.SettingsManager.IsValue("user_roles",[$e.attr("user-role")]))
+                if(IsValue("user_roles",[$e.attr("user-role")]))
                     $e.show();
                 else
                     $e.hide();
