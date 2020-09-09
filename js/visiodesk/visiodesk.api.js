@@ -2696,6 +2696,11 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
     function CheckPushKey() {
         if(window.androidBridge && androidBridge.getRegistrationId) androidBridge.getRegistrationId();
+        if( window.webkit &&
+            window.webkit.messageHandlers &&
+            window.webkit.messageHandlers.iosBridge &&
+            window.webkit.messageHandlers.iosBridge.getRegistrationId)
+            window.webkit.messageHandlers.iosBridge.getRegistrationId();
     }
 
 
