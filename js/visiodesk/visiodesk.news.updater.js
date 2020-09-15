@@ -168,6 +168,10 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
                 return _.difference(changed, checked).length;
                 // return lastTopics.size - checkedTopics.size;
             });
+        },
+
+        getLastItemId: () => {
+            return lastItemId
         }
     }
 })();

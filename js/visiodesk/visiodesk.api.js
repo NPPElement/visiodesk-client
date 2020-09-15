@@ -11,6 +11,8 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     let _topicIdsUpdates = [];
     let _needReloadTopicsByUsers = true;
 
+    let _lastItemId = -1;
+
     return {
         "FileUploader": FileUploader(),
         "GetDownloadUrl": GetDownloadUrl,
@@ -1123,7 +1125,10 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         topicIds = topicIds.sort();
         _needReloadTopicsByUsers = !_.isEqual(_topicIdsUpdates, topicIds);
         _topicIdsUpdates = topicIds;
-        topicIds.forEach(topicId=>VD_Topic.reload(topicId));
+        if(_lastItemId<VD_NEWS_UPDATER.getLastItemId()) {
+            _lastItemId = VD_NEWS_UPDATER.getLastItemId();
+            topicIds.forEach(topicId => VD_Topic.reload(topicId));
+        }
     }
 
     /**
