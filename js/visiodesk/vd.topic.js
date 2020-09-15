@@ -38,6 +38,8 @@ window.VD_Topic = (function () {
     var groupId = 0;
     /** @var {int} topicId - идентификатор текущего топика */
     var topicId = 0;
+    /** @var {int} lastItemId - идентификатор последнего итема текущего топика */
+    var lastItemId = 0;
     /** @var {object} topicParams - параметры текущего топика */
     var topicParams = {
         'groups': [],
@@ -387,6 +389,7 @@ window.VD_Topic = (function () {
                             __updateTopicParams(resultTopicParams);
 
                             __applyTopicParams(resultTopicParams);
+                            $(".topic").html('');
                             __showItems(resultTopicParams['items']);
                             check(topicId);
                             status.resolve({ 'selector': selector });
@@ -1444,6 +1447,16 @@ window.VD_Topic = (function () {
         return def;
     }
 
+    function __getLastItemId(items) {
+        let lastItemId = 0;
+        let showTypes = [3, 4, 5, 6, 13, 15, 16, 17];
+        items.forEach((item, index) => {
+            if (showTypes.indexOf(item['type']['id']) > -1 && lastItemId<item['id']) lastItemId = item['id'];
+        });
+        return lastItemId;
+    }
+
+
     /**
      * Отобразить сообщения
      * @param {array} items массив сообщений для отображения
@@ -1459,13 +1472,13 @@ window.VD_Topic = (function () {
 
         items.forEach((item, index) => {
             //только сообщения, статусы, приоритеты, пользователи, группы
-
             if((!skip_status) && item['type']['id']===6) {
                 skip_status = true;
                 return;
             }
 
             if (showTypes.indexOf(item['type']['id']) > -1) {
+                if(lastItemId<item['id']) lastItemId = item['id'];
                 //для статуса "отложено"
                 if (item['type']['id'] === 6 && item['status']['id'] === 4 && item['hold_millis']) {
                     let holdTo = moment(item['hold_millis']).format('DD.MM.YYYY HH:mm');
@@ -1521,7 +1534,9 @@ window.VD_Topic = (function () {
         });
 
         $('.topic').append(itemsListExec);
-        window.scrollTo(0, $('#screen').innerHeight());
+        // window.setTimeout(()=>window.scrollTo(0, $('#screen').innerHeight() + 50000), 500);
+        window.setTimeout(()=>$('body').animate({scrollTop: $('#screen').innerHeight()}, 3000), 50);
+        // window.scrollTo(0, $('#screen').innerHeight() + 50000);
 
         if (completeFileNames.length) {
             completeFileNames.forEach((uploadName) => {
@@ -1767,17 +1782,20 @@ window.VD_Topic = (function () {
     }
     
     
-    function reload(topicId) {
-        if($("#topic_back_back").length===1 && $("#topic_back_back").data("params") && $("#topic_back_back").data("params").lastTopicId===topicId) {
+    function reload(topic_id) {
+        if(topic_id===topic_id
+            && $("#topic_back_back").length===1
+            && $("#topic_back_back").data("params")
+            && $("#topic_back_back").data("params").lastTopicId===topic_id) {
             var editorData = editorInstance.getData();
-            VD_API.GetTopicById(topicId).done((resultTopicParams) => {
+            VD_API.GetTopicById(topic_id).done((resultTopicParams) => {
+                __applyTopicParams(resultTopicParams);
+                if(__getLastItemId(resultTopicParams['items'])<=lastItemId) return;
                 skip_status = false;
                 __updateTopicParams(resultTopicParams);
-                __applyTopicParams(resultTopicParams);
                 $(".topic").html('');
                 __showItems(resultTopicParams['items']);
-                check(topicId).done(()=>editorInstance.setData(editorData));
-
+                check(topic_id).done(()=>editorInstance.setData(editorData));
             });
         }
     }
