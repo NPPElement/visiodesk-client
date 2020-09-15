@@ -40,6 +40,8 @@ window.VD_Topic = (function () {
     var topicId = 0;
     /** @var {int} lastItemId - идентификатор последнего итема текущего топика */
     var lastItemId = 0;
+    /** @var {boolean} lastItemMySelf - последний итем - мой */
+    var lastItemMySelf = false;
     /** @var {object} topicParams - параметры текущего топика */
     var topicParams = {
         'groups': [],
@@ -391,7 +393,7 @@ window.VD_Topic = (function () {
                             __applyTopicParams(resultTopicParams);
                             $(".topic").html('');
                             __showItems(resultTopicParams['items']);
-                            check(topicId);
+                            if(!lastItemMySelf) check(topicId);
                             status.resolve({ 'selector': selector });
                         });
 
@@ -1472,6 +1474,9 @@ window.VD_Topic = (function () {
 
         items.forEach((item, index) => {
             //только сообщения, статусы, приоритеты, пользователи, группы
+            if(item['type']['id']===14 && item['author']['id']!== authorizedUserId) return;
+            lastItemMySelf = item['author']['id']=== authorizedUserId;
+
             if((!skip_status) && item['type']['id']===6) {
                 skip_status = true;
                 return;
@@ -1795,7 +1800,7 @@ window.VD_Topic = (function () {
                 __updateTopicParams(resultTopicParams);
                 $(".topic").html('');
                 __showItems(resultTopicParams['items']);
-                check(topic_id).done(()=>editorInstance.setData(editorData));
+                if(!lastItemMySelf) check(topic_id).done(()=>editorInstance.setData(editorData));
             });
         }
     }
