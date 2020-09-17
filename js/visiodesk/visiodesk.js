@@ -636,7 +636,7 @@ window.VD = (function Visiodesk() {
             VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {
 
                 // console.log("subscribe", itemId, topicsList);
-
+                let myself_changes = false;
                 if (topicsList.length && itemId > 1) {
                     topicsList.forEach((topic) => {
                         let statusItemId = 0;
@@ -654,6 +654,7 @@ window.VD = (function Visiodesk() {
 
                             if (item['type']['id'] === 6) {
                                 statusItemId = item['id'];
+                                myself_changes = item['author']['id'] === authorizedUserId;
                             } else {
                                break;
                             }
@@ -704,6 +705,8 @@ window.VD = (function Visiodesk() {
                         let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
                         if($('#sticker-' + topic['id']).length>0) audio_html = "";
 
+                        // console.log("myself_changes("+topic['id']+") = "+(myself_changes?"Yes":"No"));
+
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',
                             'audio': audio_html,
@@ -716,7 +719,7 @@ window.VD = (function Visiodesk() {
                         }, topic));
 
                         $('#sticker-' + topic['id']).remove();
-                        $stickers.prepend(itemTemplateExec);
+                        if(!myself_changes) $stickers.prepend(itemTemplateExec);
 
                         $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
                             $(this).removeClass("sound_on_icon");
