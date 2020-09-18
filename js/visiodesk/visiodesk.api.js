@@ -107,13 +107,15 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             filenames[filename]++;
             let last = filename.lastIndexOf(".");
             if(last===-1) return filename + "_"+filenames[filename];
-            let result = filename.substr(0, last-1) + "_" + filenames[filename] + filename.substr(last);
+            let result = filename.substr(0, last) + "_" + filenames[filename] + filename.substr(last);
             console.log("correctFilename("+filename+") = " + result);
             return result;
         }
 
         return {
             _clearFilenames: () => { filenames = {}; },
+            _correctFilename: correctFilename,
+
 
             /**
              * @param {string} uploaderSelector
@@ -190,7 +192,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 }).on('fileuploadprogress', function (e, data) {
                     console.log("fileuploadprogress: ", data);
                     var progress = parseInt(data.loaded / data.total * 100, 10);
-
                     console.warn(progress);
                 }).on('fileuploadchunkdone', function (e, data) {
                     console.warn(data);
@@ -220,8 +221,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                     $text.find('SPAN').html($link);
 
                     VD_Topic.setDownloadLink($text.find('.download_link'), uploadName);
-
-
                     uploadQueue.delete(fileName);
                     console.warn(data);
                 }).on('fileuploadfail', function (e, data) {

@@ -227,10 +227,10 @@ window.VD_Topic = (function () {
         "unload": unload,
         "check": check,
         "selectFile": selectFile,
+        "selectFileBase64": selectFileBase64,
         "setDownloadLink": setDownloadLink,
         "reload": reload
     };
-
 
     function run(reference, selector, params) {
         skip_status = false;
@@ -495,7 +495,23 @@ window.VD_Topic = (function () {
      */
     function selectFile(fileName, fileSize) {
         let fullItemObject = __selectFile(fileName, fileSize);
+        console.log("selectFile: ", fullItemObject);
         __appendChangedList(fullItemObject);
+
+        $('#visiodesk-tabbar').find('.message_bar').find('.icon_list').addClass('hide');
+    }
+
+    /**
+     * Добавить итем типа файл в очередь на отправку
+     * @param {string} fileName имя файла на клиентском устройстве
+     * @param {int} base64 размер файла в байтах
+     * @public
+     */
+    function selectFileBase64(fileName, base64) {
+        let fullItemObject = __selectFileBase64(fileName, base64);
+        if(!fullItemObject) return;
+        __appendChangedList(fullItemObject);
+
 
         $('#visiodesk-tabbar').find('.message_bar').find('.icon_list').addClass('hide');
     }
@@ -748,6 +764,34 @@ window.VD_Topic = (function () {
             "name": name,
             "file_name": name,
             "file_client_size": size,
+            "temp_id": VD_SETTINGS['ITEM_TYPES'][2] + '_' + name,
+        };
+        return __changeItem(itemObject);
+    }
+
+    /**
+     * Выбрать файл base64
+     * @param {string} name имя файла
+     * @param {int} size размер файла в байтах
+     * @return {object} fullItemObject дополненный универсальный объект сообщения
+     * @private
+     */
+    function __selectFileBase64(name, base64) {
+        name = VD_API.FileUploader._correctFilename(name);
+        let p = name.lastIndexOf(".");
+        if(p<1) return false;
+        let ext = name.substr(p+1).toLowerCase();
+        if(ext==="jpg") ext = "jpeg";
+
+        let srcBase64 = "data:image/"+ext+";base64, "+base64;
+
+
+
+        var itemObject = {
+            "type": { 'id': 2 },
+            "name": name,
+            "file_name": srcBase64,
+            "file_client_size": base64.length,
             "temp_id": VD_SETTINGS['ITEM_TYPES'][2] + '_' + name,
         };
         return __changeItem(itemObject);
@@ -1062,6 +1106,8 @@ window.VD_Topic = (function () {
                 VD_API.FileUploader.removeFromQueue(fullItemObject);
             }
         });
+
+        if(fullItemObject['type']['id'] === 2 && fullItemObject.file_name.indexOf("data:image/")===0) $itemTemplateExec.find(".icon.file").html("<img src='"+fullItemObject.file_name+"' width='74' />");
 
         $changedList.append($itemTemplateExec);
 
