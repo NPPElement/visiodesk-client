@@ -8,6 +8,7 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
     let lastTopics = new Map();
     let checkedTopics = new Map();
 
+
     let stream$ = new Rx.Subject();
     let pending = $.Deferred();
 
@@ -165,6 +166,9 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
 
         getNewsCounter: () => {
             return pending.then(() => {
+                // let items = lastTopics, result = [];
+                // lastTopics.forEach(item=>{ if(changed.includes(item.id) && !checked.includes(item.id)) result.push(item)});
+                // return result.length;
                 return _.difference(changed, checked).length;
                 // return lastTopics.size - checkedTopics.size;
             });

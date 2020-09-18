@@ -9,8 +9,7 @@ window.VD = (function Visiodesk() {
 
     let ref$ =  new Rx.Subject();
 
-
-
+    let lastCounter = -1;
 
     return {
         "StaticFunctions": StaticFunctions,
@@ -61,6 +60,14 @@ window.VD = (function Visiodesk() {
         "ref$": ref$,
         "SettingsManager": GetSettingsManager()
     };
+
+
+    function setAndroidCounter(count) {
+        if(count==lastCounter) return;
+        if(window.androidBridge && window.androidBridge.setBadgeCounter) window.androidBridge.setBadgeCounter(0+count);
+        lastCounter = count;
+    }
+
 
     /**
      * event listenets for base interface elements
@@ -599,6 +606,7 @@ window.VD = (function Visiodesk() {
             VD_NEWS_UPDATER.getNewsCounter().then((size) => {
                 if (size) {
                     $newsCounterEm.html(size);
+                    setAndroidCounter(0+size);
                     $newsCounter.show();
                 } else {
                     $newsCounter.hide();
@@ -965,6 +973,7 @@ window.VD = (function Visiodesk() {
             VD_Topic.check(topicParams['id']).done(() => {
                 $checkIcon.remove();
                 $topic.find('.unread').remove();
+                VD.SetStickers();
             });
         });
 
