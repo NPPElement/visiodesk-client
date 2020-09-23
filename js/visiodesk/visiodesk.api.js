@@ -76,6 +76,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         "SetUserGroupSupportId": SetUserGroupSupportId,
         "RegistrationPushKey": RegistrationPushKey,
         "CheckPushKey": CheckPushKey,
+        "UploadBase64": UploadBase64,
         "Test": Test,
 
     };
@@ -101,14 +102,12 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
             if(filenames[filename]===undefined) {
                 filenames[filename] = 1;
-                console.log("correctFilename("+filename+") = "+filename);
                 return filename;
             }
             filenames[filename]++;
             let last = filename.lastIndexOf(".");
             if(last===-1) return filename + "_"+filenames[filename];
             let result = filename.substr(0, last) + "_" + filenames[filename] + filename.substr(last);
-            console.log("correctFilename("+filename+") = " + result);
             return result;
         }
 
@@ -121,7 +120,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
              * @param {string} uploaderSelector
              */
             init: (uploaderSelector) => {
-                console.log("uploaderSelector: "+uploaderSelector);
                 $(uploaderSelector).fileupload({
                     pasteZone: $("body"),
                     url: apiContext + '/upload',
@@ -165,10 +163,8 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                             uploadQueue.set(fileName, data);
                         }
                     }
-                    console.log("fileuploadadd+: ", data);
 
                 }).on('fileuploadprocessalways', function (e, data) {
-                    console.log("fileuploadprocessalways: ", data);
                     let file = data['files'][0];
                     let fileName = file['name_2'];
                     let tempId = VD.EscapeSpecialCssChars(VD_SETTINGS['ITEM_TYPES'][2] + '_' + fileName);
@@ -190,20 +186,17 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
                     //console.warn(data);
                 }).on('fileuploadprogress', function (e, data) {
-                    console.log("fileuploadprogress: ", data);
                     var progress = parseInt(data.loaded / data.total * 100, 10);
                     console.warn(progress);
                 }).on('fileuploadchunkdone', function (e, data) {
                     console.warn(data);
                 }).on('fileuploadchunkfail', function (e, data) {
-                    console.log("fileuploadchunkfail: ", data);
                     let fileName = data['files'][0]['name'];
                     uploadQueue.delete(fileName);
 
                     //TODO: оформить вывод ошибки при загрузке файлов
                     console.error(data);
                 }).on('fileuploaddone', function (e, data) {
-                    console.log("fileuploaddone: ", data);
                     let fileName = data['files'][0]['name_2'];
                     let uploadName = data['files'][0]['uploadName'];
                     let contId = VD.EscapeSpecialCssChars(uploadName);
@@ -224,7 +217,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                     uploadQueue.delete(fileName);
                     console.warn(data);
                 }).on('fileuploadfail', function (e, data) {
-                    console.log("fileuploadfail: ", data);
                     let fileName = data['files'][0]['name'];
                     uploadQueue.delete(fileName);
 
@@ -242,15 +234,15 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
              * @param {FileItem} fileItem
              */
             submitFromQueue: (fileItem) => {
+
                 // data['headers']['Authorization'] = 'Bearer ' + window.token;
 
-                console.log("uploaded.submitFromQueue");
                 let fileName = fileItem['name'];
+
 
                 if (fileItem['author']['id'] === authorizedUserId && uploadQueue.has(fileName)) {
                     let fileToSend = uploadQueue.get(fileName);
-
-                    if (!fileToSend['created_at']) {
+                    if (_.isObject(fileToSend) && !fileToSend['created_at']) {
                         let fileToSendSize = fileToSend['files'][0]['size'];
 
                         fileToSend['headers'] = fileToSend['headers'] || {};
@@ -263,7 +255,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
                         fileToSend['created_at'] = fileItem['created_at'];
                         uploadQueue.set(fileName, fileToSend);
-                        console.log("uploaded.fileToSend: ", fileToSend);
                         fileToSend.submit();
                     }
                 }
@@ -275,6 +266,16 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             fileInQueue: (fileItem) => {
                 return fileItem['author']['id'] === authorizedUserId && uploadQueue.has(fileItem['name']);
             },
+
+            fileToQueue(fileName, fileToSend) {
+                uploadQueue.set(fileName, fileToSend);
+            },
+
+            fileDeleteQueue(fileName) {
+                uploadQueue.delete(fileName);
+            },
+
+
         }
     }
 
@@ -2579,7 +2580,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
     function SetUserGroupSupportId(group_id, support_id) {
 
-        console.log("SetUserGroupSupportId(", group_id, support_id+")");
         let def = $.Deferred();
         if(!_.contains([0,1,2,3], support_id)) {
             def.reject();
@@ -2727,6 +2727,46 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             }
         });
         return result;
+    }
+
+
+    function UploadBase64(filename, base64) {
+
+        let def = $.Deferred();
+        let url = apiContext + '/upload_base64';
+        let query = JSON.stringify({filename: filename, base64: base64});
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: query,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            console.log("UploadBase64.response = ", response)
+
+            let contId = VD.EscapeSpecialCssChars(filename);
+            let $cont = $('#' + contId);
+            let $text = $cont.find('.text');
+            let $icon = $cont.find('.icon');
+            let $link = $(`<a target="_blank" class="download_link">${_.escape(filename)}</a>`);
+
+                $icon.removeClass('file').addClass('empty');
+            $text.find('.cssload').remove();
+            $text.find('EM').removeClass('hide');
+            $text.find('SPAN').html($link);
+
+            VD_Topic.setDownloadLink($text.find('.download_link'), filename);
+
+
+            VD_API.FileUploader.removeFromQueue(filename);
+            def.resolve(true);
+        }).fail(function (response) {
+            def.resolve(false);
+        });
+        return def;
     }
 
 })();

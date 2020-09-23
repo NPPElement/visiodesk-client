@@ -495,7 +495,6 @@ window.VD_Topic = (function () {
      */
     function selectFile(fileName, fileSize) {
         let fullItemObject = __selectFile(fileName, fileSize);
-        console.log("selectFile: ", fullItemObject);
         __appendChangedList(fullItemObject);
 
         $('#visiodesk-tabbar').find('.message_bar').find('.icon_list').addClass('hide');
@@ -508,6 +507,7 @@ window.VD_Topic = (function () {
      * @public
      */
     function selectFileBase64(fileName, base64) {
+        VD_API.FileUploader.fileToQueue(fileName, base64);
         let fullItemObject = __selectFileBase64(fileName, base64);
         if(!fullItemObject) return;
         __appendChangedList(fullItemObject);
@@ -1270,6 +1270,19 @@ window.VD_Topic = (function () {
     }
 
 
+    function __sendBase64(result, origin) {
+        for(let i=0;i<result.length; i++) {
+            if(origin[i].file_name && origin[i].file_name.indexOf("data:image/")===0) {
+                let file_name = result[i].text;
+                let base64 = origin[i].file_name;
+                base64 = base64.substr(base64.indexOf(";base64,")+9);
+                VD_API.UploadBase64(file_name, base64).done(r=>{});
+
+            }
+        }
+    }
+
+
     /**
      * Подготовка itemsForSend для отправки на сервер + отправка
      * @private
@@ -1372,6 +1385,7 @@ window.VD_Topic = (function () {
 
                 return __saveLoadItems(itemsForSendFiles);
             }).then((resultFileItems) => {
+                __sendBase64(resultFileItems, itemsForSendFiles);
                 __showItems(resultFileItems);
                 __startUploadFiles(resultFileItems);
                 itemsForSend = [];
@@ -1379,6 +1393,7 @@ window.VD_Topic = (function () {
             });
         } else {
             __saveLoadItems(itemsForSend).done((resultItems) => {
+                __sendBase64(resultItems, itemsForSend);
                 __updateTopicParams(resultItems);
 
                 __clearChangedList();
@@ -1594,7 +1609,6 @@ window.VD_Topic = (function () {
                 let contId = VD.EscapeSpecialCssChars(uploadName);
                 let $cont = $('#' + contId);
                 let $link = $cont.find('.download_link');
-                // console.log("__show items: ", contId, uploadName);
                 setDownloadLink($link, uploadName);
             });
         }
@@ -1608,7 +1622,7 @@ window.VD_Topic = (function () {
      */
     function __startUploadFiles(items) {
         items.forEach((item) => {
-            if (item['type']['id'] === 2) {
+            if (item['type']['id'] === 2 && ((!item['file_name'])  || item['file_name'].indexOf("data:image/")!==0)) {
                 VD_API.FileUploader.submitFromQueue(item);
             }
         });
@@ -1701,7 +1715,6 @@ window.VD_Topic = (function () {
                     if(editor.getData()=='<p><mark class="pen-gray">Введите текст</mark></p>') {
                         editorModel.change(writer => {editor.setData('<p></p>'); });
                         editorModel.change(writer => {
-                            console.log(modelDocument.selection.getLastPosition());
                             writer.insertText('@', {'highlight': 'redPen'},  modelDocument.selection.getFirstPosition());
                             writer.setSelection(editor.model.document.getRoot(), 'end');
                             editor.editing.view.focus();
