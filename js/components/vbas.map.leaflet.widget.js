@@ -338,7 +338,6 @@
         }
 
         function __createMarkerCustomPopupContent(marker) {
-            console.log("__createMarkerCustomPopupContent: ", marker);
             marker.replace = marker.replace ? marker.replace : {};
             const def = $.Deferred();
             const defObjects = (marker.items && marker.items.length > 0)
@@ -369,6 +368,13 @@
                     });
             });
             return def;
+        }
+
+        function __createSVGPopupContent(marker) {
+            const content = L.DomUtil.create("div");
+            $(content).width(300);
+            VBasWidget.show(content, marker.object, true)
+            return L.popup().setContent(content);
         }
 
         function __createMarkerMapControllerPopupContent(marker) {
@@ -605,6 +611,86 @@
 
             return defLeafMarker;
         }
+        /**
+         *
+         * @param marker
+         * @returns {*}
+         * @private
+         * @return deferred of leaflet marker
+         */
+        function __createSVGLeafletMarker(marker) {
+            let defLeafMarker = $.Deferred();
+
+            let iconOptions = {
+                iconUrl: marker.iconUrl
+            };
+            if (marker.className) {
+                iconOptions["className"] = marker.className;
+            }
+            if (marker.iconAnchor) {
+                iconOptions["iconAnchor"] = marker.iconAnchor;
+            }
+            if (marker.shadowAnchor) {
+                iconOptions["shadowAnchor"] = marker.shadowAnchor;
+            }
+            if (marker.iconSize) {
+                iconOptions["iconSize"] = marker.iconSize;
+            }
+            if (marker.shadowSize) {
+                iconOptions["shadowSize"] = marker.shadowSize;
+            }
+            if (marker.popupAnchor) {
+                iconOptions["popupAnchor"] = marker.popupAnchor;
+            }
+
+            const leafIcon = L.icon(iconOptions);
+
+            let options = {
+                icon: leafIcon
+            };
+            if (marker.zooms) {
+                options["zooms"] = marker.zooms;
+            }
+            if (marker.parentLayerId) {
+                options["parentLayerId"] = marker.parentLayerId;
+            }
+            const leafMarker = L.marker(__xy(marker.crd), options);
+
+            const popup = __createSVGPopupContent(marker);
+            leafMarker.bindPopup(popup);
+            leafMarker.on({click: function () {
+                    if(!$(".btn-show-full-obj").length) {
+                        let $btnFull = $('<a class="leaflet-popup-close-button btn-show-full-obj fullscreen_icon" href="javascript:void(0)"  style="outline: none;right: 32px;" title="Во весь экран">&#x229E;</a>')
+                        $(".leaflet-popup").append($btnFull);
+                        $btnFull.click(function (e) {
+                            e.stopPropagation();
+                            VBasWidget.show("#visualization0", marker.object);
+                        })
+                    }
+                    if(!$(".btn-show-new-window").length) {
+                        let $btnNewWin = $('<a class="leaflet-popup-close-button btn-show-new-window" href="javascript:void(0)"  style="outline: none;right: 64px;" title="В отдельном окне">&#x22A0;</a>')
+                        $(".leaflet-popup").append($btnNewWin);
+                        $btnNewWin.click(function (e) {
+                            e.stopPropagation();
+                            // let w = window.open("/html_vdesk/object.html");
+                            let w = window.open("about:blank");
+                            window.w0 = w;
+                            $("link").each((i,l)=>{
+                                if(l.href.indexOf("svg.css")>0) {
+                                    console.log(l.href);
+                                    $(w.document.head).append("<link rel='stylesheet' href='"+l.href+"'>");
+
+                                }
+                            });
+                            VBasWidget.show($(w.document.body).css("background-color","#2F3235"), marker.object);
+                        })
+                    }
+            }});
+            defLeafMarker.resolve(leafMarker);
+
+
+            return defLeafMarker;
+        }
 
         /**
          * This function should be gone after server update
@@ -824,6 +910,10 @@
                     } else if (marker.kind === "icon") {
                         if (marker.iconUrl) {
                             defLeafMarker = __createIconLeafletMarker(marker);
+                        }
+                    } else if (marker.kind === "object") {
+                        if (marker.iconUrl) {
+                            defLeafMarker = __createSVGLeafletMarker(marker);
                         }
                     }
 

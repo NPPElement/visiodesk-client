@@ -8,6 +8,8 @@ window.VBasWidget = (function () {
 
     let _requestCache = [];
 
+    let _clear_template = false;
+
     /**
      * Load necessary template
      */
@@ -46,10 +48,11 @@ window.VBasWidget = (function () {
      * @param {string} selector widget parent container
      * @param {string} reference to display visualization
      */
-    function show(selector, reference) {
+    function show(selector, reference, clear_template) {
+        clear_template = !!clear_template;
         _selector = selector;
         _$selector = $(selector);
-
+        _clear_template = clear_template;
         __init(reference);
     }
 
@@ -59,7 +62,7 @@ window.VBasWidget = (function () {
      */
     function __objectDoesNotHaveVisualization(object) {
         _template.done((response) => {
-            const template = _.template(response.data)({
+            const template = _.template( _clear_template ? '<div class="layout" id="vbas-widget"></div>' : response.data)({
                 object: {
                     //name: VB_API.extractName(object[BACNET_CODE["object-property-reference"]]),
                     description: object[BACNET_CODE["description"]]
@@ -255,7 +258,7 @@ window.VBasWidget = (function () {
         _$selector.show();
 
         _template.done((response) => {
-            const template = _.template(response.data)({
+            const template = _.template( _clear_template ? '<div class="layout" id="vbas-widget"></div>' : response.data)({
                 object: {
                     //name: VB_API.extractName(object[BACNET_CODE["object-property-reference"]]),
                     description: object[BACNET_CODE["description"]]

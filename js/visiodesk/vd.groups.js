@@ -13,7 +13,7 @@ window.VD_Groups = (function () {
     const statusTypes = VD_SETTINGS['STATUS_TYPES'];
 
     let ready_loading = true;
-    let source$ = Rx.Observable.timer(0, 1000).flatMap((n) => {
+    let source$ = Rx.Observable.timer(0, 10000).flatMap((n) => {
         if(!ready_loading) return  $.Deferred().resolve(false);
         ready_loading = false;
         return Rx.Observable.fromPromise(VD_API.GetGroups());
