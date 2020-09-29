@@ -283,7 +283,7 @@ window.VBasWidget = (function () {
 
                 VB.Load(vis.template, void 0, replace)
                     .done((response) => {
-                        console.log("svg visualization loaded and starting update present values");
+                        // console.log("svg visualization loaded and starting update present values");
                         _$selector.find("#vbas-widget").html(response.data);
                         __prepareVisualization();
 

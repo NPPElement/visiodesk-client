@@ -155,24 +155,10 @@
             test: test,
 
             findMarkerByReference: findMarkerByReference,
-            __selectLeafletLayer: ()=> _selectedLeafBaseLayer,
-            _selectedLeafBaseLayer: _get__leafBaseLayers,
-            _leafControlLayers: _get__leafControlLayers,
-            _leafBaseLayers: _get__leafBaseLayers,
             map: ()=>{return leafMap}
         };
 
-        function _get__selectedLeafBaseLayer() {
-            return _selectedLeafBaseLayer;
-        }
 
-        function _get__leafControlLayers() {
-            return _leafControlLayers;
-        }
-
-        function _get__leafBaseLayers() {
-            return _leafBaseLayers;
-        }
 
         /**
          * Load widget data from server
@@ -672,12 +658,11 @@
                         $(".leaflet-popup").append($btnNewWin);
                         $btnNewWin.click(function (e) {
                             e.stopPropagation();
-                            // let w = window.open("/html_vdesk/object.html");
-                            let w = window.open("about:blank");
+                            let w_id = marker.object.replace(/\/|\:|\s/g,"_");
+                            let w = window.open("",w_id,"location=0");
                             window.w0 = w;
                             $("link").each((i,l)=>{
                                 if(l.href.indexOf("svg.css")>0) {
-                                    console.log(l.href);
                                     $(w.document.head).append("<link rel='stylesheet' href='"+l.href+"'>");
 
                                 }
