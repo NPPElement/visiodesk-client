@@ -359,7 +359,7 @@
         function __createSVGPopupContent(marker) {
             const content = L.DomUtil.create("div");
             $(content).width(300);
-            VBasWidget.show(content, marker.object, true)
+            VBasWidget.show(content, marker.reference, true)
             return L.popup().setContent(content);
         }
 
@@ -650,7 +650,7 @@
                         $(".leaflet-popup").append($btnFull);
                         $btnFull.click(function (e) {
                             e.stopPropagation();
-                            VBasWidget.show("#visualization0", marker.object);
+                            VBasWidget.show("#visualization0", marker.reference);
                         })
                     }
                     if(!$(".btn-show-new-window").length) {
@@ -658,16 +658,10 @@
                         $(".leaflet-popup").append($btnNewWin);
                         $btnNewWin.click(function (e) {
                             e.stopPropagation();
-                            let w_id = marker.object.replace(/\/|\:|\s/g,"_");
+                            let w_id = marker.reference.replace(/\/|\:|\s/g,"_");
                             let w = window.open("",w_id,"location=0");
-                            window.w0 = w;
-                            $("link").each((i,l)=>{
-                                if(l.href.indexOf("svg.css")>0) {
-                                    $(w.document.head).append("<link rel='stylesheet' href='"+l.href+"'>");
-
-                                }
-                            });
-                            VBasWidget.show($(w.document.body).css("background-color","#2F3235"), marker.object);
+                            $("link").each((i,l)=>{ if(l.href.indexOf("svg.css")>0) $(w.document.head).append("<link rel='stylesheet' href='"+l.href+"'>"); });
+                            VBasWidget.show($(w.document.body).css("background-color","#2F3235"), marker.reference);
                         })
                     }
             }});
