@@ -221,6 +221,15 @@ function VisiobaseDeviceCsvParser() {
                 codeName === "update_interval") {
                 //find out special columns column indexes (alias, template, replace)
                 column371[codeName] = c;
+            } else if(code.indexOf(".")>0) {
+                let path = code.split(".");
+                code = path.shift();
+                headerInfo.columns.push({
+                    name: data[headerInfo.line - 1][c],
+                    index: c,
+                    code: code,
+                    path: path
+                });
             } else {
                 code = parseInt(code);
                 // noinspection ES6ModulesDependencies
@@ -910,6 +919,7 @@ function VisiobaseDeviceCsvParser() {
             /** @type {boolean} determinate is object valid and can be imported */
             let isObjectValid = true;
 
+            console.log("headerInfo: ", headerInfo);
             try {
                 for (let c = 0; c < headerInfo.columns.length; ++c) {
                     if (!isObjectValid) {
@@ -919,7 +929,7 @@ function VisiobaseDeviceCsvParser() {
                     const header = headerInfo.columns[c];
                     const value = data[lineIndex][header.index];
 
-                    if (objectParseHandler.hasOwnProperty(header.code)) {
+                    if (objectParseHandler.hasOwnProperty(header.code) && !header['path']) {
                         //execute custom
                         const result = objectParseHandler[header.code](object, header, value, data[lineIndex]);
                         let message = "";
@@ -937,17 +947,47 @@ function VisiobaseDeviceCsvParser() {
                         }
                     } else {
                         if (typeof value !== "undefined" && value !== null) {
-                            if (_.isString(value)) {
-                                const trimmed = $.trim(value);
-                                if (!_.isEmpty(trimmed)) {
-                                    object[header.code] = trimmed;
+                            if( !header['path'] ) {
+                                if (_.isString(value)) {
+                                    const trimmed = $.trim(value);
+                                    if (!_.isEmpty(trimmed)) {
+                                        object[header.code] = trimmed;
+                                    }
+                                } else {
+                                    object[header.code] = value;
                                 }
                             } else {
-                                object[header.code] = value;
+
+                                let valueTyped = $.trim(value);
+                                if(""+parseInt(valueTyped)===valueTyped) valueTyped = parseInt(valueTyped);
+                                if(!object.hasOwnProperty(header.code)) object[header.code] = {};
+                                var o = object[header.code];
+                                if(!_.isObject(o)) {
+                                    o = JSON.parse(o);
+                                    object[header.code] = o;
+                                }
+                                for( let ki=0 ; ki<header.path.length ; ki++ ) {
+                                    let p = header.path[ki];
+                                    if( ki===header.path.length-1 ) {
+                                        if(o.hasOwnProperty(p)) {
+                                            if(Array.isArray(o[p])) o[p].push(valueTyped);
+                                            else o[p] = [o[p], valueTyped];
+                                        } else {
+                                            o[p] = valueTyped;
+                                        }
+                                    } else {
+                                        if(!o.hasOwnProperty(p)) o[p] = {};
+                                        o = o[p];
+                                    }
+                                }
                             }
                         }
                     }
                 }
+            for (let c = 0; c < headerInfo.columns.length; ++c) {
+                if (!isObjectValid) break;
+                if(_.isObject(object[headerInfo.columns[c].code])) object[headerInfo.columns[c].code] = JSON.stringify(object[headerInfo.columns[c].code]);
+            }
             } catch (e) {
                 isObjectValid = false;
                 const message = `[error] csv line: ${lineIndex + 1} catch error: '${e.message}'`;
@@ -1154,6 +1194,7 @@ function VisiobaseDeviceCsvParser() {
             }
         });
 
+        console.log("objects: ", objects);
         return {
             objects: objects,
             errors: errors
