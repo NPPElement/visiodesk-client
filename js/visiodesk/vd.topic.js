@@ -1392,7 +1392,7 @@ window.VD_Topic = (function () {
                 sendItemsBlock = false;
             });
         } else {
-            __saveLoadItems(itemsForSend).done((resultItems) => {
+            __saveLoadItems(itemsForSend).then((resultItems) => {
                 __sendBase64(resultItems, itemsForSend);
                 __updateTopicParams(resultItems);
 
@@ -1446,9 +1446,14 @@ window.VD_Topic = (function () {
                 'topic': { 'id': topicId }
             });
 
-            VD_API.AddTopicItems(itemsIn).done((resultItems) => {
-                def.resolve(resultItems);
-            });
+            VD_API.AddTopicItems(itemsIn)
+                .done((resultItems) => {
+                    def.resolve(resultItems);
+                })
+                .fail(()=>{
+                    sendItemsBlock = false;
+                    // def.resolve([]);
+                })
         } else {
             def.resolve([]);
         }

@@ -1188,6 +1188,11 @@ window.VD = (function Visiodesk() {
                     'caption': 'Невозможно выполнить действие',
                     'description': 'внутренняя ошибка сервера'
                 });
+            } else if(responseObject.error === "access is not permitted") {
+                __errorShowMessage({
+                    'caption': 'Ошибка',
+                    'description': "Не хватает прав для выполнения данной операции"
+                });
             }
             console.error(responseObject['error'] || 'Невозможно выполнить действие');
             if (url) {
