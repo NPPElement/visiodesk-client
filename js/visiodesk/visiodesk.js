@@ -1392,7 +1392,7 @@ window.VD = (function Visiodesk() {
             $('[user-role]').each((i, e)=>{
                 let $e = $(e);
                 if(!$e.attr("user-role")) return;
-                if(IsValue("user_roles",[$e.attr("user-role")]))
+                if(IsValue("user_roles",$e.attr("user-role").split(",")))
                     $e.show();
                 else
                     $e.hide();
@@ -1421,7 +1421,7 @@ window.VD = (function Visiodesk() {
             if(!index) return val;
             return val[index] ? val[index] : null;
         }
-        
+
         function IsValue(index, value) {
             if(!values[index]) return false;
             if(!Array.isArray(value)) return value===values[index];
