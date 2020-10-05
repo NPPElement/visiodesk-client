@@ -186,6 +186,7 @@ window.VBasWidget = (function () {
                     return __objectDoesNotHaveVisualization(object);
                 }
 
+
                 VB_API.getAllChildren(reference)
                     .done((response) => {
                         if (!response.success) {
@@ -286,6 +287,23 @@ window.VBasWidget = (function () {
                         // console.log("svg visualization loaded and starting update present values");
                         _$selector.find("#vbas-widget").html(response.data);
                         __prepareVisualization();
+
+                        let reference_inmap = [];
+                        $("#visualization [reference]").each((i,e)=>{ if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference")); });
+                        let count_items = reference_inmap.length;
+                        let res_objs = [];
+                        reference_inmap.forEach(ref_obj=>{
+                            VB_API.getObject(ref_obj).done(oi=>{
+                                res_objs.push(oi.data);
+                                if(!--count_items) VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
+                            })
+
+                        });
+
+
+
+
+
 
                         VB_UPDATER.requestData();
                     })

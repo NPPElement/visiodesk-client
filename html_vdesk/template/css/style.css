@@ -2563,7 +2563,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 .message_bar .icon_list A.change_user {
     background: url("../images/icon_bar_change_user.svg") 0 0 no-repeat;
 }
-.message_bar .icon_list A.change_place {
+.message_bar .icon_list A.insert_place {
     background: url("../images/icon_bar_change_place.svg") 0 0 no-repeat;
 }
 .message_bar .icon_list A.insert_user {

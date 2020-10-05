@@ -1125,7 +1125,7 @@
                 "getObject/{reference}"
                     .replace("{reference}", _reference);
 
-            //console.log("GET " + url);
+            // console.log("GET " + url);
 
             $.ajax({
                 method: "GET",

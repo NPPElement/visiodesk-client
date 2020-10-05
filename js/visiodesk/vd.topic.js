@@ -205,15 +205,78 @@ window.VD_Topic = (function () {
 
         },
 
+        _setPlaceMode: function() {
+            assortmentTools.mode = 'place';
 
-        open: function (editor) {
+
+
+
+            VD_API.GetUsers().done((userItems) => {
+                let itemTemplate = serviceTemplatesData['vd.topic.selected.item.html'];
+                $t = $("#assortment_tools");
+                $t.innerHTML = '';
+                assortmentTools.items = [];
+
+                userItems.forEach((item) => {
+                    let checked = false;
+
+                    let name = (item['last_name'] || '') + ' ' + (item['first_name'] || '') + ' ' + (item['middle_name'] || '');
+
+                    var position =  item['position'] || '';
+                    var user_info = {
+                        'item_type_code': 'user',
+                        'name': name,
+                        'description': position,
+                        'checked': checked ? 'checked': '',
+                        'id': item['id'],
+                        'login': item['login'],
+                        'search_string': name + ' ' +  position + item['login']
+                    };
+
+                    assortmentTools.items.push(user_info);
+                    let itemTemplateExec = _.template(itemTemplate)($.extend({}, emptyUserObject, user_info , item));
+                    $t.append(itemTemplateExec);
+                });
+
+                $t.find(".item").click((event) => {
+                    event.stopPropagation();
+                    let $item = $(event.currentTarget);
+                    let user_id = parseInt($item.data('id'));
+                    let selectedUserName = $item.data('name');
+                    let selectedUserDesc = $item.data('desc');
+                    assortmentTools.selected_id = user_id;
+
+                    assortmentTools.editor.model.change( writer => {
+                        var selection = assortmentTools.editor.model.document.selection;
+                        writer.remove(selection.focus.nodeBefore);
+                        writer.insertText('#'+assortmentTools.getUserLogin(user_id), {'highlight': 'bluePen'}, selection.getFirstPosition());
+                        assortmentTools.editor.fire('break_highlight', selection.getFirstPosition());
+                        assortmentTools.editor.editing.view.focus()
+                    });
+
+                    assortmentTools.close();
+                    let fullItemObject = __selectUser(user_id, selectedUserName, selectedUserDesc);
+                    __appendChangedList(fullItemObject);
+                });
+                assortmentTools.filterBySelection();
+                // window.setTimeout(assortmentTools.filterBySelection, 12);
+            });
+
+
+
+
+        },
+
+
+        open: function (editor, mode) {
             assortmentTools.editor = editor;
             if(assortmentTools.isOpen()) return;
             $("#assortment_tools")
                 .removeClass("hide")
                 .width($("#visiodesk-tabbar .message_bar").width())
                 .css("bottom", $("#visiodesk-tabbar .message_bar").height() + "px");
-            assortmentTools._setUsersMode();
+            if(mode==="user") assortmentTools._setUsersMode();
+            if(mode==="place") assortmentTools._setPlaceMode();
         },
 
         close: function () {
@@ -370,6 +433,13 @@ window.VD_Topic = (function () {
                         event.stopPropagation();
                         $iconList.addClass('hide');
                         editorInstance.fire("insert_at")
+                    });
+
+                    //Открыть окно с ................
+                    $iconList.find('.insert_place').click((event) => {
+                        event.stopPropagation();
+                        $iconList.addClass('hide');
+                        editorInstance.fire("insert_place")
                     });
 
                     //Открыть окно с списком пользователей
@@ -1735,6 +1805,25 @@ window.VD_Topic = (function () {
                 });
 
 
+                editor.on('insert_place', (event, position) => {
+
+                    if(editor.getData()=='<p><mark class="pen-gray">Введите текст</mark></p>') {
+                        editorModel.change(writer => {editor.setData('<p></p>'); });
+                        editorModel.change(writer => {
+                            writer.insertText('#', {'highlight': 'bluePen'},  modelDocument.selection.getFirstPosition());
+                            writer.setSelection(editor.model.document.getRoot(), 'end');
+                            editor.editing.view.focus();
+                        });
+
+                    } else {
+                        editorModel.change(writer => {
+                            writer.insertText('#', {'highlight': 'bluePen'},  modelDocument.selection.getLastPosition());
+                            editor.editing.view.focus();
+                        });
+                    }
+
+                });
+
                 editor.on('clear', () => {
                     editor.setData('<p></p>');
                 });
@@ -1766,6 +1855,9 @@ window.VD_Topic = (function () {
                                     //'bold': true,
                                     'highlight': 'bluePen'
                                 }, selection.getFirstPosition());
+                                if(!assortmentTools.isOpen()
+                                    && selection.focus.nodeBefore
+                                    && selection.focus.nodeBefore.data.length>=3) assortmentTools.open(editor, "place");
                             });
                         }
                     }
@@ -1789,7 +1881,7 @@ window.VD_Topic = (function () {
                                 }, selection.getFirstPosition());
                                 if(!assortmentTools.isOpen()
                                     && selection.focus.nodeBefore
-                                    && selection.focus.nodeBefore.data.length>=3) assortmentTools.open(editor);
+                                    && selection.focus.nodeBefore.data.length>=3) assortmentTools.open(editor, "user");
                             });
                         }
                     };
@@ -1814,11 +1906,15 @@ window.VD_Topic = (function () {
                     }
 
                     if (selection.hasAttribute('highlight')) {
+                        // console.log("selection.getAttribute(): ", selection.getAttribute("highlight"));
                         if (assortmentTools.isOpen()) {
                             assortmentTools.filter( selection.focus.nodeBefore.data);
                             // window.setTimeout( () => { if(selection.focus.nodeBefore) assortmentTools.filter( selection.focus.nodeBefore.data); }, 10);
                         } else {
-                            if(selection.focus.nodeBefore && selection.focus.nodeBefore.data.length>3) assortmentTools.open(editor);
+                            let _mode = false;
+                            if(selection.getAttribute("highlight")==="redPen") _mode = "user";
+                            if(selection.getAttribute("highlight")==="bluePen") _mode = "place";
+                            if(_mode && selection.focus.nodeBefore && selection.focus.nodeBefore.data.length>3) assortmentTools.open(editor, _mode);
                         }
                     }
                 });
