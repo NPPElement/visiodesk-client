@@ -957,27 +957,28 @@ function VisiobaseDeviceCsvParser() {
                                     object[header.code] = value;
                                 }
                             } else {
-
                                 let valueTyped = $.trim(value);
-                                if(""+parseInt(valueTyped)===valueTyped) valueTyped = parseInt(valueTyped);
-                                if(!object.hasOwnProperty(header.code)) object[header.code] = {};
-                                var o = object[header.code];
-                                if(!_.isObject(o)) {
-                                    o = JSON.parse(o);
-                                    object[header.code] = o;
-                                }
-                                for( let ki=0 ; ki<header.path.length ; ki++ ) {
-                                    let p = header.path[ki];
-                                    if( ki===header.path.length-1 ) {
-                                        if(o.hasOwnProperty(p)) {
-                                            if(Array.isArray(o[p])) o[p].push(valueTyped);
-                                            else o[p] = [o[p], valueTyped];
+                                if (valueTyped.length > 0) {
+                                    if ("" + parseInt(valueTyped) === valueTyped) valueTyped = parseInt(valueTyped);
+                                    if (!object.hasOwnProperty(header.code)) object[header.code] = {};
+                                    var o = object[header.code];
+                                    if (!_.isObject(o)) {
+                                        o = JSON.parse(o);
+                                        object[header.code] = o;
+                                    }
+                                    for (let ki = 0; ki < header.path.length; ki++) {
+                                        let p = header.path[ki];
+                                        if (ki === header.path.length - 1) {
+                                            if (o.hasOwnProperty(p)) {
+                                                if (Array.isArray(o[p])) o[p].push(valueTyped);
+                                                else o[p] = [o[p], valueTyped];
+                                            } else {
+                                                o[p] = valueTyped;
+                                            }
                                         } else {
-                                            o[p] = valueTyped;
+                                            if (!o.hasOwnProperty(p)) o[p] = {};
+                                            o = o[p];
                                         }
-                                    } else {
-                                        if(!o.hasOwnProperty(p)) o[p] = {};
-                                        o = o[p];
                                     }
                                 }
                             }
