@@ -40,7 +40,8 @@ window.VBasWidget = (function () {
     })();
 
     return {
-        show: show
+        show: show,
+        openWindow: openWindow,
     };
 
     /**
@@ -75,6 +76,34 @@ window.VBasWidget = (function () {
                 VB_UPDATER.unregister("vb.widget");
                 _$selector.hide();
             });
+        });
+    }
+    /**
+     * object does not have visualization, initialize all necessary state
+     * @private
+     */
+    function openWindow(selector, callback, before_close) {
+        _selector = selector;
+        _$selector = $(selector);
+        _$selector.show();
+
+        _template.done((response) => {
+            const template = _.template(response.data)({
+                object: {
+                    name: "",
+                    description: ""
+                }
+            });
+
+            _$selector.html(template);
+            _$selector.find("#vbas-widget").html("");
+            _$selector.find(".window_header .close_icon").click(() => {
+                if(before_close) before_close();
+                _$selector.html('');
+                _$selector.hide();
+            });
+
+            if(callback) callback();
         });
     }
 

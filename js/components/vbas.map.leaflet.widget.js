@@ -65,6 +65,7 @@
      */
 
 
+
     function DefManager() {
         let data = {};
 
@@ -297,8 +298,6 @@
                         const x = parsed[3];
                         const y = parsed[4];
 
-                        console.log("parsed: ", parsed);
-
                         for (let caption in _leafBaseLayers) {
                             const leafLayer = _leafBaseLayers[caption];
                             if (leafLayer.options.id === layerId) {
@@ -359,7 +358,7 @@
         function __createSVGPopupContent(marker) {
             const content = L.DomUtil.create("div");
             $(content).width(300);
-            VBasWidget.show(content, marker.reference, true)
+            VBasWidget.show(content, marker.reference, true);
             return L.popup().setContent(content);
         }
 
@@ -394,7 +393,6 @@
          * @return deferred of leaflet marker
          */
         function __createDefaultLeafletMarker(marker) {
-            console.log("__createDefaultLeafletMarker: ", marker);
             const def = $.Deferred();
 
             let options = {};
@@ -649,8 +647,15 @@
                         let $btnFull = $('<a class="leaflet-popup-close-button btn-show-full-obj fullscreen_icon" href="javascript:void(0)"  style="outline: none;right: 32px;" title="Во весь экран">&#x229E;</a>')
                         $(".leaflet-popup").append($btnFull);
                         $btnFull.click(function (e) {
+
                             e.stopPropagation();
-                            VBasWidget.show("#visualization0", marker.reference);
+                            VBasWidget.openWindow("#visualization0", ()=>{
+                                window.$clon = $(".leaflet-popup-content #vbas-widget").clone();
+                                $("#visualization0 #vbas-widget").append($clon);
+                            }, ()=>{
+                                $(".leaflet-popup-content-wrapper .leaflet-popup-content").html(''); //  #vbas-widget
+                                $(".leaflet-popup-content-wrapper .leaflet-popup-content").append($clon);
+                            });
                         })
                     }
                     if(!$(".btn-show-new-window").length) {
@@ -666,6 +671,7 @@
                     }
             }});
             defLeafMarker.resolve(leafMarker);
+
 
 
             return defLeafMarker;
@@ -838,7 +844,6 @@
             __createLayerGroups(layer).done((defLeafGroups, leafGroups) => {
                 let overlays = {};
                 leafGroups.forEach((leafGroup) => {
-                    // console.log("leafGroup: ", leafGroup);
                     leafMap.addLayer(leafGroup);
                     overlays[leafGroup.options.caption] = leafGroup;
                 });
@@ -993,7 +998,6 @@
 
             leafMap.on("baselayerchange", (e) => {
                 _selectedLeafBaseLayer = e.layer;
-                console.log("_selectedLeafBaseLayer: ", _selectedLeafBaseLayer);
                 __selectLeafletLayer(e.layer.options.id);
             });
 
