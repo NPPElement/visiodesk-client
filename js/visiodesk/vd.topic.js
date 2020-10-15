@@ -1611,7 +1611,7 @@ window.VD_Topic = (function () {
         items.forEach((item, index) => {
             //только сообщения, статусы, приоритеты, пользователи, группы
             if(item['type']['id']===14 && item['author']['id']!== authorizedUserId) return;
-            lastItemMySelf = item['author']['id']=== authorizedUserId;
+            lastItemMySelf = item['author']['id']=== authorizedUserId && item['type']['id']===14;
 
             if((!skip_status) && item['type']['id']===6) {
                 skip_status = true;
