@@ -59,6 +59,11 @@ window.LOGGER = (function Logger() {
             last_url = window.location.href;
             addEvent("\t\t ----------- URL: "+last_url);
         }
+
+        if(!$("#topic-export-calendar").data('daterangepicker')) {
+            addEvent("#topic-export-calendar: NO DATARANGEPICKER");
+        }
+
     }
 
     window.setInterval(sendLogBuffer, 15000);
