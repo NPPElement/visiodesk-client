@@ -1746,7 +1746,8 @@
     function Test() {
         $.ajax({
             type: "GET",
-            url: "/vbas/gate/test",
+            // url: "/vbas/gate/test",
+            url: "/vbas/gate/get/2098190/binary-value",
             dataType: "json",
             headers: {
                 'Authorization': 'Bearer ' + token

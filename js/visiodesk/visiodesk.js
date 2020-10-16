@@ -785,6 +785,7 @@ window.VD = (function Visiodesk() {
 
 
     function Controller(reference, selector, params, force_refresh) {
+        LOGGER.vd_controller(reference, selector, params, force_refresh);
         let state_data =  {
             reference: reference,
             parentSelector: selector,
