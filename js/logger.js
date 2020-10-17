@@ -60,8 +60,8 @@ window.LOGGER = (function Logger() {
             addEvent("\t\t ----------- URL: "+last_url);
         }
 
-        if(!$("#topic-export-calendar").data('daterangepicker')) {
-            addEvent("#topic-export-calendar: NO DATARANGEPICKER");
+        if(!$(".daterangepicker").length) {
+            addEvent("#topic-export-calendar: NO DATARANGEPICKER (.daterangepicker)");
         }
 
     }
