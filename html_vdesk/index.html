@@ -154,6 +154,8 @@
         <div id="tab-content-leaflet" style="left:0;right:0;top:0;bottom:0;position:absolute;"></div>
     </div>
 
+    <div id="datapickerParent"></div>
+
 </div>
 
 
@@ -311,6 +313,7 @@
 
         const $calendar = $("#topic-export-calendar");
         $calendar.daterangepicker({
+            "parentEl": "#datapickerParent",
             "autoApply": false,
             "opens": "left",
             "locale": VD_SETTINGS['DATERANGEPICKER_LOCALE'],

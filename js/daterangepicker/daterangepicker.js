@@ -840,8 +840,6 @@
             html += '</tbody>';
             html += '</table>';
 
-            console.log("this.container: ", this.container, this.element, html ? html.substr(0,300):"none");
-
             this.container.find('.drp-calendar.' + side + ' .calendar-table').html(html);
 
         },
