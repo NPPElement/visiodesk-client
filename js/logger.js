@@ -62,6 +62,8 @@ window.LOGGER = (function Logger() {
 
         if(!$(".daterangepicker").length) {
             addEvent("#topic-export-calendar: NO DATARANGEPICKER (.daterangepicker)");
+            initializeExportTopicCalendar();
+            addEvent("#topic-export-calendar: RESTORE DATARANGEPICKER (.daterangepicker)");
         }
 
     }
