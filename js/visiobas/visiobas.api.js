@@ -1511,9 +1511,6 @@
             let url = VB_SETTINGS.apiContext +
                 "put/all";
 
-            console.log("POST " + url);
-            console.log(JSON.stringify(objects));
-
             $.ajax({
                 method: "POST",
                 url: url,

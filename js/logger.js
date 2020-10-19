@@ -44,6 +44,8 @@ window.LOGGER = (function Logger() {
     }
 
 
+    let last_text = false;
+    let last_repeat = 0;
 
     function addEvent(text) {
         if(!log_ON) return;

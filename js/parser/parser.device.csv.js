@@ -919,7 +919,6 @@ function VisiobaseDeviceCsvParser() {
             /** @type {boolean} determinate is object valid and can be imported */
             let isObjectValid = true;
 
-            console.log("headerInfo: ", headerInfo);
             try {
                 for (let c = 0; c < headerInfo.columns.length; ++c) {
                     if (!isObjectValid) {
@@ -985,10 +984,10 @@ function VisiobaseDeviceCsvParser() {
                         }
                     }
                 }
-            for (let c = 0; c < headerInfo.columns.length; ++c) {
-                if (!isObjectValid) break;
-                if(_.isObject(object[headerInfo.columns[c].code])) object[headerInfo.columns[c].code] = JSON.stringify(object[headerInfo.columns[c].code]);
-            }
+                for (let c = 0; c < headerInfo.columns.length; ++c) {
+                    if (!isObjectValid) break;
+                    if(_.isObject(object[headerInfo.columns[c].code]) && Array.isArray(headerInfo.columns[c].path) ) object[headerInfo.columns[c].code] = JSON.stringify(object[headerInfo.columns[c].code]);
+                }
             } catch (e) {
                 isObjectValid = false;
                 const message = `[error] csv line: ${lineIndex + 1} catch error: '${e.message}'`;
@@ -1195,7 +1194,6 @@ function VisiobaseDeviceCsvParser() {
             }
         });
 
-        console.log("objects: ", objects);
         return {
             objects: objects,
             errors: errors
