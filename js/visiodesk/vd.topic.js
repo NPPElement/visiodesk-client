@@ -530,7 +530,7 @@ window.VD_Topic = (function () {
             URL.revokeObjectURL(videoList[i]);
         }
 
-        $('.daterangepicker').remove();
+        // $('.daterangepicker').remove();
     }
 
     /**
