@@ -1407,10 +1407,10 @@ window.VD = (function Visiodesk() {
 
         function Reload() {
             VD_API.LoadUserSettings().done(new_value => {
-                old_values = $.extend(values);
+                old_values = $.extend({}, values);
                 values = new_value;
                 updates$.onNext(true);
-                console.log("new settings",new_value);
+                // console.log("new settings",new_value);
                 __checkToken();
                 __inline_update();
                 __setRoleVisibles();
