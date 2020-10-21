@@ -44,6 +44,7 @@ window.VD = (function Visiodesk() {
         /*Visiodesk interface utilites*/
         "SetTabBarNav": SetTabBarNav,
         "SetTabBarCounters": SetTabBarCounters,
+        "SetTabBarCountersImmediately": SetTabBarCountersImmediately,
         "SetStickers": SetStickers,
         "SetHistory": SetHistory,
         "GetHistory": GetHistory,
@@ -592,6 +593,23 @@ window.VD = (function Visiodesk() {
         const $feedCounter = $('#feed-counter');
         const $feedCounterEm = $feedCounter.find('EM');
 
+    }
+    
+    function SetTabBarCountersImmediately() {
+        const $newsCounter = $('#news-counter');
+        const $newsCounterEm = $newsCounter.find('EM');
+
+        const $feedCounter = $('#feed-counter');
+        const $feedCounterEm = $feedCounter.find('EM');
+
+        let size = VD_NEWS_UPDATER.getNewsCounterNow();
+        if (size) {
+            $newsCounterEm.html(size);
+            setAndroidCounter(0+size);
+            $newsCounter.show();
+        } else {
+            $newsCounter.hide();
+        }
     }
 
     function SetTabBarCounters() {
