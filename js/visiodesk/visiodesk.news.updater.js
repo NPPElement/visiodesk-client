@@ -150,7 +150,6 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
             if (lastTopics.has(topicId)) {
                 checkedTopics.set(topicId, topicId);
             }
-            console.log("changed, checked: ",changed, checked);
             VD.SetTabBarCountersImmediately();
         },
 
