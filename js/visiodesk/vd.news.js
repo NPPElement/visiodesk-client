@@ -179,7 +179,6 @@ window.VD_News = (function () {
 
     function __loadAndUpdate(topicsRange, selector) {
         return VD_NEWS_UPDATER.load(topicsRange).then((topicsUpdated) => {
-            console.log("topicsUpdated: ", topicsUpdated);
             __updateTopicsList(topicsUpdated, selector);
             return true;
         });
