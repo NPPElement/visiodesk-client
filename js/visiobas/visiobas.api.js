@@ -524,6 +524,7 @@
          * @return {string|null} return normalized reference or null if argument is not valid
          */
         function validateReference(reference) {
+            if(reference.indexOf("Map:")===0) return  reference;
             if (_.isEmpty(reference)) {
                 return null;
             }
@@ -1744,7 +1745,8 @@
         $.ajax({
             type: "GET",
             // url: "/vbas/gate/test",
-            url: "/vbas/gate/get/2098190/binary-value",
+            url: "/vbas/gate/reliability_vocab",
+            // url: "/vbas/gate/get/2098190/binary-value",
             dataType: "json",
             headers: {
                 'Authorization': 'Bearer ' + token

@@ -615,7 +615,7 @@ function VisiobaseDeviceCsvParser() {
                     const val = $.trim(kv.join(":"));
 
                     //check is val should be reference
-                    if (val.indexOf("Site:") !== -1) {
+                    if (val.indexOf("Site:") !== -1 || val.indexOf("Map:") !== -1) {
                         replace[key] = VB_API.validateReference(val);
                     } else {
                         replace[key] = val;
@@ -958,6 +958,7 @@ function VisiobaseDeviceCsvParser() {
                             } else {
                                 let valueTyped = $.trim(value);
                                 if (valueTyped.length > 0) {
+                                    if(valueTyped[0]=="[") valueTyped = JSON.parse(valueTyped);
                                     if ("" + parseInt(valueTyped) === valueTyped) valueTyped = parseInt(valueTyped);
                                     if (!object.hasOwnProperty(header.code)) object[header.code] = {};
                                     var o = object[header.code];
