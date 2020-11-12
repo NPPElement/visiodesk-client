@@ -22,7 +22,7 @@
         let _parent;
 
 
-        let _tree_current = "visioBAS";
+        let _tree_path = "Site";
         let _tree_current_title = {
             Site: "visioBAS",
             Map: "Карты"
@@ -211,7 +211,8 @@
         function update(options) {
             // if(!options) return;
             // console.log("ObjectsList.update(options): ", options);
-            let reference = options && options.reference || "Site";
+            let reference = options && options.reference || _tree_path;
+            // let reference = options && options.reference || "Site";
             const logWindowHref = options && options.href || "";
 
             // reference = "Map";
@@ -280,7 +281,7 @@
                     "objects": objects,
                     "folder": {
                         items: _tree_current_title,
-                        current: _tree_current
+                        current: _tree_current_title[_tree_path]
                     },
                     "object": {
                         "reference": reference
@@ -433,7 +434,10 @@
                 list.push([-1,["Отменить", "cancel blue"]]);
                 let changed = VD.CreateDropdownDialog($item, new Map(list), 'Корневой элемент');
                 changed.subscribe((result) => {
-                        console.log("RES: ", result);
+                    console.log("RES: ", result);
+                    _tree_path = result.value;
+                    $("#folder_name").text(_tree_current_title[_tree_path]);
+                    update({"reference": _tree_path});
                 });
             });
         }

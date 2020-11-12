@@ -8,10 +8,11 @@
             <% }  %>
         </div>
         <% if (!_.isEmpty(parent.reference)) { %>
-<!--        <div class="text"><%= parent.name %></div>-->
+        <div class="text"><%= parent.name %></div>
         <% } else { %>
-<!--        <div class="text"><%= folder.items[folder.current] %><span class="root-change-arrow">&downarrow;</span></div>-->
-        <div class="text">visioBAS</div>
+        <div class="text" id="folder_name"><%= folder.current %></div>
+        <div class="text"><%= folder.items[folder.current] %><span class="root-change-arrow">&downarrow;</span></div>
+<!--        <div class="text">visioBAS</div>-->
         <% } %>
         <div class="bar for_submenu">
             <a class="update"></a>
