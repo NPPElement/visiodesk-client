@@ -6993,7 +6993,7 @@ label.input_group_title {
 }
 
 .dropdown ul {
-    background: #999;
+    /*background: #999;*/
 }
 
 .dropdown ul li.cancel {
@@ -7323,4 +7323,21 @@ label.input_group_title {
 }
 
 
+.dropdown.site {
+    align-items: flex-start;
+    padding-top: 86px;
+}
+
+.dropdown.site UL LI:hover {
+    background: rgba(248, 248, 248, 1.0);
+}
+
+.dropdown.site UL LI:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.pointer {
+    cursor: pointer;
+}
 

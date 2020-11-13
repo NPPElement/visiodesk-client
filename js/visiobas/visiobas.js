@@ -73,12 +73,17 @@ window.VB = (function Visiobas() {
      * @param {Addr} addr
      */
     function redirect(addr) {
-        window._location = addr.reference;
 
         console.log("VB.redirect: ", addr);
         if (typeof addr === "undefined") {
             return;
         }
+
+        if (addr.reference.indexOf("Map") === 0) {
+            return;
+        }
+
+        window._location = addr.reference;
 
         function showVisiobas() {
             VD.ShowVisiobasTabbar();

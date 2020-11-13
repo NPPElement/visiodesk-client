@@ -24,7 +24,7 @@
 
         let _tree_path = "Site";
         let _tree_current_title = {
-            Site: "visioBAS",
+            Site: "Объекты",
             Map: "Карты"
         };
 
@@ -298,8 +298,18 @@
                         hammer.get("pinch").set({enable: false});
                         hammer.on("tap", (event) => {
                             const reference = $(e).attr("data-reference");
-                            __select(reference, e);
-                            __logWindowOpen($(e).attr("href"), $(e).data());
+                            if(reference.indexOf("Map:")===-1) {
+                                __select(reference, e);
+                                __logWindowOpen($(e).attr("href"), $(e).data());
+                            } else {
+                                // MAP
+                                if(reference.indexOf("/")===-1) {
+                                    let layer = reference.replace("Map:","");
+                                    VBasMapLeafletWidget.goLayer(layer)
+                                } else {
+                                    let html = "<visiobas src='/svg/library/MARKER_SENSOR_S.svg'></visiobas>";
+                                }
+                            }
                         });
                     });
 
@@ -427,12 +437,35 @@
         
         
         function __setRootFolderChangeListener() {
-            $(".root-change-arrow").click(function (event) {
-                let $item = $(event.currentTarget);
-                let list = [];
-                for(let k in _tree_current_title) list.push([k, _tree_current_title[k]]);
-                list.push([-1,["Отменить", "cancel blue"]]);
-                let changed = VD.CreateDropdownDialog($item, new Map(list), 'Корневой элемент');
+            // $(".root-change-arrow").click(function (event) {
+            let $item;
+            // $("#do_select_folder_root").click(function (event) {
+            $("#folder_name").click(function (event) {
+                console.log("do_select_folder_root: ");
+                let $dropdown = $('<div class="dropdown site"><ul></ul></div>');
+                let $list = $dropdown.children("ul");
+                for(let k in _tree_current_title) {
+                    $item = $('<li>'+(k==_tree_path ? "<b>"+_tree_current_title[k]+"</b>" : _tree_current_title[k])+'</li>');
+                    $item.data({'value': k,'valueStr': _tree_current_title[k]});
+                    $list.append($item);
+                }
+                $list.append($('<li class="blue">Отменить</li>').data({value: -1}));
+                $("body").append($dropdown);
+
+                $list.children('LI').click((event) => {
+                    event.stopPropagation();
+                    let data = $(event.currentTarget).data();
+                    if(data.value!=-1) {
+                        _tree_path = data.value;
+                        $("#folder_name").text(_tree_current_title[_tree_path]);
+                        update({"reference": _tree_path});
+                    }
+                    $('.dropdown').remove();
+                });
+                return;
+
+                // let changed = VD.CreateDropdownDialog($item, new Map(list), 'Корневой элемент');
+
                 changed.subscribe((result) => {
                     console.log("RES: ", result);
                     _tree_path = result.value;

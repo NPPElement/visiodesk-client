@@ -10,8 +10,9 @@
         <% if (!_.isEmpty(parent.reference)) { %>
         <div class="text"><%= parent.name %></div>
         <% } else { %>
-        <div class="text" id="folder_name"><%= folder.current %></div>
-        <div class="text"><%= folder.items[folder.current] %><span class="root-change-arrow">&downarrow;</span></div>
+
+        <div class="text pointer" id="folder_name"><%= folder.current %></div>
+            <%= folder.items[folder.current] %>
 <!--        <div class="text">visioBAS</div>-->
         <% } %>
         <div class="bar for_submenu">

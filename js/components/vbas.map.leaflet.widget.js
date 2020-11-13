@@ -156,9 +156,16 @@
             test: test,
 
             findMarkerByReference: findMarkerByReference,
-            map: ()=>{return leafMap}
+            map: ()=>{return leafMap},
+            goLayer: goLayer
         };
 
+        function goLayer(name) {
+            for(let n in _leafBaseLayers) {
+                let op = _leafBaseLayers[n].options;
+                if(op.id===name) return $(".leaflet-control-layers-base input")[op.zIndex-1].click();
+            }
+        }
 
 
         /**

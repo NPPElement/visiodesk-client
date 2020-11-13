@@ -653,6 +653,7 @@ window.VD = (function Visiodesk() {
     }
 
     function SetStickers() {
+        return;
         let wrapperSelector = '#stickers';
         let $stickers = $(wrapperSelector);
         let closed_last_id = [];
