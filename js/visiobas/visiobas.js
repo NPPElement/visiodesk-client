@@ -98,7 +98,7 @@ window.VB = (function Visiobas() {
             }
         }
 
-        if (addr.reference.startsWith("Site") || addr.reference.startsWith("Map")) {
+        if (addr.reference.startsWith("Site") || addr.reference.startsWith("Map") || addr.reference.startsWith("Panel")) {
             // window.history.pushState(addr, '', addr.reference.replace("Site", "/html_vdesk/#Site")) // k+
             showVisiobas();
             EVENTS.onNext({
