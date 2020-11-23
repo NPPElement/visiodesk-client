@@ -77,6 +77,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         "RegistrationPushKey": RegistrationPushKey,
         "CheckPushKey": CheckPushKey,
         "UploadBase64": UploadBase64,
+        "MyUniqCode": MyUniqCode,
         "Test": Test,
 
     };
@@ -2716,6 +2717,27 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         $.ajax({
             type: "GET",
             url: apiContext + "/getTestString",
+            // url: "/external/getTestString",
+            async: false,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: (response) => {
+                result = response
+            }
+        });
+        return result;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    function MyUniqCode() {
+        let result = false;
+        $.ajax({
+            type: "GET",
+            url: apiContext + "/getPersonalKey",
             // url: "/external/getTestString",
             async: false,
             contentType: "application/json;charset=UTF-8",
