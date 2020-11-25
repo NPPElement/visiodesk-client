@@ -981,6 +981,8 @@
                 _unorderedLeafBaseLayers[layer.map.id] = leafLayer;
             }
 
+            if(selectedLayer==null) return;
+
             _leafBaseLayers = {};
             for (let i = 0; i < data.map.layers.length; ++i) {
                 const layer = data.map.layers[i];

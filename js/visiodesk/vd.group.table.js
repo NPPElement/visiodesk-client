@@ -283,6 +283,7 @@ window.VD_GroupTable = (function () {
             })
             .fail((response, r2) => {
                 console.error(response, r2);
+                $table.html('');
                 result.reject();
             });
         return result;
