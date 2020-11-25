@@ -282,8 +282,11 @@ window.VD_GroupTable = (function () {
                 result.resolve({group: group, event: topics});
             })
             .fail((response, r2) => {
-                console.error(response, r2);
-                $table.html('');
+                // console.error(response, r2);
+                window.setTimeout(close, 1000);
+
+
+
                 result.reject();
             });
         return result;
