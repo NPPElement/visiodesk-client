@@ -7341,3 +7341,11 @@ label.input_group_title {
     cursor: pointer;
 }
 
+
+
+.message_bar .send .button.block,
+.message_bar .send .push.block {
+    background: url(../images/spinner_loading.svg) 0 0 no-repeat;
+    background-size: 28px;
+    cursor: default;
+}

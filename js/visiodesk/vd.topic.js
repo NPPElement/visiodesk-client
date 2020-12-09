@@ -322,6 +322,7 @@ window.VD_Topic = (function () {
         };
         itemsForSend = [];
         sendItemsBlock = false;
+        __buttonBlockMode(false);
 
         VB.Load(VD_SETTINGS['TEMPLATE_DIR'] + "/vd.topic.html", selector, {
             "{%imgDir%}": VD_SETTINGS['IMG_DIR'],
@@ -1353,6 +1354,19 @@ window.VD_Topic = (function () {
     }
 
 
+    function __buttonBlockMode(value) {
+        if(value)    {
+            $(".send .button").addClass("block");
+            $(".send .push").addClass("block");
+        } else {
+            $(".send .button").removeClass("block");
+            $(".send .push").removeClass("block");
+
+        }
+        sendItemsBlock = value;
+    }
+
+
     /**
      * Подготовка itemsForSend для отправки на сервер + отправка
      * @private
@@ -1362,9 +1376,7 @@ window.VD_Topic = (function () {
             return;
         }
         sendItemsBlock = true;
-
-
-
+        __buttonBlockMode(true);
 
         VD_API.FileUploader._clearFilenames();
 
@@ -1406,6 +1418,7 @@ window.VD_Topic = (function () {
             __changeItem(itemObject);
         } else if (!topicId) {
             sendItemsBlock = false;
+            __buttonBlockMode(false);
             return;
         }
 
@@ -1460,6 +1473,7 @@ window.VD_Topic = (function () {
                 __startUploadFiles(resultFileItems);
                 itemsForSend = [];
                 sendItemsBlock = false;
+                __buttonBlockMode(false);
             });
         } else {
             __saveLoadItems(itemsForSend).then((resultItems) => {
@@ -1475,6 +1489,7 @@ window.VD_Topic = (function () {
                 __startUploadFiles(resultItems);
                 itemsForSend = [];
                 sendItemsBlock = false;
+                __buttonBlockMode(false);
                 VD_NEWS_UPDATER.topicChange(topicId);
                 VD_FEED_UPDATER.topicChange(topicId);
 
@@ -1522,6 +1537,7 @@ window.VD_Topic = (function () {
                 })
                 .fail(()=>{
                     sendItemsBlock = false;
+                    __buttonBlockMode(false);
                     // def.resolve([]);
                 })
         } else {
