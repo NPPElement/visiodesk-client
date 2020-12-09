@@ -372,6 +372,7 @@ window.VD_GroupsChange = (function () {
                     });
 
                     VD_API.AddGroup(fields, groupId, bindedUsers, unbindedUsers).done((result)=>{
+                        $('.spinner_icon').removeClass().addClass('save_icon');
                         var prioritiesObject = __prepareGroupPriorityForServer();
                         var priorities = [];
                         var group_id = groupId>0 ? groupId: result.id;
