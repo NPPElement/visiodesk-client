@@ -318,7 +318,9 @@ window.VBasWidget = (function () {
                         __prepareVisualization();
 
                         let reference_inmap = [];
-                        $("#visualization [reference]").each((i,e)=>{ if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference")); });
+                        $("#visualization [reference]").each((i,e)=>{
+                            if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference"));
+                        });
                         let count_items = reference_inmap.length;
                         let res_objs = [];
                         reference_inmap.forEach(ref_obj=>{
@@ -368,6 +370,10 @@ window.VBasWidget = (function () {
                 .fail((response) => {
                     console.error(response.error);
                 })
+        });
+
+        $(".reference[reference]").click(function(){
+            VBasWidget.show("#visualization", $(this).attr("reference"));
         });
     }
 

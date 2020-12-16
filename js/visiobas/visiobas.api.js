@@ -48,6 +48,7 @@
 
             "getLibrary": getLibrary,
             "getMap": getMap,
+            "getTrendLog": getTrendLog,
 
             "Test": Test,
         };
@@ -1503,6 +1504,7 @@
         function importObjects(objects) {
             let def = $.Deferred();
 
+
             if (_.isEmpty(objects) || !_.isArray(objects)) {
                 return def.reject({
                     success: false,
@@ -1740,6 +1742,26 @@
                 return null;
             }
         }
+    }
+
+    function getTrendLog(step, from_date, to_date, object_references) {
+        const url = "/vbas/arm/trend/getLog";
+        if(typeof from_date === "string")   from_date   = Math.ceil((new Date(from_date)).valueOf()/1000);
+        if(typeof to_date === "string")     to_date     = Math.ceil((new Date(to_date)).valueOf()/1000);
+
+        console.log("from: "+from_date + ", to: "+to_date);
+        $.ajax({
+            type: "POST",
+            url: url + "/"+step + "/"+from_date + "/"+to_date,
+            data: JSON.stringify(object_references),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(r=>{
+            console.log(r.data[0]);
+        });
     }
 
     function Test() {

@@ -547,5 +547,4 @@
 $("#visualization [reference]").each((i,e)=>{
     let reference = $(e).attr("reference");
     if(reference.indexOf("Site:")!==0) return;
-
 });

@@ -7349,3 +7349,8 @@ label.input_group_title {
     background-size: 28px;
     cursor: default;
 }
+
+
+.reference {
+    cursor: pointer;
+}

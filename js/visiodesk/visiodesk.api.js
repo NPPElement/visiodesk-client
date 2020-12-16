@@ -34,6 +34,8 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         "GetUsersByGroup": GetUsersByGroup,
 
+        "GetTopicsByGroupFromPos": GetTopicsByGroupFromPos,
+
         "GetTopicsByGroup": GetTopicsByGroup,
         "GetAllTopicsByGroup": GetAllTopicsByGroup,
         "GetTopicsByUser": GetTopicsByUser,
@@ -1052,6 +1054,47 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 } else {
                     def.resolve(topicList);
                 }
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject();
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject();
+        });
+
+        return def;
+    }
+
+
+    /**
+     * Получение списка топиков в группе (без закрытых)
+     * @param {int} groupId идентификатор группы
+     * @param {int} topicId идентификатор топика
+     * @return {Deferred}
+     */
+    function GetTopicsByGroupFromPos(groupId = 0, fromPos = 0) {
+        let def = $.Deferred();
+
+        if (!groupId) {
+            console.error('Не задан идентификатор группы');
+            def.reject();
+        }
+
+        let url = apiContext + '/getTopicsByGroup/' + groupId + "/"+fromPos;
+
+        $.ajax({
+            method: "GET",
+            url: url,
+            type: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            if (response.success) {
+                let topicList = response.data;
+                def.resolve(topicList);
             } else {
                 VD.ErrorHandler('SERVER', response, url);
                 def.reject();

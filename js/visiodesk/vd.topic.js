@@ -26,6 +26,9 @@ window.VD_Topic = (function () {
         'description': ''
     };
 
+    let imagesBuffer = {};
+    window.imagesBuffer = imagesBuffer;
+
 
     //TODO: Дополнительные параметры итемов
     const extendedParams = {
@@ -310,7 +313,7 @@ window.VD_Topic = (function () {
 
         topicId = parseInt(refName) || 0;
 
-        $('#screen').addClass('hotels');+
+        $('#screen').addClass('hotels');
         $('#visiobas-tabbar').addClass('hide');
         $('#main-container').removeClass().addClass('extra_pad2');
 
@@ -608,6 +611,39 @@ window.VD_Topic = (function () {
         let index = imagesListIndex;
         imagesListIndex++;
 
+        /*
+        console.log("__setImage("+imagesListIndex+"): "+uploadName);
+
+        if(!imagesBuffer[uploadName]) {
+            let img = document.createElement('img');
+            img.onload = function () {
+                imagesList.push({
+                    'index': index,
+                    'src': img['src'],
+                    'w': img['width'],
+                    'h': img['height']
+                });
+
+                $link.html(`<img src="${img['src']}">`);
+                imagesBuffer[uploadName] = img;
+            };
+            img.onerror = function () {
+                console.log("CANNOT LOAD: "+downloadUrl);
+            }
+            img.src = downloadUrl;
+        } else {
+            imagesList.push({
+                'index': index,
+                'src': imagesBuffer[uploadName]['src'],
+                'w': imagesBuffer[uploadName]['width'],
+                'h': imagesBuffer[uploadName]['height']
+            });
+            $link.html(`<img src="${imagesBuffer[uploadName]['src']}">`);
+
+        }
+        */
+
+
         loadImage(downloadUrl, (img) => {
                 if(img.type === "error") {
                     console.warn("Error loading image " + downloadUrl);
@@ -626,6 +662,7 @@ window.VD_Topic = (function () {
                 // 'noRevoke': true
             }
         );
+
 
         $link.click((event) => {
             event.stopPropagation();
