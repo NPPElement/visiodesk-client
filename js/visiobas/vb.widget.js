@@ -6,6 +6,9 @@ window.VBasWidget = (function () {
 
     let _$selector;
 
+    let _reference;
+    let _replace;
+
     let _requestCache = [];
 
     let _clear_template = false;
@@ -54,6 +57,7 @@ window.VBasWidget = (function () {
         _selector = selector;
         _$selector = $(selector);
         _clear_template = clear_template;
+        _reference = reference;
         __init(reference);
     }
 
@@ -226,6 +230,8 @@ window.VBasWidget = (function () {
                         let replace = vis.replace;
                         let updating = [];
 
+                        _replace = replace;
+
                         //register as required for update all children objects
                         VB_UPDATER.register(children,
                             [
@@ -372,9 +378,22 @@ window.VBasWidget = (function () {
                 })
         });
 
-        $(".reference[reference]").click(function(){
-            VBasWidget.show("#visualization", $(this).attr("reference"));
+        $(".reference[reference]").click(function() {
+            let reference = $(this).attr("reference");
+            if(reference.endsWith(".svg")) {
+                VB.Load(reference, void 0, _replace)
+                    .done((response) => {
+                        console.log("response: ", response);
+                        _$selector.find("#vbas-widget").html(response.data);
+                        __prepareVisualization();
+                    });
+
+            } else if (reference.startWith("Site:")){
+                VBasWidget.show("#visualization", reference);
+            }
+
         });
+
     }
 
     /**
