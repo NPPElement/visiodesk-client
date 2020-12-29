@@ -426,12 +426,20 @@ window.VBasWidget = (function () {
     }
 
     function __openWindowTrendLog() {
-        VBasWidget.openWindow("#graphic_popup");
+        // VBasWidget.openWindow("#graphic_popup");
+
+        $("#graphic_popup").show();
         let $c = $("#graphic_popup .layout");
         $c
             .attr("id", "graphic_full")
             .attr("gr-width", ($c.width()-50))
             .attr("gr-height", ($("#graphic_popup").height())-150);
+
+        $("#graphic_popup .close_icon").click(function () {
+            $("#graphic_popup .layout").html('');
+            $("#graphic_popup").hide();
+        });
+
 
 
         makeGraphics("graphic_full", chart_references)

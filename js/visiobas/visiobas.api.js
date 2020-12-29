@@ -1763,7 +1763,7 @@
                 'Authorization': 'Bearer ' + token
             }
         }).done(r=>{
-            console.log(r.data[0]);
+            // console.log(r.data[0]);
             if(r.success) {
                 def.resolve(r.data);
             } else {
