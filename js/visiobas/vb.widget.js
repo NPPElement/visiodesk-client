@@ -500,9 +500,7 @@ window.VBasWidget = (function () {
             $(".gr_controls .fullscreen_icon").click(__openWindowTrendLog);
             $(".gr_controls .close_icon").click(function () {
                 chart_references=[];
-                // $("#gr_chartist").html('');
-                $gr.html('');
-                // $("#vbas-widget .gr_controls").remove();
+                $("#gr_chartist").html('');
                 $(".gr_controls").remove();
             });
 
