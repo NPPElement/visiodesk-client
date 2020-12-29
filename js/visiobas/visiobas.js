@@ -1234,7 +1234,6 @@ window.VB = (function Visiobas() {
                         .css("top",""+(e.clientY-e.offsetY-value*57)+"px")
                         .show()
                         .find("li").click(function () {
-                            console.log($(this).text())
                             $("#popup").hide().html('');
                             let val = $(this).attr("value");
                             if(val==='cancel') return;

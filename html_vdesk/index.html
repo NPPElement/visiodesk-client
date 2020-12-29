@@ -108,6 +108,7 @@
     <div id="group_table"></div>
 
     <div class="visualization visioBAS" id="visualization0"></div>
+    <div class="visualization " id="graphic_popup"></div>
 
 
     <div id="gray-bg"></div>
@@ -119,6 +120,7 @@
     <div class="stickers" id="stickers"></div>
 
     <div class="popup" id="popup" style="display: none"></div>
+    <div class="popup" id="popup_calendar" style="display: none"></div>
 <!--    <div class="tools" id="tools"></div>-->
 
     <!--Parameters-->
@@ -230,8 +232,9 @@
 <!--<script src="/js/flotr2.min.js" type="text/javascript" ></script>-->
 
 <!-- chartlist -->
-<link rel="stylesheet" href="/js/chartlist/chartist.min.css">
-<script src="/js/chartlist/chartist.min.js"></script>
+<link rel="stylesheet" href="/js/chartlist/0.11.4/chartist.min.css">
+<script src="/js/chartlist/0.11.4/chartist.min.js"></script>
+<script src="/js/chartlist/0.11.4/chartist-plugin-legend.js"></script>
 
 <!-- leaflet -->
 <script src="/js/leaflet/leaflet.js" type="text/javascript"></script>
@@ -519,14 +522,18 @@
                 // data.submit();
             });
 
+
+
         $(".get_ident a").click(function (e) {
             var $tmp = $("<textarea>");
             $("body").append($tmp);
-            $tmp.val(VD_API.MyUniqCode()).select();
+            let key = VD_API.MyUniqCode();
+            $tmp.val(key).select();
             document.execCommand("copy");
             $tmp.remove();
-            VD.ShowErrorMessage({ description: 'Персональный ключ скопирован', timer:2000});
+            VD.ShowErrorMessage({description: 'Персональный ключ скопирован', timer: 2000});
         });
+
     });
 
 

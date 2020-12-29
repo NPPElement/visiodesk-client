@@ -13,6 +13,13 @@ window.VBasWidget = (function () {
 
     let _clear_template = false;
 
+
+    let chart_references = [];
+
+    let gr_update_timer = {};
+    let gr_date_start = null;
+    let gr_date_end = null;
+
     /**
      * Load necessary template
      */
@@ -343,6 +350,7 @@ window.VBasWidget = (function () {
 
 
                         VB_UPDATER.requestData();
+                        __initTrendLog();
                     })
                     .fail((response) => {
                         console.error("Can't load template: " + vis.template);
@@ -383,9 +391,24 @@ window.VBasWidget = (function () {
             if(reference.endsWith(".svg")) {
                 VB.Load(reference, void 0, _replace)
                     .done((response) => {
-                        console.log("response: ", response);
                         _$selector.find("#vbas-widget").html(response.data);
                         __prepareVisualization();
+
+                        let reference_inmap = [];
+                        $("#visualization [reference]").each((i,e)=>{
+                            if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference"));
+                        });
+                        let count_items = reference_inmap.length;
+                        let res_objs = [];
+                        reference_inmap.forEach(ref_obj=>{
+                            VB_API.getObject(ref_obj).done(oi=>{
+                                res_objs.push(oi.data);
+                                if(!--count_items) VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
+                            })
+
+                        });
+
+                        __initTrendLog();
                     });
 
             } else if (reference.startWith("Site:")){
@@ -396,6 +419,209 @@ window.VBasWidget = (function () {
 
     }
 
+    function __signal_by_chart(reference) {
+        if(chart_references.indexOf(reference)===-1) chart_references.push(reference);
+                                                else chart_references = _.difference(chart_references,[reference]);
+        makeGraphics("gr_chartist", chart_references);
+    }
+
+    function __openWindowTrendLog() {
+        VBasWidget.openWindow("#graphic_popup");
+        let $c = $("#graphic_popup .layout");
+        $c
+            .attr("id", "graphic_full")
+            .attr("gr-width", ($c.width()-50))
+            .attr("gr-height", ($("#graphic_popup").height())-150);
+
+
+        makeGraphics("graphic_full", chart_references)
+    }
+
+
+    function makeGraphics(containerId, references) {
+        if(gr_update_timer[containerId]) {
+            window.clearTimeout(gr_update_timer[containerId]);
+            gr_update_timer[containerId] = false;
+        }
+
+        let isToNow = false;
+
+
+        function getDateOrToday(d) {
+            if(!d) {
+                isToNow = true;
+                return new Date();
+            }
+            let now_date = new Date();
+            if(d.getDate()===now_date.getDate() && d.getFullYear()===now_date.getFullYear() && d.getMonth()===now_date.getMonth()) {
+                isToNow = true;
+                return now_date;
+            }
+            isToNow = false;
+
+            window.clearTimeout(gr_update_timer[containerId]);
+            return d;
+        }
+
+        references.sort();
+        let stepSecond = 10*60;
+
+        let date_to = getDateOrToday(gr_date_end);
+
+        date_to.setMinutes(date_to.getMinutes()-1);
+
+        let date_from = gr_date_start;
+
+        if(date_from==null || (date_to.valueOf()-date_from.valueOf()<1000*60*30) || date_from.getDate()==date_to.getDate()) {
+            date_from = new Date(date_to);
+            date_from.setMinutes(date_from.getMinutes()-30);
+        }
+
+        var $gr = $('#'+containerId);
+        var gr_w = $gr.attr("gr-width")-20;
+        var gr_h = $gr.attr("gr-height");
+
+        function convName(name) {
+            let p = name.indexOf(".");
+            if(p>0) name = name.substr(p+1);
+            return name;
+        }
+
+        function setControlIcons() {
+
+            if(!$("#"+containerId).html().length) return;
+
+            $(".gr_controls").remove();
+            var $contol_btns = $("<div class='gr_controls'><a class='fullscreen_icon'></a><a class='calendar_icon'></a><a class='close_icon'></a></div>");
+            var gr_position = document.getElementById("gr_chartist").getBoundingClientRect();
+            $("#vbas-widget").append($contol_btns);
+            $contol_btns.offset({top: gr_position.top + 16, left:  gr_position.left+gr_position.width + 6});
+
+            $(".gr_controls .fullscreen_icon").click(__openWindowTrendLog);
+            $(".gr_controls .close_icon").click(function () {
+                chart_references=[];
+                // $("#gr_chartist").html('');
+                $gr.html('');
+                // $("#vbas-widget .gr_controls").remove();
+                $(".gr_controls").remove();
+            });
+
+
+
+            $(".gr_controls .calendar_icon").daterangepicker({
+                "autoApply": false,
+                "opens": "left",
+                "locale": VD_SETTINGS['DATERANGEPICKER_LOCALE'],
+                // "template": template
+            }, (start, end) => {
+                start = start.toDate();
+                end = end.toDate();
+                var d = new Date();
+                if(end&& start) {
+                    if(d.getDate()===end.getDate() && d.getFullYear()===end.getFullYear() && d.getMonth()===end.getMonth()) end = new Date();
+                    gr_date_start = start;
+                    gr_date_end = end;
+                    makeGraphics(containerId, chart_references);
+                }
+
+
+            });
+
+        }
+
+        function labelToText(time,  from, to) {
+            let diff_minutes = (to.valueOf() - from.valueOf()) / 1000 / 60; //
+            let stamp = "HH:mm:ss DD.MM.YYYY";
+
+            if (diff_minutes > 60 * 24 * 30 * 10) {
+                stamp = "MM.YYYY";
+            } else if (diff_minutes > 60 * 24 * 30) {
+                stamp = "DD.MM.YYYY";
+            } else if (diff_minutes > 60 * 24) {
+                stamp = "HH:mm DD/MM";
+            } else if (diff_minutes > 60) {
+                stamp = "HH:mm";
+            } else {
+                stamp = "HH:mm:ss";
+            }
+            return moment(time).format(stamp);
+        }
+
+
+            //
+        // // date_to.setHours(date_to.getHours()-25-20);
+        // date_from.setMinutes(date_from.getMinutes()-30);
+        // // date_from.setHours(date_from.getHours()-1);
+        let NN = Math.ceil(gr_w/30);
+        if(NN%2===1) NN++;
+        stepSecond = Math.ceil((date_to.valueOf()-date_from.valueOf())/1000/(NN-1));
+        if(!stepSecond) return;
+        if(references.length>0) {
+            VB_API.getTrendLog(stepSecond, date_from, date_to, references)
+                .done(data => {
+                    let chart_labels = [];
+                    let chart_series = [];
+                    let t = new Date(date_from.valueOf());
+                    for (let i = 0; i < data[0].length; i++) {
+                        chart_labels.push((i % 2) === 0 || i===data[0].length-1 ? labelToText(t, date_from, date_to) : null);
+                        t.setSeconds(t.getSeconds() + stepSecond);
+                    }
+                    for (let i = 0; i < data.length; i++) chart_series.push({
+                        name: convName(references[i]),
+                        data: data[i]
+                    });
+
+                    var chart_data = {
+                        labels: chart_labels,
+                        series: chart_series
+                    };
+
+                    if (!gr_w) console.error("Не указана ширина вставляемого графика (аттрибут [gr-width])");
+                    if (!gr_h) console.error("Не указана высота вставляемого графика (аттрибут [gr-height])");
+                    if (gr_h && gr_w) {
+                        new Chartist.Line(
+                            '#' + containerId,
+                            chart_data,
+                            {
+                                width: gr_w + 'px',
+                                height: gr_h + 'px', plugins: [
+                                    Chartist.plugins.legend({
+                                        clickable: false
+                                    })]
+                            });
+
+                        window.setTimeout(setControlIcons, 200);
+                    }
+                });
+            if(isToNow && !gr_update_timer[containerId]) {
+                gr_update_timer[containerId] = window.setTimeout(function () {
+                    gr_update_timer[containerId] = false;
+                    makeGraphics(containerId, chart_references);
+                }, stepSecond * 1000);
+            }
+
+        } else {
+            $(".gr_controls").remove();
+            $("#"+containerId).html('');
+        }
+
+        // console.log("GRAPH["+containerId+"] = ["+references.join(", ")+"]");
+    }
+    
+    function __initTrendLog() {
+        $(".trendlog [reference], .trendlog[reference]").each(function () {
+            let $r = $(this);
+            if($r.attr("tlc")) return;
+            $r.attr("tlc", 1);
+            $r.click(function (e) {
+                let reference = $(this).attr("reference");
+                if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
+
+            })
+        });
+    }
+    
+    
     /**
      * Display can't display widget template
      * @private

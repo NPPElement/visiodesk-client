@@ -1745,9 +1745,12 @@
     }
 
     function getTrendLog(step, from_date, to_date, object_references) {
+        let def = $.Deferred();
         const url = "/vbas/arm/trend/getLog";
         if(typeof from_date === "string")   from_date   = Math.ceil((new Date(from_date)).valueOf()/1000);
         if(typeof to_date === "string")     to_date     = Math.ceil((new Date(to_date)).valueOf()/1000);
+        if(typeof from_date === "object") from_date = Math.ceil(from_date.valueOf()/1000);
+        if(typeof   to_date === "object")   to_date = Math.ceil(  to_date.valueOf()/1000);
 
         console.log("from: "+from_date + ", to: "+to_date);
         $.ajax({
@@ -1761,7 +1764,13 @@
             }
         }).done(r=>{
             console.log(r.data[0]);
+            if(r.success) {
+                def.resolve(r.data);
+            } else {
+                def.reject();
+            }
         });
+        return def;
     }
 
     function Test() {

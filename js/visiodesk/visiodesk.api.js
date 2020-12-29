@@ -13,6 +13,8 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
     let _lastItemId = -1;
 
+    let personalKey = false;
+
     return {
         "FileUploader": FileUploader(),
         "GetDownloadUrl": GetDownloadUrl,
@@ -2773,25 +2775,26 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         return result;
     }
 
-    /**
-     * @return {boolean}
-     */
+
+
+
     function MyUniqCode() {
-        let result = false;
+        if(personalKey!=false) return personalKey;
         $.ajax({
             type: "GET",
             url: apiContext + "/getPersonalKey",
-            // url: "/external/getTestString",
             async: false,
             contentType: "application/json;charset=UTF-8",
             headers: {
                 'Authorization': 'Bearer ' + token
             },
             success: (response) => {
-                result = response
+                personalKey = response;
+                return personalKey;
             }
         });
-        return result;
+
+        return personalKey;
     }
 
 
@@ -2837,4 +2840,5 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 })();
 
 window.onGetRegistrationId = VD_API.RegistrationPushKey;
+VD_API.MyUniqCode();
 

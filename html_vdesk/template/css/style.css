@@ -7354,3 +7354,125 @@ label.input_group_title {
 .reference {
     cursor: pointer;
 }
+
+.ct-label {
+    color: #eee!important;
+}
+
+.ct-horizontal {
+
+}
+
+.ct-grid.ct-horizontal {
+    stroke: rgba(255, 255, 255, 0.5)!important;
+}
+
+.ct-grid.ct-vertical {
+    stroke: rgba(255, 255, 255, 0.5)!important;
+}
+
+#graphic_popup * {
+    font-family: 'SF-PRO-Regular';
+
+}
+
+.ct-legend {
+    position: relative;
+    z-index: 10;
+    list-style: none;
+    text-align: center;
+}
+
+.ct-legend li {
+    position: relative;
+    padding-left: 23px;
+    margin-right: 10px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    display: inline-block;
+    color: white;
+}
+
+.ct-legend li:before {
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    left: 0;
+    content: '';
+    border: 3px solid transparent;
+    border-radius: 2px;
+}
+.ct-legend li.inactive:before {
+    background: transparent;
+}
+.ct-legend.ct-legend-inside {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.ct-legend.ct-legend-inside li{
+    display: block;
+    margin: 0;
+}
+
+
+.ct-legend .ct-series-0:before {
+    background-color: #d70206;
+    border-color: #d70206;
+}
+.ct-legend .ct-series-1:before {
+    background-color: #f05b4f;
+    border-color: #f05b4f;
+}
+.ct-legend .ct-series-2:before {
+    background-color: #f4c63d;
+    border-color: #f4c63d;
+}
+.ct-legend .ct-series-3:before {
+    background-color: #d17905;
+    border-color: #d17905;
+}
+.ct-legend .ct-series-4:before {
+    background-color: #453d3f;
+    border-color: #453d3f;
+}
+
+.ct-point {
+    display: none;
+}
+
+
+.gr_controls {
+    width:30px;
+    height: 100px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.gr_controls .fullscreen_icon {
+    width: 24px;
+    height: 24px;
+    background: url("../images/fullscreen_icon_dark.svg") 50% 50% no-repeat;
+}
+
+.gr_controls .calendar_icon {
+    width: 24px;
+    height: 24px;
+    background: url("../images/caption_calendar_dark.svg") 50% 50% no-repeat;
+}
+
+.gr_controls .close_icon {
+    width: 24px;
+    height: 24px;
+    background: url(../images/close_icon_dark.svg) 50% 50% no-repeat;
+}
+
+#popup_calendar {
+    z-index: 3;
+    color: #cccccc;
+    font-family: 'SF-PRO-Regular';
+    padding:  12px;
+    border-radius: 8px;
+}
