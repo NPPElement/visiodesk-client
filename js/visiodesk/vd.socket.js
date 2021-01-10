@@ -13,6 +13,11 @@ window.VD_Socket = (function () {
         {name: ""},
     ];
 
+    let mode_func = {
+
+    };
+
+    window.isOnline = true;
 
     /**
      *
@@ -29,7 +34,11 @@ window.VD_Socket = (function () {
         start: start,
         send: function (text) {
             ws.send(text);
-        }
+        },
+        addModeListener: function (name, func) {
+            mode_func[name] = func
+        },
+
 
     };
 
@@ -87,8 +96,8 @@ window.VD_Socket = (function () {
         if(request.url.indexOf("getChangedSubscribesIds")>0) return false;
         if(request.url.indexOf(".html")>0) return true;
         if(request.url.indexOf(".svg")>0) return true;
-        if(request.url.indexOf("/get")>0) return true;
-        if(request.method.toUpperCase()==="GET") return true;
+        // if(request.url.indexOf("/get")>0) return true;
+        // if(request.method.toUpperCase()==="GET") return true;
         return false;
     }
 
@@ -96,6 +105,13 @@ window.VD_Socket = (function () {
         return true;
     }
 
+    function setMode(newMode) {
+        if(isOnline!=newMode) {
+            let old = isOnline;
+            isOnline = newMode;
+            for(let key in mode_func) if(mode_func[key]) mode_func[key](isOnline, old);
+        }
+    }
 
     function replaceAjax() {
         let $_ajax = $.ajax;
@@ -110,6 +126,7 @@ window.VD_Socket = (function () {
             let _done = deferred.done;
             deferred.done = function() {
                 // _dbg("func_done: ", arguments[0]);
+                setMode(true);
                 _done.apply(this, arguments);
                 return deferred;
             };
@@ -130,13 +147,14 @@ window.VD_Socket = (function () {
 
             $_ajax(options)
                 .done(function () {
+                    setMode(true);
                     // console.log("LOAD: ", options.url + "(" + urlsCount[options.url] + ")");
                     if(isStatic) cashResult[options.url] = arguments;
                     if(isDynamic) cashResultDynamic[options.url] = arguments;
                     deferred.resolve.apply(this, arguments);
                 })
-                .fail(function () {
-
+                .fail(function (x) {
+                    setMode(x.status!==0);
                     if(isDynamic && cashResultDynamic[options.url]) {
                         deferred.resolve.apply(this, cashResultDynamic[options.url]);
                         // console.log("CASH.DYNAMIC: ", options.url + "(" + urlsCount[options.url] + ")");
