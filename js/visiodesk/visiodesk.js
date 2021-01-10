@@ -1167,9 +1167,16 @@ window.VD = (function Visiodesk() {
             let status = responseObject['status'];
             switch (status) {
                 case 0:
+                    /*
                     __errorShowMessage({
                         'caption': 'Прервано соединение',
                         'description': 'проверьте подключение к Интернету',
+                        'timer': 3000
+                    });
+                    */
+                    __errorShowMessage({
+                        'caption': 'Отсутствует соединение.',
+                        'description': 'Данные не обновляются.',
                         'timer': 3000
                     });
                     break;
