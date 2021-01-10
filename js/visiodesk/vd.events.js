@@ -211,7 +211,7 @@ window.VD_Events = (function () {
 
         if($(".topic_list").length>0) {
             window.clearTimeout(timer);
-            timer = window.setTimeout(loadLazy, __lastLoadTopicCount!==LIMIT_TOPIC  ? 10000 : 300);
+            timer = window.setTimeout(loadLazy, __lastLoadTopicCount!==0  ? 10000 : 300);
         }
         /*
         __applyFilter(filter, data).forEach((topic) => {

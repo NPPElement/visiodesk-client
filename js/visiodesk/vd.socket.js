@@ -22,6 +22,8 @@ window.VD_Socket = (function () {
 
     replaceAjax();
 
+    any();
+
     return {
         init: init,
         start: start,
@@ -120,7 +122,7 @@ window.VD_Socket = (function () {
 
             if(isStatic && cashResult[options.url]) {
                 deferred.resolve.apply(this, cashResult[options.url]);
-                console.log("CASH: ", options.url + "(" + urlsCount[options.url] + ")");
+                // console.log("CASH: ", options.url + "(" + urlsCount[options.url] + ")");
                 return deferred;
             }
 
@@ -136,7 +138,7 @@ window.VD_Socket = (function () {
 
                     if(isDynamic && cashResultDynamic[options.url]) {
                         deferred.resolve.apply(this, cashResultDynamic[options.url]);
-                        console.log("CASH.DYNAMIC: ", options.url + "(" + urlsCount[options.url] + ")");
+                        // console.log("CASH.DYNAMIC: ", options.url + "(" + urlsCount[options.url] + ")");
                         return deferred;
                     }
                     deferred.reject.apply(this, arguments);
@@ -154,13 +156,14 @@ window.VD_Socket = (function () {
         let _load_image = loadImage;
         let cash = {};
         window._my_cash = cash;
+
         window.loadImage  = function (file, callback, options) {
-            console.log("file: ", file);
             if(cash[file]) {
-                console.log("cash: " + file);
+                // console.log("cash: " + file);
                 callback(cash[file]);
             } else {
                 _load_image(file, (img)=>{
+                    // console.log("load: ", file);
                     if(file.indexOf("blob")===-1) {
                         cash[file] = img;
                     }
@@ -168,8 +171,9 @@ window.VD_Socket = (function () {
                 }, options);
             }
         }
-    };
-    // any();
+
+    }
+
 
 
     function imp() {

@@ -524,6 +524,8 @@ window.VD_Topic = (function () {
     }
 
     function unload() {
+        // offline режим
+        return;
         for (let i = 0; i < imagesList.length; i++) {
             URL.revokeObjectURL(imagesList[i]['src']);
         }
@@ -614,6 +616,7 @@ window.VD_Topic = (function () {
 
         // console.log("__setImage("+imagesListIndex+"): "+uploadName);
 
+        /*
         if(!imagesBuffer[uploadName]) {
 
             let img = document.createElement('img');
@@ -645,21 +648,21 @@ window.VD_Topic = (function () {
 
         }
 
+         */
 
-        /*
+
+
 
         loadImage(downloadUrl, (img) => {
                 if(img.type === "error") {
                     console.warn("Error loading image " + downloadUrl);
                 } else {
-                    console.log("downloadUrl/img: ", downloadUrl, img);
                     imagesList.push({
                         'index': index,
                         'src': img['src'],
                         'w': img['width'],
                         'h': img['height']
                     });
-                    console.log("topic.loadImage: ", `${img['src']}`);
                     $link.html(`<img src="${img['src']}">`);
                 }
             }, {
@@ -668,7 +671,7 @@ window.VD_Topic = (function () {
             }
         );
 
-        */
+
 
 
         $link.click((event) => {

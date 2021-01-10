@@ -1043,7 +1043,8 @@ window.VD = (function Visiodesk() {
                     if(img.type === "error") {
                         console.warn("Error loading image " + downloadUrl);
                     } else {
-                        urlsToRevoke.push(img['src']);
+                        // offline режим, чтобы не очищались
+                        // urlsToRevoke.push(img['src']);
                         imagesList.push({
                             'index': index,
                             'src': img['src'],
