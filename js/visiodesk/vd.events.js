@@ -51,6 +51,8 @@ window.VD_Events = (function () {
         showClosed: false
     };
 
+    const LIMIT_TOPIC = 50;
+
     /**
      * @typedef {object} User
      * @property {number} id
@@ -203,7 +205,7 @@ window.VD_Events = (function () {
 
         });
 
-        if($(".topic_list").length>0) window.setTimeout(loadLazy, __lastLoadTopicCount===0  ? 10000 : 300);
+        if($(".topic_list").length>0) window.setTimeout(loadLazy, __lastLoadTopicCount!==LIMIT_TOPIC  ? 10000 : 300);
         /*
         __applyFilter(filter, data).forEach((topic) => {
 
@@ -476,7 +478,7 @@ window.VD_Events = (function () {
             if (_filter.showClosed) {
                 return VD_API.GetAllTopicsByGroup(groupId, true, _filter.date.start, _filter.date.end);
             } else {
-                return VD_API.GetTopicsByGroupPart(groupId, lastItemIds[_groupId], 20, __getLoadedIds() );
+                return VD_API.GetTopicsByGroupPart(groupId, lastItemIds[_groupId], LIMIT_TOPIC, __getLoadedIds() );
             }
         } else {
             return $.Deferred().reject();
@@ -519,6 +521,7 @@ window.VD_Events = (function () {
 
 
 
+
         data.sort((item1, item2) => {
             if (item1.priority_id > item2.priority_id) return -1;
             if (item1.priority_id < item2.priority_id) return 1;
@@ -527,6 +530,7 @@ window.VD_Events = (function () {
 
             return 0;
         });
+
 
         return data;
     }
