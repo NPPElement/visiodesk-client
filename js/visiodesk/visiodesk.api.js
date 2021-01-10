@@ -40,6 +40,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         "GetTopicsByGroup": GetTopicsByGroup,
         "GetAllTopicsByGroup": GetAllTopicsByGroup,
+        "GetTopicsByGroupPart": GetTopicsByGroupPart,
         "GetTopicsByUser": GetTopicsByUser,
         "GetChangedSubscribesIds": GetChangedSubscribesIds,
         "GetTopicById": GetTopicById,
@@ -371,6 +372,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         let def = $.Deferred();
 
         let url = apiContext + '/getGroups';
+        if(id>0) url +="/"+id;
 
         $.ajax({
             method: "GET",
@@ -1165,7 +1167,61 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         });
 
         return def;
-    };
+    }
+
+
+    /**
+     * Получение списка топиков за указанный период с фильтром по группе (с закрытыми)
+     * @param {int} groupId идентификатор группы
+     * @param {boolean} showClosed показать закрытые топики
+     * @param {int} start начальная дата в мс
+     * @param {int} end конечная дата в мс
+     * @return {Deferred}
+     */
+    function GetTopicsByGroupPart(groupId = 0, lastItemId = 0, maxTopic = -1, loadedTopicIds = []) {
+        let def = $.Deferred();
+
+        if (!groupId) {
+            console.error('Не задан идентификатор группы');
+            def.reject();
+        }
+
+
+
+        let url = `${apiContext}/getTopicsByGroup/${groupId}/${lastItemId}/${maxTopic}`;
+
+        $.ajax({
+            method: "POST",
+            url: url,
+            data: JSON.stringify(loadedTopicIds),
+            type: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            if (response.success) {
+                let topicList = response.data;
+                def.resolve(topicList);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject({
+                    result: false,
+                    error: response.error
+                });
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject({
+                result: false,
+                error: errorThrown
+            });
+        });
+
+        return def;
+    }
+
+
 
     function _updateTopicIds(topicIds) {
         topicIds = topicIds.sort();
@@ -1351,7 +1407,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         if (topicsIdList.length) {
             ajaxParams = {
-                type: "POST",
+                method: "POST",
                 url: url + 1,
                 data: JSON.stringify(topicsIdList),
                 contentType: "application/json;charset=UTF-8",

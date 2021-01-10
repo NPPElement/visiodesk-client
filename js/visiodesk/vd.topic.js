@@ -611,10 +611,11 @@ window.VD_Topic = (function () {
         let index = imagesListIndex;
         imagesListIndex++;
 
-        /*
-        console.log("__setImage("+imagesListIndex+"): "+uploadName);
+
+        // console.log("__setImage("+imagesListIndex+"): "+uploadName);
 
         if(!imagesBuffer[uploadName]) {
+
             let img = document.createElement('img');
             img.onload = function () {
                 imagesList.push({
@@ -626,10 +627,11 @@ window.VD_Topic = (function () {
 
                 $link.html(`<img src="${img['src']}">`);
                 imagesBuffer[uploadName] = img;
+                // console.log("imagesBuffer <- "+uploadName);
             };
             img.onerror = function () {
                 console.log("CANNOT LOAD: "+downloadUrl);
-            }
+            };
             img.src = downloadUrl;
         } else {
             imagesList.push({
@@ -638,23 +640,26 @@ window.VD_Topic = (function () {
                 'w': imagesBuffer[uploadName]['width'],
                 'h': imagesBuffer[uploadName]['height']
             });
+            // console.log("imagesBuffer -> "+uploadName);
             $link.html(`<img src="${imagesBuffer[uploadName]['src']}">`);
 
         }
-        */
 
+
+        /*
 
         loadImage(downloadUrl, (img) => {
                 if(img.type === "error") {
                     console.warn("Error loading image " + downloadUrl);
                 } else {
+                    console.log("downloadUrl/img: ", downloadUrl, img);
                     imagesList.push({
                         'index': index,
                         'src': img['src'],
                         'w': img['width'],
                         'h': img['height']
                     });
-
+                    console.log("topic.loadImage: ", `${img['src']}`);
                     $link.html(`<img src="${img['src']}">`);
                 }
             }, {
@@ -662,6 +667,8 @@ window.VD_Topic = (function () {
                 // 'noRevoke': true
             }
         );
+
+        */
 
 
         $link.click((event) => {

@@ -1,6 +1,6 @@
 window.VD_Socket = (function () {
 
-    const URL_WS = 'ws://localhost:8080/vdesk/ws';
+    const URL_WS = 'ws://'+window.location.host+'/vdesk/ws';
     const timeReconnect = 2000; // 1s
     let _dbg = console.log;
 
@@ -21,7 +21,10 @@ window.VD_Socket = (function () {
     let ws = null;
     return {
         init: init,
-        start: start
+        start: start,
+        send: function (text) {
+            ws.send(text);
+        }
 
     };
 
@@ -33,7 +36,7 @@ window.VD_Socket = (function () {
     function start() {
         window.setInterval(()=>{
             if(!isConnect && !tryConnect) init();
-            else _dbg(isConnect, tryConnect);
+            // else _dbg(isConnect, tryConnect);
         }, timeReconnect);
     }
 
@@ -43,22 +46,23 @@ window.VD_Socket = (function () {
         tryConnect = true;
         ws = new WebSocket(URL_WS);
         ws.onopen = function(event) {
-            _dbg("onopen: ");
+            _dbg("onopen: ", event);
             tryConnect = false;
             isConnect = true;
             isReconnecting = false;
         };
         ws.onclose = function(event) {
-            _dbg("onclose: ");
+            _dbg("onclose: ", event);
             tryConnect = false;
             isConnect = false;
             setTimeout(init, timeReconnect);
         };
         ws.onmessage = function(event) {
-            _dbg("onmessage: ");
+            _dbg("onmessage: ", event);
+            ws.send("wait...");
         };
         ws.onerror = function(event) {
-            _dbg("onerror: ");
+            _dbg("onerror: ", event);
         };
     }
     function replaceAjax() {
@@ -71,10 +75,12 @@ window.VD_Socket = (function () {
 
     // let _dbg = console.log;
     function isStaticContent(request) {
+        if(request.method.toUpperCase()==="POST") return false;
         if(request.url.indexOf(".html")>0) return true;
         if(request.url.indexOf(".svg")>0) return true;
         if(request.url.indexOf("/get")>0) return true;
-        return true;
+        if(request.method.toUpperCase()==="GET") return true;
+        return false;
     }
     function replaceAjax2() {
         let $_ajax = $.ajax;
@@ -119,25 +125,30 @@ window.VD_Socket = (function () {
         };
     }
 
-    replaceAjax2();
+    // replaceAjax2();
 
 
 
     function any() {
         let _load_image = loadImage;
         let cash = {};
+        window._my_cash = cash;
         window.loadImage  = function (file, callback, options) {
+            console.log("file: ", file);
             if(cash[file]) {
                 console.log("cash: " + file);
                 callback(cash[file]);
             } else {
                 _load_image(file, (img)=>{
-                    if(file.indexOf("blob")===-1) cash[file] = img;
-                    callback(cash[file]);
+                    if(file.indexOf("blob")===-1) {
+                        cash[file] = img;
+                    }
+                    callback(img);
                 }, options);
             }
         }
-    }; any();
+    };
+    // any();
 
 
     function imp() {

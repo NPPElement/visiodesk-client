@@ -31,6 +31,15 @@ window.VD_Events = (function () {
      * @type {string} root selector
      */
     let _selector;
+    let _reference;
+    let __lastLoadTopicCount = 0;
+    let _params;
+    let _groupId = 0;
+
+    let lastItemId = 0;
+    let lastItemIds = {};
+    let loadedTopicIds = {};
+    let loadedTopic = {};
 
     /** @type {object} applied filter */
     let _filter = {
@@ -124,7 +133,7 @@ window.VD_Events = (function () {
 
     return {
         "run": run,
-        "unload": unload
+        "unload": unload,
     };
 
     function __setCalendarFilterDate(start, end) {
@@ -156,11 +165,52 @@ window.VD_Events = (function () {
      * @private
      */
     function __buildTopicList(data, filter) {
-        __clearTopicList();
+        // __clearTopicList();
         const template = serviceTemplatesData['vd.events.item.html'];
+        let  templateInner = template.substr( template.indexOf("\n") );
+        templateInner = templateInner.substr(0, templateInner.length-6);
         const $topicList = $(".topic_list");
+        lastItemIds[_groupId] = 0;
+        data.forEach((topic)=>{
+            if( !loadedTopicIds[_groupId].includes(topic.id) ) loadedTopicIds[_groupId].push(topic.id);
+            let _lId = topic.items[topic.items.length-1].id;
+            if(_lId>lastItemIds[_groupId]) lastItemIds[_groupId] = _lId;
+
+            if($("#topic-"+topic.id).length>0) {
+                if(topic._change) {
+                    $("#topic-"+topic.id).html(_.template(templateInner)(topic));
+                    loadedTopic[_groupId][topic.id]._change = false;
+                }
+                // VD.ReferenceBindClick(_selector, '#topic-' + topic.id);
+            } else {
+                $topicList.append(_.template(template)(topic));
+                // console.log("append: \n\n"+templateInner+"\n\n");
+
+                if (_.isArray(topic['images']) && topic['images'].length) {
+                    VD.SetTopicSlider('#topic-' + topic.id, topic['images']);
+                }
+
+                VD.ReferenceBindClick(_selector, '#topic-' + topic.id);
+                VD.SetTopicSubmenu(_selector, topic);
+            }
+
+            if(__filterCriteria(filter, topic)) {
+                $("#topic-" + topic.id).show();
+            } else {
+                $("#topic-" + topic.id).hide();
+            }
+
+
+        });
+
+        if($(".topic_list").length>0) window.setTimeout(loadLazy, __lastLoadTopicCount===0  ? 10000 : 300);
+        /*
         __applyFilter(filter, data).forEach((topic) => {
-            $topicList.append(_.template(template)(topic));
+
+            if( !loadedTopicIds.includes(topic.id) ) loadedTopicIds.push(topic.id);
+
+            if($("#topic-"+topic.id).length>0) $("#topic-"+topic.id).replaceWith(_.template(template)(topic));
+            else $topicList.append(_.template(template)(topic));
 
             if (_.isArray(topic['images']) && topic['images'].length) {
                 VD.SetTopicSlider('#topic-' + topic.id, topic['images']);
@@ -169,7 +219,26 @@ window.VD_Events = (function () {
             VD.ReferenceBindClick(_selector, '#topic-' + topic.id);
             VD.SetTopicSubmenu(_selector, topic);
         });
+         */
     }
+
+
+    function __filterCriteria(filter, topic) {
+        if (filter && filter.status_id) {
+            if (topic.status_id !== filter.status_id) {
+                return false;
+            }
+        }
+
+        if (filter && filter.date.start && filter.date.end) {
+            if (moment.utc(topic.created_at) < filter.date.start || moment.utc(topic.created_at) > filter.date.end) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     /**
      * Apply filter and return filtered data
@@ -178,20 +247,7 @@ window.VD_Events = (function () {
      * @private
      */
     function __applyFilter(filter, data) {
-        return data.filter((topic) => {
-            if (filter && filter.status_id) {
-                if (topic.status_id !== filter.status_id) {
-                    return false;
-                }
-            }
-            if (filter && filter.date.start && filter.date.end) {
-                if (moment.utc(topic.created_at) < filter.date.start || moment.utc(topic.created_at) > filter.date.end) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
+        return data.filter(topic => __filterCriteria(filter, topic));
     }
 
     /**
@@ -414,6 +470,19 @@ window.VD_Events = (function () {
         }
     }
 
+
+    function __loadTopicsLazy(groupId, params) {
+        if (groupId) {
+            if (_filter.showClosed) {
+                return VD_API.GetAllTopicsByGroup(groupId, true, _filter.date.start, _filter.date.end);
+            } else {
+                return VD_API.GetTopicsByGroupPart(groupId, lastItemIds[_groupId], 20, __getLoadedIds() );
+            }
+        } else {
+            return $.Deferred().reject();
+        }
+    }
+
     function __prepareTopics(groupId, topics) {
         let data = [];
         topics.forEach((topic) => {
@@ -443,16 +512,18 @@ window.VD_Events = (function () {
                 unread: false,
                 messages_number: MAX_MESSAGES_NUMBER,
                 images: images,
-                items: topic['items']
+                items: topic['items'],
+                _change: topic['_change'],
             });
         });
 
+
+
         data.sort((item1, item2) => {
-            if (item1.priority_id > item2.priority_id) {
-                return -1;
-            } else if (item1.priority_id < item2.priority_id) {
-                return 1;
-            }
+            if (item1.priority_id > item2.priority_id) return -1;
+            if (item1.priority_id < item2.priority_id) return 1;
+            if (item1.id > item2.id) return -1;
+            if (item1.id < item2.id) return 1;
 
             return 0;
         });
@@ -560,12 +631,90 @@ window.VD_Events = (function () {
             __clearCalendarFilterDate();
         });
     }
+    
+    
+    function __getTopicArray() {
+        let res = [];
+        _.forEach(loadedTopic[_groupId], function (topic, id ) {
+            res.push(topic);
+        });
+
+        res.sort((a,b)=> {
+            if(a.id<b.id) return 1;
+            if(a.id>b.id) return -1;
+            return 0;
+        });
+        return res;
+    }
+
+    function __getLoadedIds() {
+        let res = [];
+        _.forEach(loadedTopic[_groupId], function (topic, id ) {
+            res.push(id);
+        });
+        return res;
+    }
+
+
+    function loadLazy() {
+        return __loadTopicsLazy(_groupId, _params)
+            .then((topics) => {
+                topics.forEach(t=>{
+                    t._change = !!loadedTopic[_groupId][t.id];
+                    loadedTopic[_groupId][t.id] = t
+                });
+                __lastLoadTopicCount = topics.length;
+                let all_topics = __getTopicArray();
+                resultCache = __prepareTopics(_groupId, all_topics);
+                __buildTopicList(resultCache, _filter);
+
+                //прокрутка до нужного топика, при переходе через ссылку "назад"
+                if (_params['lastTopicId']) {
+                    __scrollIntoTopic(_params['lastTopicId'], _selector);
+                    delete _params['lastTopicId'];
+                }
+                __initializeSearchField();
+                __initializeCalendar(_reference, _params);
+                __initializeTopFilterTab();
+                return { 'selector': _selector }
+            })
+
+    }
 
     function run(reference, selector, params) {
+
         _selector = selector;
+        _reference = reference;
+        _params = params;
         resultCache = [];
         const groupId = parseInt(VB_API.extractName(reference));
 
+        if(!loadedTopicIds[groupId]) {
+            loadedTopicIds[groupId] = [];
+            loadedTopic[groupId] = {};
+            lastItemIds[groupId] = 0;
+        }
+
+        _groupId = groupId;
+        if(_groupId != groupId) {
+            __clearTopicList();
+        }
+
+        return __loadGroup(groupId)
+            .then((group) => {
+                return __loadTemplate(group);
+            })
+            .then(() => {
+                return VB.LoadTemplatesList(serviceTemplatesList, VD_SETTINGS['TEMPLATE_DIR']);
+            })
+            .then((templates) => {
+                serviceTemplatesData = templates;
+            })
+            .then(() => {
+                return loadLazy();
+            });
+
+        /* Переделываем, чтобы загружалось постепенно */
         return __loadGroup(groupId)
             .then((group) => {
                 return __loadTemplate(group);
@@ -600,6 +749,7 @@ window.VD_Events = (function () {
                     'selector': selector
                 }
             })
+
     }
 
     function unload() {

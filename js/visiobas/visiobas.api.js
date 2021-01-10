@@ -1754,7 +1754,7 @@
 
         console.log("from: "+from_date + ", to: "+to_date);
         $.ajax({
-            type: "POST",
+            method: "POST",
             url: url + "/"+step + "/"+from_date + "/"+to_date,
             data: JSON.stringify(object_references),
             contentType: "application/json; charset=utf-8",
