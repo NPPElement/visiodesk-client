@@ -40,6 +40,7 @@ window.VD_Events = (function () {
     let lastItemIds = {};
     let loadedTopicIds = {};
     let loadedTopic = {};
+    let timer = false;
 
     /** @type {object} applied filter */
     let _filter = {
@@ -180,10 +181,13 @@ window.VD_Events = (function () {
 
             if($("#topic-"+topic.id).length>0) {
                 if(topic._change) {
-                    $("#topic-"+topic.id).html(_.template(templateInner)(topic));
+                    // $("#topic-"+topic.id).html(_.template(templateInner)(topic));
+                    $("#topic-"+topic.id).replaceWith(_.template(template)(topic));
                     loadedTopic[_groupId][topic.id]._change = false;
+                    VD.ReferenceBindClick(_selector, '#topic-' + topic.id);
+                    VD.SetTopicSubmenu(_selector, topic);
                 }
-                // VD.ReferenceBindClick(_selector, '#topic-' + topic.id);
+
             } else {
                 $topicList.append(_.template(template)(topic));
                 // console.log("append: \n\n"+templateInner+"\n\n");
@@ -205,7 +209,10 @@ window.VD_Events = (function () {
 
         });
 
-        if($(".topic_list").length>0) window.setTimeout(loadLazy, __lastLoadTopicCount!==LIMIT_TOPIC  ? 10000 : 300);
+        if($(".topic_list").length>0) {
+            window.clearTimeout(timer);
+            timer = window.setTimeout(loadLazy, __lastLoadTopicCount!==LIMIT_TOPIC  ? 10000 : 300);
+        }
         /*
         __applyFilter(filter, data).forEach((topic) => {
 

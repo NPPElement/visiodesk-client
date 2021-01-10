@@ -19,6 +19,9 @@ window.VD_Socket = (function () {
      * @WebSocket {null}
      */
     let ws = null;
+
+    replaceAjax();
+
     return {
         init: init,
         start: start,
@@ -65,29 +68,40 @@ window.VD_Socket = (function () {
             _dbg("onerror: ", event);
         };
     }
-    function replaceAjax() {
+    function replaceAjax___() {
         let $_ajax = $.ajax;
         $.ajax = function () {
-            console.log(arguments[0]);
             return $_ajax.apply(null, arguments);
         }
     }
 
     // let _dbg = console.log;
     function isStaticContent(request) {
-        if(request.method.toUpperCase()==="POST") return false;
+        if(request.method && request.method.toUpperCase()==="POST") return false;
+        if(request.type && request.type.toUpperCase()==="POST") return false;
+        if(request.url.indexOf("pinglog")>0) return false;
+        if(request.url.indexOf("getLastItemId")>0) return false;
+        if(request.url.indexOf("getChangedSubscribesIds")>0) return false;
         if(request.url.indexOf(".html")>0) return true;
         if(request.url.indexOf(".svg")>0) return true;
         if(request.url.indexOf("/get")>0) return true;
         if(request.method.toUpperCase()==="GET") return true;
         return false;
     }
-    function replaceAjax2() {
+
+    function isDynamicContent(request) {
+        return true;
+    }
+
+
+    function replaceAjax() {
         let $_ajax = $.ajax;
         let urlsCount = {};
         let cashResult = {};
+        let cashResultDynamic = {};
         let doneCallBack = {};
         let isStatic;
+        let isDynamic;
         $.ajax = function (options) {
             var deferred = $.Deferred();
             let _done = deferred.done;
@@ -101,6 +115,7 @@ window.VD_Socket = (function () {
             urlsCount[options.url]++;
 
             isStatic = isStaticContent(options);
+            isDynamic = isDynamicContent(options);
             // _dbg("isStatic [" +options.url +"] == "+isStatic);
 
             if(isStatic && cashResult[options.url]) {
@@ -112,12 +127,18 @@ window.VD_Socket = (function () {
 
             $_ajax(options)
                 .done(function () {
-
-                    console.log("LOAD: ", options.url + "(" + urlsCount[options.url] + ")");
+                    // console.log("LOAD: ", options.url + "(" + urlsCount[options.url] + ")");
                     if(isStatic) cashResult[options.url] = arguments;
+                    if(isDynamic) cashResultDynamic[options.url] = arguments;
                     deferred.resolve.apply(this, arguments);
                 })
                 .fail(function () {
+
+                    if(isDynamic && cashResultDynamic[options.url]) {
+                        deferred.resolve.apply(this, cashResultDynamic[options.url]);
+                        console.log("CASH.DYNAMIC: ", options.url + "(" + urlsCount[options.url] + ")");
+                        return deferred;
+                    }
                     deferred.reject.apply(this, arguments);
                 });
 
@@ -125,7 +146,7 @@ window.VD_Socket = (function () {
         };
     }
 
-    // replaceAjax2();
+
 
 
 

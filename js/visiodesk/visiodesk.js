@@ -1011,7 +1011,6 @@ window.VD = (function Visiodesk() {
             if($items.html().length>10) {
                 $items.html('');
             } else {
-                console.log("topicParams:", topicParams);
                 ShowLastItems($items, topicParams.items, topicParams.last_checked_id);
             }
         });
