@@ -83,6 +83,7 @@ window.VD_Socket = (function () {
         if(request.type && request.type.toUpperCase()==="POST") return false;
         if(request.url.indexOf("pinglog")>0) return false;
         if(request.url.indexOf("getLastItemId")>0) return false;
+        if(request.url.indexOf("getTopicById")>0) return false;
         if(request.url.indexOf("getChangedSubscribesIds")>0) return false;
         if(request.url.indexOf(".html")>0) return true;
         if(request.url.indexOf(".svg")>0) return true;
