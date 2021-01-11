@@ -59,7 +59,8 @@ window.VD = (function Visiodesk() {
         "ShowErrorMessage": __errorShowMessage,
 
         "ref$": ref$,
-        "SettingsManager": GetSettingsManager()
+        "SettingsManager": GetSettingsManager(),
+        "Vocab": Vocab()
     };
 
 
@@ -1413,6 +1414,7 @@ window.VD = (function Visiodesk() {
         }
 
 
+
         function __setRoleVisibles() {
             timer_role = false;
             if(!Get("user_roles")) return window.setTimeout(Reload, 1000);
@@ -1472,6 +1474,30 @@ window.VD = (function Visiodesk() {
         }
     }
 
+    function Vocab() {
+        return {
+            type: {
+                1: {"id": 1, "name": 'img', "title": 'Изображение'},
+                2: {"id": 2, "name": 'file', "title": 'Документ'},
+                3: {"id": 3, "name": 'user', "title": 'Пользователь'},
+                4: {"id": 4, "name": 'group', "title": 'Группа'},
+                5: {"id": 5, "name": 'priority', "title": 'Приоритет'},
+                6: {"id": 6, "name": 'status', "title": 'Статус'},
+                7: {"id": 7, "name": 'problem', "title": 'Проблема'},
+                8: {"id": 8, "name": 'term_date_plan', "title": 'Плановая дата завершения'},
+                9: {"id": 9, "name": 'term_date_fact', "title": 'Фактическая дата завершения'},
+                10: {"id": 10, "name": 'audio', "title": 'Аудиофайл'},
+                11: {"id": 11, "name": 'location', "title": 'Место'},
+                12: {"id": 12, "name": 'venue', "title": 'Встреча'},
+                13: {"id": 13, "name": 'message', "title": 'Сообщение'},
+                14: {"id": 14, "name": 'check', "title": 'Ознакомлен'},
+                15: {"id": 15, "name": 'removed_from_group', "title": 'Удален у группы'},
+                16: {"id": 16, "name": 'removed_from_user', "title": 'Удален у пользователя'},
+                17: {"id": 17, "name": 'description', "title": 'Изменено описание'},
+                18: {"id": 18, "name": 'checklist', "title": 'Из чек-листа'},
+            }
+        }
+    }
 
 
 })();

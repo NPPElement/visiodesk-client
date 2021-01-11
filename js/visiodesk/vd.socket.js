@@ -13,11 +13,16 @@ window.VD_Socket = (function () {
         {name: ""},
     ];
 
-    let mode_func = {
+    let mode_func = {};
 
-    };
+    let postPipe = [];
+
+    let idIdx = 10111000;
+    let nextProceed = false;
 
     window.isOnline = true;
+    window.postPipe = postPipe;
+
 
     /**
      *
@@ -26,8 +31,8 @@ window.VD_Socket = (function () {
     let ws = null;
 
     replaceAjax();
-
     any();
+    // addModeListener("ifRestoreConnection", ifRestoreConnection);
 
     return {
         init: init,
@@ -35,9 +40,8 @@ window.VD_Socket = (function () {
         send: function (text) {
             ws.send(text);
         },
-        addModeListener: function (name, func) {
-            mode_func[name] = func
-        },
+        addModeListener: addModeListener,
+        // sendAllPosts: sendAllPosts,
 
 
     };
@@ -52,6 +56,10 @@ window.VD_Socket = (function () {
             if(!isConnect && !tryConnect) init();
             // else _dbg(isConnect, tryConnect);
         }, timeReconnect);
+    }
+
+    function addModeListener(name, func) {
+        mode_func[name] = func;
     }
 
 
@@ -106,12 +114,86 @@ window.VD_Socket = (function () {
     }
 
     function setMode(newMode) {
-        if(isOnline!=newMode) {
+        if(isOnline!==newMode) {
             let old = isOnline;
             isOnline = newMode;
             for(let key in mode_func) if(mode_func[key]) mode_func[key](isOnline, old);
         }
     }
+    
+    function localAddTopicItem(options) {
+        if(options.url.indexOf("addTopicItems")===-1) return  false;
+        addIfPostPipe(options);
+        let data = JSON.parse(options.data);
+
+        for(let i=0;i<data.length;i++) {
+            data[i].id = idIdx++;
+            data[i].removed = false;
+            data[i].created_at = moment.utc().format("YYYY-MM-DD HH:mm:ss");
+            data[i].type = VD.Vocab.type[data[i].type.id];
+            data[i].author = VD.SettingsManager.Get();
+            data[i]._offline = true;
+        }
+        return {
+            success: true,
+            debug: "client answer",
+            data: data
+        }
+    }
+
+
+    function addIfPostPipe(ajax_options) {
+        if(ajax_options.url.indexOf("addTopicItems")===-1) return  false;
+        postPipe.push({
+            options: ajax_options,
+            callback: null,
+            url: window.location.href
+        });
+        return true;
+    }
+
+
+    function localProceed(options) {
+        let r;
+        r  = localAddTopicItem(options);
+        if(r) return r;
+        return r;
+    }
+
+
+    function nextPostSend() {
+        if(nextProceed) return false;
+        if(postPipe.length>0) {
+            nextProceed = true;
+            let url = postPipe[0].url;
+            // console.log("URL: "+url);
+            $.ajax(postPipe[0].options)
+                .done(function (r) {
+                    console.log("Отправка задним числом: ", r);
+                    postPipe.shift();
+                    if(postPipe.length===0) {
+                        $(".body.offline").removeClass("offline");
+//                        window.location.href = url;
+                    }
+                    nextProceed = false;
+                })
+                .fail(function (r) {
+                    console.log("FAIL");
+                    nextProceed = false;
+                    // console.log("RESTORE FAIL: ", r);
+                    // delete postPipe[idx];
+                })
+
+        }
+    }
+
+/*
+    function ifRestoreConnection(connNow, connOld) {
+        if(!connNow || connOld) return;
+        // sendAllPosts();
+    }
+
+ */
 
     function replaceAjax() {
         let $_ajax = $.ajax;
@@ -121,26 +203,24 @@ window.VD_Socket = (function () {
         let doneCallBack = {};
         let isStatic;
         let isDynamic;
+
         $.ajax = function (options) {
             var deferred = $.Deferred();
-            let _done = deferred.done;
-            deferred.done = function() {
-                // _dbg("func_done: ", arguments[0]);
-                setMode(true);
-                _done.apply(this, arguments);
-                return deferred;
-            };
-
             if( !urlsCount[options.url] ) urlsCount[options.url] = 1;
             urlsCount[options.url]++;
 
             isStatic = isStaticContent(options);
             isDynamic = isDynamicContent(options);
-            // _dbg("isStatic [" +options.url +"] == "+isStatic);
 
             if(isStatic && cashResult[options.url]) {
                 deferred.resolve.apply(this, cashResult[options.url]);
                 // console.log("CASH: ", options.url + "(" + urlsCount[options.url] + ")");
+                return deferred;
+            }
+
+            let localRes;
+            if((!isOnline) && (localRes = localProceed(options))) {
+                deferred.resolve.call(this, localRes, "success", deferred);
                 return deferred;
             }
 
@@ -151,10 +231,14 @@ window.VD_Socket = (function () {
                     // console.log("LOAD: ", options.url + "(" + urlsCount[options.url] + ")");
                     if(isStatic) cashResult[options.url] = arguments;
                     if(isDynamic) cashResultDynamic[options.url] = arguments;
+                    // console.log("POSR ARG: ", arguments);
                     deferred.resolve.apply(this, arguments);
+                    if(isOnline) nextPostSend();
                 })
                 .fail(function (x) {
                     setMode(x.status!==0);
+
+
                     if(isDynamic && cashResultDynamic[options.url]) {
                         deferred.resolve.apply(this, cashResultDynamic[options.url]);
                         // console.log("CASH.DYNAMIC: ", options.url + "(" + urlsCount[options.url] + ")");
@@ -162,8 +246,14 @@ window.VD_Socket = (function () {
                     }
                     deferred.reject.apply(this, arguments);
                 });
-
-            return deferred.promise();
+            let promise = deferred.promise();
+            let done_promise = promise.done;
+            promise.done = function () {
+                // console.log("done_promise: ", arguments[0]);
+                //  поидее нужно сделать накопление функций обратного вызова, но они будут с отличными переменными окружения
+                return done_promise.apply(this, arguments);
+            };
+            return promise;
         };
     }
 

@@ -7476,3 +7476,14 @@ label.input_group_title {
     padding:  12px;
     border-radius: 8px;
 }
+
+
+.topic .message.reply .body.offline {
+    animation: AnimationBorderBlink 1s ease infinite;
+}
+
+@keyframes AnimationBorderBlink {
+    0%{border: 2px solid rgba(0, 122, 255, 0.2);}
+    50%{border: 2px solid rgba(0, 122, 255, 0.6)}
+    100%{border: 2px solid rgba(0, 122, 255, 0.2);}
+}

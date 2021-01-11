@@ -1524,6 +1524,7 @@ window.VD_Topic = (function () {
             });
         } else {
             __saveLoadItems(itemsForSend).then((resultItems) => {
+
                 __sendBase64(resultItems, itemsForSend);
                 __updateTopicParams(resultItems);
 
@@ -1697,7 +1698,8 @@ window.VD_Topic = (function () {
                     'index': index,
                     'length': items.length,
                     'created_date': VD.GetFormatedDate(item['created_at']),
-                    'text': ''
+                    'text': '',
+                    'offline': item._offline ? ' offline':''
                 }, item));
                 lastUserId = item['author']['id'];
                 itemsListExec += itemTemplateExec;
