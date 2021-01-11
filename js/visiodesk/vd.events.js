@@ -672,7 +672,12 @@ window.VD_Events = (function () {
             .then((topics) => {
                 topics.forEach(t=>{
                     t._change = !!loadedTopic[_groupId][t.id];
-                    loadedTopic[_groupId][t.id] = t
+                    if(t.status_id==-1 && t._change) {
+                        delete loadedTopic[_groupId][t.id];
+                        $("#topic-"+t.id).remove();
+                    } else {
+                        loadedTopic[_groupId][t.id] = t
+                    }
                 });
                 __lastLoadTopicCount = topics.length;
                 let all_topics = __getTopicArray();
