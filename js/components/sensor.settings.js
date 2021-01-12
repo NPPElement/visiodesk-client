@@ -132,7 +132,6 @@
          * @param {string} code - option string id
          */
         function __edit(parameters, code) {
-            console.log("__edit:", parameters, code, _settingsEditSelector)
             var option = {};
             for (var i = 0; i < parameters.length; i++) {
                 var currentOption = parameters[i];
@@ -156,7 +155,14 @@
                     $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", ""+$("#param_value").val()==""+_value);
                 });
                 $("#sensor-settings-edit-wrapper .save").click(function () {
-                    console.log(""+_object[77]+"["+_param_code+"] " + _value + " -> "+ $("#param_value").val());
+                    let value_new = $("#param_value").val();
+                    VB_API.saveObjectParam(_object[77], _param_code, value_new).done(function (x) {
+                        $(".opt_item[data-code='"+_param_code+"'] a").html(value_new);
+                        _object[_param_code] = value_new;
+                        if(_param_code==85) $("#sensor-settings-wrapper .time").text(value_new);
+                        _value = value_new;
+                        $("#sensor-settings-edit-wrapper .save").addClass("inactive");
+                    });
                 })
             });
         }

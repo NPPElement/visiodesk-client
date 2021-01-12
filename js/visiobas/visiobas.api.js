@@ -25,6 +25,7 @@
             //setDeviceId: setDeviceId,
             "getObjects": getObjects,
             "putObjects": putObjects,
+            "saveObjectParam": saveObjectParam,
 
             "getTrendLogsLastSeconds": getTrendLogsLastSeconds,
             "getObjectTrendLogs": getObjectTrendLogs,
@@ -1167,6 +1168,54 @@
                     textStatus: textStatus,
                     error: errorThrown
                 });
+            });
+
+            return def;
+        }
+
+
+        /**
+         * request certain for object
+         * @param {string} reference requested object reference
+         * @param {param} param requested object reference
+         * @param {value} value requested object reference
+         * @returns {Promise} deferred object with object data
+         */
+        function saveObjectParam(reference, param, value) {
+            let def = $.Deferred();
+
+            let _reference = urlReference(reference);
+            if (_.isNull(_reference)) {
+                return def.reject({
+                    success: false,
+                    error: "reference value is not valid: " + reference
+                });
+            }
+
+            let url = VB_SETTINGS.apiContext +
+                "saveObjectParam/{param}/{reference}"
+                    .replace("{reference}", _reference)
+                    .replace("{param}", param);
+
+            // console.log("GET " + url);
+
+            $.ajax({
+                method: "POST",
+                url: url,
+                type: "json",
+                data: value,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }).done((responce, textStatus, jqXHR) => {
+                if (responce.success) {
+                    def.resolve(responce.data);
+                } else {
+                    def.reject();
+                }
+
+            }).fail((jqXHR, textStatus, errorThrown) => {
+                def.reject();
             });
 
             return def;
