@@ -153,9 +153,7 @@
                 VD.SetVisiobasAdminSubmenu(_settingsEditSelector);
 
                 $("#param_value").on("propertychange change click keyup input paste", function () {
-                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", $("#param_value").val()===_value);
-                    // if($("#param_value").val()==_value) $("#sensor-settings-edit-wrapper .save").hide();
-                    // else $("#sensor-settings-edit-wrapper .save").show();
+                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", ""+$("#param_value").val()==""+_value);
                 });
                 $("#sensor-settings-edit-wrapper .save").click(function () {
                     console.log(""+_object[77]+"["+_param_code+"] " + _value + " -> "+ $("#param_value").val());

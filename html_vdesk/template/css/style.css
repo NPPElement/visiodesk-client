@@ -7500,6 +7500,7 @@ label.input_group_title {
     height: 28px;
     width: 48px;
     background: url('../images/save_orange.svg') no-repeat right;
+    transition: 0.2s;
 }
 
 #sensor-settings-edit-wrapper .caption NAV .save.inactive {
