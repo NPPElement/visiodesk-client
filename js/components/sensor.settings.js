@@ -28,6 +28,8 @@
         let _param_code = null;
         let _value = null;
 
+        let _parameters = null;
+
         return {
             create: create
         };
@@ -38,7 +40,6 @@
          */
         function create(object) {
             _object = object;
-            console.log("_object: ", _object);
             VD.SwitchVisiobasTab('#objects-list', _settingsMainSelector);
 
             //resolved when getting devices
@@ -73,7 +74,7 @@
             let optionalCodes = VisiobasObject.propertiesToCodes(optionalProperties);
 
             //prepare data binding for object.parameters.html template
-            let parameters = _.map(object, (value, code) => {
+            _parameters = _.map(object, (value, code) => {
                 const name = I18N.get("attr." + code);
                 if (_.isString(value)) {
                     //replace html entity to spec
@@ -89,7 +90,7 @@
             });
 
             //does display all parameters or only required
-            defObject.resolve(_.filter(parameters, (p) => {
+            defObject.resolve(_.filter(_parameters, (p) => {
                 return _displayAll || p.class != "optional";
             }));
 
@@ -119,11 +120,22 @@
                         var itemCode = $item.data('code');
 
                         if (itemCode) {
-                            __edit(parameters, itemCode);
+                            __edit(_parameters, itemCode);
                         }
                     });
                 });
             });
+        }
+
+
+        function __save_parameter(code, value) {
+            for (var i = 0; i < _parameters.length; i++) {
+                if (_parameters[i]['code'] == code) {
+                    _param_code = code;
+                    _parameters[i].value = value;
+                    return;
+                }
+            }
         }
 
         /**
@@ -133,8 +145,8 @@
          */
         function __edit(parameters, code) {
             var option = {};
-            for (var i = 0; i < parameters.length; i++) {
-                var currentOption = parameters[i];
+            for (var i = 0; i < _parameters.length; i++) {
+                var currentOption = _parameters[i];
                 if (currentOption['code'] == code) {
                     _param_code = code;
                     _value = currentOption.value;
@@ -162,6 +174,7 @@
                         if(_param_code==85) $("#sensor-settings-wrapper .time").text(value_new);
                         _value = value_new;
                         $("#sensor-settings-edit-wrapper .save").addClass("inactive");
+                        __save_parameter(_param_code, value_new);
                     });
                 })
             });
