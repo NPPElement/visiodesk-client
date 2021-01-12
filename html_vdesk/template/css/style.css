@@ -7487,3 +7487,22 @@ label.input_group_title {
     50%{border: 2px solid rgba(0, 122, 255, 0.6)}
     100%{border: 2px solid rgba(0, 122, 255, 0.2);}
 }
+
+#sensor-settings-edit-wrapper .caption NAV .text {
+    white-space: normal;
+}
+
+#sensor-settings-edit-wrapper .caption NAV .bar {
+    min-width: 0;
+}
+
+#sensor-settings-edit-wrapper .caption NAV .save {
+    height: 28px;
+    width: 48px;
+    background: url('../images/save_orange.svg') no-repeat right;
+}
+
+#sensor-settings-edit-wrapper .caption NAV .save.inactive {
+    opacity: 0.33;
+    transition: 0.2s;
+}

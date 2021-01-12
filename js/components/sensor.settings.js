@@ -24,6 +24,10 @@
         /** @type{boolean} display all visiobas object properties */
         let _displayAll = false;
 
+        let _object = null;
+        let _param_code = null;
+        let _value = null;
+
         return {
             create: create
         };
@@ -33,6 +37,8 @@
          * @param {object} object bacnet
          */
         function create(object) {
+            _object = object;
+            console.log("_object: ", _object);
             VD.SwitchVisiobasTab('#objects-list', _settingsMainSelector);
 
             //resolved when getting devices
@@ -126,10 +132,13 @@
          * @param {string} code - option string id
          */
         function __edit(parameters, code) {
+            console.log("__edit:", parameters, code, _settingsEditSelector)
             var option = {};
             for (var i = 0; i < parameters.length; i++) {
                 var currentOption = parameters[i];
                 if (currentOption['code'] == code) {
+                    _param_code = code;
+                    _value = currentOption.value;
                     option = currentOption;
                     break;
                 }
@@ -142,6 +151,15 @@
             }).done(() => {
                 VD.SetVisiobasHistory(_settingsMainSelector, _settingsEditSelector);
                 VD.SetVisiobasAdminSubmenu(_settingsEditSelector);
+
+                $("#param_value").on("propertychange change click keyup input paste", function () {
+                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", $("#param_value").val()===_value);
+                    // if($("#param_value").val()==_value) $("#sensor-settings-edit-wrapper .save").hide();
+                    // else $("#sensor-settings-edit-wrapper .save").show();
+                });
+                $("#sensor-settings-edit-wrapper .save").click(function () {
+                    console.log(""+_object[77]+"["+_param_code+"] " + _value + " -> "+ $("#param_value").val());
+                })
             });
         }
     }

@@ -2,6 +2,10 @@
     <nav>
         <a class="back">Назад</a>
         <div class="text"><%= option.name %></div>
+        <div class="bar">
+            <a class="save inactive"></a>
+        </div>
+
     </nav>
 </div>
 
@@ -11,7 +15,7 @@
 <div class="sensor_admin">
     <div class="item">
         <div class="field">
-            <input type="text" class="left_align" value="<%= option.value %>">
+            <input type="text" class="left_align" id="param_value" value="<%= option.value %>">
             <a class="clear"></a>
         </div>
     </div>
