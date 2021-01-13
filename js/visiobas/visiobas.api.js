@@ -1211,7 +1211,7 @@
                 if (responce.success) {
                     def.resolve(responce.data);
                 } else {
-                    def.reject();
+                    def.reject(responce.error);
                 }
 
             }).fail((jqXHR, textStatus, errorThrown) => {

@@ -119,7 +119,7 @@
                         var $item = $(event.currentTarget);
                         var itemCode = $item.data('code');
 
-                        if (itemCode) {
+                        if (itemCode && itemCode!="79") {
                             __edit(_parameters, itemCode);
                         }
                     });
@@ -168,14 +168,25 @@
                 });
                 $("#sensor-settings-edit-wrapper .save").click(function () {
                     let value_new = $("#param_value").val();
-                    VB_API.saveObjectParam(_object[77], _param_code, value_new).done(function (x) {
-                        $(".opt_item[data-code='"+_param_code+"'] a").html(value_new);
-                        _object[_param_code] = value_new;
-                        if(_param_code==85) $("#sensor-settings-wrapper .time").text(value_new);
-                        _value = value_new;
-                        $("#sensor-settings-edit-wrapper .save").addClass("inactive");
-                        __save_parameter(_param_code, value_new);
-                    });
+                    VB_API.saveObjectParam(_object[77], _param_code, value_new)
+                        .done(function (x) {
+                            $(".opt_item[data-code='"+_param_code+"'] a").html(value_new);
+                            _object[_param_code] = value_new;
+                            if(_param_code==85) $("#sensor-settings-wrapper .time").text(value_new);
+                            _value = value_new;
+                            $("#sensor-settings-edit-wrapper .save").addClass("inactive");
+                            __save_parameter(_param_code, value_new);
+                        })
+                        .fail(function (error) {
+                            let errorText = I18N.get(`vbas.error.save_object.${error}`);
+                            if(!errorText) errorText = error;
+                            VD.ShowErrorMessage({
+                                'caption': 'Ошибка сохранения.',
+                                'description': errorText,
+                                'timer': 3000
+                            });
+
+                        });
                 })
             });
         }

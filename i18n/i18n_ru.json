@@ -529,5 +529,17 @@
 
     "vdesk.placeholder.default":"Введите текст",
 
-    "vdesk.export.failed": "Не удалось выгрузить ленту в файл csv"
+    "vdesk.export.failed": "Не удалось выгрузить ленту в файл csv",
+
+
+
+    "vbas.error.save_object.1": "Объект не найден",
+    "vbas.error.save_object.2": "Свойство не определено",
+    "vbas.error.save_object.3": "Свойство не существует",
+    "vbas.error.save_object.4": "Объект с новым идентификатором уже существует",
+    "vbas.error.save_object.5": "Устройство с тами идентификатором уже существует",
+    "vbas.error.save_object.6": "Имя объекта не может быть пустое",
+    "vbas.error.save_object.7": "Уровень объекта не может быть изменён",
+    "vbas.error.save_object.8": "Тип объекта не может быть изменён",
+    "vbas.error.save_object.9": "Объект с таким именем уже существует"
 }
