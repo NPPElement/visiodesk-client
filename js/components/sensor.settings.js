@@ -179,7 +179,7 @@
                         })
                         .fail(function (error) {
                             let errorText = I18N.get(`vbas.error.save_object.${error}`);
-                            if(!errorText) errorText = error;
+                            if(!errorText) errorText = "Ошибка #" + error;
                             VD.ShowErrorMessage({
                                 'caption': 'Ошибка сохранения.',
                                 'description': errorText,

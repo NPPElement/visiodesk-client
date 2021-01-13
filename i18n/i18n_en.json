@@ -538,4 +538,15 @@
     "vdesk.placeholder.default":"Type...",
 
     "vdesk.export.failed": "Failed topics csv export",
+
+    "vbas.error.save_object.1": "Object not found",
+    "vbas.error.save_object.2": "Property not defined",
+    "vbas.error.save_object.3": "Property not exists",
+    "vbas.error.save_object.4": "Device with this identifier are exists",
+    "vbas.error.save_object.5": "Device with this name are exists",
+    "vbas.error.save_object.6": "Object name cannot be empty",
+    "vbas.error.save_object.7": "Object level cannot be change",
+    "vbas.error.save_object.8": "Object type cannot be change",
+    "vbas.error.save_object.9": "Object with this name are exists"
+
 }
