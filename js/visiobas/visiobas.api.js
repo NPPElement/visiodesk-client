@@ -1801,7 +1801,6 @@
         if(typeof from_date === "object") from_date = Math.ceil(from_date.valueOf()/1000);
         if(typeof   to_date === "object")   to_date = Math.ceil(  to_date.valueOf()/1000);
 
-        console.log("from: "+from_date + ", to: "+to_date);
         $.ajax({
             method: "POST",
             url: url + "/"+step + "/"+from_date + "/"+to_date,

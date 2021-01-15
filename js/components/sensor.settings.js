@@ -163,6 +163,8 @@
                 VD.SetVisiobasHistory(_settingsMainSelector, _settingsEditSelector);
                 VD.SetVisiobasAdminSubmenu(_settingsEditSelector);
 
+                $("#sensor-settings-edit-wrapper select").chosen({width: "300px"});
+
                 $("#param_value").on("propertychange change click keyup input paste", function () {
                     $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", ""+$("#param_value").val()==""+_value);
                 });

@@ -7507,3 +7507,12 @@ label.input_group_title {
     opacity: 0.33;
     transition: 0.2s;
 }
+
+.chosen-dark {
+    font-family: 'SF-PRO-Regular';
+}
+
+
+.sensor_admin .item.chosen-dark  .field {
+    justify-content: flex-start!important;
+}

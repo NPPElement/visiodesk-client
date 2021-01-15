@@ -545,8 +545,9 @@
     "vbas.error.save_object.4": "Device with this identifier are exists",
     "vbas.error.save_object.5": "Device with this name are exists",
     "vbas.error.save_object.6": "Object name cannot be empty",
-    "vbas.error.save_object.7": "Object level cannot be change",
-    "vbas.error.save_object.8": "Object type cannot be change",
-    "vbas.error.save_object.9": "Object with this name are exists"
+    "vbas.error.save_object.7": "Object type cannot be change",
+    "vbas.error.save_object.8": "Object with this name are exists",
+    "vbas.error.save_object.9": "Parent target not found",
+    "vbas.error.save_object.10": "Part of the path cannot be empty"
 
 }
