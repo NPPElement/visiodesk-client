@@ -139,8 +139,9 @@ MIT License
     font-size: 17px;
 }
 
-.chosen-container .chosen-results li {
+.chosen-dark .chosen-container .chosen-results li {
     line-height: 17px;
+    font-size: 14px;
 }
 
 .chosen-dark * {

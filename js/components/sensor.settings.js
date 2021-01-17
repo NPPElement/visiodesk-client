@@ -144,6 +144,7 @@
          * @param {string} code - option string id
          */
         function __edit(parameters, code) {
+            console.log("__edit");
             var option = {};
             for (var i = 0; i < _parameters.length; i++) {
                 var currentOption = _parameters[i];
@@ -163,36 +164,207 @@
                 VD.SetVisiobasHistory(_settingsMainSelector, _settingsEditSelector);
                 VD.SetVisiobasAdminSubmenu(_settingsEditSelector);
 
-                $("#sensor-settings-edit-wrapper select").chosen({width: "300px"});
+                __setFieldEditor();
 
-                $("#param_value").on("propertychange change click keyup input paste", function () {
-                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", ""+$("#param_value").val()==""+_value);
-                });
-                $("#sensor-settings-edit-wrapper .save").click(function () {
-                    let value_new = $("#param_value").val();
-                    VB_API.saveObjectParam(_object[77], _param_code, value_new)
-                        .done(function (x) {
-                            $(".opt_item[data-code='"+_param_code+"'] a").html(value_new);
-                            _object[_param_code] = value_new;
-                            if(_param_code==85) $("#sensor-settings-wrapper .time").text(value_new);
-                            _value = value_new;
-                            $("#sensor-settings-edit-wrapper .save").addClass("inactive");
-                            __save_parameter(_param_code, value_new);
-                        })
-                        .fail(function (error) {
-                            let errorText = I18N.get(`vbas.error.save_object.${error}`);
-                            if(!errorText) errorText = "Ошибка #" + error;
-                            VD.ShowErrorMessage({
-                                'caption': 'Ошибка сохранения.',
-                                'description': errorText,
-                                'timer': 3000
-                            });
 
-                        });
-                })
             });
         }
+
+
+
+
+
+        function __getFieldEditInfo(code, object_type) {
+            let result = {};
+
+            function myExt(obj, adds) {
+                let result = {};
+                if(!adds) adds = {};
+                let obj2 = typeof adds === "string" ? {type: adds} : adds;
+                if(!obj) obj = {};
+                for(let k in obj) result[k]=obj[k];
+                for(let k in obj2) result[k]=obj2[k];
+                return result;
+            }
+
+            let type_name = VB_OBJECTS_EDIT_PARAMS[code] ? VB_OBJECTS_EDIT_PARAMS[code].type : "string";
+            if(typeof VB_OBJECTS_EDIT_PARAMS[code] === "string") type_name = VB_OBJECTS_EDIT_PARAMS[code];
+            result = myExt(result, VB_OBJECTS_EDIT_PARAMS.default);
+            result = myExt(result, VB_OBJECTS_EDIT_PARAMS["default_"+type_name]);
+            result = myExt(result, VB_OBJECTS_EDIT_PARAMS[code]);
+
+
+
+            if( _.isObject(result.type) ) {
+                result.type = result.type[object_type];
+                result = myExt(result, VB_OBJECTS_EDIT_PARAMS["default_"+result.type]);
+            }
+
+
+
+            return result;
+        }
+
+
+
+
+
+
+        function __setFieldEditor() {
+
+
+            let $field_container = $("#field_param_value");
+
+            let object_type = "folder";
+            _parameters.forEach(item=>{ if(item.code==="79") object_type = item.value; });
+
+            let params = __getFieldEditInfo(_param_code, object_type);
+
+            let filtered_value = _value;
+            if(params['filter']) {
+                let f = params['filter'];
+                if(_.isFunction(f)) filtered_value = f(filtered_value);
+                else if(_.isObject(f) &&  f[filtered_value]!==undefined ) filtered_value = f[filtered_value];
+            }
+
+            let type = params['type'];
+            if(typeof eval("__setFieldEditor_"+type)!=="function") type = "string";
+
+
+            let select_items = [];
+
+            let $input = null;
+            let do_input = ()=> {
+                $input = eval("__setFieldEditor_"+type)($field_container, params, filtered_value, select_items);
+                $input.on("propertychange change click keyup input paste", function () {
+                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", ""+$("#param_value").val()==""+_value);
+                });
+            };
+
+
+            let select = params['select'];
+            if(_.isArray(select)) {
+                select_items = select;
+                do_input();
+            }
+            else if(typeof select === "function") {
+                let r = select();
+                if(r['done']) {
+                    r.done(function (items) {
+                        select_items = items;
+                        do_input();
+                    })
+                } else {
+                    select_items = items;
+                    do_input();
+                }
+            } else do_input();
+
+            function backfilter(value) {
+                let f = params['filter'];
+                if(!_.isObject(f)) return value;
+                for(let key in f) if(f[key]==value) return key;
+                return value;
+            }
+
+
+            $("#sensor-settings-edit-wrapper select").chosen({width: "300px"});
+
+
+            $("#sensor-settings-edit-wrapper .save").click(function () {
+                let value_return = $input.val();
+
+
+                let value_new = backfilter(value_return);
+                VB_API.saveObjectParam(_object[77], _param_code, value_return)
+                    .done(function (x) {
+                        $(".opt_item[data-code='"+ _param_code +"'] a").html(value_new);
+                        _object[_param_code] = value_new;
+                        if(_param_code == 85) $("#sensor-settings-wrapper .time").text(value_new);
+                        _value = value_new;
+                        $("#sensor-settings-edit-wrapper .save").addClass("inactive");
+                        __save_parameter(_param_code, value_new);
+                    })
+
+                    .fail(function (error) {
+                        let errorText = I18N.get(`vbas.error.save_object.${error}`);
+                        if(!errorText) errorText = "Ошибка #" + error;
+                        VD.ShowErrorMessage({
+                            'caption': 'Ошибка сохранения.',
+                            'description': errorText,
+                            'timer': 3000
+                        });
+
+                    });
+            })
+        }
+
+
+
+        function __setFieldEditor_select($fc, params, value, options) {
+            let $inp = $("<select data-placeholder=\"\"></select>");
+            options.forEach(item=>$inp.append("<option"+(item.value===value?" selected":"")+" value='"+item.value+"'>"+item.title+"</option>"));
+            $fc.html($inp);
+            $inp.val(value);
+            $inp.chosen({width: "330px", default_single_text: "Выберите"});
+            return $inp;
+
+        }
+
+
+
+        function __setFieldEditor_bool($fc, params, value, options) {
+            let $inp = $("<select data-placeholder=\"\"></select>");
+            options.forEach(item=>$inp.append("<option"+(item.value===value?" selected":"")+" value='"+item.value+"'>"+item.title+"</option>"));
+            $fc.html($inp);
+            $inp.val(value);
+            $inp.chosen({width: "330px", default_single_text: "Выберите"});
+            return $inp;
+        }
+
+        function __setFieldEditor_bacnet_bool($fc, params, value, options) {
+            let $inp = $("<select data-placeholder=\"\"></select>");
+            options.forEach(item=>$inp.append("<option"+(item.value===value?" selected":"")+" value='"+item.value+"'>"+item.title+"</option>"));
+            $fc.html($inp);
+            $inp.val(value);
+            $inp.chosen({width: "330px", default_single_text: "Выберите"});
+            return $inp;
+        }
+
+
+        function __setFieldEditor_int($fc, params, value, options) {
+            let $inp = $("<input type=\"number\" class=\"left_align\" step=\"1\" min=\"1\" >");
+            $fc.html($inp);
+            $inp.val(value);
+            return $inp;
+        }
+
+
+        function __setFieldEditor_real($fc, params, value, options) {
+            let $inp = $("<input type=\"number\" class=\"left_align\">");
+            $fc.html($inp);
+            $inp.val(value);
+            return $inp;
+        }
+
+
+
+        function __setFieldEditor_string($fc, params, value, options) {
+            let $inp = $("<input type=\"text\" class=\"left_align\">");
+            $fc.html($inp);
+            $inp.val(value);
+            return $inp;
+        }
+
+
+
+
+
     }
+
+
+
+
 
     window.SensorSettings = SensorSettings;
 })();

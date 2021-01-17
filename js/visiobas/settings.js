@@ -179,3 +179,169 @@ window.VD_SETTINGS = {
         return result;
     },
 };
+
+
+
+
+window.VB_OBJECTS_EDIT_PARAMS = {
+    default: {
+        type: "string",
+        empty: true,
+    },
+
+    default_bool: {
+        type: "bool",
+        filter: { "true": 1, "false": 0 },
+        select: [
+            {value: 1, title: "Да"},
+            {value: 0, title: "Нет"}
+        ]
+    },
+
+    default_bacnet_bool: {
+        type: "bool",
+        filter: { "inactive": 0, "active": 1 },
+        select: [
+            {value: 0, title: "Пассивный"},
+            {value: 1, title: "Активный"}
+        ]
+    },
+
+    6: "bacnet_bool",
+    40: "bacnet_bool",
+    22: "real",
+    65: "real",
+    69: "real",
+    106: "real",
+    45: "real",
+    59: "real",
+    25: "real",
+
+    85: {
+        type: {
+            "binary-input": "bacnet_bool",
+            "binary-output": "bacnet_bool",
+            "binary-value": "bacnet_bool",
+            "analog-input": "real",
+            "analog-output": "real",
+            "analog-value": "real"
+        }
+    },
+
+
+    104: {
+        type: {
+            "binary-input": "bool",
+            "binary-output": "bool",
+            "binary-value": "bool",
+            "analog-input": "real",
+            "analog-output": "real",
+            "analog-value": "real"
+        }
+    },
+
+
+
+    36: {
+        type: "select",
+        empty: false,
+        select: [
+            {value: "normal", title: "Normal" },
+            {value: "fault", title: "Fault" },
+            {value: "offnormal", title: "Offnormal" },
+            {value: "high-limit", title: "High limit" },
+            {value: "low-limit", title: "Low limit" },
+            {value: "life-safety-alarm", title: "Life safety alarm" },
+        ],
+    },
+    72: {
+        type: "select",
+        empty: false,
+        select: [
+            {value: "alarm", title: "Alarm" },
+            {value: "event", title: "Event" },
+            {value: "ack-notification", title: "Ack notification" },
+        ],
+    },
+
+    75: "int",
+
+    79: false,
+
+
+    81:"bool",
+
+    84: {
+        type: "select",
+        select: [
+            {value: "normal", title: "Нормальная"},
+            {value: "reverse", title: "Обратная"}
+        ]
+    },
+
+
+    103: {
+        type: "select",
+        empty: true,
+        select: [
+            {value: 'no-fault-detected', title: 'No fault detected'},
+            {value: 'no-sensor', title: 'No sensor'},
+            {value: 'over-range', title:  'Over range'},
+            {value: 'under-range', title: 'Under range'},
+            {value: 'open-loop', title: 'Open loop'},
+            {value: 'shorted-loop', title: 'Shorted loop'},
+            {value: 'no-output', title: 'No output'},
+            {value: 'unreliable-other', title: 'Unreliable other'},
+            {value: 'process-error', title: 'Process error'},
+            {value: 'multi-state-fault', title: 'Multi state fault'},
+            {value: 'configuration-error', title: 'Configuration error'},
+            {value: 'reserved', title: 'Reserved'},
+            {value: 'communication-failure', title: 'Communication failure'},
+            {value: 'member-fault', title: 'Member fault'},
+            {value: 'monitored-object-fault', title: 'Monitored object fault'},
+            {value: 'tripped', title: 'Tripped'}
+        ]
+    },
+    846: {
+        type: "select",
+        empty: false,
+        select: function () {
+            let def = $.Deferred();
+            VB_API.getDevices()
+                .done(function (r) {
+                    let result = [];
+                    r.data.forEach(function (item) {
+                        let title = item['77'].split(".");
+                        title = title[title.length-1];
+                        result.push({
+                            value: item['75'],
+                            title: title
+                        })
+                    });
+                    console.log("result:", result);
+                    def.resolve(result);
+                })
+                .fail(function () {
+                    def.reject();
+                });
+            return def;
+        }
+    },
+    353: {
+        type: "bool",
+        filter: { "true": 1, "false": 0 },
+        select: [
+            {value: 0, title: "Выключить"},
+            {value: 1, title: "Включить"}
+        ]
+    },
+
+    371: {
+        type: "string",
+        filter: function (x) {
+            return _.unescape(x);
+        }
+    }
+};
+
+

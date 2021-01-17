@@ -7516,3 +7516,9 @@ label.input_group_title {
 .sensor_admin .item.chosen-dark  .field {
     justify-content: flex-start!important;
 }
+
+.sensor_admin input::-webkit-outer-spin-button,
+.sensor_admin input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
