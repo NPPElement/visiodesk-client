@@ -7522,3 +7522,26 @@ label.input_group_title {
     -webkit-appearance: none;
     margin: 0;
 }
+
+
+.json_key-autocomplete.ui-autocomplete {
+    z-index: 2;
+    color: white;
+    list-style: none;
+    padding-top: 10px!important;
+    margin-left: -10px;
+    width: 300px;
+
+}
+
+.json_key-autocomplete li {
+    height: 45px;
+    min-height: 45px;
+    font-family: 'SF-PRO-Regular';
+    background: #2F3235;
+}
+
+.json_key-autocomplete li .ui-menu-item-wrapper {
+    line-height: 44px;
+    padding-left: 10px;
+}

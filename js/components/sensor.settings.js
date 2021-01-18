@@ -15,6 +15,8 @@
         const MIN_PRES_VALUE = BACNET_PROPERTY_ID["min-pres-value"];
         const MAX_PRES_VALUE = BACNET_PROPERTY_ID["max-pres-value"];
 
+        const JSON_CODES = ["371"];
+
         /** @type{string} templates dir*/
         let _templatesDir = VB_SETTINGS.htmlDir + "/components";
         /** @type{string} DOM parent id */
@@ -27,6 +29,9 @@
         let _object = null;
         let _param_code = null;
         let _value = null;
+        let _json_value = null;
+        let _json_path = [];
+
 
         let _parameters = null;
 
@@ -41,6 +46,7 @@
         function create(object) {
             _object = object;
             VD.SwitchVisiobasTab('#objects-list', _settingsMainSelector);
+            _json_path = [];
 
             //resolved when getting devices
             let defDevices = $.Deferred();
@@ -143,7 +149,7 @@
          * @param {array} parameters - device options list
          * @param {string} code - option string id
          */
-        function __edit(parameters, code) {
+        function __edit(parameters, code, json_keys) {
             console.log("__edit");
             var option = {};
             for (var i = 0; i < _parameters.length; i++) {
@@ -156,6 +162,20 @@
                 }
             }
 
+
+            
+
+
+            if(JSON_CODES.includes(""+code)) {
+                return __edit_json([]);
+            }
+            // option.value_json = _json_value;
+            // option.json_path = _json_path;
+
+
+
+            
+            
             VD.SwitchVisiobasTab(_settingsMainSelector, _settingsEditSelector);
 
             VB.Load(_templatesDir + "/object.parameters.edit.html", _settingsEditSelector, {
@@ -163,13 +183,38 @@
             }).done(() => {
                 VD.SetVisiobasHistory(_settingsMainSelector, _settingsEditSelector);
                 VD.SetVisiobasAdminSubmenu(_settingsEditSelector);
-
                 __setFieldEditor();
-
-
             });
         }
 
+        
+        function __edit_json(paths) {
+            let option = {};
+            _json_path = paths;
+            if(!paths) paths = [];
+            let json = _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
+
+            console.log("__edit_json: ", paths, json);
+
+            paths.forEach( path=> json = json[path] );
+            _json_value = json;
+
+            console.log("DO JSON: ", _json_value);
+
+            option.json = JSON.parse(JSON.stringify(json));
+            option.paths = paths;
+            console.log("option.edit.json: ", option);
+            VD.SwitchVisiobasTab(_settingsMainSelector, _settingsEditSelector);
+            VB.Load(_templatesDir + "/object.parameters.edit.json.html", _settingsEditSelector, {
+                "option": option
+            }).done(() => {
+                // VD.SetVisiobasHistory(_settingsMainSelector, _settingsEditSelector);
+                VD.SetVisiobasAdminSubmenu(_settingsEditSelector);
+                __setFieldEditor();
+            });
+
+
+        }
 
 
 
@@ -353,6 +398,95 @@
             let $inp = $("<input type=\"text\" class=\"left_align\">");
             $fc.html($inp);
             $inp.val(value);
+            return $inp;
+        }
+
+        function __setFieldEditor_json($fc, params, value, options) {
+            // let $inp = $("<input type=\"text\" class=\"left_align n_json_0\" style='display: none;'>");
+            let $inp = $("<input type=\"text\" class=\"left_align n_json_0\" style__='display: none;'>");
+            $fc.html($inp);
+            console.log("_json_path: ", _json_path);
+            $inp.val(_json_path.join("."));
+            let $root = $(".line2:last");
+            let node_num = 0;
+
+
+            $("#sensor-settings-edit-wrapper .back_json").click(function (event) {
+                console.log("BACK.PATH: ", _json_path);
+                if(_json_path.length>0) {
+                    // event.stopPropagation();
+                    let new_paths = Array.from(_json_path);
+                    new_paths.pop();
+                    console.log("new_paths.BACK: ", new_paths);
+                    __edit_json(new_paths);
+                } else {
+                    // VD.SwitchVisiobasTab(_settingsMainSelector, _settingsEditSelector);
+                    // VD.SetVisiobasHistory(_settingsMainSelector, _settingsEditSelector);
+                    $(_settingsEditSelector).hide();
+                    $(_settingsMainSelector).show();
+                }
+            });
+
+
+            // $( ".json_key" ).attr("autocomplete","on");
+            let autocomplete = [];
+            if(VB_OBJECTS_EDIT_PARAMS[_param_code] && VB_OBJECTS_EDIT_PARAMS[_param_code].autocomplete) {
+                $(".json_key").autocomplete({
+                    source: VB_OBJECTS_EDIT_PARAMS[_param_code].autocomplete,
+                    classes: {"ui-autocomplete": "json_key-autocomplete"}
+                });
+            }
+            // $( ".json_key" ).attr("autocomplete","on");
+
+
+            function appendNode($prev, level, name, value) {
+                let $node = $(`<div><div class="sensor_admin">
+                                <div class="item chosen-dark">
+                                    <div class="field" id="field_param_value">
+                                    <input type="text" class="left_align" value="(${level})${name}">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="line2"><div></div></div>
+                            </div>`);
+                $prev.after($node);
+                return $node;
+            }
+
+
+            // let json = JSON.parse(value);
+            let json = JSON.parse("{\"template\":\"/svg/AHU_X.svg\",\"alias\":\"\",\"replace\":{\"{%ahu%}\":\"Приточная установка AHU-C-1\",\"{%room%}\":\"Бассейн справа (1 этаж)\",\"{%OAT%}\":\"Site:Blok_C/Temperature.AI_45000\"}}");
+
+
+            function showJSON(json, $node, level) {
+                let $node_current = $node;
+                for(let key in json) {
+                    let json_value = json[key];
+                    if(_.isObject(json_value)) {
+                        let $fork_node = appendNode($node_current, level+1, key, true);
+                        showJSON(json_value, $fork_node, level+1);
+                    } else if(_.isArray(json_value)) {
+                        let $array_node = appendNode($node_current, level+1, key, "["+json_value.join(",")+"]");
+                    } else {
+                        let $edit_node = appendNode($node_current, level+1, key, json_value);
+                    }
+                }
+            }
+
+            // showJSON(json, $root,0);
+
+            $(".json_item a[data-key]").click(function () {
+                let key = $(this).attr("data-key");
+                if(true || _.isObject(_json_value[key])) {
+                    let new_path = Array.from(_json_path);
+                    new_path.push(key);
+                    console.log("NEW PATHS: ", new_path);
+
+                    __edit_json(new_path);
+                }
+            });
             return $inp;
         }
 

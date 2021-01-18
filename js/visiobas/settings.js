@@ -337,10 +337,19 @@ window.VB_OBJECTS_EDIT_PARAMS = {
     },
 
     371: {
-        type: "string",
+        type: "json",
         filter: function (x) {
             return _.unescape(x);
-        }
+        },
+        autocomplete: [
+            "template",
+            "alias",
+            "replace",
+            "{%OAT%}",
+            "{%room%}",
+            "{%ahu%}",
+            "T_ROOM"
+        ]
     }
 };
 
