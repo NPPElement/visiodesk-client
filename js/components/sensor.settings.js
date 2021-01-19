@@ -212,7 +212,7 @@
 
             console.log("DO JSON: ", json);
 
-            option.json = JSON.parse(JSON.stringify(json));
+            option.json =  JSON.parse(JSON.stringify(json));
             option.paths = paths;
             console.log("option.edit.json: ", option);
             VD.SwitchVisiobasTab(_settingsMainSelector, _settingsEditSelector);
@@ -411,7 +411,7 @@
                     console.log("FULL_JSON: ", FULL_JSON);
                     console.log("FULL_JSON<SF: ", JSON.stringify( FULL_JSON));
                     // return;
-                    value_return = JSON.stringify( FULL_JSON);
+                    value_return = _.escape(JSON.stringify( FULL_JSON));
                 }
 
 
