@@ -203,7 +203,6 @@
             // let gv = () => _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
 
             let json = gv();
-            json["device_list"] = [100,200,400,600,"Неизвестное устройство"];
             // _value = gv();
 
             console.log("__edit_json: ", paths, json);
