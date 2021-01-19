@@ -28,12 +28,11 @@
 
 
 <% let json = option.json; %>
-<% if ( _.isObject(json) )  { %>
+<% if ( _.isObject(json) && !_.isArray(json) )  { %>
 <div class="opt_list sensor_admin json_item">
     <% for (let key in option.json) { %>
     <div class="opt_item item">
-<!--        <span class="label" data-key="<%= key %>"><%= key %></span>-->
-        <div class="field"><input type="text" class="left_align json_key" value="<%= key %>" autocomplete="on"></div>
+        <div class="field"><input type="text" class="left_align json_key" data-json_key="<%= key %>" data-value_origin="<%= key %>" value="<%= key %>" autocomplete="on"></div>
         <% if (_.isObject(json[key])) { %>
         <a data-key="<%= key %>" title="<%= json[key] %>"></a>
         <% } else { %>
@@ -45,11 +44,29 @@
 </div>
 
 
+<% } else if ( _.isArray(json) ) { %>
+<div class="opt_list sensor_admin json_item">
+
+    <% for (let key=0; key < option.json.length; key++) { %>
+    <div class="opt_item item">
+        <span class="label">#<%= key %></span>
+        <% if (_.isObject(json[key])) { %>
+        <a data-key="<%= key %>" title="<%= json[key] %>"></a>
+        <% } else { %>
+        <a data-key="<%= key %>" data-index="true" data-num="<%= _.isString(json[key]) ? '' : 'true' %>" title="<%= json[key] %>"><%= json[key] %></a>
+        <% } %>
+    </div>
+    <div class="line2"><div></div></div>
+    <% } %>
+</div>
+
+
+
 <% } else { %>
-<div class="sensor_admin">
+<div class="sensor_admin json_item">
     <div class="item">
-        <div class="field" id__="field_param_value">
-            <input type="text" class="left_align" value="<%= option.json  %>">
+        <div class="field">
+            <input type="text" class="left_align" data-value_origin="<%= option.json %>" value="<%= option.json  %>">
             <a class="clear"></a>
         </div>
     </div>

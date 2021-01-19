@@ -32,6 +32,7 @@
         let _json_value = null;
         let _json_path = [];
 
+        let gv = () => _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
 
         let _parameters = null;
 
@@ -139,6 +140,14 @@
                 if (_parameters[i]['code'] == code) {
                     _param_code = code;
                     _parameters[i].value = value;
+
+                    if(_.isArray(_json_path)) {
+                        let json = gv();
+                        _json_path.forEach( path=> json = json[path] );
+                        _json_value = json;
+                    }
+
+
                     return;
                 }
             }
@@ -165,12 +174,11 @@
 
             
 
-
+            _json_path = false;
             if(JSON_CODES.includes(""+code)) {
+                _json_path = [];
                 return __edit_json([]);
             }
-            // option.value_json = _json_value;
-            // option.json_path = _json_path;
 
 
 
@@ -187,19 +195,23 @@
             });
         }
 
-        
+
         function __edit_json(paths) {
             let option = {};
             _json_path = paths;
             if(!paths) paths = [];
-            let json = _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
+            // let gv = () => _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
+
+            let json = gv();
+            json["device_list"] = [100,200,400,600,"Неизвестное устройство"];
+            // _value = gv();
 
             console.log("__edit_json: ", paths, json);
 
             paths.forEach( path=> json = json[path] );
             _json_value = json;
 
-            console.log("DO JSON: ", _json_value);
+            console.log("DO JSON: ", json);
 
             option.json = JSON.parse(JSON.stringify(json));
             option.paths = paths;
@@ -282,7 +294,17 @@
             let do_input = ()=> {
                 $input = eval("__setFieldEditor_"+type)($field_container, params, filtered_value, select_items);
                 $input.on("propertychange change click keyup input paste", function () {
-                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", ""+$("#param_value").val()==""+_value);
+                    let json_key = $(this).attr("data-json_key"); // Редактируем ключ
+                    let isArrayValue = $(this).attr("data-key");
+                    let data_key = "" + $(this).attr("data-key");
+                    data_key = data_key.length>0?parseInt(data_key) : false;
+                    let valueIsNum = !!$(this).attr("data-num");
+                    let change = false;
+                    $input.each(function (i, e) {
+                        change|=$(e).attr("data-value_origin")!=$(e).val();
+                    });
+
+                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", !change);
                 });
             };
 
@@ -317,7 +339,81 @@
 
 
             $("#sensor-settings-edit-wrapper .save").click(function () {
-                let value_return = $input.val();
+                // let value_return = $input.val();
+                let value_return = null;
+
+                if(_json_path===false) { // Обычные поля
+                    value_return = $input.val();
+                } else {
+                    // Все JSON поня
+                    let new_json_node = _json_value;
+                    if(_.isArray(_json_value)) { // Ситуация пока не доступна, если не сделать однвременное редактирование элементов массива
+                        let new_array = Array.from(_json_value);
+                        $input.each(function (idx, e) {
+                            let array_index = parseInt( $(e).attr("data-key") );
+                            let oldItemValue = $(e).attr("data-value_origin");
+                            let newItemValue = $(e).val();
+                            if($(e).attr("data-num")) {
+                                oldItemValue = parseFloat(oldItemValue);
+                                newItemValue = parseFloat(newItemValue);
+                            }
+                            if(oldItemValue!==newItemValue) new_array[array_index] = newItemValue;
+                        });
+                        console.log("new_array: ", new_array);
+                        new_json_node = new_array;
+                    } else if(_.isObject(_json_value)) { // Тут будет только редактирование ключей, т.к. не доступны значения
+                        let new_keys = {};
+                        let old_keys = [];
+                        $input.each(function (idx, e) {
+                            let oldKey = $(e).attr("data-value_origin");
+                            let newKey = $(e).val();
+                            if(oldKey!==newKey) {
+                                new_keys[oldKey] = newKey;
+                                old_keys.push(oldKey);
+                            }
+                        });
+                        let new_json_value = _json_value;
+                        for(let k in _json_value) {
+                            if(new_keys[k]) new_json_value[new_keys[k]] = _json_value[k];
+                            else new_json_value[k] =  _json_value[k];
+                        }
+                        old_keys.forEach(ok=>delete new_json_value[ok]);
+                        console.log("new value by keys: ", new_json_value );
+                        new_json_node = new_json_value;
+
+                    } else { // Ну а тут редактироваться будут именно значения
+                        let oldValue =$input.attr("data-value_origin");
+                        let newValue = $input.val();
+                        if($input.attr("data-num")) {
+                            oldValue = parseFloat(oldValue);
+                            newValue = parseFloat(newValue);
+                        }
+                        if(oldValue!==newValue) {
+                            console.log("NEW single value: ", newValue);
+                        }
+                        new_json_node = newValue;
+                    }
+                    console.log("_value: ", _value);
+                    console.log("_json_value: ", _json_value);
+                    console.log("_json_path: ", _json_path);
+
+                    let FULL_JSON = gv();
+                    let scan_json = FULL_JSON;
+                    if(_json_path.length>0) {
+                        for (let i = 0; i < _json_path.length; i++) {
+                            let k = _json_path[i];
+                            if (i < _json_path.length - 1) scan_json = scan_json[k];
+                            else scan_json[k] = new_json_node;
+                        }
+                    } else {
+                        FULL_JSON = new_json_node;
+                    }
+
+                    console.log("FULL_JSON: ", FULL_JSON);
+                    console.log("FULL_JSON<SF: ", JSON.stringify( FULL_JSON));
+                    // return;
+                    value_return = JSON.stringify( FULL_JSON);
+                }
 
 
                 let value_new = backfilter(value_return);
@@ -347,7 +443,7 @@
 
 
         function __setFieldEditor_select($fc, params, value, options) {
-            let $inp = $("<select data-placeholder=\"\"></select>");
+            let $inp = $("<select data-placeholder=\"\" data-value_origin='"+value+"'></select>");
             options.forEach(item=>$inp.append("<option"+(item.value===value?" selected":"")+" value='"+item.value+"'>"+item.title+"</option>"));
             $fc.html($inp);
             $inp.val(value);
@@ -359,7 +455,7 @@
 
 
         function __setFieldEditor_bool($fc, params, value, options) {
-            let $inp = $("<select data-placeholder=\"\"></select>");
+            let $inp = $("<select data-placeholder=\"\" data-value_origin='"+value+"'></select>");
             options.forEach(item=>$inp.append("<option"+(item.value===value?" selected":"")+" value='"+item.value+"'>"+item.title+"</option>"));
             $fc.html($inp);
             $inp.val(value);
@@ -368,7 +464,7 @@
         }
 
         function __setFieldEditor_bacnet_bool($fc, params, value, options) {
-            let $inp = $("<select data-placeholder=\"\"></select>");
+            let $inp = $("<select data-placeholder=\"\" data-value_origin='"+value+"'></select>");
             options.forEach(item=>$inp.append("<option"+(item.value===value?" selected":"")+" value='"+item.value+"'>"+item.title+"</option>"));
             $fc.html($inp);
             $inp.val(value);
@@ -378,7 +474,7 @@
 
 
         function __setFieldEditor_int($fc, params, value, options) {
-            let $inp = $("<input type=\"number\" class=\"left_align\" step=\"1\" min=\"1\" >");
+            let $inp = $("<input type=\"number\" class=\"left_align\" step=\"1\" min=\"1\"  data-value_origin='"+value+"'>");
             $fc.html($inp);
             $inp.val(value);
             return $inp;
@@ -395,7 +491,7 @@
 
 
         function __setFieldEditor_string($fc, params, value, options) {
-            let $inp = $("<input type=\"text\" class=\"left_align\">");
+            let $inp = $("<input type=\"text\" class=\"left_align\" data-value_origin='"+value+"'>");
             $fc.html($inp);
             $inp.val(value);
             return $inp;
@@ -403,12 +499,8 @@
 
         function __setFieldEditor_json($fc, params, value, options) {
             // let $inp = $("<input type=\"text\" class=\"left_align n_json_0\" style='display: none;'>");
-            let $inp = $("<input type=\"text\" class=\"left_align n_json_0\" style__='display: none;'>");
-            $fc.html($inp);
-            console.log("_json_path: ", _json_path);
-            $inp.val(_json_path.join("."));
-            let $root = $(".line2:last");
-            let node_num = 0;
+            let $inp = $(".json_item input");
+            console.log("_json_path: ", _json_path, "input_count: "+$inp.length);
 
 
             $("#sensor-settings-edit-wrapper .back_json").click(function (event) {
@@ -420,23 +512,18 @@
                     console.log("new_paths.BACK: ", new_paths);
                     __edit_json(new_paths);
                 } else {
-                    // VD.SwitchVisiobasTab(_settingsMainSelector, _settingsEditSelector);
-                    // VD.SetVisiobasHistory(_settingsMainSelector, _settingsEditSelector);
                     $(_settingsEditSelector).hide();
                     $(_settingsMainSelector).show();
                 }
             });
 
-
-            // $( ".json_key" ).attr("autocomplete","on");
-            let autocomplete = [];
             if(VB_OBJECTS_EDIT_PARAMS[_param_code] && VB_OBJECTS_EDIT_PARAMS[_param_code].autocomplete) {
                 $(".json_key").autocomplete({
                     source: VB_OBJECTS_EDIT_PARAMS[_param_code].autocomplete,
                     classes: {"ui-autocomplete": "json_key-autocomplete"}
                 });
             }
-            // $( ".json_key" ).attr("autocomplete","on");
+
 
 
             function appendNode($prev, level, name, value) {
@@ -456,36 +543,17 @@
             }
 
 
-            // let json = JSON.parse(value);
-            let json = JSON.parse("{\"template\":\"/svg/AHU_X.svg\",\"alias\":\"\",\"replace\":{\"{%ahu%}\":\"Приточная установка AHU-C-1\",\"{%room%}\":\"Бассейн справа (1 этаж)\",\"{%OAT%}\":\"Site:Blok_C/Temperature.AI_45000\"}}");
-
-
-            function showJSON(json, $node, level) {
-                let $node_current = $node;
-                for(let key in json) {
-                    let json_value = json[key];
-                    if(_.isObject(json_value)) {
-                        let $fork_node = appendNode($node_current, level+1, key, true);
-                        showJSON(json_value, $fork_node, level+1);
-                    } else if(_.isArray(json_value)) {
-                        let $array_node = appendNode($node_current, level+1, key, "["+json_value.join(",")+"]");
-                    } else {
-                        let $edit_node = appendNode($node_current, level+1, key, json_value);
-                    }
-                }
-            }
-
-            // showJSON(json, $root,0);
 
             $(".json_item a[data-key]").click(function () {
+                console.log("click");
                 let key = $(this).attr("data-key");
-                if(true || _.isObject(_json_value[key])) {
-                    let new_path = Array.from(_json_path);
-                    new_path.push(key);
-                    console.log("NEW PATHS: ", new_path);
+                let isIndex = !!$(this).attr("data-num");
+                let new_path = Array.from(_json_path);
+                console.log("NEW PATHS"+(isIndex?".INDEX":"")+": ", new_path);
+                if(isIndex) key = parseInt(key);
+                new_path.push(key);
 
-                    __edit_json(new_path);
-                }
+                __edit_json(new_path);
             });
             return $inp;
         }
