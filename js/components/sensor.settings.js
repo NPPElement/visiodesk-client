@@ -31,6 +31,7 @@
         let _value = null;
         let _json_value = null;
         let _json_path = [];
+        let _json_modify = false;
 
         let gv = () => _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
 
@@ -135,6 +136,26 @@
         }
 
 
+        function __objectEquals(obj1, obj2) {
+            if(_.isNumber(obj1) || _.isNumber(obj1) ) {
+                return obj1===obj2
+            }
+
+            if(_.isArray(obj1)) {
+                if(!_.isArray(obj2) || obj1.length!=obj2.length) return false;
+                for(let i=0;i<obj1.length;i++) if(! __objectEquals(obj1[i], obj2[i])) return false
+                return true;
+            }
+
+            if(_.isObject(obj1)) {
+                if(!_.isObject(obj2)) return false;
+                if(! __objectEquals(_.keys(obj1), _.keys(obj2)) ) return false;
+            }
+
+            for(let key in obj1) if( !__objectEquals(obj1[key], obj2[key]) ) return false;
+            return true;
+        }
+
         function __save_parameter(code, value) {
             for (var i = 0; i < _parameters.length; i++) {
                 if (_parameters[i]['code'] == code) {
@@ -150,6 +171,32 @@
 
                     return;
                 }
+            }
+        }
+
+
+        function _setJsonParameter(key, value) {
+            console.log("_setJsonParameter: ", key, value);
+            let t = _json_modify === false ? gv() : _json_modify;
+            console.log("_json_modify: ", _json_modify, _json_path);
+            for(let i=0;i<_json_path.length;i++) {
+                let k = _json_path[i];
+                if(t[k]===undefined) t[k] = {};
+                t = t[k];
+            }
+
+            console.log("FIND.t: ", t);
+
+            if(_.isArray(t)) {
+
+                t.push(value);
+                console.log("IS_ARRAY, new.t ", t);
+            } else  if(key===null) {
+                t = [value];
+            } else {
+
+                if(value===null) delete t[key];
+                else t[key] = value;
             }
         }
 
@@ -202,7 +249,7 @@
             if(!paths) paths = [];
             // let gv = () => _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
 
-            let json = gv();
+            let json = _json_modify ? _json_modify : gv();
             // _value = gv();
 
             console.log("__edit_json: ", paths, json);
@@ -303,7 +350,7 @@
                         change|=$(e).attr("data-value_origin")!=$(e).val();
                     });
 
-                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", !change);
+                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", !change && !_json_modify);
                 });
             };
 
@@ -526,25 +573,14 @@
                 });
             }
 
+            let VALS_DEFAULT = {
+                "str": "Новое значение",
+                "num": 0,
+                "arr": [],
+                "obj": {},
+            };
 
-
-            function appendNode($prev, level, name, value) {
-                let $node = $(`<div><div class="sensor_admin">
-                                <div class="item chosen-dark">
-                                    <div class="field" id="field_param_value">
-                                    <input type="text" class="left_align" value="(${level})${name}">
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="line2"><div></div></div>
-                            </div>`);
-                $prev.after($node);
-                return $node;
-            }
-
-
+            let $popup = $("#popup_select_node_type");
 
             $(".json_item a[data-key]").click(function () {
                 console.log("click");
@@ -557,6 +593,125 @@
 
                 __edit_json(new_path);
             });
+
+
+            // $(".select_node_type").selectmenu();
+            $("#popup_select_node_type").hide();
+
+            let ed_key = false;
+
+            $(".json_node .json_node_type").click(function () {
+                let $t = $(this);
+                ed_key = $t.closest(".json_node").attr("data-item-key");
+                console.log("ed_key: ", ed_key);
+                let os = $t.offset();
+                $popup.show();
+                $popup.offset({top: os.top+40, left: os.left-10});
+            });
+
+            $("#popup_select_node_type > div > div").click(function () {
+                let action = $(this).attr("data-action");
+                switch (action) {
+                    case "del":
+                        if(ed_key) {
+                            let current_json  = _json_modify ? _json_modify : gv();
+                            delete current_json[ed_key];
+                            _json_modify = current_json;
+                            __edit_json(_json_path);
+                        }
+                        break;
+                    case "str":
+                        _setJsonParameter(ed_key, VALS_DEFAULT["str"]);
+                        __edit_json(_json_path);
+                        break;
+                    case "num":
+                        _setJsonParameter(ed_key, VALS_DEFAULT["num"]);
+                        __edit_json(_json_path);
+                        break;
+                    case "obj":
+                        _setJsonParameter(ed_key, VALS_DEFAULT["obj"]);
+                        __edit_json(_json_path);
+                        break;
+                    case "arr":
+                        _setJsonParameter(ed_key, VALS_DEFAULT["arr"]);
+                        __edit_json(_json_path);
+                        break;
+                    case "cancel":
+                        break;
+                }
+                $popup.hide();
+            });
+
+            $(".select_node_add_type .json_node_type").click(function () {
+                let $t = $(this);
+
+                let nodeType = $t.attr("data-type");
+                let new_value = false;
+
+
+                if(_json_modify===false) _json_modify = gv();
+                let suf = "";
+                // while (_json_modify['new_node'+suf]!==undefined) { suf = suf ? suf+1 : 2; }
+
+
+                /*
+                var _json_modify = {
+                    a: 12,
+                    b: {
+                        c: 6
+                    }
+                };
+                nodeType = "key";
+                var _json_path = ["b", "c"];
+                new_vals = { key: "Новое значение" };
+                suf = "";
+                */
+
+
+
+                if(_json_path.length>0) {
+                    console.log("_json_path._: ", _json_path);
+                    let tmp = _json_modify;
+                    for(let i=0;i<_json_path.length;i++) tmp = tmp[_json_path[i]];
+                    suf="";
+                    while (tmp['new_node'+suf]!==undefined) { suf = suf ? suf+1 : 2; }
+                    // tmp['new_node'+suf] = VALS_DEFAULT[nodeType];
+                    _setJsonParameter('new_node'+suf, VALS_DEFAULT[nodeType]);
+                } else {
+                    console.log("_json_path.0: ");
+                    while (_json_modify['new_node'+suf]!==undefined) { suf = suf ? suf+1 : 2; }
+                    // _json_modify['new_node'+suf] = VALS_DEFAULT[nodeType];
+                    _setJsonParameter('new_node'+suf, VALS_DEFAULT[nodeType]);
+                }
+
+
+                console.log("_json_modify: ", _json_modify);
+
+
+                __edit_json(_json_path);
+                /*
+                $(".json_item").append(`
+                    <div class="opt_item item json_node">
+                    <a class="json_node_type" title="Строка">$</a>
+                    <div class="field">
+                        <input type="text" class="left_align json_key" data-json_key="newNode" data-value_origin="newNode" value="newNode" autocomplete="on">
+                    </div>
+                    <div class="line2"><div></div></div>
+                    </div>`);
+                */
+                console.log("nodeType: ", nodeType);
+            });
+
+
+            $("body").mousedown(function (e) {
+                let xy0 = $popup.offset();
+                if( Math.abs(xy0.left + 75 - e.pageX) > 100 ||  Math.abs(xy0.top + 75 - e.pageY) > 100) {
+                    $popup.hide();
+                }
+            });
+
+            $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", !_json_modify || __objectEquals(gv(), _json_modify) );
+
             return $inp;
         }
 

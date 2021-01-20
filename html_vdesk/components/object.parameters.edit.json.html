@@ -12,27 +12,26 @@
 <div class="pref_delimiter"></div>
 <div class="line2"><div></div></div>
 
-<!--
-<div class="sensor_admin">
-    <div class="item">
-        <div class="field" id="field_param_value">
-            <input type="text" class="left_align" id="param_value" value="<%= option.value %>">
-            <a class="clear"></a>
-        </div>
-    </div>
-</div>
-
-<div class="line2"><div></div></div>
-
--->
 
 
 <% let json = option.json; %>
 <% if ( _.isObject(json) && !_.isArray(json) )  { %>
 <div class="opt_list sensor_admin json_item">
     <% for (let key in option.json) { %>
-    <div class="opt_item item">
-        <div class="field"><input type="text" class="left_align json_key" data-json_key="<%= key %>" data-value_origin="<%= key %>" value="<%= key %>" autocomplete="on"></div>
+    <div class="opt_item item json_node" data-item-key="<%= key %>">
+        <% if (_.isArray(json[key])) { %>
+        <a class="json_node_type" title="Массив значений">[]</a>
+        <% } else if (_.isObject(json[key])) { %>
+        <a class="json_node_type" title="Объект">{}</a>
+        <% } else if (_.isNumber(json[key])) { %>
+        <a class="json_node_type" title="Число">#</a>
+        <% } else { %>
+        <a class="json_node_type" title="Строка">$</a>
+        <% } %>
+        <div class="field">
+            <input type="text" class="left_align json_key" data-json_key="<%= key %>" data-value_origin="<%= key %>" value="<%= key %>" autocomplete="on">
+        </div>
+
         <% if (_.isObject(json[key])) { %>
         <a data-key="<%= key %>" title="<%= json[key] %>"></a>
         <% } else { %>
@@ -41,6 +40,8 @@
     </div>
     <div class="line2"><div></div></div>
     <% } %>
+
+
 </div>
 
 
@@ -62,6 +63,8 @@
 
 
 
+
+
 <% } else { %>
 <div class="sensor_admin json_item">
     <div class="item">
@@ -75,3 +78,33 @@
 <div class="line2"><div></div></div>
 <% } %>
 
+
+
+<% if ( _.isArray(json) ||  _.isObject(json)) { %>
+<div class="pref_delimiter"></div>
+<div class="line2"><div></div></div>
+
+<div class="opt_item select_node_add_type">
+    <span class="label">Добавить узел: </span>
+    <a class="json_node_type" data-type="str" title="Добавить строковый параметр">$</a>
+    <a class="json_node_type" data-type="num" title="Добавить числовой параметр">#</a>
+    <a class="json_node_type" data-type="arr" title="Добавить массив">[]</a>
+    <a class="json_node_type" data-type="obj" title="Добавно объект">{}</a>
+</div>
+<div class="line2"><div></div></div>
+<% } %>
+
+
+
+
+<div id="popup_select_node_type">
+    <div>
+        <div data-action="del"><span>x</span> удалить</div>
+        <div data-action="str"><span>$</span> строка</div>
+        <div data-action="num"><span>#</span>  число</div>
+        <div data-action="obj"><span>{}</span> объект</div>
+        <div data-action="arr"><span>[]</span> массив</div>
+        <div data-action="cancel"><span></span> [отмена]</div>
+    </div>
+
+</div>
