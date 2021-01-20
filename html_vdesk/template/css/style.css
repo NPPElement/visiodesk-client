@@ -7600,3 +7600,12 @@ label.input_group_title {
     text-decoration: underline;
     /*border: 1px solid #888;*/
 }
+
+.json_idx {
+    color: white;
+    /*margin-left: 8px;*/
+    width: 22px;
+    text-align: right;
+    display: inline-block
+}
+

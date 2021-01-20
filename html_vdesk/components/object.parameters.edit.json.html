@@ -49,8 +49,22 @@
 <div class="opt_list sensor_admin json_item">
 
     <% for (let key=0; key < option.json.length; key++) { %>
-    <div class="opt_item item">
-        <span class="label">#<%= key %></span>
+    <div class="opt_item json_node item" data-item-key="<%= key %>">
+
+        <% if (_.isArray(json[key])) { %>
+        <a class="json_node_type" title="Массив значений">[] <span class="json_idx"><%= key %></span></a>
+        <% } else if (_.isObject(json[key])) { %>
+        <a class="json_node_type" title="Объект">{} <span class="json_idx"><%= key %></span></a>
+        <% } else if (_.isNumber(json[key])) { %>
+        <a class="json_node_type" title="Число"># <span class="json_idx"><%= key %></span></a>
+        <% } else { %>
+        <a class="json_node_type" title="Строка">$ <span class="json_idx"><%= key %></span></a>
+        <% } %>
+
+
+<!-- align-items: -->
+
+<!--        <span class="label">#<%= key %></span>-->
         <% if (_.isObject(json[key])) { %>
         <a data-key="<%= key %>" title="<%= json[key] %>"></a>
         <% } else { %>

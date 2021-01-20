@@ -137,7 +137,12 @@
 
 
         function __objectEquals(obj1, obj2) {
+            // console.log("__objectEquals: ", obj1, obj2);
             if(_.isNumber(obj1) || _.isNumber(obj1) ) {
+                return obj1===obj2
+            }
+
+            if(_.isString(obj1) || _.isString(obj1) ) {
                 return obj1===obj2
             }
 
@@ -152,7 +157,14 @@
                 if(! __objectEquals(_.keys(obj1), _.keys(obj2)) ) return false;
             }
 
-            for(let key in obj1) if( !__objectEquals(obj1[key], obj2[key]) ) return false;
+            for(let key in obj1) {
+                if(!obj1.hasOwnProperty(key)) {
+                    // console.log("skip: "+key);
+                    continue;
+                }
+                // console.log("find: "+key);
+                if( !__objectEquals(obj1[key], obj2[key]) ) return false;
+            }
             return true;
         }
 
@@ -177,20 +189,22 @@
 
         function _setJsonParameter(key, value) {
             console.log("_setJsonParameter: ", key, value);
-            let t = _json_modify === false ? gv() : _json_modify;
-            console.log("_json_modify: ", _json_modify, _json_path);
+            if(_json_modify===false) _json_modify = gv();
+            let t = _json_modify;
             for(let i=0;i<_json_path.length;i++) {
                 let k = _json_path[i];
                 if(t[k]===undefined) t[k] = {};
                 t = t[k];
             }
 
-            console.log("FIND.t: ", t);
 
             if(_.isArray(t)) {
-
-                t.push(value);
-                console.log("IS_ARRAY, new.t ", t);
+                if(key!==false) {
+                    t[key] = value;
+                }
+                else {
+                    t.push(value);
+                }
             } else  if(key===null) {
                 t = [value];
             } else {
@@ -646,42 +660,36 @@
                 let $t = $(this);
 
                 let nodeType = $t.attr("data-type");
-                let new_value = false;
 
 
                 if(_json_modify===false) _json_modify = gv();
                 let suf = "";
-                // while (_json_modify['new_node'+suf]!==undefined) { suf = suf ? suf+1 : 2; }
-
-
-                /*
-                var _json_modify = {
-                    a: 12,
-                    b: {
-                        c: 6
-                    }
-                };
-                nodeType = "key";
-                var _json_path = ["b", "c"];
-                new_vals = { key: "Новое значение" };
-                suf = "";
-                */
-
-
 
                 if(_json_path.length>0) {
                     console.log("_json_path._: ", _json_path);
-                    let tmp = _json_modify;
-                    for(let i=0;i<_json_path.length;i++) tmp = tmp[_json_path[i]];
-                    suf="";
-                    while (tmp['new_node'+suf]!==undefined) { suf = suf ? suf+1 : 2; }
-                    // tmp['new_node'+suf] = VALS_DEFAULT[nodeType];
-                    _setJsonParameter('new_node'+suf, VALS_DEFAULT[nodeType]);
+                    if(_.isArray( _json_value)) {
+                        _setJsonParameter(false, VALS_DEFAULT[nodeType]);
+                    } else {
+                        suf = "";
+                        let tmp = _json_modify;
+                        for(let i=0;i<_json_path.length;i++) tmp = tmp[_json_path[i]];
+                        while (tmp['new_node' + suf] !== undefined) {
+                            suf = suf ? suf + 1 : 2;
+                        }
+                        // tmp['new_node'+suf] = VALS_DEFAULT[nodeType];
+                        _setJsonParameter('new_node' + suf, VALS_DEFAULT[nodeType]);
+                    }
                 } else {
                     console.log("_json_path.0: ");
-                    while (_json_modify['new_node'+suf]!==undefined) { suf = suf ? suf+1 : 2; }
-                    // _json_modify['new_node'+suf] = VALS_DEFAULT[nodeType];
-                    _setJsonParameter('new_node'+suf, VALS_DEFAULT[nodeType]);
+                    if(_.isArray( _json_value)) {
+                        _setJsonParameter(false, VALS_DEFAULT[nodeType]);
+                    } else {
+                        while (_json_modify['new_node' + suf] !== undefined) {
+                            suf = suf ? suf + 1 : 2;
+                        }
+                        // _json_modify['new_node'+suf] = VALS_DEFAULT[nodeType];
+                        _setJsonParameter('new_node' + suf, VALS_DEFAULT[nodeType]);
+                    }
                 }
 
 
