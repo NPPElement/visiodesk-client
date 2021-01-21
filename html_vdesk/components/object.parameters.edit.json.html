@@ -83,7 +83,7 @@
 <div class="sensor_admin json_item">
     <div class="item">
         <div class="field">
-            <input type="text" class="left_align" data-value_origin="<%= option.json %>" value="<%= option.json  %>">
+            <input type="text" class="left_align json_scalar_value<%= _.isNumber(option.json) ? ' json_num': ' json_str' %>" data-scalar_key="<%= option.scalar_key %>" data-value_origin="<%= option.json %>" value="<%= option.json  %>">
             <a class="clear"></a>
         </div>
     </div>

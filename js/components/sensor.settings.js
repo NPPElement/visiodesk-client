@@ -17,6 +17,8 @@
 
         const JSON_CODES = ["371"];
 
+        const _DO_DELETE = "<<!Do_DeLeTe!>>";
+
         /** @type{string} templates dir*/
         let _templatesDir = VB_SETTINGS.htmlDir + "/components";
         /** @type{string} DOM parent id */
@@ -33,7 +35,7 @@
         let _json_path = [];
         let _json_modify = false;
 
-        let gv = () => _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
+        let gv = () => _json_path!==false && _value.indexOf("{")!==-1 && _value.indexOf("}")!==-1 ? JSON.parse(_.unescape(_value)) : {};
 
         let _parameters = null;
 
@@ -191,16 +193,23 @@
             console.log("_setJsonParameter: ", key, value);
             if(_json_modify===false) _json_modify = gv();
             let t = _json_modify;
+            let prev = _json_modify;
             for(let i=0;i<_json_path.length;i++) {
                 let k = _json_path[i];
                 if(t[k]===undefined) t[k] = {};
+                if(prev[k]===undefined) prev[k] = {};
                 t = t[k];
+                // if(i<_json_path)
             }
 
 
             if(_.isArray(t)) {
                 if(key!==false) {
-                    t[key] = value;
+                    if(value===_DO_DELETE) {
+                        t.splice(key, 1);
+                        console.log("_DO_DELETE 1, ", t, _json_modify);
+                    }
+                    else t[key] = value;
                 }
                 else {
                     t.push(value);
@@ -209,7 +218,10 @@
                 t = [value];
             } else {
 
-                if(value===null) delete t[key];
+                if(value===_DO_DELETE) {
+                    console.log("_DO_DELETE 2");
+                    delete t[key];
+                }
                 else t[key] = value;
             }
         }
@@ -240,6 +252,8 @@
                 _json_path = [];
                 return __edit_json([]);
             }
+
+            _json_path = false;
 
 
 
@@ -274,6 +288,8 @@
             console.log("DO JSON: ", json);
 
             option.json =  JSON.parse(JSON.stringify(json));
+            option.scalar_key = _json_path && _json_path.length ? _json_path[_json_path.length-1] : "";
+
             option.paths = paths;
             console.log("option.edit.json: ", option);
             VD.SwitchVisiobasTab(_settingsMainSelector, _settingsEditSelector);
@@ -324,9 +340,6 @@
 
 
 
-
-
-
         function __setFieldEditor() {
 
 
@@ -351,23 +364,48 @@
             let select_items = [];
 
             let $input = null;
+
+
+
+
+
+
+
             let do_input = ()=> {
                 $input = eval("__setFieldEditor_"+type)($field_container, params, filtered_value, select_items);
                 $input.on("propertychange change click keyup input paste", function () {
                     let json_key = $(this).attr("data-json_key"); // Редактируем ключ
                     let isArrayValue = $(this).attr("data-key");
                     let data_key = "" + $(this).attr("data-key");
-                    data_key = data_key.length>0?parseInt(data_key) : false;
+                    data_key = data_key.length>0 ? parseInt(data_key) : false;
                     let valueIsNum = !!$(this).attr("data-num");
                     let change = false;
                     $input.each(function (i, e) {
                         change|=$(e).attr("data-value_origin")!=$(e).val();
+
+                        let isScalarValue = $(e).hasClass("json_scalar_value");
+                        if(isScalarValue) {
+                            let scalarKey = $(e).attr("data-scalar_key");
+                            _setJsonParameter(scalarKey, $(e).hasClass("json_num") ? parseFloat( $(e).val()) :  $(e).val());
+                        }
+
+
+
+
                     });
 
-                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", !change && !_json_modify);
+
+                    let _origin = gv();
+
+                    console.log("CHANGE: ", change);
+                    $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", !change && __objectEquals( _json_modify ? _json_modify : _origin, _origin ));
                 });
             };
 
+
+            function _storeInputs() {
+
+            }
 
             let select = params['select'];
             if(_.isArray(select)) {
@@ -396,6 +434,10 @@
 
 
             $("#sensor-settings-edit-wrapper select").chosen({width: "300px"});
+
+
+
+
 
 
             $("#sensor-settings-edit-wrapper .save").click(function () {
@@ -443,8 +485,9 @@
 
                     } else { // Ну а тут редактироваться будут именно значения
                         let oldValue =$input.attr("data-value_origin");
+                        // $(e).hasClass("json_num") ? parseFloat( $(e).val()) :  $(e).val()
                         let newValue = $input.val();
-                        if($input.attr("data-num")) {
+                        if($input.attr("data-num") || $input.hasClass("json_num")) {
                             oldValue = parseFloat(oldValue);
                             newValue = parseFloat(newValue);
                         }
@@ -488,6 +531,16 @@
                         _value = value_new;
                         $("#sensor-settings-edit-wrapper .save").addClass("inactive");
                         __save_parameter(_param_code, value_new);
+
+
+                        if(_json_path!==false) {
+                            console.log("_value", _value);
+                            console.log("_json_modify", _json_modify);
+                            console.log("_json_path", _json_path);
+                            console.log("_json_value", _json_value);
+                            _json_modify = false;
+                        }
+
                     })
 
                     .fail(function (error) {
@@ -631,6 +684,7 @@
                             let current_json  = _json_modify ? _json_modify : gv();
                             delete current_json[ed_key];
                             _json_modify = current_json;
+                            _setJsonParameter(ed_key, _DO_DELETE);
                             __edit_json(_json_path);
                         }
                         break;
