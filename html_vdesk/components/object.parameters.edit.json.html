@@ -46,7 +46,7 @@
 
 
 <% } else if ( _.isArray(json) ) { %>
-<div class="opt_list sensor_admin json_item">
+<div class="opt_list sensor_admin json_item sortable">
 
     <% for (let key=0; key < option.json.length; key++) { %>
     <div class="opt_item json_node item" data-item-key="<%= key %>">
@@ -60,18 +60,13 @@
         <% } else { %>
         <a class="json_node_type" title="Строка">$ <span class="json_idx"><%= key %></span></a>
         <% } %>
-
-
-<!-- align-items: -->
-
-<!--        <span class="label">#<%= key %></span>-->
         <% if (_.isObject(json[key])) { %>
         <a data-key="<%= key %>" title="<%= json[key] %>"></a>
         <% } else { %>
         <a data-key="<%= key %>" data-index="true" data-num="<%= _.isString(json[key]) ? '' : 'true' %>" title="<%= json[key] %>"><%= json[key] %></a>
         <% } %>
     </div>
-    <div class="line2"><div></div></div>
+
     <% } %>
 </div>
 

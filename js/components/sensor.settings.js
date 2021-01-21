@@ -649,6 +649,8 @@
 
             let $popup = $("#popup_select_node_type");
 
+            let lastSortTime = 0;
+
             $(".json_item a[data-key]").click(function () {
                 console.log("click");
                 let key = $(this).attr("data-key");
@@ -668,6 +670,9 @@
             let ed_key = false;
 
             $(".json_node .json_node_type").click(function () {
+
+                if((new Date()).valueOf()-lastSortTime<300) return;
+
                 let $t = $(this);
                 ed_key = $t.closest(".json_node").attr("data-item-key");
                 console.log("ed_key: ", ed_key);
@@ -773,6 +778,50 @@
             });
 
             $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", !_json_modify || __objectEquals(gv(), _json_modify) );
+
+            if(_.isArray(_json_value )) {
+                $(".json_item").sortable({ revert: true, axis: "y",
+                    update: function(e, ui) {
+                        let idxs = [];
+                        let new_json_array = [];
+                        $(".sortable a[data-key]").each(function (i, e) {
+                            console.log($(e).attr("data-key"));
+                            new_json_array.push(_json_value[$(e).attr("data-key")]);
+                            $(e).attr("data-key", i);
+                        });
+                        console.log("new_json_array: ", new_json_array);
+                        /*
+                        return;
+
+                        // lastSortTime =  (new Date()).valueOf();
+                        let i1 = $(ui.item[0]).attr("data-item-key");
+                        let i2 = $(ui.item[0]).prev().attr("data-item-key");
+                        console.log("sort: " + i1+" <-> "+i2);
+
+                        $(ui.item[0]).attr("data-item-key", i2);
+                        $(ui.item[0]).prev().attr("data-item-key", i1);
+
+                        let t = _json_value[i1];
+                        _json_value[i1] = _json_value[i2];
+                        _json_value[i2] = t;
+
+                         */
+                        _json_value = new_json_array;
+                        if(_json_path.length>0) {
+                            let last_path = _json_path.pop();
+                            _setJsonParameter(last_path, _json_value);
+                            _json_path.push(last_path);
+                        } else {
+                            _json_modify = _json_value;
+                        }
+
+                        let _origin = gv();
+                        $("#sensor-settings-edit-wrapper .save").toggleClass("inactive", __objectEquals( _json_modify ? _json_modify : _origin, _origin ));
+                    },
+                    sort: function () { lastSortTime =  (new Date()).valueOf(); $popup.hide() },
+                    stop: function () { lastSortTime =  (new Date()).valueOf(); $popup.hide() },
+                });
+            }
 
             return $inp;
         }

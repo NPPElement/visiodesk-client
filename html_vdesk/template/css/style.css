@@ -7609,3 +7609,8 @@ label.input_group_title {
     display: inline-block
 }
 
+
+.json_item.sortable .json_node {
+    border-bottom:1px solid #C8C8C8;
+}
+
