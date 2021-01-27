@@ -789,23 +789,6 @@
                             new_json_array.push(_json_value[$(e).attr("data-key")]);
                             $(e).attr("data-key", i);
                         });
-                        console.log("new_json_array: ", new_json_array);
-                        /*
-                        return;
-
-                        // lastSortTime =  (new Date()).valueOf();
-                        let i1 = $(ui.item[0]).attr("data-item-key");
-                        let i2 = $(ui.item[0]).prev().attr("data-item-key");
-                        console.log("sort: " + i1+" <-> "+i2);
-
-                        $(ui.item[0]).attr("data-item-key", i2);
-                        $(ui.item[0]).prev().attr("data-item-key", i1);
-
-                        let t = _json_value[i1];
-                        _json_value[i1] = _json_value[i2];
-                        _json_value[i2] = t;
-
-                         */
                         _json_value = new_json_array;
                         if(_json_path.length>0) {
                             let last_path = _json_path.pop();

@@ -391,6 +391,7 @@ window.VD_Events = (function () {
 
     function __initializeSearchField() {
         const $searchField = $(".search1 .search_field").find("input");
+        if(!$searchField.length) return;
         $searchField.autocomplete({
             classes: {"ui-autocomplete": "vd-events-autocomplete"},
             delay: 0,
@@ -532,6 +533,8 @@ window.VD_Events = (function () {
         data.sort((item1, item2) => {
             if (item1.priority_id > item2.priority_id) return -1;
             if (item1.priority_id < item2.priority_id) return 1;
+            if (item1.status_id > item2.status_id) return 1;
+            if (item1.status_id < item2.status_id) return -1;
             if (item1.id > item2.id) return -1;
             if (item1.id < item2.id) return 1;
 
