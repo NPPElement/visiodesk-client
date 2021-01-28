@@ -427,6 +427,8 @@
 
             function backfilter(value) {
                 let f = params['filter'];
+                let bf = params['backFilter'];
+                if(_.isFunction(bf)) return  bf(value);
                 if(!_.isObject(f)) return value;
                 for(let key in f) if(f[key]==value) return key;
                 return value;
@@ -523,6 +525,7 @@
 
 
                 let value_new = backfilter(value_return);
+                console.log("value_new:", value_new);
                 VB_API.saveObjectParam(_object[77], _param_code, value_return)
                     .done(function (x) {
                         $(".opt_item[data-code='"+ _param_code +"'] a").html(value_new);
