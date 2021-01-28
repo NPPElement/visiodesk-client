@@ -283,17 +283,18 @@ window.VB_OBJECTS_EDIT_PARAMS = {
         type: "string",
         filter: function (x) {
             let res = [];
-            if(_.isString(x)) return x;
-            if( Array.isArray(x) ) res = x.map(x => x==null? "null": ""+x);
+            if(_.isString(x)) x=x.split(",");
+            if( Array.isArray(x) ) res = x.map(x => x==null || x==="" ? "null": ""+x);
 
             return res.length>0 ? res.join("|") : "null|null|null|null|null|null|null|null|null|null|null|null|null|null|null|null";
         },
 
         backFilter: function (value) {
             let res = [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
-            if(!value) return res;
+            if(!value) return res.join(",");
             value = value.split("|");
             for(let i=0;i<value.length;i++) if(value[i]!="null") res[i] = value[i];
+            return res.join(",");
         }
     },
 
