@@ -535,8 +535,8 @@ window.VD_Events = (function () {
             if (item1.priority_id < item2.priority_id) return 1;
             if (item1.status_id > item2.status_id) return 1;
             if (item1.status_id < item2.status_id) return -1;
-            if (item1.id > item2.id) return -1;
-            if (item1.id < item2.id) return 1;
+            if (item1.last_topic_id > item2.last_topic_id) return -1;
+            if (item1.last_topic_id < item2.last_topic_id) return 1;
 
             return 0;
         });
