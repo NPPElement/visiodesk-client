@@ -1,0 +1,13 @@
+<%
+let temp_id_attr = temp_id ? 'id="' + temp_id + '"' : '';
+let icon = item_type_code === "status" || item_type_code === "priority" ? text : "";
+%>
+<div class="item select change_terminated_to" <%= temp_id_attr %>>
+<input type="hidden" class="result_field" value="<%- format_date %>">
+<div class="label">
+    <div class="text">
+        <span class="name">Выполнить до</span>
+    </div>
+</div>
+<a><%- format_date%></a>
+</div>

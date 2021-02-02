@@ -3,6 +3,7 @@ window.VD_Topic = (function () {
     const serviceTemplatesList = [
         'vd.topic.message.html',
         'vd.topic.changed.item.html',
+        'vd.topic.terminated_to.html',
         'vd.topic.file.html',
         'vd.topic.selected.item.html',
         'vd.topic.selected.func.html'
@@ -36,7 +37,47 @@ window.VD_Topic = (function () {
         5: ", проверить до: "
     };
 
-    let groupPriorityTimes = {};
+    let groupPriorityTimes = {
+        data: [],
+        names: {
+            0: true,
+            1: "plan_inwork",
+            3: "plan_ready",
+            5: "plan_verify",
+        },
+        getByGroup: function(groupId, priorityId, statusId) {
+            let res = 60*24*30, r, field = groupPriorityTimes.names[statusId];
+            groupPriorityTimes.data.forEach(item=>{
+                if(item.group_id===groupId && item.priority_id === priorityId) {
+                    r=0;
+                    if(field===true) {
+                        for(let s in groupPriorityTimes.names) {
+                            if(s>0) r+=item[groupPriorityTimes.names[s]];
+                        }
+                    } else {
+                        r = item[field];
+                    }
+                    if(res>r) res=r;
+                }
+            });
+            console.log("getByGroup["+groupId+","+priorityId+"] = " + res);
+            return res;
+
+        },
+        get: function (groups, priorityId, statusId) {
+            let res = 999999;
+            if(Array.isArray(groups)) groups.forEach(g=>{
+                let r = groupPriorityTimes.getByGroup(g, priorityId, statusId);
+                if(res>r) res = r;
+            });
+            if(res===999999)  res = groupPriorityTimes.getByGroup(0, priorityId, statusId);
+            return res;
+        },
+
+        getMomentTermTo: function (groups, priorityId) {
+            return  moment().add( 1000*60* groupPriorityTimes.get(groups, priorityId,0) );
+        }
+    };
 
     window.imagesBuffer = imagesBuffer;
 
@@ -501,6 +542,8 @@ window.VD_Topic = (function () {
                         });*/
                     } else {
 
+                        __appendChangedList(__selectTerminatedTo(moment().add(1000*60*60)).valueOf());
+
                         __appendChangedList(__selectStatus(1));
 
                         //связь с опцией журнала работ (если есть)
@@ -828,6 +871,41 @@ window.VD_Topic = (function () {
             return __changeItem(itemObject);
         }
         return {};
+    }
+
+
+    /**
+     * Изменить дату последнего срока
+     * @param {int} date Дата окончания
+     * @return {object} fullItemObject дополненный универсальный объект сообщения
+     * @private
+     */
+    function __selectTerminatedTo(date) {
+        var itemObject = {
+            "type": { 'id': 8 },
+            "like": 0,
+            "text": date,
+            "format_date": moment(date).format('DD.MM.YYYY HH:mm'),
+            "topic": {id: topicId},
+            "temp_id": VD_SETTINGS['ITEM_TYPES'][8],
+        };
+        return __changeItem(itemObject);
+    }
+    
+    function __updateTerminateTo() {
+        let f = false;
+        itemsForSend.forEach(item=>{ if(item['type']['id']===8) f = true; });
+        if(!f) return;
+
+        let termTo = groupPriorityTimes.getMomentTermTo(__getGroupIds(),__getPriorityId());
+        console.log("new TERM TO: ", termTo.format('DD.MM.YYYY HH:mm'));
+        __selectTerminatedTo(termTo.valueOf());
+        let $tt = $("#term_date_plan");
+        if($tt.length) {
+            console.log("$tt.length: ", $tt.length);
+            $tt.find("a").html(termTo.format('DD.MM.YYYY HH:mm'));
+            $tt.find("input").val(termTo.format('DD.MM.YYYY HH:mm'));
+        }
     }
 
     /**
@@ -1210,10 +1288,14 @@ window.VD_Topic = (function () {
     function __changeItem(itemObject) {
         var fullItemObject = __bindItemParams(itemObject, extendedParams);
 
-        if (fullItemObject['type']['id'] === 6 || fullItemObject['type']['id'] === 5) {
+        if (fullItemObject['type']['id'] === 6 || fullItemObject['type']['id'] === 5 || fullItemObject['type']['id'] === 8) {
             __removeItem(fullItemObject['type']['id']);
         }
         itemsForSend.push(fullItemObject);
+        if([4,5].includes(fullItemObject['type']['id'])) {
+            console.log("DO: __updateTerminateTo");
+            __updateTerminateTo();
+        }
         return fullItemObject;
     }
 
@@ -1256,7 +1338,8 @@ window.VD_Topic = (function () {
             __removeFromChangedList(fullItemObject['type']['id']);
         }
 
-        let itemTemplate = serviceTemplatesData['vd.topic.changed.item.html'];
+        let itemTemplate = serviceTemplatesData[ fullItemObject['type']['id'] === 8 ? 'vd.topic.terminated_to.html' : 'vd.topic.changed.item.html'];
+
         let itemTemplateExec = _.template(itemTemplate)($.extend({
             'item_type_code': itemTypeCode,
             'temp_id': itemTempId,
@@ -1275,11 +1358,43 @@ window.VD_Topic = (function () {
 
         if(fullItemObject['type']['id'] === 2 && fullItemObject.file_name.indexOf("data:image/")===0) $itemTemplateExec.find(".icon.file").html("<img src='"+fullItemObject.file_name+"' width='74' />");
 
+        /*
+
+        if(fullItemObject['type']['id'] === 8) {
+            let $calendar = $itemTemplateExec.find('.change_terminated_to').children('A');
+            console.log("SET $calendar", $calendar);
+            $calendar.click((event) => {
+                if (editBlock) {
+                    event.stopImmediatePropagation();
+                    return false;
+                }
+            });
+            $calendar.daterangepicker({
+                "autoApply": false,
+                "opens": "left",
+                "drops": "up",
+                "singleDatePicker": true,
+                "timePicker": true,
+                "timePicker24Hour": true,
+                "locale": VD_SETTINGS['DATERANGEPICKER_LOCALE'],
+                "startDate": moment.utc(fullItemObject['text']).local()
+            }, (resultDate) => {
+                $calendar.html(resultDate.format('DD.MM.YYYY HH:mm'));
+                __selectTerminatedTo(+resultDate);
+                // todo: дату....
+            });
+
+        }
+        */
+
         $changedList.append($itemTemplateExec);
 
         if (fullItemObject['type']['id'] === 6 && holdToTypeIds.includes(fullItemObject['status']['id'])) {
             __initializeCalendar($changedList);
         }
+
+        if(fullItemObject['type']['id'] === 8 ) __initializeCalendarTerminatedTo($changedList);
+
     }
 
     /**
@@ -1528,9 +1643,11 @@ window.VD_Topic = (function () {
             let topicType = parseInt($topicHeader.find('INPUT[name="topicType"]').val());
             let topicName = $.trim($topicHeader.find('INPUT[name="topicName"]').val());
 
+            let terminatedTo = false;
             //при создании топика отправка файлов отдельно
             let itemsForSendNoFiles = itemsForSend.filter((item) => {
-                return item['type']['id'] !== 2;
+                if(item['type']['id'] === 8) terminatedTo = item['text'];
+                return (item['type']['id'] !== 2) && (item['type']['id'] !== 8);
             });
             let itemsForSendFiles = itemsForSend.filter((item) => {
                 return item['type']['id'] === 2;
@@ -1551,8 +1668,13 @@ window.VD_Topic = (function () {
                 ]
             }
 
-            console.log("newTopicParams: ", newTopicParams);
-            // return;
+
+
+            let termTo = groupPriorityTimes.get(__getGroupIds(),2, 0);
+            newTopicParams['terminated_to'] = moment().add(1000*60*termTo).valueOf();
+            if(terminatedTo!==false) newTopicParams['terminated_to'] = terminatedTo;
+
+            console.log("newTopicParams: ", newTopicParams, termTo);
 
             __saveLoadTopic(newTopicParams).then((resultTopicParams) => {
                 __updateTopicParams(resultTopicParams);
@@ -1867,6 +1989,35 @@ window.VD_Topic = (function () {
         });
     }
 
+
+    /**
+     * календарь срока выполнения
+     * @param {Object} $changedList
+     * @private
+     */
+    function __initializeCalendarTerminatedTo($changedList) {
+        const $calendar = $changedList.find('.change_terminated_to').children('A');
+        const startDate = moment().add(VD_SETTINGS['ON_HOLD_DEFAULT'], 'ms');
+
+        $calendar.html(startDate.format('DD.MM.YYYY HH:mm'));
+        $calendar.daterangepicker({
+            "autoApply": false,
+            "opens": "center",
+            "drops": "up",
+            "singleDatePicker": true,
+            "timePicker": true,
+            "timePicker24Hour": true,
+            "locale": VD_SETTINGS['DATERANGEPICKER_LOCALE'],
+            "startDate": startDate,
+            "minDate": moment()
+        }, (resultDate) => {
+            $calendar.html(resultDate.format('DD.MM.YYYY HH:mm'));
+            console.log(resultDate);
+            __selectTerminatedTo(resultDate.valueOf());
+        });
+    }
+
+
     /**
      * Подключение редактора Ckeditor 5 к полю отправки сообщений
      * @param {string} editorSelector селектор блока
@@ -2105,10 +2256,37 @@ window.VD_Topic = (function () {
     
     
     function __loadGroupPriority() {
-        VD_API.GetPriorityGroup(0).done(data => data.forEach(x => groupPriorityTimes[x.id] = x));
+        VD_API.GetPriorityGroup(0).done(data => data.forEach(x => groupPriorityTimes.data.push(x)));
     }
 
 
+    function __getPriorityId() {
+        let res = 2;
+        console.log("itemsForSend: ", itemsForSend);
+        itemsForSend.forEach(function (item) {
+            if(item.type.id===5) res =  item.priority.id;
+        });
+        console.log("__getPriorityId() = ", res);
+        return res;
+    }
+
+    function __getGroupIds() {
+        let attachedGroups = [];
+        let removedGroups = [];
+        itemsForSend.forEach(item => {
+            if (item['type']['id'] === 4) {
+                attachedGroups.push(item['group_id']);
+            }
+            if (item['type']['id'] === 15) {
+                removedGroups.push(item['group_id']);
+            }
+        });
+
+        let groups = _.difference(attachedGroups, removedGroups);
+        if(groups.length===0) groups.push(groupId);
+        console.log("__getGroupIds() = ", groups);
+        return groups;
+    }
 
     
 
