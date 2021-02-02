@@ -8,11 +8,33 @@
         <div class="text">
             <span class="name"><%- name %></span>
             <span class="desc"><%- description %></span>
+
             <% if (icon === "on_hold") {%>
-                <div class="calendar_wrapper">
-                    <span>До:&nbsp;</span>
-                    <a></a>
-                </div>
+            <div class="calendar_wrapper" data-status_id="4">
+                <span>До:&nbsp;</span>
+                <a></a>
+            </div>
+            <% } %>
+
+            <% if (icon === "new") {%>
+            <div class="calendar_wrapper" data-status_id="1">
+                <span>В работу до:&nbsp;</span>
+                <a></a>
+            </div>
+            <% } %>
+
+            <% if (icon === "in_progress") {%>
+            <div class="calendar_wrapper" data-status_id="3">
+                <span>Выполнить до:&nbsp;</span>
+                <a></a>
+            </div>
+            <% } %>
+
+            <% if (icon === "resolved") {%>
+            <div class="calendar_wrapper" data-status_id="5">
+                <span>Проверить до:&nbsp;</span>
+                <a></a>
+            </div>
             <% } %>
         </div>
     </div>

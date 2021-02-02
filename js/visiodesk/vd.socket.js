@@ -104,6 +104,7 @@ window.VD_Socket = (function () {
         if(request.url.indexOf("getChangedSubscribesIds")>0) return false;
         if(request.url.indexOf(".html")>0) return true;
         if(request.url.indexOf(".svg")>0) return true;
+        if(request.url.indexOf("getGroupPriority/0")>0) return true;
         // if(request.url.indexOf("/get")>0) return true;
         // if(request.method.toUpperCase()==="GET") return true;
         return false;

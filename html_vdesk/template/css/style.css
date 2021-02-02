@@ -2778,12 +2778,18 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     color: #007AFF;
 }
 
-.changed_list .item.status.on_hold {
+.changed_list .item.status.on_hold,
+.changed_list .item.status.new,
+.changed_list .item.status.resolved,
+.changed_list .item.status.in_progress {
     min-height: 88px;
     align-items: flex-start;
     padding-top: 7.5px;
 }
-.changed_list .item.status.on_hold .label .text {
+.changed_list .item.status.on_hold .label .text,
+.changed_list .item.status.in_progress .label .text,
+.changed_list .item.status.resolved .label .text,
+.changed_list .item.status.new .label .text {
     padding-top: 5px;
 }
 
@@ -7415,6 +7421,9 @@ label.input_group_title {
     margin: 0;
 }
 
+.ct-line {
+    stroke-width: 1px!important;
+}
 
 .ct-legend .ct-series-0:before {
     background-color: #d70206;

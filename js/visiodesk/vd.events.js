@@ -402,6 +402,7 @@ window.VD_Events = (function () {
                     const priorityName = I18N.get(`vdesk.topic.priority.${topic.priority_id}`);
                     const statusName = I18N.get(`vdesk.topic.status.${topic.status_id}`);
                     return topic.name.toLowerCase().indexOf(query) !== -1 ||
+                        (""+topic.id).indexOf(query) !== -1 ||
                         topic.description.toLowerCase().indexOf(query) !== -1 ||
                         priorityName.toLowerCase().indexOf(query) !== -1 ||
                         statusName.toLowerCase().indexOf(query) !== -1;
@@ -423,6 +424,7 @@ window.VD_Events = (function () {
             //const statusTypes = VD_SETTINGS["STATUS_TYPES"][topic["status_id"]];
             const preferTextLength = 50;
             let text = event.description;
+            let id = event.id;
             if (event.description.length > preferTextLength) {
                 text = event.description.substring(0, preferTextLength) + "...";
             }
@@ -438,6 +440,7 @@ window.VD_Events = (function () {
                                     <span class="crop">${__prepare(event.name)}</span>
                                 </div>
                                 <div class="num">
+                                    <span>#${id}</span>
                                     <span class="status statusTypes">${statusName}</span>
                                 </div>
                             </div>
@@ -514,6 +517,7 @@ window.VD_Events = (function () {
                 description: topic.description || '',
                 status_id: topic.status_id,
                 priority_id: topic.priority_id,
+                last_item_id: topic.last_item_id,
                 priority_name: I18N.get(`vdesk.topic.priority.${topic["priority_id"]}`),
                 priority_code: VD_SETTINGS["PRIORITY_TYPES"][topic["priority_id"]],
                 status_name: I18N.get(`vdesk.topic.status.${topic["status_id"]}`),
@@ -533,10 +537,10 @@ window.VD_Events = (function () {
         data.sort((item1, item2) => {
             if (item1.priority_id > item2.priority_id) return -1;
             if (item1.priority_id < item2.priority_id) return 1;
-            if (item1.status_id > item2.status_id) return 1;
-            if (item1.status_id < item2.status_id) return -1;
-            if (item1.last_topic_id > item2.last_topic_id) return -1;
-            if (item1.last_topic_id < item2.last_topic_id) return 1;
+            // if (item1.status_id > item2.status_id) return 1;
+            // if (item1.status_id < item2.status_id) return -1;
+            if (item1.last_item_id > item2.last_item_id) return -1;
+            if (item1.last_item_id < item2.last_item_id) return 1;
 
             return 0;
         });

@@ -27,6 +27,17 @@ window.VD_Topic = (function () {
     };
 
     let imagesBuffer = {};
+
+    const holdToTypeIds = [1,3,4,5];
+    const appendStatusText = {
+        1: ", в работу до: ",
+        3: ", выполнить до: ",
+        4: ", проверить до: ",
+        5: ", проверить до: "
+    };
+
+    let groupPriorityTimes = {};
+
     window.imagesBuffer = imagesBuffer;
 
 
@@ -288,6 +299,8 @@ window.VD_Topic = (function () {
         }
     };
 
+    __loadGroupPriority();
+
     return {
         "run": run,
         "unload": unload,
@@ -487,6 +500,9 @@ window.VD_Topic = (function () {
                             __showItems(loadResult);
                         });*/
                     } else {
+
+                        __appendChangedList(__selectStatus(1));
+
                         //связь с опцией журнала работ (если есть)
                         if (params['checklistId']) {
                             groupId = 0;
@@ -721,17 +737,49 @@ window.VD_Topic = (function () {
     function __selectStatus(value, holdMills = 0) {
         let valueInt = parseInt(value);
         if (!_.isNaN(valueInt) && VD_SETTINGS['STATUS_TYPES'][valueInt]) {
+
+            let time = holdMills || +moment() + VD_SETTINGS['ON_HOLD_DEFAULT'];
+            let timeStr = moment(time).format('DD.MM.YYYY HH:mm');
+
+            console.log("time: ",  moment(time).format('DD.MM.YYYY HH:mm'));
+
+            // holdToTypeIds
+            //on_hold
+            switch (valueInt) {
+                case 1:
+                    timeStr = ", в работу до: "+timeStr
+                    break;
+
+                case 3:
+                    timeStr = ", проверить до: "+timeStr
+                    break;
+
+                case 4:
+                    timeStr = "";
+                    break;
+
+                case 5:
+                    timeStr = ", проверить до: "+timeStr
+                    break;
+
+                default:
+                    timeStr="";
+                    time=null;
+
+            }
+
             var itemObject = {
                 "type": { 'id': 6 },
                 "status": { 'id': valueInt },
                 "text": VD_SETTINGS['STATUS_TYPES'][valueInt],
-                "name": I18N.get(`vdesk.topic.status.${valueInt}`)
-            };
+                "name": I18N.get(`vdesk.topic.status.${valueInt}`),// + timeStr,
 
-            //on_hold
-            if (valueInt === 4) {
-                itemObject['hold_millis'] = holdMills || +moment() + VD_SETTINGS['ON_HOLD_DEFAULT'];
-            }
+            };
+            if(time!==null) itemObject["hold_millis"] = time;
+
+
+            console.log("itemObject: ", itemObject);
+
 
             return __changeItem(itemObject);
         }
@@ -1229,7 +1277,7 @@ window.VD_Topic = (function () {
 
         $changedList.append($itemTemplateExec);
 
-        if (fullItemObject['type']['id'] === 6 && fullItemObject['status']['id'] === 4) {
+        if (fullItemObject['type']['id'] === 6 && holdToTypeIds.includes(fullItemObject['status']['id'])) {
             __initializeCalendar($changedList);
         }
     }
@@ -1422,6 +1470,7 @@ window.VD_Topic = (function () {
         if (sendItemsBlock) {
             return;
         }
+        // (пока убрано) TODO: Убрать!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         sendItemsBlock = true;
         __buttonBlockMode(true);
 
@@ -1434,7 +1483,11 @@ window.VD_Topic = (function () {
 
             itemsForSend.forEach((item) => {
                 if (item['type']['id'] === 6) {
-                    hasStatus = true
+                    hasStatus = true;
+
+                    if(item['name'].indexOf(",")===-1 && appendStatusText[item['status']['id']]) {
+                        item['name']+=appendStatusText[item['status']['id']] + moment(item['hold_millis']).format('DD.MM.YYYY HH:mm');
+                    }
                 }
                 if (item['type']['id'] === 5) {
                     hasPriority = true
@@ -1497,6 +1550,9 @@ window.VD_Topic = (function () {
                     { 'id': groupId }
                 ]
             }
+
+            console.log("newTopicParams: ", newTopicParams);
+            // return;
 
             __saveLoadTopic(newTopicParams).then((resultTopicParams) => {
                 __updateTopicParams(resultTopicParams);
@@ -1678,16 +1734,25 @@ window.VD_Topic = (function () {
             lastItemMySelf = item['author']['id']=== authorizedUserId && item['type']['id']===14;
 
             if((!skip_status) && item['type']['id']===6) {
-                skip_status = true;
-                return;
+                // skip_status = true;
+                // return;
             }
 
             if (showTypes.indexOf(item['type']['id']) > -1) {
                 if(lastItemId<item['id']) lastItemId = item['id'];
                 //для статуса "отложено"
-                if (item['type']['id'] === 6 && item['status']['id'] === 4 && item['hold_millis']) {
+                if (item['type']['id'] === 6 && holdToTypeIds.includes(item['status']['id']) && item['hold_millis']) {
                     let holdTo = moment(item['hold_millis']).format('DD.MM.YYYY HH:mm');
-                    item['name'] = `${item['name']}[br][i]до ${holdTo}[/i]`;
+
+                    if(item['name'].indexOf(",")===-1) {
+                        if (appendStatusText[item['status']['id']]) {
+                            item['name'] += appendStatusText[item['status']['id']] + `[br][i]${holdTo}[/i]`;
+                        } else {
+                            item['name'] = `${item['name']}[br][i]до ${holdTo}[/i]`;
+                        }
+                    }
+
+
                 }
 
                 let itemTemplate = serviceTemplatesData['vd.topic.message.html'];
@@ -1789,8 +1854,16 @@ window.VD_Topic = (function () {
             "startDate": startDate,
             "minDate": moment()
         }, (resultDate) => {
-            $calendar.html(resultDate.format('DD.MM.YYYY HH:mm'));
-            __selectStatus(4, +resultDate);
+
+            let calendar_status_id = $changedList.find('.calendar_wrapper').attr("data-status_id");
+
+            if(!calendar_status_id) {
+                console.error("calendar_status_id IS NULL", $changedList.find('.calendar_wrapper').html());
+            } else {
+                $calendar.html(resultDate.format('DD.MM.YYYY HH:mm'));
+                __selectStatus(calendar_status_id, +resultDate);
+                console.log("__selectStatus = "+calendar_status_id);
+            }
         });
     }
 
@@ -2030,6 +2103,14 @@ window.VD_Topic = (function () {
         }
     }
     
+    
+    function __loadGroupPriority() {
+        VD_API.GetPriorityGroup(0).done(data => data.forEach(x => groupPriorityTimes[x.id] = x));
+    }
+
+
+
+    
 
     /**
      * Вставка картинок с буфера обмена
@@ -2064,5 +2145,7 @@ window.VD_Topic = (function () {
               }
           }
       });
+
+      
 
 })();
