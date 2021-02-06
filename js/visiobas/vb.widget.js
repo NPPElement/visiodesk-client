@@ -58,6 +58,7 @@ window.VBasWidget = (function () {
      * create vbas widget to display svg component and update it state
      * @param {string} selector widget parent container
      * @param {string} reference to display visualization
+     * @param {boolean} clear_template предоставить чистый шаблон
      */
     function show(selector, reference, clear_template) {
         clear_template = !!clear_template;
@@ -227,7 +228,9 @@ window.VBasWidget = (function () {
                 }
 
 
-                VB_API.getAllChildren(reference)
+                if(Object.keys(vis.replace).length===0) {
+                    __loadTemplate(vis);
+                } else  VB_API.getAllChildren(reference)
                     .done((response) => {
                         if (!response.success) {
                             console.error(`Possible not all child objects was received of parent: ${reference}`);
@@ -497,7 +500,7 @@ window.VBasWidget = (function () {
 
         function setControlIcons() {
 
-            if(!$("#"+containerId).html().length) return;
+            if(!$("#"+containerId).html()) return;
 
             $(".gr_controls").remove();
             var $contol_btns = $("<div class='gr_controls'><a class='fullscreen_icon'></a><a class='calendar_icon'></a><a class='close_icon'></a></div>");
@@ -615,6 +618,7 @@ window.VBasWidget = (function () {
     }
     
     function __initTrendLog() {
+        /*
         $(".trendlog [reference], .trendlog[reference]").each(function () {
             let $r = $(this);
             if($r.attr("tlc")) return;
@@ -624,6 +628,24 @@ window.VBasWidget = (function () {
                 if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
 
             })
+        });
+        */
+        $(".trendlog").click(function (event) {
+            event.stopPropagation();
+            let $childRef = $(this).find("[reference]");
+            console.log("childRef: ", $childRef.length);
+            $(this).find("[reference]").each(function () {
+                let $r = $(this);
+                let reference = $r.attr("reference");
+                if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
+            })
+        });
+
+        $(".trendlog[reference]").click(function (event) {
+            event.stopPropagation();
+            let $r = $(this);
+            let reference = $r.attr("reference");
+            if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
         });
     }
     

@@ -7615,11 +7615,20 @@ label.input_group_title {
     /*margin-left: 8px;*/
     width: 22px;
     text-align: right;
-    display: inline-block
+    display: inline-block;
 }
 
 
 .json_item.sortable .json_node {
     border-bottom:1px solid #C8C8C8;
+}
+
+.trendlog:hover,
+.trendlog[reference]:hover {
+    cursor: alias;
+}
+
+.trendlog:hover [reference] {
+    text-shadow: #FFFF99 0 0 2px;
 }
 
