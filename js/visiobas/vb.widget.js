@@ -229,7 +229,8 @@ window.VBasWidget = (function () {
 
 
                 if(Object.keys(vis.replace).length===0) {
-                    __loadTemplate(vis);
+                    _replace = vis.replace;
+                    __loadTemplate(vis, _replace, object);
                 } else  VB_API.getAllChildren(reference)
                     .done((response) => {
                         if (!response.success) {
