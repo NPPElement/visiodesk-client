@@ -228,7 +228,6 @@
             let rc_len0 = _requestCache.length;
             _requestCache = [];
             _requestString = [];
-            _timeLast = "";
             for (let k in _data) {
                 const data = _data[k];
                 _requestCache.push({
@@ -240,6 +239,7 @@
                 _requestString.push( data.object["77"]+"#"+ f.join(",") );
             }
             _dbg("__updateRequestCache: "+rs_len0+"("+rc_len0+")"+" -> "+_requestString.length + "("+_requestCache.length+")");
+            _timeLast = "";
             _rerequest();
         }
 
