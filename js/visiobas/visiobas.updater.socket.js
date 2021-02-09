@@ -12,6 +12,7 @@
         let _requestCache = [];
         let _requestString = [];
         let _timeLast = "";
+        let last_updated = [];
 
         /**
          * Map of subscribed data and objects cache
@@ -355,6 +356,7 @@
          * @private
          */
         function __notifySubscribersForNewDataCache(update) {
+            last_updated = update;
             for (let id in _subscribes) {
                 const subscriber = _subscribes[id];
                 if (subscriber.subscriber.callback) {
@@ -437,6 +439,7 @@
          * Request current data without waiting timer
          */
         function requestData() {
+            if(last_updated.length>0) __notifySubscribersForNewDataCache(last_updated);
             __requestData();
         }
 
