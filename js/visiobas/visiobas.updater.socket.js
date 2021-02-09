@@ -3,13 +3,15 @@
  * for user
  */
 (function () {
-    function VisiobasUpdater() {
+    function VisiobasUpdaterSocket() {
         let _timerHandle = null;
 
         /**
          * request cache to update actual data
          */
         let _requestCache = [];
+        let _requestString = [];
+        let _timeLast = "";
 
         /**
          * Map of subscribed data and objects cache
@@ -64,13 +66,35 @@
          */
         let _workLogSubscribers = {};
 
+
+        /**
+         * @type WebSocket
+         */
+        let ws = null;
+        const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
+        let _dbg = console.log;
+        let wait = false;
+        let tryConnect = false;
+        let isConnect = false;
+        const timeReconnect = 5000; // 1s
+        let lastRequestKey = "";
+
+
         return {
             "requestData": requestData,
             "start": start,
             "register": register,
             "unregister": unregister,
             "addObject": addObject,
-            "subscribeForWorkLog": subscribeForWorkLog
+            "subscribeForWorkLog": subscribeForWorkLog,
+            "ws_send": function (data) {
+                if(ws.readyState===1) ws.send(data);
+                else {
+                    isConnect = false;
+                    console.log("ws.readyState = "+ws.readyState);
+                    // init_ws();
+                }
+            }
         };
 
         /**
@@ -78,6 +102,7 @@
          * @param {string} id unique subscriber id
          */
         function unregister(id) {
+            _dbg("unregister #"+id);
             if (_.has(_subscribes, id)) {
                 _subscribes[id].references.forEach(reference => {
                     if (_.has(_data, reference)) {
@@ -104,7 +129,20 @@
             delete _workLogSubscribers[id];
         }
 
+
+        function _rerequest() {
+            __requestData();
+            /*
+            _dbg("_rerequest");
+            if(ws!=null) ws.close();
+            init_ws();
+
+             */
+
+        }
+
         function __registerObject(object, fields, subscriberId) {
+            // _dbg("__registerObject: ",object, fields, subscriberId);
             const reference = object["77"];
             const type = object["79"];
 
@@ -141,6 +179,7 @@
          * @return {boolean} success flag
          */
         function addObject(object, fields, subscriberId) {
+            _dbg("addObject");
             if (!_.has(_subscribes, subscriberId)) {
                 //there no subscriber with id
                 return false;
@@ -148,6 +187,7 @@
 
             const res = __registerObject(object, fields, subscriberId);
             if (res) {
+                _dbg("addObject", object, fields, subscriberId);
                 __updateRequestCache();
             }
 
@@ -161,6 +201,7 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
+            _dbg("register.len = "+objects.length, fields, subscriber, objects);
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
             }
@@ -172,35 +213,135 @@
             };
 
             objects.forEach((o) => {
-                __registerObject(o, fields, subscriber.id);
+                let r = __registerObject(o, fields, subscriber.id);
+                if(!r) {
+                    _dbg("!reg.o: #" + o["75"]+" " + o["77"]);
+                }
             });
 
             __updateRequestCache();
+            // __requestData();
         }
 
         function __updateRequestCache() {
+            let rs_len0 = _requestString.length;
+            let rc_len0 = _requestCache.length;
             _requestCache = [];
+            _requestString = [];
+            _timeLast = "";
             for (let k in _data) {
                 const data = _data[k];
                 _requestCache.push({
                     "77": data.object["77"],
                     "fields": data.fields.join(",")
                 });
+                let f = data.fields;
+                if(!f.includes("79")) f.push("79");
+                _requestString.push( data.object["77"]+"#"+ f.join(",") );
             }
+            _dbg("__updateRequestCache: "+rs_len0+"("+rc_len0+")"+" -> "+_requestString.length + "("+_requestCache.length+")");
+            _rerequest();
         }
+
+        function setLastDate(items) {
+            let maxTimeStr = _timeLast;
+            let maxTimeMoment = moment(0);
+            items.forEach(item=>{
+                let m = moment(item['timestamp']);
+                if(m>maxTimeMoment) {
+                    maxTimeMoment = m;
+                    maxTimeStr = item['timestamp'];
+                }
+            });
+            _timeLast = maxTimeStr;
+            // _timeLast = maxTimeMoment.add(1000*2*60*60).format("YYYY-MM-DD HH:mm:ss");
+            console.log("_timeLast: ", _timeLast);
+        }
+
+        function init_ws() {
+            if(window.STOP) return;
+
+            _dbg("init_ws");
+            if(tryConnect) return;
+            tryConnect = true;
+            if(ws!=null) {
+                _dbg("init_ws.ws.close()");
+                ws.close();
+            }
+            ws = new WebSocket(URL_WS);
+
+            ws.onopen = function(event) {
+                _dbg("ws.onopen");
+
+                tryConnect = false;
+                isConnect = true;
+                wait = false;
+
+                if(_requestString.length>0) __requestData();
+
+            };
+            ws.onclose = function(event) {
+                _dbg("ws.onclose");
+
+                tryConnect = false;
+                isConnect = false;
+                if(_requestString.length>0) init_ws();
+                // setTimeout(init_ws, timeReconnect);
+                // wait = false;
+            };
+            ws.onmessage = function(event) {
+                wait = false;
+                let data = event.data;
+                data = JSON.parse(data);
+                _dbg("onmessage: ", data);
+                if(data.length>0) {
+
+                    setLastDate(data);
+                    __notifySubscribersForNewDataCache(data);
+                }
+                __requestData();
+            };
+            ws.onerror = function(event) {
+                _dbg("ws.onerror");
+            };
+
+
+        }
+
 
         /**
          * Start visiobas updater
          * @private
          */
         function start() {
-            if (_timerHandle) {
-                clearTimeout(_timerHandle);
-            }
 
-            _timerHandle = setInterval(__timerRequest, 5000);
-            // window.VB_UPDATER.__DATA = _data;
-            // window.VB_UPDATER.__SUBSCRIBES = _subscribes;
+            if (_timerHandle) clearTimeout(_timerHandle);
+
+            _timerHandle = window.setInterval(()=>{
+                if(window.STOP) return;
+                _dbg("periodic: isConnect = "+isConnect+", tryConnect = "+tryConnect);
+
+                if(!isConnect && !tryConnect) {
+                    _dbg("periodic:  init_ws");
+                    init_ws();
+                }
+            }, timeReconnect);
+
+
+
+
+
+            // if (_timerHandle) clearTimeout(_timerHandle);
+
+            // init_ws();
+
+            // _timerHandle = setInterval(__timerRequest, 5000);
+
+            window.VB_UPDATER.__DATA = _data;
+            window.VB_UPDATER.__SUBSCRIBES = _subscribes;
+
+
+
         }
 
         function __timerRequest() {
@@ -299,27 +440,59 @@
             __requestData();
         }
 
-        function __requestData() {
-            if (_requestCache.length === 0) {
-                return;
+        function __resetRequest() {
+            /*
+            if(wait && isConnect) {
+                ws.close();
             }
 
-            const maxRequestObjects = 20;
-            let request = [];
-            for (let i = 0; i < _requestCache.length; ++i) {
-                if (i % maxRequestObjects === 0) {
-                    __requestChunkData(request);
-                    request = [];
-                }
-                request.push(_requestCache[i]);
-            }
-
-            __requestChunkData(request);
+             */
         }
+
+        function __requestData() {
+            /*
+            if(wait) {
+                 ws.close();
+                 init_ws();
+                 return;
+            }
+             */
+            // if(wait) return;
+            console.log("__requestData: ", _requestString.length  + ", time ="+_timeLast);
+            if(_requestString.length>0) {
+                let rs =_requestString.join(";");
+                let newRequestKey = "C"+rs.length+"L"+_requestString.length;
+
+                console.log("__requestData.key: " +  lastRequestKey +"->"+newRequestKey);
+
+
+                if (lastRequestKey.length>3 && lastRequestKey!==newRequestKey && wait) {
+                    console.log("__requestData.close()");
+                    wait = false;
+                    ws.close();
+                    return;
+                }
+                if(wait) return;
+
+
+
+                wait = true;
+                lastRequestKey = newRequestKey;
+                _dbg("ws.send("+_timeLast+","+_requestString.length+");");
+                ws.send(_timeLast+";"+rs);
+            } else {
+                wait = false;
+            }
+        }
+
+
+
+
+
     }
 
-    window.VB_UPDATER__ = VisiobasUpdater();
+    window.VB_UPDATER = VisiobasUpdaterSocket();
 
     //start pooling server for requested data
-    window.VB_UPDATER__.start();
+    window.VB_UPDATER.start();
 })();

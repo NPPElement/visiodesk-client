@@ -66,6 +66,7 @@ window.VD_Socket = (function () {
     function init() {
         if(tryConnect) return;
         tryConnect = true;
+        if(ws!=null) ws.close();
         ws = new WebSocket(URL_WS);
         ws.onopen = function(event) {
             _dbg("onopen: ", event);
@@ -87,12 +88,48 @@ window.VD_Socket = (function () {
             _dbg("onerror: ", event);
         };
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     function replaceAjax___() {
         let $_ajax = $.ajax;
         $.ajax = function () {
             return $_ajax.apply(null, arguments);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // let _dbg = console.log;
     function isStaticContent(request) {
