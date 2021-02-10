@@ -411,7 +411,7 @@ window.VBasWidget = (function () {
                             })
 
                         });
-
+                        VB_UPDATER.requestData();
                         __initTrendLog();
                     });
 
