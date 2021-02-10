@@ -10,7 +10,9 @@
             };
 
             function show() {
-                const selectedNodeReference = (selectedNode) ? selectedNode[BACNET_CODE["object-property-reference"]] : "Site";
+                // const selectedNodeReference = (selectedNode) ? selectedNode[BACNET_CODE["object-property-reference"]] : "Site";
+                const selectedNodeReference = $(".for_submenu .graphic").attr("data-reference");
+
                 VB.Load(VB_SETTINGS.htmlDir + "/visiobas/vb.objects.delete.html",
                     void 0,
                     {

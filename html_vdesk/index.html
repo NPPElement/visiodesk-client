@@ -508,6 +508,7 @@
 
         $("body").on("click",".parent_reference", function (e) {
             let reference = $(this).attr("reference");
+            console.log("click.parent_reference: ", reference);
             if(reference) VB.redirect({reference: reference});
         });
 

@@ -442,7 +442,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         }).done(function (response) {
 
             if (response.success) {
-                console.log("GetPriorityGroup: ",response.data);
                 def.resolve(response.data);
             } else {
                 VD.ErrorHandler('SERVER', response, url);

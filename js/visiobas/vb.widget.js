@@ -31,7 +31,7 @@ window.VBasWidget = (function () {
             url: url,
             type: "html"
         }).done((obj, textStatus, jqXHR) => {
-            console.info(`template loaded: ${url}`);
+            // console.info(`template loaded: ${url}`);
             _template.resolve({
                 success: true,
                 data: obj,

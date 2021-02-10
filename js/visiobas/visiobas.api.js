@@ -815,7 +815,7 @@
 
             let url = "";
 
-            if (_reference == "Site") {
+            if (false &&  _reference == "Site") {
                 url = VB_SETTINGS.apiContext + "del"
             } else {
                 url = VB_SETTINGS.apiContext + "del/{reference}"
@@ -1158,7 +1158,12 @@
 
                     def.resolve(result);
                 } else {
-                    def.reject(result);
+                    if(reference.indexOf(":")===-1) {
+                        result.data['77'] = reference;
+                        def.resolve(result);
+                    } else {
+                        def.reject(result);
+                    }
                 }
 
             }).fail((jqXHR, textStatus, errorThrown) => {

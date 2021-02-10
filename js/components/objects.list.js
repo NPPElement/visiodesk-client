@@ -216,6 +216,7 @@
             // let reference = options && options.reference || "Site";
             const logWindowHref = options && options.href || "";
 
+            window._location = reference;
             // reference = "Map";
 
             if (logWindowHref) {
@@ -238,8 +239,6 @@
             });
 
             VB_API.getChildren(reference).done((response) => {
-                console.log("update objects list, got " + response.data.length + " nodes, reference: "+reference);
-
                 VB_UPDATER.register(response.data,
                     [
                         BACNET_CODE["present-value"],
@@ -328,7 +327,6 @@
                             } else {
                                 const $parent = $(e).parent();
                                 const reference = $(e).attr("data-reference");
-                                console.log("Hummer reference = ", reference);
 
                                 if ($(e).hasClass("back")) {
                                     // VB.redirect(VB.popHistory());
@@ -341,7 +339,6 @@
                                         reference: reference
                                     });
                                 } else if ($parent.hasClass('contextmenu') || $parent.hasClass('group_chain')) {
-                                    console.log("__select.reference = ", reference);
                                     __select(reference, e);
                                     __logWindowOpen($(e).attr("href"), $(e).data());
                                 }
@@ -442,7 +439,6 @@
             let $item;
             // $("#do_select_folder_root").click(function (event) {
             $("#folder_name").click(function (event) {
-                console.log("do_select_folder_root: ");
                 let $dropdown = $('<div class="dropdown site"><ul></ul></div>');
                 let $list = $dropdown.children("ul");
                 for(let k in _tree_current_title) {
@@ -468,7 +464,6 @@
                 // let changed = VD.CreateDropdownDialog($item, new Map(list), 'Корневой элемент');
 
                 changed.subscribe((result) => {
-                    console.log("RES: ", result);
                     _tree_path = result.value;
                     $("#folder_name").text(_tree_current_title[_tree_path]);
                     update({"reference": _tree_path});

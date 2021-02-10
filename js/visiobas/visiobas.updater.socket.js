@@ -73,7 +73,7 @@
          */
         let ws = null;
         const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
-        let _dbg = console.log;
+        let _dbg = ()=>{}; //console.log;
         let wait = false;
         let tryConnect = false;
         let isConnect = false;
@@ -92,7 +92,6 @@
                 if(ws.readyState===1) ws.send(data);
                 else {
                     isConnect = false;
-                    console.log("ws.readyState = "+ws.readyState);
                     // init_ws();
                 }
             }
@@ -202,7 +201,7 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
-            _dbg("register.len = "+objects.length, fields, subscriber, objects);
+            // _dbg("register.len = "+objects.length, fields, subscriber, objects);
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
             }
@@ -216,7 +215,7 @@
             objects.forEach((o) => {
                 let r = __registerObject(o, fields, subscriber.id);
                 if(!r) {
-                    _dbg("!reg.o: #" + o["75"]+" " + o["77"]);
+                     //_dbg("!reg.o: #" + o["75"]+" " + o["77"]);
                 }
             });
 
@@ -239,7 +238,7 @@
                 if(!f.includes("79")) f.push("79");
                 _requestString.push( data.object["77"]+"#"+ f.join(",") );
             }
-            _dbg("__updateRequestCache: "+rs_len0+"("+rc_len0+")"+" -> "+_requestString.length + "("+_requestCache.length+")");
+            // _dbg("__updateRequestCache: "+rs_len0+"("+rc_len0+")"+" -> "+_requestString.length + "("+_requestCache.length+")");
             _timeLast = "";
             _rerequest();
         }
@@ -256,7 +255,7 @@
             });
             _timeLast = maxTimeStr;
             // _timeLast = maxTimeMoment.add(1000*2*60*60).format("YYYY-MM-DD HH:mm:ss");
-            console.log("_timeLast: ", _timeLast);
+            // console.log("_timeLast: ", _timeLast);
         }
 
         function init_ws() {
@@ -320,10 +319,10 @@
 
             _timerHandle = window.setInterval(()=>{
                 if(window.STOP) return;
-                _dbg("periodic: isConnect = "+isConnect+", tryConnect = "+tryConnect);
+                // _dbg("periodic: isConnect = "+isConnect+", tryConnect = "+tryConnect);
 
                 if(!isConnect && !tryConnect) {
-                    _dbg("periodic:  init_ws");
+                    // _dbg("periodic:  init_ws");
                     init_ws();
                 }
             }, timeReconnect);
@@ -461,16 +460,15 @@
             }
              */
             // if(wait) return;
-            console.log("__requestData: ", _requestString.length  + ", time ="+_timeLast);
+            // console.log("__requestData: ", _requestString.length  + ", time ="+_timeLast);
             if(_requestString.length>0) {
                 let rs =_requestString.join(";");
                 let newRequestKey = "C"+rs.length+"L"+_requestString.length;
 
-                console.log("__requestData.key: " +  lastRequestKey +"->"+newRequestKey);
+                // console.log("__requestData.key: " +  lastRequestKey +"->"+newRequestKey);
 
 
                 if (lastRequestKey.length>3 && lastRequestKey!==newRequestKey && wait) {
-                    console.log("__requestData.close()");
                     wait = false;
                     ws.close();
                     return;
@@ -482,7 +480,7 @@
                 wait = true;
                 lastRequestKey = newRequestKey;
                 _dbg("ws.send("+_timeLast+","+_requestString.length+");");
-                ws.send(_timeLast+";"+rs);
+                if(ws && ws.readyState===1) ws.send(_timeLast+";"+rs);
             } else {
                 wait = false;
             }

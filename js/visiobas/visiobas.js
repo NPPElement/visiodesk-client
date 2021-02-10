@@ -73,15 +73,11 @@ window.VB = (function Visiobas() {
      * @param {Addr} addr
      */
     function redirect(addr) {
-
-        console.log("VB.redirect: ", addr);
         if (typeof addr === "undefined") {
             return;
         }
 
-        if (addr.reference.indexOf("Map") === 0) {
-            return;
-        }
+        // if (addr.reference.indexOf("Map") === 0) { return; }
 
         window._location = addr.reference;
 
@@ -113,7 +109,9 @@ window.VB = (function Visiobas() {
 
     function goBack() {
         var reference = VB_API.parentReference(window._location);
-        if(!reference) reference = "Site";
+        if(!reference) {
+            reference = "Site";
+        }
         redirect({reference: reference});
     }
     
@@ -123,7 +121,6 @@ window.VB = (function Visiobas() {
     function addHistory(addr) {
         window._history = _history;
         if(!_.isEqual(lastHistory(),addr)) {
-            console.log("addHistory: ", addr);
             _history.push(addr);
         }
     }
@@ -676,8 +673,6 @@ window.VB = (function Visiobas() {
      * @returns Promise
      */
     function Request(reference) {
-        console.log("Request: ", reference);
-
         let def = $.Deferred();
 
         VB_API.getObject(reference).done((response) => {
@@ -1247,17 +1242,14 @@ window.VB = (function Visiobas() {
 
                 });
 
-                console.log("multi-state.ITEM: ", object, $item.html());
                 break;
 
             case "folder":
-                console.log("folder.ITEM: ", object, reference);
                 $item = $(`<div class="icon_item" id="${uniqId}"></div>`);
                 $item.css({ 'background-image': `url("${icon}")` });
 
                 $item.on('click', (event) => {
                     event.stopPropagation();
-                    console.log("GO TO: ", reference, "from: ", object);
                     VD.ShowVisiobasTabbar();
                     VBasWidget.show("#visualization", reference);
                 });

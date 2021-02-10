@@ -548,6 +548,7 @@ window.VD = (function Visiodesk() {
             }
             else if ($item.hasClass('automatic')) {
                 ShowVisiobasTabbar();
+                console.log("automatic._subscribe: ", $item);
                 VB.redirect({
                     reference: "Site"
                 });
@@ -820,7 +821,6 @@ window.VD = (function Visiodesk() {
         if(reference===window._last_reference && reference!==":News" &&  reference!==":Feed" && !force_refresh) return;
         window._last_reference = reference;
         params = params || {};
-        // console.log("Controller: ", reference, selector);
         var refName = 'VD_' + VB_API.extractName(reference);
         var refParent = 'VD_' + VB_API.extractName(VB_API.parentReference(reference));
         var moduleName = '';
@@ -830,6 +830,8 @@ window.VD = (function Visiodesk() {
         } else if (typeof window[refParent] == "object" && typeof window[refParent]['run'] == "function") {
             moduleName = refParent;
         }
+
+        // console.log("Controller: ", reference, selector, moduleName, refName);
 
         if (moduleName != '') {
             __unloadModule(VD.GetHistory());
@@ -855,8 +857,13 @@ window.VD = (function Visiodesk() {
             });
 
         } else {
-            console.error(`Undefined visiodesk module resolved by reference: "${reference}"`);
-            window.setTimeout(()=>{VD.Controller(":Groups","#main-container")}, 2000);
+            if(refName && reference.replace(":","")===reference.replace(":","").toUpperCase()) {
+                console.error(`Undefined visiodesk module resolved by reference: "${reference}"`);
+            }
+            window.setTimeout(() => {
+                VD.Controller(":Groups", "#main-container")
+            }, 2000);
+
         }
     }
 
