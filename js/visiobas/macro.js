@@ -64,6 +64,7 @@
          * @param {object} [replaceKeyValue=undefined] key-value replace dict
          */
         function executeFragment(fragment, replaceKeyValue) {
+            console.log("executeFragment: ", fragment, replaceKeyValue);
 
             let req = fragment.find("visiobas").filter((i, e) => {
                 return !_.isEmpty($(e).attr("src"));

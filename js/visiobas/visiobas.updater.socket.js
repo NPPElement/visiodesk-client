@@ -180,7 +180,7 @@
          * @return {boolean} success flag
          */
         function addObject(object, fields, subscriberId) {
-            _dbg("addObject");
+            console.log("addObject " , object, " +"+subscriberId);
             if (!_.has(_subscribes, subscriberId)) {
                 //there no subscriber with id
                 return false;
@@ -202,6 +202,7 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
+            console.log("register:", objects, subscriber );
             // _dbg("register.len = "+objects.length, fields, subscriber, objects);
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
