@@ -342,11 +342,14 @@ window.VBasWidget = (function () {
                     .done((response) => {
                         // console.log("svg visualization loaded and starting update present values");
                         _$selector.find("#vbas-widget").html(response.data);
+                        console.log("#vbas-widget < html: ", response.data);
                         __prepareVisualization();
 
                         let reference_inmap = [];
                         $("#visualization [reference]").each((i,e)=>{
-                            if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference"));
+                            // if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference"));
+                            // убрано проверка на то, не является ли оно сигналом. Сигналы тоже нужно "грузить"
+                            reference_inmap.push($(e).attr("reference"));
                         });
                         let count_items = reference_inmap.length;
                         let res_objs = [];
