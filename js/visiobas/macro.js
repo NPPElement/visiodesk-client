@@ -38,6 +38,7 @@
          * @param {object} [replace=undefined] key - value object to preform replace
          */
         function replacer(text, replace) {
+            console.log("replacer: ", text, replace);
             if (!_.isEmpty(replace) && !_.isNull(replace) && _.isObject(replace)) {
                 _.each(Object.keys(replace), (key) => {
                     if (true || (key.startsWith("{%") && key.endsWith("%}"))) {
