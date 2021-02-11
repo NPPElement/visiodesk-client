@@ -101,12 +101,16 @@
 
 
         function __parseMqttData(topic, data) {
+
             let reference  = __path2reference(topic);
             data = data.split(" ");
-            let valueNum = data[2];
-            let statusNum = data[3];
-            let typeNum = data[1];
+            // console.log("data: ", data);
+            let valueNum = data[3];
+            let statusNum = data[4];
+            let typeNum = data[2];
+
             let objectType = BACNET_OBJECT_TYPE_NAME[typeNum];
+            if(objectType===undefined) return;
             let value = null;
             let status = [false,false,false,false];
             for(let i=0;i<4;i++) status[i]=(statusNum&(1<<i))!==0;
@@ -134,7 +138,7 @@
         function mqttOnData(topic, messageArray, packet) {
             let messageStr = "";
             messageArray.forEach(c=>messageStr+=String.fromCharCode(c));
-            console.log("mqttOnData("+(++nr)+"): ", topic, messageStr);
+            // console.log("mqttOnData("+(++nr)+"): ", topic, messageStr);
             __parseMqttData(topic, messageStr);
         }
 

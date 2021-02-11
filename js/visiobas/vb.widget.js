@@ -228,7 +228,17 @@ window.VBasWidget = (function () {
                 }
 
 
-                if(reference.indexOf("/")===-1 && Object.keys(vis.replace).length===0) {
+                if(true || (reference.indexOf("/")===-1 && Object.keys(vis.replace).length===0)) {
+                    VB_UPDATER.register([],
+                        [
+                            BACNET_CODE["present-value"],
+                            BACNET_CODE["status-flags"]
+                        ],
+                        {
+                            "id": "vb.widget",
+                            "callback": __updateValues
+                        });
+
                     _replace = vis.replace;
                     __loadTemplate(vis, _replace, object);
                 } else  VB_API.getAllChildren(reference)
