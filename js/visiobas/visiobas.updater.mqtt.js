@@ -28,7 +28,9 @@
          * @param {string} id unique subscriber id
          */
         function unregister(id) {
+            console.log("unregister: ", id);
             window.VB_UPDATER.__DATA = _data;
+            window.VB_UPDATER.__SUBSCRIBES = _subscribes;
             if (_.has(_subscribes, id)) {
                 _subscribes[id].references.forEach(reference => {
                     if (_.has(_data, reference)) {
@@ -163,6 +165,7 @@
          * @return {boolean} success flag
          */
         function addObject(object, fields, subscriberId) {
+            console.log("addObject " , object, " +"+subscriberId)
             if (!_.has(_subscribes, subscriberId)) {
                 //there no subscriber with id
                 return false;
@@ -183,6 +186,7 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
+            console.log("register:", objects, subscriber );
             firstDataPass = false;
 
             console.log("register.subscribe: ", objects, fields, subscriber);
