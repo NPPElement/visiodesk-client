@@ -356,12 +356,12 @@ window.VBasWidget = (function () {
                             VB_API.getObject(ref_obj).done(oi=>{
                                 res_objs.push(oi.data);
                                 if(!--count_items) VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
-                                console.log("reference_inmap:", reference_inmap);
-                                console.log("res_objs:", res_objs);
                             })
 
                         });
 
+                        console.log("reference_inmap:", reference_inmap);
+                        console.log("res_objs:", res_objs);
 
 
 

@@ -72,7 +72,6 @@
             });
 
             req = $.map(req, function (vb) {
-                console.log("req.vb: ",  vb.html());
                 let src = $(vb).attr("src");
                 //let selector = $(vb).attr("selector");
                 let insertMode = $(vb).attr("insert-mode") || "replace";
