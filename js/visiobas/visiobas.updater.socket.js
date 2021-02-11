@@ -131,6 +131,7 @@
 
 
         function _rerequest() {
+            if(last_updated.length>0) __notifySubscribersForNewDataCache(last_updated);
             __requestData();
             /*
             _dbg("_rerequest");

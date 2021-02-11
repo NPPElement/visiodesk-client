@@ -4,65 +4,15 @@
  */
 (function () {
     function VisiobasUpdater() {
-        let _timerHandle = null;
-
-        /**
-         * request cache to update actual data
-         */
         let _requestCache = [];
-
-        /**
-         * Map of subscribed data and objects cache
-         * @example
-         * {
-         *     "Site:AI_001": {
-         *          "object": {...},
-         *          "ref": 2
-         *     }
-         * }
-         * @type {object}
-         * @private
-         */
         let _data = {};
-
-        /**
-         * Visiobas backnet objects cache data with actual fields values
-         * @type {Array} array of visiobas objects
-         * @private
-         */
-        //let _dataCache = [];
-
-        /**
-         * Map of registered subscribers
-         * key {string} subscriber id,
-         * value {object} with follow structure: {subscriber: {}, objects: []}
-         * Each subscriber has it own callback
-         * @private
-         */
-        //let _watchers = {};
-
-        /**
-         * Map of registered subscribers
-         * @example
-         * {
-         *     "id": {
-         *             "subscriber": {
-         *                  "id": {string},
-         *                  "callback": {function(objects)}
-         *             },
-         *             "references": [...]
-         *     }
-         * }
-         * @type {{}}
-         * @private
-         */
         let _subscribes = {};
-
-        /**
-         * Only work log subscribers
-         * @private
-         */
         let _workLogSubscribers = {};
+        let mqttClient = null;
+        let mqttConnected = false;
+        let firstDataPass = false;
+        let firstDataValues = [];
+        let nr = 0;
 
         return {
             "requestData": requestData,
@@ -78,11 +28,13 @@
          * @param {string} id unique subscriber id
          */
         function unregister(id) {
+            window.VB_UPDATER.__DATA = _data;
             if (_.has(_subscribes, id)) {
                 _subscribes[id].references.forEach(reference => {
                     if (_.has(_data, reference)) {
                         if (!--_data[reference].ref) {
                             delete _data[reference];
+                            mqttClient.unsubscribe(__reference2path(reference));
                         }
                     }
                 });
@@ -100,11 +52,9 @@
             _workLogSubscribers[subscriber.id] = subscriber;
         }
 
-        function unsubscribeForWorkLog(id) {
-            delete _workLogSubscribers[id];
-        }
-
         function __registerObject(object, fields, subscriberId) {
+            // console.log("__registerObject: ", object, fields, subscriberId);
+
             const reference = object["77"];
             const type = object["79"];
 
@@ -125,6 +75,7 @@
                 const subscriber = _subscribes[subscriberId];
                 if (subscriber.references.indexOf(reference) === -1) {
                     subscriber.references.push(reference);
+                    mqttSubscribe(object['77']);
                 }
 
                 result = true;
@@ -132,6 +83,73 @@
 
             return result;
         }
+
+        function __reference2path(reference) {
+            return reference.split(".").join("/").split(":").join("/");
+        }
+
+        function __path2reference(topic) {
+            topic = topic.split("/");
+            let r = topic[0];
+            for(let i=1;i<topic.length;i++) {
+                if(i===1) r+=":"+topic[i];
+                else if(i===2) r+="/"+topic[i];
+                else r+="."+topic[i];
+            }
+            return r;
+        }
+
+
+        function __parseMqttData(topic, data) {
+            let reference  = __path2reference(topic);
+            data = data.split(" ");
+            let valueNum = data[2];
+            let statusNum = data[3];
+            let typeNum = data[1];
+            let objectType = BACNET_OBJECT_TYPE_NAME[typeNum];
+            let value = null;
+            let status = [false,false,false,false];
+            for(let i=0;i<4;i++) status[i]=(statusNum&(1<<i))!==0;
+
+            if(objectType.indexOf('binary')!==-1) {
+                if(valueNum=='0') value = 'active';
+                else if(valueNum=='1') value = 'inactive'
+            } else if(objectType.indexOf('analog')!==-1 && valueNum.charAt(0)!=='n') {
+                value = parseFloat(valueNum);
+            } else if(objectType.indexOf('multistate')!==-1 && valueNum.charAt(0)!=='n') {
+                value = parseInt(valueNum);
+            }
+
+            let objects = {
+                '77': reference,
+                '79': objectType,
+                '85': value,
+                '111': status
+            };
+            // console.log("__parseMqttData: ", objects);
+            if(firstDataPass) __notifySubscribersForNewDataCache([objects]);
+            else firstDataValues.push(objects);
+        }
+
+        function mqttOnData(topic, messageArray, packet) {
+            let messageStr = "";
+            messageArray.forEach(c=>messageStr+=String.fromCharCode(c));
+            console.log("mqttOnData("+(++nr)+"): ", topic, messageStr);
+            __parseMqttData(topic, messageStr);
+        }
+
+        function mqttSubscribe(reference) {
+            if(!mqttConnected) {
+                console.log("Mqtt not connected");
+                return;
+            }
+            let objPath = __reference2path(reference);
+            console.log("subscribe: ",objPath);
+            mqttClient.unsubscribe( objPath);
+            mqttClient.subscribe( objPath, function () {
+            });
+        }
+
 
         /**
          * Add object to registered subscriber
@@ -161,6 +179,10 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
+            firstDataPass = false;
+
+            console.log("register.subscribe: ", objects, fields, subscriber);
+
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
             }
@@ -194,19 +216,39 @@
          * @private
          */
         function start() {
-            if (_timerHandle) {
-                clearTimeout(_timerHandle);
-            }
+            console.log("UPDATER.start");
+            mqttClient = mqtt.connect("ws://visiodesk.net:15675/ws", {
+                username: "user",
+                password: "user",
+                keepalive: 60,
+                encoding: 'utf8',
+                clientId: "webclient"+Math.random().toString(16).substr(2, 8),
+                protocolId: 'MQIsdp',
+                protocolVersion: 3,
+            });
 
-            _timerHandle = setInterval(__timerRequest, 5000);
-            // window.VB_UPDATER.__DATA = _data;
-            // window.VB_UPDATER.__SUBSCRIBES = _subscribes;
+            mqttClient.on('connect', function() {
+                console.log("mqtt connected");
+                mqttConnected = true;
+                let refs = Object.keys(_data);
+                refs.forEach(ref=>{
+                    let path = __reference2path(ref);
+                    console.log("path: "+path);
+                    mqttClient.subscribe( path );
+                } );
+
+
+
+            });
+
+            mqttClient.on('message', mqttOnData);
+            mqttClient.on('disconnect', function () {
+                console.log('mqtt disconnect, ', arguments);
+            });
+
+            window._mqttClient = mqttClient;
         }
 
-        function __timerRequest() {
-            __requestData();
-            //__requestWorkLogData();
-        }
 
         /**
          * Notify all registered subscribed about new data cache
@@ -236,89 +278,24 @@
             }
         }
 
-        function __requestWorkLogData() {
-            //TODO how to request last unreaded data ?
-            VB_API.getEventPingLogs(8 * 60 * 60).done((response) => {
-                //notify work log subscribers
-                for (let id in _workLogSubscribers) {
-                    const subscriber = _workLogSubscribers[id];
-                    if (subscriber.callback) {
-                        subscriber.callback.call(null, response.data);
-                    }
-                }
 
-            }).fail((response) => {
-                console.log(response.error);
-            });
-        }
 
-        function __requestChunkData(chunk) {
-            if (!chunk.length) {
-                return
-            }
 
-            // console.log(sprintf("request chink %d objects", chunk.length));
-
-            VB_API.getObjects(chunk).done((response) => {
-                const refCode = BACNET_CODE["object-property-reference"];
-                const flagsCode = BACNET_CODE["status-flags"];
-                const presentCode = BACNET_CODE["present-value"];
-                const activeCode = BACNET_CODE["active-text"];
-                const inactiveCode = BACNET_CODE["inactive-text"];
-
-                let updated = [];
-                for (let i = 0; i < response.data.length; ++i) {
-                    let data = response.data[i];
-                    let reference = data[refCode];
-                    let status = data[flagsCode] || [false, false, false, false];
-                    let presentValue = data[presentCode];
-                    let activeText = data[activeCode];
-                    let inactiveText = data[inactiveCode];
-
-                    if (_.has(_data, reference)) {
-                        const dataCache = _data[reference];
-                        const fields = dataCache.fields;
-                        for (let i = 0; i < fields.length; ++i) {
-                            const field = fields[i];
-                            dataCache.object[field] = data[field];
-                        }
-                        updated.push(_data[reference].object);
-                    }
-                }
-
-                __notifySubscribersForNewDataCache(updated);
-            }).fail((response) => {
-                console.error("Can't update present values, error: " + response.error);
-            });
-        }
 
         /**
          * Request current data without waiting timer
          */
         function requestData() {
-            __requestData();
+            firstDataPass = true;
+            __notifySubscribersForNewDataCache(firstDataValues);
+            firstDataValues = [];
         }
 
-        function __requestData() {
-            if (_requestCache.length === 0) {
-                return;
-            }
 
-            const maxRequestObjects = 20;
-            let request = [];
-            for (let i = 0; i < _requestCache.length; ++i) {
-                if (i % maxRequestObjects === 0) {
-                    __requestChunkData(request);
-                    request = [];
-                }
-                request.push(_requestCache[i]);
-            }
-
-            __requestChunkData(request);
-        }
     }
 
     window.VB_UPDATER = VisiobasUpdater();
+
 
     //start pooling server for requested data
     window.VB_UPDATER.start();
