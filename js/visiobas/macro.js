@@ -38,7 +38,7 @@
          * @param {object} [replace=undefined] key - value object to preform replace
          */
         function replacer(text, replace) {
-            console.log("replacer: ", text, replace);
+            console.log("replacer: ", replace);
             if (!_.isEmpty(replace) && !_.isNull(replace) && _.isObject(replace)) {
                 _.each(Object.keys(replace), (key) => {
                     if (true || (key.startsWith("{%") && key.endsWith("%}"))) {
@@ -65,14 +65,14 @@
          * @param {object} [replaceKeyValue=undefined] key-value replace dict
          */
         function executeFragment(fragment, replaceKeyValue) {
-            console.log("executeFragment: ", fragment, replaceKeyValue);
+            // console.log("executeFragment: ", fragment, replaceKeyValue);
 
             let req = fragment.find("visiobas").filter((i, e) => {
                 return !_.isEmpty($(e).attr("src"));
             });
 
             req = $.map(req, function (vb) {
-                console.log("req: ", req, vb);
+                console.log("req.vb: ",  vb.html());
                 let src = $(vb).attr("src");
                 //let selector = $(vb).attr("selector");
                 let insertMode = $(vb).attr("insert-mode") || "replace";

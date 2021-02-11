@@ -342,7 +342,6 @@ window.VBasWidget = (function () {
                     .done((response) => {
                         // console.log("svg visualization loaded and starting update present values");
                         _$selector.find("#vbas-widget").html(response.data);
-                        console.log("#vbas-widget < html: ", response.data);
                         __prepareVisualization();
 
                         let reference_inmap = [];
@@ -357,6 +356,8 @@ window.VBasWidget = (function () {
                             VB_API.getObject(ref_obj).done(oi=>{
                                 res_objs.push(oi.data);
                                 if(!--count_items) VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
+                                console.log("reference_inmap:", reference_inmap);
+                                console.log("res_objs:", res_objs);
                             })
 
                         });

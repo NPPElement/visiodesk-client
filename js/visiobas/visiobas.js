@@ -746,7 +746,7 @@ window.VB = (function Visiobas() {
 
             VISIOBAS_MACRO.executeTemplate(text, replace).done((template) => {
 
-                console.log("VISIOBAS_MACRO.executeTemplate: ", text, replace, "=>", template);
+                // console.log("VISIOBAS_MACRO.executeTemplate: ", text, replace, "=>", template);
 
                 if (!_.isEmpty(selector)) {
                     $(selector).html(template);
