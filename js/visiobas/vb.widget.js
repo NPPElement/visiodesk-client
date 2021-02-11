@@ -353,15 +353,25 @@ window.VBasWidget = (function () {
                         let count_items = reference_inmap.length;
                         let res_objs = [];
                         reference_inmap.forEach(ref_obj=>{
-                            VB_API.getObject(ref_obj).done(oi=>{
-                                res_objs.push(oi.data);
-                                if(!--count_items) VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
-                            })
+                            VB_API.getObject(ref_obj)
+                                .done(oi=>{
+                                    res_objs.push(oi.data);
+                                    if(!--count_items) {
+                                        VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
+                                        console.log("res_objs:", res_objs);
+                                    }
+                                })
+                                .fail(r=>{
+                                    console.log("getObject["+ref_obj+"] FAIL");
+                                    if(!--count_items) {
+                                        VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
+                                        console.log("res_objs:", res_objs);
+                                    }
+                                })
 
                         });
 
                         console.log("reference_inmap:", reference_inmap);
-                        console.log("res_objs:", res_objs);
 
 
 
