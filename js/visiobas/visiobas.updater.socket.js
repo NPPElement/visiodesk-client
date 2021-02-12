@@ -73,7 +73,7 @@
          */
         let ws = null;
         const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
-        let _dbg = ()=>{}; //console.log;
+        let _dbg = ()=>console.log;
         let wait = false;
         let tryConnect = false;
         let isConnect = false;

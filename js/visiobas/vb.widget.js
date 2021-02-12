@@ -344,7 +344,7 @@ window.VBasWidget = (function () {
                         // console.log("svg visualization loaded and starting update present values");
                         _$selector.find("#vbas-widget").html(response.data);
                         __prepareVisualization();
-
+                        /*
                         let reference_inmap = [];
                         $("#visualization [reference]").each((i,e)=>{
                             // if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference"));
@@ -373,12 +373,10 @@ window.VBasWidget = (function () {
                         });
 
                         console.log("reference_inmap:", reference_inmap);
+                        */
+                        __subscribeOnSingal();
 
 
-
-
-
-                        VB_UPDATER.requestData();
                         __initTrendLog();
                     })
                     .fail((response) => {
@@ -389,6 +387,16 @@ window.VBasWidget = (function () {
             }
         });
     }
+
+    function __subscribeOnSingal() {
+        var nominal_objects = [];
+        $("#visualization [reference^='Site:']").each((i, e) =>nominal_objects.push({'77':$(e).attr("reference"),'79':'accumulator'}));
+        console.log("res_objs:", nominal_objects);
+        console.log("VB_UPDATER.register.START", nominal_objects);
+        VB_UPDATER.register(nominal_objects,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
+        VB_UPDATER.requestData();
+    }
+
 
     /**
      * Register action handlers for instance 'click' handler ...
