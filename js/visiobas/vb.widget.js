@@ -127,6 +127,13 @@ window.VBasWidget = (function () {
     function __updateObject(o) {
         const selector = sprintf("[reference='%s']", o[BACNET_CODE["object-property-reference"]]);
         const dom = _$selector.find(selector);
+        if(dom.length===0) {
+            // console.log("not found: ", o['77']);
+            return;
+        } else {
+            // console.log("found and update: ", o['77']);
+        }
+
         const format = dom.attr("format");
         const status = o[BACNET_CODE["status-flags"]];
         const statusIsNormal = status.indexOf(true) === -1;
@@ -229,80 +236,8 @@ window.VBasWidget = (function () {
                 }
 
 
-                if(true || (reference.indexOf("/")===-1 && Object.keys(vis.replace).length===0)) {
-                    VB_UPDATER.register([],
-                        [
-                            BACNET_CODE["present-value"],
-                            BACNET_CODE["status-flags"]
-                        ],
-                        {
-                            "id": "vb.widget",
-                            "callback": __updateValues
-                        });
-
-                    _replace = vis.replace;
-                    __loadTemplate(vis, _replace, object);
-                } else  VB_API.getAllChildren(reference)
-                    .done((response) => {
-                        if (!response.success) {
-                            console.error(`Possible not all child objects was received of parent: ${reference}`);
-                        }
-
-                        const children = response.data;
-                        let replace = vis.replace;
-                        let updating = [];
-
-                        _replace = replace;
-
-                        //register as required for update all children objects
-                        VB_UPDATER.register(children,
-                            [
-                                BACNET_CODE["present-value"],
-                                BACNET_CODE["status-flags"]
-                            ],
-                            {
-                                "id": "vb.widget",
-                                "callback": __updateValues
-                            });
-
-                        //additional register objects from property list if it has 'reference' value
-                        for (let k in replace) {
-                            if (!replace.hasOwnProperty(k)) {
-                                continue;
-                            }
-                            if (replace[k].startsWith("Site:")) {
-                                const reference = replace[k];
-                                VB_API.getObject(reference)
-                                    .done((response) => {
-                                        VB_UPDATER.addObject(response.data,
-                                            [
-                                                BACNET_CODE["present-value"],
-                                                BACNET_CODE["status-flags"]
-                                            ],
-                                            "vb.widget");
-                                    })
-                                    .fail((response) => {
-                                        console.log(`Can't get object '${reference}', error: '${response.data}'`);
-                                    });
-                            }
-                        }
-
-                        children.forEach((o) => {
-                            const opl = VB_API.parsePropertyList(o[BACNET_CODE["property-list"]]);
-                            if (opl != null && !_.isEmpty(opl.alias)) {
-                                replace[opl.alias] = o[BACNET_CODE["object-property-reference"]];
-                            }
-                        });
-
-                        __loadTemplate(vis, replace, object);
-                    })
-                    .fail((response) => {
-                        console.error("Can't get children objects, parent: " + reference);
-                        console.error(response.error);
-
-                        //trying to load template without replace data
-                        __loadTemplate(vis);
-                    })
+                _replace = vis.replace;
+                __loadTemplate(vis, _replace, object);
             })
             .fail((response) => {
                 console.error("Can't get object: " + reference);
@@ -341,42 +276,9 @@ window.VBasWidget = (function () {
 
                 VB.Load(vis.template, void 0, replace)
                     .done((response) => {
-                        // console.log("svg visualization loaded and starting update present values");
                         _$selector.find("#vbas-widget").html(response.data);
                         __prepareVisualization();
-                        /*
-                        let reference_inmap = [];
-                        $("#visualization [reference]").each((i,e)=>{
-                            // if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference"));
-                            // убрано проверка на то, не является ли оно сигналом. Сигналы тоже нужно "грузить"
-                            reference_inmap.push($(e).attr("reference"));
-                        });
-                        let count_items = reference_inmap.length;
-                        let res_objs = [];
-                        reference_inmap.forEach(ref_obj=>{
-                            VB_API.getObject(ref_obj)
-                                .done(oi=>{
-                                    res_objs.push(oi.data);
-                                    if(!--count_items) {
-                                        VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
-                                        console.log("res_objs:", res_objs);
-                                    }
-                                })
-                                .fail(r=>{
-                                    console.log("getObject["+ref_obj+"] FAIL");
-                                    if(!--count_items) {
-                                        VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
-                                        console.log("res_objs:", res_objs);
-                                    }
-                                })
-
-                        });
-
-                        console.log("reference_inmap:", reference_inmap);
-                        */
-                        __subscribeOnSingal();
-
-
+                        __subscribeOnSignal();
                         __initTrendLog();
                     })
                     .fail((response) => {
@@ -388,13 +290,16 @@ window.VBasWidget = (function () {
         });
     }
 
-    function __subscribeOnSingal() {
-        var nominal_objects = [];
+    function __subscribeOnSignal() {
+        var nominal_objects = []; // условный объект, т.к. поля известно какие нужны.В будущем уйти совсем от списка полей и на сервере и на клиенте
         $("#visualization [reference^='Site:']").each((i, e) =>nominal_objects.push({'77':$(e).attr("reference"),'79':'accumulator'}));
-        console.log("res_objs:", nominal_objects);
-        console.log("VB_UPDATER.register.START", nominal_objects);
-        VB_UPDATER.register(nominal_objects,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
-        VB_UPDATER.requestData();
+        if(nominal_objects.length>0) {
+            VB_UPDATER.register(nominal_objects, [BACNET_CODE["present-value"], BACNET_CODE["status-flags"]], {
+                "id": "vb.widget",
+                "callback": __updateValues
+            });
+            VB_UPDATER.requestData();
+        }
     }
 
 
@@ -430,21 +335,7 @@ window.VBasWidget = (function () {
                     .done((response) => {
                         _$selector.find("#vbas-widget").html(response.data);
                         __prepareVisualization();
-
-                        let reference_inmap = [];
-                        $("#visualization [reference]").each((i,e)=>{
-                            if($(e).attr("reference").indexOf("Site:")===0) reference_inmap.push($(e).attr("reference"));
-                        });
-                        let count_items = reference_inmap.length;
-                        let res_objs = [];
-                        reference_inmap.forEach(ref_obj=>{
-                            VB_API.getObject(ref_obj).done(oi=>{
-                                res_objs.push(oi.data);
-                                if(!--count_items) VB_UPDATER.register(res_objs,[BACNET_CODE["present-value"],BACNET_CODE["status-flags"]],{"id": "vb.widget","callback": __updateValues});
-                            })
-
-                        });
-                        VB_UPDATER.requestData();
+                        __subscribeOnSignal();
                         __initTrendLog();
                     });
 
@@ -652,18 +543,6 @@ window.VBasWidget = (function () {
     }
     
     function __initTrendLog() {
-        /*
-        $(".trendlog [reference], .trendlog[reference]").each(function () {
-            let $r = $(this);
-            if($r.attr("tlc")) return;
-            $r.attr("tlc", 1);
-            $r.click(function (e) {
-                let reference = $(this).attr("reference");
-                if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
-
-            })
-        });
-        */
         $(".trendlog").click(function (event) {
             event.stopPropagation();
             let $childRef = $(this).find("[reference]");

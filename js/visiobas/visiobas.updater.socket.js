@@ -14,57 +14,8 @@
         let _timeLast = "";
         let last_updated = [];
 
-        /**
-         * Map of subscribed data and objects cache
-         * @example
-         * {
-         *     "Site:AI_001": {
-         *          "object": {...},
-         *          "ref": 2
-         *     }
-         * }
-         * @type {object}
-         * @private
-         */
         let _data = {};
-
-        /**
-         * Visiobas backnet objects cache data with actual fields values
-         * @type {Array} array of visiobas objects
-         * @private
-         */
-        //let _dataCache = [];
-
-        /**
-         * Map of registered subscribers
-         * key {string} subscriber id,
-         * value {object} with follow structure: {subscriber: {}, objects: []}
-         * Each subscriber has it own callback
-         * @private
-         */
-        //let _watchers = {};
-
-        /**
-         * Map of registered subscribers
-         * @example
-         * {
-         *     "id": {
-         *             "subscriber": {
-         *                  "id": {string},
-         *                  "callback": {function(objects)}
-         *             },
-         *             "references": [...]
-         *     }
-         * }
-         * @type {{}}
-         * @private
-         */
         let _subscribes = {};
-
-        /**
-         * Only work log subscribers
-         * @private
-         */
         let _workLogSubscribers = {};
 
 
@@ -73,7 +24,7 @@
          */
         let ws = null;
         const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
-        let _dbg = ()=>console.log;
+        let _dbg = console.log;
         let wait = false;
         let tryConnect = false;
         let isConnect = false;
@@ -88,13 +39,8 @@
             "unregister": unregister,
             "addObject": addObject,
             "subscribeForWorkLog": subscribeForWorkLog,
-            "ws_send": function (data) {
-                if(ws.readyState===1) ws.send(data);
-                else {
-                    isConnect = false;
-                    // init_ws();
-                }
-            }
+            "ws_send": ws_send
+
         };
 
         /**
@@ -111,7 +57,10 @@
                         }
                     }
                 });
+                ws.close();
                 delete _subscribes[id];
+
+                if(id==="vb.widget") last_updated = [];
 
                 __updateRequestCache();
             }
@@ -202,7 +151,7 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
-            console.log("register:", objects, subscriber );
+            console.log("register:", objects.length, subscriber );
             // _dbg("register.len = "+objects.length, fields, subscriber, objects);
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
@@ -258,6 +207,17 @@
             _timeLast = maxTimeStr;
             // _timeLast = maxTimeMoment.add(1000*2*60*60).format("YYYY-MM-DD HH:mm:ss");
             // console.log("_timeLast: ", _timeLast);
+        }
+
+        function ws_send(data) {
+            _dbg("ws.send("+_timeLast+","+_requestString.length+");");
+            if(ws.readyState===1) {
+                    ws.send(data);
+                } else {
+                    _dbg("ws_send: ")
+                    isConnect = false;
+                    // init_ws();
+                }
         }
 
         function init_ws() {
@@ -481,8 +441,8 @@
 
                 wait = true;
                 lastRequestKey = newRequestKey;
-                _dbg("ws.send("+_timeLast+","+_requestString.length+");");
-                if(ws && ws.readyState===1) ws.send(_timeLast+";"+rs);
+                // if(ws && ws.readyState===1)
+                    ws_send(_timeLast+";"+rs);
             } else {
                 wait = false;
             }
