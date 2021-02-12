@@ -380,29 +380,30 @@ window.VBasWidget = (function () {
     }
 
     function makeGraphics(containerId, references) {
-
         let needNames = [];
-        references.forEach(ref=>{
-            if(gr_names[ref]===undefined) {
+        references.forEach(ref => {
+            if (gr_names[ref] === undefined) {
                 needNames.push({
-                    '77':ref,
-                    'fields':"77,28"
+                    '77': ref,
+                    'fields': "77,28"
                 });
             }
         });
+        if(needNames.length>0) {
+            VB_API.getObjects(needNames)
+                .done(res => {
+                    console.log(res.data);
+                    res.data.forEach(obj => gr_names[obj['77']] = obj['28']);
+                    makeGraphics_names(containerId, references);
+                })
+                .fail(err => {
+                    references.forEach(ref => gr_names[ref] = __lastName(ref));
+                    makeGraphics_names(containerId, references);
+                });
 
-        VB_API.getObjects(needNames)
-            .done(res=>{
-                console.log(res.data);
-                res.data.forEach(obj=>gr_names[obj['77']] = obj['28']);
-                makeGraphics_names(containerId, references);
-            })
-            .fail(err=>{
-                references.forEach(ref=>gr_names[ref] = __lastName(ref));
-                makeGraphics_names(containerId, references);
-            });
-
-
+        } else {
+            makeGraphics_names(containerId, references);
+        }
 
     }
 
@@ -592,9 +593,10 @@ window.VBasWidget = (function () {
             $(this).find("[reference]").each(function () {
                 let $r = $(this);
                 let reference = $r.attr("reference");
-                if(reference.indexOf("Site:")===0) references.push(reference);
+                // if(reference.indexOf("Site:")===0) references.push(reference);
+                if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
             });
-            makeGraphics("gr_chartist", references);
+            // makeGraphics("gr_chartist", references);
         });
 
         $(".trendlog[reference]").click(function (event) {
