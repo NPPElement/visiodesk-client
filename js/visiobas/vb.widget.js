@@ -52,6 +52,7 @@ window.VBasWidget = (function () {
     return {
         show: show,
         openWindow: openWindow,
+        updateValues: __updateValues
     };
 
     /**
