@@ -5513,14 +5513,14 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 }
 
 .visualization .window_header {
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
 }
 
 .visualization .window_header NAV {
     display: flex;
     align-items: flex-start;
     padding: 0 5px;
-    min-height: 44px;
+    /*min-height: 44px;*/
 }
 
 .visualization .window_header .edit_icon {

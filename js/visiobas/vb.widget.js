@@ -19,6 +19,7 @@ window.VBasWidget = (function () {
     let gr_update_timer = {};
     let gr_date_start = null;
     let gr_date_end = null;
+    let gr_names = {};
 
     /**
      * Load necessary template
@@ -373,8 +374,39 @@ window.VBasWidget = (function () {
         makeGraphics("graphic_full", chart_references)
     }
 
+    function __lastName(ref) {
+        let n = ref.split(".");
+        return n[n.length-1];
+    }
 
     function makeGraphics(containerId, references) {
+
+        let needNames = [];
+        references.forEach(ref=>{
+            if(gr_names[ref]===undefined) {
+                needNames.push({
+                    '77':ref,
+                    'fields':"77,28"
+                });
+            }
+        });
+
+        VB_API.getObjects(needNames)
+            .done(res=>{
+                console.log(res.data);
+                res.data.forEach(obj=>gr_names[obj['77']] = obj['28']);
+                makeGraphics_names(containerId, references);
+            })
+            .fail(err=>{
+                references.forEach(ref=>gr_names[ref] = __lastName(ref));
+                makeGraphics_names(containerId, references);
+            });
+
+
+
+    }
+
+    function makeGraphics_names(containerId, references) {
         if(gr_update_timer[containerId]) {
             window.clearTimeout(gr_update_timer[containerId]);
             gr_update_timer[containerId] = false;
@@ -501,7 +533,8 @@ window.VBasWidget = (function () {
                         t.setSeconds(t.getSeconds() + stepSecond);
                     }
                     for (let i = 0; i < data.length; i++) chart_series.push({
-                        name: convName(references[i]),
+                        name: gr_names[references[i]],
+                        // name: convName(references[i]),
                         data: data[i]
                     });
 
@@ -547,11 +580,21 @@ window.VBasWidget = (function () {
             event.stopPropagation();
             let $childRef = $(this).find("[reference]");
             console.log("childRef: ", $childRef.length);
+            /*
             $(this).find("[reference]").each(function () {
                 let $r = $(this);
                 let reference = $r.attr("reference");
                 if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
             })
+             */
+
+            let references = [];
+            $(this).find("[reference]").each(function () {
+                let $r = $(this);
+                let reference = $r.attr("reference");
+                if(reference.indexOf("Site:")===0) references.push(reference);
+            });
+            makeGraphics("gr_chartist", references);
         });
 
         $(".trendlog[reference]").click(function (event) {
