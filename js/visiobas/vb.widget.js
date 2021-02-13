@@ -348,9 +348,25 @@ window.VBasWidget = (function () {
 
     }
 
+    function __signal_pass(reference) {
+        if(chart_references.indexOf(reference)===-1) {
+            chart_references.push(reference);
+            $(".trendlog[reference='"+reference+"'],.trendlog [reference='"+reference+"']").addClass("signal_in_trendlog");
+            // console.log("__signal_by_chart.add: ", reference);
+        } else {
+            chart_references = _.difference(chart_references,[reference]);
+            $(".trendlog[reference='"+reference+"'],.trendlog [reference='"+reference+"']").removeClass("signal_in_trendlog");
+            // console.log("__signal_by_chart.remove: ", reference);
+        }
+    }
+
     function __signal_by_chart(reference) {
-        if(chart_references.indexOf(reference)===-1) chart_references.push(reference);
-                                                else chart_references = _.difference(chart_references,[reference]);
+        // console.log("chart_references: ", chart_references);
+        if(Array.isArray(reference)) {
+            reference.forEach(r=>__signal_pass(r));
+        } else {
+            __signal_pass(reference);
+        }
         makeGraphics("gr_chartist", chart_references);
     }
 
@@ -380,6 +396,7 @@ window.VBasWidget = (function () {
     }
 
     function makeGraphics(containerId, references) {
+        // console.log("makeGraphics: "+containerId, references);
         let needNames = [];
         references.forEach(ref => {
             if (gr_names[ref] === undefined) {
@@ -392,7 +409,7 @@ window.VBasWidget = (function () {
         if(needNames.length>0) {
             VB_API.getObjects(needNames)
                 .done(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     res.data.forEach(obj => gr_names[obj['77']] = obj['28']);
                     makeGraphics_names(containerId, references);
                 })
@@ -408,9 +425,16 @@ window.VBasWidget = (function () {
     }
 
     function makeGraphics_names(containerId, references) {
+        // console.log("makeGraphics_names: "+containerId, references);
         if(gr_update_timer[containerId]) {
             window.clearTimeout(gr_update_timer[containerId]);
             gr_update_timer[containerId] = false;
+        }
+
+        if(references.length===0) {
+            // console.log("references.length ==0 ");
+            $(".gr_controls").remove();
+            $("#"+containerId).html('');
         }
 
         let isToNow = false;
@@ -580,7 +604,7 @@ window.VBasWidget = (function () {
         $(".trendlog").click(function (event) {
             event.stopPropagation();
             let $childRef = $(this).find("[reference]");
-            console.log("childRef: ", $childRef.length);
+            // console.log("childRef: ", $childRef.length);
             /*
             $(this).find("[reference]").each(function () {
                 let $r = $(this);
@@ -593,15 +617,17 @@ window.VBasWidget = (function () {
             $(this).find("[reference]").each(function () {
                 let $r = $(this);
                 let reference = $r.attr("reference");
-                // if(reference.indexOf("Site:")===0) references.push(reference);
-                if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
+                if(reference.indexOf("Site:")===0) references.push(reference);
+                // if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
             });
+            __signal_by_chart(references);
             // makeGraphics("gr_chartist", references);
         });
 
         $(".trendlog[reference]").click(function (event) {
-            event.stopPropagation();
             let $r = $(this);
+            // if($r.closest(".trendlog").length>0) return;
+            event.stopPropagation();
             let reference = $r.attr("reference");
             if(reference.indexOf("Site:")===0) __signal_by_chart(reference);
         });

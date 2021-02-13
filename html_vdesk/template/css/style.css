@@ -7632,3 +7632,7 @@ label.input_group_title {
     text-shadow: #FFFF99 0 0 2px;
 }
 
+
+.signal_in_trendlog {
+    font-weight:bold!important;
+}
