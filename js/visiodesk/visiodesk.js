@@ -1193,7 +1193,7 @@ window.VD = (function Visiodesk() {
                         'caption': 'Не хватает прав доступа',
                         'description': 'перейти на главную страницу',
                         'click': () => {
-                            window.location = '/index.html';
+                            window.location = '/';
                         }
                     });
                     break;
