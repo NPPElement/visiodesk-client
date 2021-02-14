@@ -129,7 +129,7 @@
          * @return {boolean} success flag
          */
         function addObject(object, fields, subscriberId) {
-            console.log("addObject " , object, " +"+subscriberId);
+            // console.log("addObject.SOCKET " , object, " +"+subscriberId);
             if (!_.has(_subscribes, subscriberId)) {
                 //there no subscriber with id
                 return false;
@@ -151,7 +151,7 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
-            console.log("register:", objects.length, subscriber );
+            // console.log("register:", objects.length, subscriber );
             // _dbg("register.len = "+objects.length, fields, subscriber, objects);
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
@@ -317,6 +317,7 @@
          * @private
          */
         function __notifySubscribersForNewDataCache(update) {
+            // console.log("__notifySubscribersForNewDataCache: ", update);
             last_updated = update;
             for (let id in _subscribes) {
                 const subscriber = _subscribes[id];
@@ -334,7 +335,7 @@
                         objects = update;
                     }
 
-                    // console.log(sprintf("notify '%s' updating %d objects", subscriber.subscriber.id, objects.length));
+                    console.log(sprintf("notify '%s' updating %d objects", subscriber.subscriber.id, objects.length));
                     subscriber.subscriber.callback.call(null, objects);
                 }
             }

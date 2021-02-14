@@ -149,7 +149,6 @@
                 });
                 */
                 VISIOBAS_MACRO.executeTemplate(data).done((fragment) => {
-                  console.log("asdasd....");
 
                   $("#content").empty().append(fragment);
                 });
