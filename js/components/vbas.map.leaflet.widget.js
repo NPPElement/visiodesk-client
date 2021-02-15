@@ -377,6 +377,16 @@
             return L.popup().setContent(content);
         }
 
+
+        function __createVideoPopupContent(marker, html) {
+            const content = L.DomUtil.create("div");
+            $(content).width(300);
+            $(content).html(html);
+            return [L.popup().setContent(content),$(content)];
+            // return $(content);
+        }
+
+
         function __createMarkerMapControllerPopupContent(marker) {
             const def = $.Deferred();
             const content = L.DomUtil.create("div");
@@ -610,6 +620,8 @@
 
             return defLeafMarker;
         }
+
+
         /**
          *
          * @param marker
@@ -684,8 +696,83 @@
                             VBasWidget.show($(w.document.body).css("background-color","#2F3235"), marker.reference);
                         })
                     }
-            }});
+                }});
             defLeafMarker.resolve(leafMarker);
+
+
+
+            return defLeafMarker;
+        }
+
+
+        /**
+         *
+         * @param marker
+         * @returns {*}
+         * @private
+         * @return deferred of leaflet marker
+         */
+        function __createVideoLeafletMarker(marker) {
+
+            console.log("__createVideoLeafletMarker: ", marker);
+
+            let defLeafMarker = $.Deferred();
+
+            let iconOptions = {
+                iconUrl: marker.iconUrl
+            };
+            if (marker.className) {
+                iconOptions["className"] = marker.className;
+            }
+            if (marker.iconAnchor) {
+                iconOptions["iconAnchor"] = marker.iconAnchor;
+            }
+            if (marker.shadowAnchor) {
+                iconOptions["shadowAnchor"] = marker.shadowAnchor;
+            }
+            if (marker.iconSize) {
+                iconOptions["iconSize"] = marker.iconSize;
+            }
+            if (marker.shadowSize) {
+                iconOptions["shadowSize"] = marker.shadowSize;
+            }
+            if (marker.popupAnchor) {
+                iconOptions["popupAnchor"] = marker.popupAnchor;
+            }
+
+            const leafIcon = L.icon(iconOptions);
+
+            let videoCaption = marker.name;
+            if(marker.description) videoCaption = marker.description;
+
+            let options = {
+                icon: leafIcon
+            };
+            if (marker.zooms) {
+                options["zooms"] = marker.zooms;
+            }
+            if (marker.parentLayerId) {
+                options["parentLayerId"] = marker.parentLayerId;
+            }
+            const leafMarker = L.marker(__xy(marker.crd), options);
+
+            if(marker.popupUrl && marker.popupUrl.toLowerCase().indexOf("mp4")) {
+
+                const popup = __createVideoPopupContent(marker, '');
+                leafMarker.bindPopup(popup[0]);
+                leafMarker.on({
+                    click: function () {
+                        // $(popup).find("video").play();
+
+                        console.log("popup html", popup[1].html());
+                        popup[1].html(' <video class="video-ramka" src="' + marker.popupUrl + '" title="'+videoCaption+'" width="300" autoplay loop></video>');
+                    }
+                });
+                defLeafMarker.resolve(leafMarker);
+            } else {
+                console.error("нужно в popupUrl иметь ссылку на mp4");
+                leafMarker.reject();
+            }
 
 
 
@@ -974,6 +1061,10 @@
                     } else if (marker.kind === "object") {
                         if (marker.iconUrl) {
                             defLeafMarker = __createSVGLeafletMarker(marker);
+                        }
+                    } else if (marker.kind === "video") {
+                        if (marker.iconUrl) {
+                            defLeafMarker = __createVideoLeafletMarker(marker);
                         }
                     }
 

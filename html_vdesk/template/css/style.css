@@ -7638,3 +7638,8 @@ label.input_group_title {
     fill: #FFFF99!important;
     color:#FFFF99!important;
 }
+
+.video-ramka {
+    border: 1px solid #aaa;
+    border-radius: 6px;
+}
