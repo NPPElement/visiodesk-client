@@ -763,7 +763,7 @@
 
                 const selector = sprintf("[reference='%s']", object[BACNET_CODE["object-property-reference"]]);
                 const $dom = $("#" + _containerId).find(selector);
-                // console.log("MAP UPDATE: ", object, "sel: "+selector+", dom", $dom);
+                console.log("MAP UPDATE: ", object, "sel: "+selector+", dom", $dom);
                 const format = $dom.attr("format");
                 const status = object[BACNET_CODE["status-flags"]] || [false, false, false, false];
                 const statusIsNormal = status.indexOf(true) === -1;
