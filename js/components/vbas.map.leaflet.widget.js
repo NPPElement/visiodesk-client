@@ -153,10 +153,15 @@
 
         const _vbUpdaterId = "vbas.map.leaflet.widget";
 
+        let _timerLookRefs = false;
+        let _lastRefs = false;
+
+        __lookSignal();
 
         return {
             create: create,
             test: test,
+            __subscribeOnSignal: __subscribeOnSignal,
 
             findMarkerByReference: findMarkerByReference,
             map: ()=>{return leafMap},
@@ -856,11 +861,16 @@
 
             //load and add layer groups into leafMap
             __createLayerGroups(layer).done((defLeafGroups, leafGroups) => {
+                console.log("__createLayerGroups.DONE: ", leafGroups);
                 let overlays = {};
                 leafGroups.forEach((leafGroup) => {
-                    leafMap.addLayer(leafGroup);
+                    let r = leafMap.addLayer(leafGroup);
+                    console.log("R:",r);
                     overlays[leafGroup.options.caption] = leafGroup;
                 });
+
+                window.setTimeout(__subscribeOnSignal, 1400);
+                // __subscribeOnSignal();
 
                 _leafControlLayers = L.control.layers(_leafBaseLayers, overlays).addTo(leafMap);
 
@@ -875,15 +885,47 @@
 
 
 
+
             });
-            __subscribeOnSignal();
+             // __subscribeOnSignal();
+            // window.setTimeout(__subscribeOnSignal, 4000);
         }
 
+        function __lookSignal() {
+            if(_timerLookRefs!==false) window.clearInterval(_timerLookRefs);
+            let refs = [];
+            _timerLookRefs = window.setInterval(function () {
+                var nominal_objects = []; // условный объект, т.к. поля известно какие нужны.В будущем уйти совсем от списка полей и на сервере и на клиенте
+                $("#map [reference^='Site:']").each((i, e) => {
+                        let ref = $(e).attr("reference");
+                        refs.push(ref);
+                        nominal_objects.push({'77': ref, '79': 'accumulator'});
+                    }
+                );
+                refs = _.uniq(refs);
+                // console.log("nominal_objects: ", nominal_objects);
+                refs.sort();
+                let new_md5 = hex_md5( refs.join() );
+                if(_lastRefs!==new_md5) {
+                    console.log("!_.isEqual",_lastRefs, refs);
+                    _lastRefs = new_md5;
+                    if(nominal_objects.length>0) {
+                        VB_UPDATER.register(nominal_objects, [BACNET_CODE["present-value"], BACNET_CODE["status-flags"]], {
+                            "id": _vbUpdaterId,
+                            "callback": __subscriber_for_update
+                        });
+                        VB_UPDATER.requestData();
+                    }
+                }
+
+            },1500);
+        }
 
         function __subscribeOnSignal() {
+            return;
             var nominal_objects = []; // условный объект, т.к. поля известно какие нужны.В будущем уйти совсем от списка полей и на сервере и на клиенте
             $("#map [reference^='Site:']").each((i, e) =>nominal_objects.push({'77':$(e).attr("reference"),'79':'accumulator'}));
-            // console.log("__subscribeOnSignal:", nominal_objects);
+            console.log("__subscribeOnSignal:", nominal_objects);
 
             if(nominal_objects.length>0) {
                 VB_UPDATER.register(nominal_objects, [BACNET_CODE["present-value"], BACNET_CODE["status-flags"]], {

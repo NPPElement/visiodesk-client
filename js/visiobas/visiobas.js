@@ -987,6 +987,7 @@ window.VB = (function Visiobas() {
      });
      */
     function CreateForMapControllers(options) {
+        // console.log("CreateForMapControllers: ", options);
         const OBJECT_TYPE_CODE = BACNET_PROPERTY_ID["object-type"];
         const ITEM_WIDTH = 69;
         const ITEM_PAD_RIGHT = 10;
@@ -1040,6 +1041,7 @@ window.VB = (function Visiobas() {
             let reference = item['reference'] || '';
 
             VB_API.getObject(reference).then((response) => {
+                // console.log("VB_API.getObject: ", response);
                 let object = response.data;
                 switch (object[OBJECT_TYPE_CODE]) {
                     case 'analog-output':
@@ -1060,14 +1062,17 @@ window.VB = (function Visiobas() {
             }).done(() => {
                 loadedObjectsNumber++;
                 if (loadedObjectsNumber === items_size) {
+                    console.log("objectsReady.resolve");
                     objectsReady.resolve();
                 }
             });
         });
 
         objectsReady.done(() => {
+            // console.log("objectsReady.done: ", items);
             items.forEach((item, index) => {
                 let object = objects[index];
+                // console.log("items.forEach.item: ", item, index, objects);
                 if (!_.isEmpty(object)) {
                     __createForMapController(item, object, $wrapper);
                 }
@@ -1089,6 +1094,7 @@ window.VB = (function Visiobas() {
      * @private
      */
     function __createForMapController(item, object, $wrapper) {
+        // console.log("__createForMapController: ", item, object, $wrapper);
         const objectType = object[BACNET_PROPERTY_ID["object-type"]];
         const presentValue = object[BACNET_PROPERTY_ID["present-value"]];
         const minPresValue = object[BACNET_PROPERTY_ID["min-pres-value"]];

@@ -39,7 +39,8 @@
             "unregister": unregister,
             "addObject": addObject,
             "subscribeForWorkLog": subscribeForWorkLog,
-            "ws_send": ws_send
+            "ws_send": ws_send,
+            "_rerequest": _rerequest
 
         };
 
@@ -129,6 +130,7 @@
          * @return {boolean} success flag
          */
         function addObject(object, fields, subscriberId) {
+            if(!isConnect) return window.setTimeout(function () { addObject(object, fields, subscriberId); },100);
             // console.log("addObject.SOCKET " , object, " +"+subscriberId);
             if (!_.has(_subscribes, subscriberId)) {
                 //there no subscriber with id
@@ -151,7 +153,8 @@
          * @param {object} subscriber
          */
         function register(objects, fields, subscriber) {
-            // console.log("register:", objects.length, subscriber );
+            if(!isConnect) return window.setTimeout(()=>register(objects, fields, subscriber),100);
+            console.log("register(socket):", objects.length, subscriber );
             // _dbg("register.len = "+objects.length, fields, subscriber, objects);
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
@@ -191,7 +194,8 @@
             }
             // _dbg("__updateRequestCache: "+rs_len0+"("+rc_len0+")"+" -> "+_requestString.length + "("+_requestCache.length+")");
             _timeLast = "";
-            _rerequest();
+            if(isConnect) _rerequest();
+
         }
 
         function setLastDate(items) {
@@ -238,8 +242,8 @@
                 tryConnect = false;
                 isConnect = true;
                 wait = false;
-
                 if(_requestString.length>0) __requestData();
+
 
             };
             ws.onclose = function(event) {

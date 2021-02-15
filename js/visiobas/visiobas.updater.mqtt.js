@@ -187,6 +187,7 @@
          */
         function register(objects, fields, subscriber) {
             console.log("register:", objects, subscriber );
+
             firstDataPass = false;
 
             console.log("register.subscribe: ", objects, fields, subscriber);
