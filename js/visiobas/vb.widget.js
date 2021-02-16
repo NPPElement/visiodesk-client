@@ -128,6 +128,7 @@ window.VBasWidget = (function () {
     function __updateObject(o) {
         const selector = sprintf("[reference='%s']", o[BACNET_CODE["object-property-reference"]]);
         const dom = _$selector.find(selector);
+
         if(dom.length===0) {
             // console.log("not found: ", o['77']);
             return;
@@ -141,77 +142,83 @@ window.VBasWidget = (function () {
         const objectType = o[BACNET_CODE["object-type"]];
         const presentValue = o[BACNET_CODE["present-value"]];
 
-        //update class status
-        dom.removeClass("hide normal in-alarm fault overridden out-of-service");
-        dom.removeClass("active inactive");
 
-        if (status[0]) {
-            dom.addClass("in-alarm");
-        }
-        if (status[1]) {
-            dom.addClass("fault");
-        }
-        if (status[2]) {
-            dom.addClass("overridden");
-        }
-        if (status[3]) {
-            dom.addClass("out-of-service")
-        }
-        if (statusIsNormal) {
-            dom.addClass("normal");
-        }
+        function __set_dom(dom, o) {
+            //update class status
+            dom.removeClass("hide normal in-alarm fault overridden out-of-service");
+            dom.removeClass("active inactive");
 
-        if (VB.isAnalog(objectType) || objectType === "accumulator") {
-            if (dom.length) {
-                try {
-                    let transformSet = (typeof dom.data("transform-set") !== "undefined") ? dom.data("transform-set") : void 0;
-                    transformSet = (typeof dom.attr("transform-set") !== "undefined") ? dom.attr("transform-set") : void 0;
-                    if (transformSet) {
-                        const translateMatch = transformSet.match(/translate\((.*)\)/);
-                        if (translateMatch && translateMatch[1]) {
-                            const translate = translateMatch[1].split(",").map((e) => {
-                                return parseFloat(e);
-                            });
-                            const translateX = translate[0] * presentValue;
-                            const translateY = translate[1] * presentValue;
-                            dom.attr("transform", `translate(${translateX}, ${translateY})`);
+            if (status[0]) {
+                dom.addClass("in-alarm");
+            }
+            if (status[1]) {
+                dom.addClass("fault");
+            }
+            if (status[2]) {
+                dom.addClass("overridden");
+            }
+            if (status[3]) {
+                dom.addClass("out-of-service")
+            }
+            if (statusIsNormal) {
+                dom.addClass("normal");
+            }
+
+            if (VB.isAnalog(objectType) || objectType === "accumulator") {
+                if (dom.length) {
+                    try {
+                        let transformSet = (typeof dom.data("transform-set") !== "undefined") ? dom.data("transform-set") : void 0;
+                        transformSet = (typeof dom.attr("transform-set") !== "undefined") ? dom.attr("transform-set") : void 0;
+                        if (transformSet) {
+                            const translateMatch = transformSet.match(/translate\((.*)\)/);
+                            if (translateMatch && translateMatch[1]) {
+                                const translate = translateMatch[1].split(",").map((e) => {
+                                    return parseFloat(e);
+                                });
+                                const translateX = translate[0] * presentValue;
+                                const translateY = translate[1] * presentValue;
+                                dom.attr("transform", `translate(${translateX}, ${translateY})`);
+                            }
+
+                            const scaleMatch = transformSet.match(/scale\((.*)\)/);
+                            if (scaleMatch && scaleMatch[1]) {
+                                const scale = scaleMatch[1].split(",").map((e) => {
+                                    return parseFloat(e);
+                                });
+                                const scaleX = scale[0] * presentValue;
+                                const scaleY = scale[1] * presentValue;
+                                dom.attr("transform", `scale(${scaleX}, ${scaleY})`);
+                            }
                         }
-
-                        const scaleMatch = transformSet.match(/scale\((.*)\)/);
-                        if (scaleMatch && scaleMatch[1]) {
-                            const scale = scaleMatch[1].split(",").map((e) => {
-                                return parseFloat(e);
-                            });
-                            const scaleX = scale[0] * presentValue;
-                            const scaleY = scale[1] * presentValue;
-                            dom.attr("transform", `scale(${scaleX}, ${scaleY})`);
-                        }
+                    } catch (e) {
+                        console.error(`Failed update transform-set... ${e.message}`);
                     }
-                } catch (e) {
-                    console.error(`Failed update transform-set... ${e.message}`);
                 }
+                dom.addClass("sensor");
+                if (dom.is("text")) {
+                    dom.html(sprintf(format || "%f", presentValue));
+                } else if (dom.is("g")) {
+                    dom.find("text").html(sprintf(format || "%f", presentValue));
+                }
+            } else if (VB.isBinary(objectType)) {
+                const presentValueText = presentValue === "active" ? o[BACNET_CODE["active-text"]] : o[BACNET_CODE["inactive-text"]];
+                dom.addClass((presentValue === "active") ? "active" : "inactive");
+                if (dom.is("text")) {
+                    dom.html(sprintf(format || "%s", presentValueText));
+                } else if (dom.is("g")) {
+                    dom.find("text").html(sprintf(format || "%s", presentValueText));
+                }
+            } else if (VB.isMultiState(objectType)) {
+                const value = presentValue;
+                dom.removeClass((i, className) => {
+                    return className.startsWith("multi-state-");
+                });
+                dom.addClass(`multi-state-${value}`);
             }
-            dom.addClass("sensor");
-            if (dom.is("text")) {
-                dom.html(sprintf(format || "%f", presentValue));
-            } else if (dom.is("g")) {
-                dom.find("text").html(sprintf(format || "%f", presentValue));
-            }
-        } else if (VB.isBinary(objectType)) {
-            const presentValueText = presentValue === "active" ? o[BACNET_CODE["active-text"]] : o[BACNET_CODE["inactive-text"]];
-            dom.addClass((presentValue === "active") ? "active" : "inactive");
-            if (dom.is("text")) {
-                dom.html(sprintf(format || "%s", presentValueText));
-            } else if (dom.is("g")) {
-                dom.find("text").html(sprintf(format || "%s", presentValueText));
-            }
-        } else if (VB.isMultiState(objectType)) {
-            const value = presentValue;
-            dom.removeClass((i, className) => {
-                return className.startsWith("multi-state-");
-            });
-            dom.addClass(`multi-state-${value}`);
         }
+
+        dom.each((i, e)=>__set_dom($(e), o));
+
     }
 
     function __init(reference) {
