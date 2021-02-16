@@ -714,7 +714,7 @@
          */
         function __createVideoLeafletMarker(marker) {
 
-            console.log("__createVideoLeafletMarker: ", marker);
+            // console.log("__createVideoLeafletMarker: ", marker);
 
             let defLeafMarker = $.Deferred();
 
@@ -764,7 +764,7 @@
                     click: function () {
                         // $(popup).find("video").play();
 
-                        console.log("popup html", popup[1].html());
+                        // console.log("popup html", popup[1].html());
                         popup[1].html(' <video class="video-ramka" src="' + marker.popupUrl + '" title="'+videoCaption+'" width="300" autoplay loop></video>');
                     }
                 });
@@ -846,66 +846,109 @@
         }
         
         function __subscriber_for_update(objects) {
+
+
             objects.forEach((object) => {
 
                 const selector = sprintf("[reference='%s']", object[BACNET_CODE["object-property-reference"]]);
                 const $dom = $("#" + _containerId).find(selector);
-                console.log("MAP UPDATE: ", object, "sel: "+selector+", dom", $dom);
+                // console.log("MAP UPDATE: ", object, "sel: "+selector+", dom", $dom);
                 const format = $dom.attr("format");
                 const status = object[BACNET_CODE["status-flags"]] || [false, false, false, false];
                 const statusIsNormal = status.indexOf(true) === -1;
                 const objectType = __convertObjectType(object[BACNET_CODE["object-type"]]);
                 const presentValue = object[BACNET_CODE["present value"]];
 
-                //update class status
-                $dom.removeClass("hide normal in-alarm fault overridden out-of-service");
-                $dom.removeClass("active inactive");
 
-                if (status[0]) {
-                    $dom.addClass("in-alarm");
-                }
-                if (status[1]) {
-                    $dom.addClass("fault");
-                }
-                if (status[2]) {
-                    $dom.addClass("overridden");
-                }
-                if (status[3]) {
-                    $dom.addClass("out-of-service")
-                }
-                if (statusIsNormal) {
-                    $dom.addClass("normal");
-                }
+                function __set_dom($dom, object) {
 
-                if (VB.isAnalog(objectType) ||
-                    objectType === "accumulator") {
-                    $dom.addClass("sensor");
-                    if ($dom.is("text")) {
-                        $dom.html(sprintf(format || "%f", presentValue));
-                    } else if ($dom.is("g")) {
-                        $dom.find("text").html(sprintf(format || "%f", presentValue));
+                    //update class status
+                    $dom.removeClass("hide normal in-alarm fault overridden out-of-service");
+                    $dom.removeClass("active inactive");
+
+                    if (status[0]) {
+                        $dom.addClass("in-alarm");
                     }
-                } else if (VB.isBinary(objectType)) {
-                    const presentValueText = presentValue === "active" ? object[BACNET_CODE["active-text"]] : object[BACNET_CODE["inactive-text"]];
-                    $dom.addClass((presentValue === "active") ? "active" : "inactive");
-                    if ($dom.is("text")) {
-                        $dom.html(sprintf(format || "%s", presentValueText));
-                    } else if ($dom.is("g")) {
-                        $dom.find("text").html(sprintf(format || "%s", presentValueText));
+                    if (status[1]) {
+                        $dom.addClass("fault");
                     }
-                } else if (VB.isMultiState(objectType)) { // проверить
+                    if (status[2]) {
+                        $dom.addClass("overridden");
+                    }
+                    if (status[3]) {
+                        $dom.addClass("out-of-service")
+                    }
+                    if (statusIsNormal) {
+                        $dom.addClass("normal");
+                    }
 
-                    let multiStates = object[BACNET_CODE["state-text"]];
-                    let displayValue = presentValue;
-                    if (!_.isEmpty(multiStates)) {
-                        multiStates = JSON.parse(multiStates);
-                        if (_.isObject(multiStates)  && multiStates.hasOwnProperty(presentValue)) {
-                            displayValue = multiStates[presentValue];
+                    if (VB.isAnalog(objectType) ||
+                        objectType === "accumulator") {
+                        // if(object['77']==="Site:PETROL-STATIONS/PETROL-STATION_1.tank98_level")
+                        //     console.log("HERE: ", $dom, object);
+
+
+                        if ($dom.length) {
+                            try {
+                                let transformSet = (typeof $dom.data("transform-set") !== "undefined") ? $dom.data("transform-set") : void 0;
+                                transformSet = (typeof $dom.attr("transform-set") !== "undefined") ? $dom.attr("transform-set") : void 0;
+                                if (transformSet) {
+                                    const translateMatch = transformSet.match(/translate\((.*)\)/);
+                                    if (translateMatch && translateMatch[1]) {
+                                        const translate = translateMatch[1].split(",").map((e) => {
+                                            return parseFloat(e);
+                                        });
+                                        const translateX = translate[0] * presentValue;
+                                        const translateY = translate[1] * presentValue;
+                                        $dom.attr("transform", `translate(${translateX}, ${translateY})`);
+                                    }
+
+                                    const scaleMatch = transformSet.match(/scale\((.*)\)/);
+                                    if (scaleMatch && scaleMatch[1]) {
+                                        const scale = scaleMatch[1].split(",").map((e) => {
+                                            return parseFloat(e);
+                                        });
+                                        const scaleX = scale[0] * presentValue;
+                                        const scaleY = scale[1] * presentValue;
+                                        $dom.attr("transform", `scale(${scaleX}, ${scaleY})`);
+                                    }
+                                }
+                            } catch (e) {
+                                console.error(`Failed update transform-set... ${e.message}`);
+                            }
                         }
+
+                        $dom.addClass("sensor");
+                        if ($dom.is("text")) {
+                            $dom.html(sprintf(format || "%f", presentValue));
+                        } else if ($dom.is("g")) {
+                            $dom.find("text").html(sprintf(format || "%f", presentValue));
+                        }
+                    } else if (VB.isBinary(objectType)) {
+                        const presentValueText = presentValue === "active" ? object[BACNET_CODE["active-text"]] : object[BACNET_CODE["inactive-text"]];
+                        $dom.addClass((presentValue === "active") ? "active" : "inactive");
+                        if ($dom.is("text")) {
+                            $dom.html(sprintf(format || "%s", presentValueText));
+                        } else if ($dom.is("g")) {
+                            $dom.find("text").html(sprintf(format || "%s", presentValueText));
+                        }
+                    } else if (VB.isMultiState(objectType)) { // проверить
+
+                        let multiStates = object[BACNET_CODE["state-text"]];
+                        let displayValue = presentValue;
+                        if (!_.isEmpty(multiStates)) {
+                            multiStates = JSON.parse(multiStates);
+                            if (_.isObject(multiStates)  && multiStates.hasOwnProperty(presentValue)) {
+                                displayValue = multiStates[presentValue];
+                            }
+                        }
+                        $dom.html(displayValue);
+                        // todo: Проверить, делал вслепую
                     }
-                    $dom.html(displayValue);
-                    // todo: Проверить, делал вслепую
                 }
+
+
+                $dom.each((i, e)=>__set_dom($(e), object));
             });
         }
         
@@ -948,11 +991,11 @@
 
             //load and add layer groups into leafMap
             __createLayerGroups(layer).done((defLeafGroups, leafGroups) => {
-                console.log("__createLayerGroups.DONE: ", leafGroups);
+                // console.log("__createLayerGroups.DONE: ", leafGroups);
                 let overlays = {};
                 leafGroups.forEach((leafGroup) => {
                     let r = leafMap.addLayer(leafGroup);
-                    console.log("R:",r);
+                    // console.log("R:",r);
                     overlays[leafGroup.options.caption] = leafGroup;
                 });
 
@@ -994,7 +1037,7 @@
                 refs.sort();
                 let new_md5 = hex_md5( refs.join() );
                 if(_lastRefs!==new_md5) {
-                    console.log("!_.isEqual",_lastRefs, refs);
+                    // console.log("!_.isEqual",_lastRefs, refs);
                     _lastRefs = new_md5;
                     if(nominal_objects.length>0) {
                         VB_UPDATER.register(nominal_objects, [BACNET_CODE["present-value"], BACNET_CODE["status-flags"]], {
@@ -1012,7 +1055,7 @@
             return;
             var nominal_objects = []; // условный объект, т.к. поля известно какие нужны.В будущем уйти совсем от списка полей и на сервере и на клиенте
             $("#map [reference^='Site:']").each((i, e) =>nominal_objects.push({'77':$(e).attr("reference"),'79':'accumulator'}));
-            console.log("__subscribeOnSignal:", nominal_objects);
+            // console.log("__subscribeOnSignal:", nominal_objects);
 
             if(nominal_objects.length>0) {
                 VB_UPDATER.register(nominal_objects, [BACNET_CODE["present-value"], BACNET_CODE["status-flags"]], {

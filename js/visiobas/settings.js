@@ -271,6 +271,8 @@ window.VB_OBJECTS_EDIT_PARAMS = {
 
     81:"bool",
 
+
+
     84: {
         type: "select",
         select: [
@@ -353,7 +355,14 @@ window.VB_OBJECTS_EDIT_PARAMS = {
             {value: 1, title: "Включить"}
         ]
     },
-
+    133: {
+        type: "bool",
+        filter: { "true": 1, "false": 0 },
+        select: [
+            {value: 0, title: "Не вести лог"},
+            {value: 1, title: "Записывать лог"}
+        ]
+    },
     371: {
         type: "json",
         filter: function (x) {

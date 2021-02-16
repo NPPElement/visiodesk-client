@@ -142,7 +142,6 @@ window.VBasWidget = (function () {
         const objectType = o[BACNET_CODE["object-type"]];
         const presentValue = o[BACNET_CODE["present-value"]];
 
-
         function __set_dom(dom, o) {
             //update class status
             dom.removeClass("hide normal in-alarm fault overridden out-of-service");
@@ -218,7 +217,6 @@ window.VBasWidget = (function () {
         }
 
         dom.each((i, e)=>__set_dom($(e), o));
-
     }
 
     function __init(reference) {

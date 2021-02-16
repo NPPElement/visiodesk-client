@@ -154,7 +154,7 @@
          */
         function register(objects, fields, subscriber) {
             if(!isConnect) return window.setTimeout(()=>register(objects, fields, subscriber),100);
-            console.log("register(socket):", objects.length, subscriber );
+            // console.log("register(socket):", objects.length, subscriber );
             // _dbg("register.len = "+objects.length, fields, subscriber, objects);
             if (_.has(_subscribes, subscriber.id)) {
                 unregister(subscriber.id);
