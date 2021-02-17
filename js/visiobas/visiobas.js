@@ -1094,7 +1094,7 @@ window.VB = (function Visiobas() {
      * @private
      */
     function __createForMapController(item, object, $wrapper) {
-        console.log("__createForMapController: ", item, object, $wrapper);
+        // console.log("__createForMapController: ", item, object, $wrapper);
         const objectType = object[BACNET_PROPERTY_ID["object-type"]];
         const presentValue = object[BACNET_PROPERTY_ID["present-value"]];
         const minPresValue = object[BACNET_PROPERTY_ID["min-pres-value"]];

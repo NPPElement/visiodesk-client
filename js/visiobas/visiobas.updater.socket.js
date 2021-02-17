@@ -24,7 +24,7 @@
          */
         let ws = null;
         const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
-        let _dbg = console.log;
+        let _dbg = ()=>{};// console.log;
         let wait = false;
         let tryConnect = false;
         let isConnect = false;
@@ -139,7 +139,7 @@
 
             const res = __registerObject(object, fields, subscriberId);
             if (res) {
-                _dbg("addObject", object, fields, subscriberId);
+                // _dbg("addObject", object, fields, subscriberId);
                 __updateRequestCache();
             }
 
