@@ -143,6 +143,7 @@ window.VBasWidget = (function () {
         const presentValue = o[BACNET_CODE["present-value"]];
 
         function __set_dom(dom, o) {
+            const format = dom.attr("format");
             //update class status
             dom.removeClass("hide normal in-alarm fault overridden out-of-service");
             dom.removeClass("active inactive");

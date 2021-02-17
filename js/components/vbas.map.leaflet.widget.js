@@ -861,6 +861,7 @@
 
 
                 function __set_dom($dom, object) {
+                    const format = $dom.attr("format");
 
                     //update class status
                     $dom.removeClass("hide normal in-alarm fault overridden out-of-service");
