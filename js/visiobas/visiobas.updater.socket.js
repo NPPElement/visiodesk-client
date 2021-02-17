@@ -214,7 +214,7 @@
         }
 
         function ws_send(data) {
-            _dbg("ws.send("+_timeLast+","+_requestString.length+");");
+            // _dbg("ws.send("+_timeLast+","+_requestString.length+");");
             if(ws.readyState===1) {
                     ws.send(data);
                 } else {
@@ -259,7 +259,7 @@
                 wait = false;
                 let data = event.data;
                 data = JSON.parse(data);
-                _dbg("onmessage: ", data);
+                // _dbg("onmessage: ", data);
                 if(data.length>0) {
 
                     setLastDate(data);

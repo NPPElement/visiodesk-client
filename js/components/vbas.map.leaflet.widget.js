@@ -386,6 +386,14 @@
             // return $(content);
         }
 
+        function __createPopupHtmlContent(marker, html) {
+            const content = L.DomUtil.create("div");
+            // $(content).width(300);
+            $(content).html(html);
+            return [L.popup().setContent(content),$(content)];
+            // return $(content);
+        }
+
 
         function __createMarkerMapControllerPopupContent(marker) {
             const def = $.Deferred();
@@ -779,6 +787,89 @@
             return defLeafMarker;
         }
 
+
+        /**
+         *
+         * @param marker
+         * @returns {*}
+         * @private
+         * @return deferred of leaflet marker
+         */
+        function __createPopupHtmlLeafletMarker(marker) {
+
+            // console.log("__createVideoLeafletMarker: ", marker);
+
+            let defLeafMarker = $.Deferred();
+
+            let iconOptions = {
+                iconUrl: marker.iconUrl
+            };
+            if (marker.className) {
+                iconOptions["className"] = marker.className;
+            }
+            if (marker.iconAnchor) {
+                iconOptions["iconAnchor"] = marker.iconAnchor;
+            }
+            if (marker.shadowAnchor) {
+                iconOptions["shadowAnchor"] = marker.shadowAnchor;
+            }
+            if (marker.iconSize) {
+                iconOptions["iconSize"] = marker.iconSize;
+            }
+            if (marker.shadowSize) {
+                iconOptions["shadowSize"] = marker.shadowSize;
+            }
+            if (marker.popupAnchor) {
+                iconOptions["popupAnchor"] = marker.popupAnchor;
+            }
+
+            const leafIcon = L.icon(iconOptions);
+
+            let videoCaption = marker.name;
+            if(marker.description) videoCaption = marker.description;
+
+            let options = {
+                icon: leafIcon
+            };
+            if (marker.zooms) {
+                options["zooms"] = marker.zooms;
+            }
+            if (marker.parentLayerId) {
+                options["parentLayerId"] = marker.parentLayerId;
+            }
+            const leafMarker = L.marker(__xy(marker.crd), options);
+
+            if( marker.html) {
+
+                const popup = __createPopupHtmlContent(marker, '');
+                leafMarker.bindPopup(popup[0]);
+                leafMarker.on({
+                    click: function () {
+                        // $(popup).find("video").play();
+
+                        // console.log("popup html", popup[1].html());
+                        // popup[1].html(' А тут будет что попало, но для начала ...<br> смотрим маркер в отладке<br>'+marker.html);
+                        popup[1].html(marker.html);
+                        VISIOBAS_MACRO.executeTemplate(popup[1], marker.replace).done((fragment) => {
+                            // console.log("fragment: ", fragment);
+                        });
+                        window.setTimeout(()=>{
+                            popup[1].parent().width(popup[1].children().width());
+                            VB_UPDATER.requestData();
+                        }, 120);
+                    }
+                });
+                defLeafMarker.resolve(leafMarker);
+            } else {
+                console.error("нужно в html валидный HTML код");
+                leafMarker.reject();
+            }
+
+
+
+            return defLeafMarker;
+        }
+
         /**
          * This function should be gone after server update
          * @param {string} objectType
@@ -1109,6 +1200,10 @@
                     } else if (marker.kind === "video") {
                         if (marker.iconUrl) {
                             defLeafMarker = __createVideoLeafletMarker(marker);
+                        }
+                    } else if (marker.kind === "popup") {
+                        if (marker.iconUrl) {
+                            defLeafMarker = __createPopupHtmlLeafletMarker(marker);
                         }
                     }
 
