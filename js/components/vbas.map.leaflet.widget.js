@@ -210,7 +210,7 @@
                 });
 
                 return $.when.apply($, defLayers).done(() => {
-                    console.log(`layers loaded: ${data.layers.length}`);
+                    // console.log(`layers loaded: ${data.layers.length}`);
                     // if (response.marker && response.marker.options) {
                     //     //update default leaflet markers properties
                     //     L.Icon.Default.prototype.options = _.extend(L.Icon.Default.prototype.options, response.marker.options);
@@ -219,7 +219,7 @@
                     loadedLayersData.forEach((loadedData) => {
                         data.layers[loadedData.map.id] = loadedData;
                     });
-                    console.log("loadedLayersData:", data);
+                    // console.log("loadedLayersData:", data);
 
                     def.resolve(data);
                 });
@@ -839,19 +839,21 @@
             }
             const leafMarker = L.marker(__xy(marker.crd), options);
 
+
             if( marker.html) {
 
                 const popup = __createPopupHtmlContent(marker, '');
+                
                 leafMarker.bindPopup(popup[0]);
                 leafMarker.on({
                     click: function () {
-                        // $(popup).find("video").play();
-
-                        // console.log("popup html", popup[1].html());
-                        // popup[1].html(' А тут будет что попало, но для начала ...<br> смотрим маркер в отладке<br>'+marker.html);
                         popup[1].html(marker.html);
                         VISIOBAS_MACRO.executeTemplate(popup[1], marker.replace).done((fragment) => {
-                            // console.log("fragment: ", fragment);
+                            popup[1].click(function () {
+                                leafMarker.togglePopup();
+                                VD.ShowVisiobasTabbar();
+                                VBasWidget.show("#visualization", marker.reference);
+                            })
                         });
                         window.setTimeout(()=>{
                             popup[1].parent().width(popup[1].children().width());
@@ -1232,8 +1234,8 @@
                 });
 
                 defManagerLeafMarkers.done((defLeafMarkers, leafMarkers) => {
-                    console.log(`Leaflet markers created: ${leafMarkers.length}`);
-                    console.log(sprintf("layer group created: %s", group.id));
+                    // console.log(`Leaflet markers created: ${leafMarkers.length}`);
+                    // console.log(sprintf("layer group created: %s", group.id));
 
                     const resolvedLeafMarkers = [];
                     for (let i = 0; i < defLeafMarkers.length; ++i) {
@@ -1244,7 +1246,7 @@
                         }
                     }
 
-                    console.log("Resolved leaflet markers : " + resolvedLeafMarkers.length);
+                    // console.log("Resolved leaflet markers : " + resolvedLeafMarkers.length);
 
                     const leafGroup = L.layerGroup(resolvedLeafMarkers, {
                         caption: group.caption,

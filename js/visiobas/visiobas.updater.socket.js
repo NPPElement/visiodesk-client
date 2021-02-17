@@ -339,7 +339,7 @@
                         objects = update;
                     }
 
-                    console.log(sprintf("notify '%s' updating %d objects", subscriber.subscriber.id, objects.length));
+                    // console.log(sprintf("notify '%s' updating %d objects", subscriber.subscriber.id, objects.length));
                     subscriber.subscriber.callback.call(null, objects);
                 }
             }
