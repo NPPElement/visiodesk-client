@@ -1062,7 +1062,7 @@ window.VB = (function Visiobas() {
             }).done(() => {
                 loadedObjectsNumber++;
                 if (loadedObjectsNumber === items_size) {
-                    console.log("objectsReady.resolve");
+                    // console.log("objectsReady.resolve");
                     objectsReady.resolve();
                 }
             });
