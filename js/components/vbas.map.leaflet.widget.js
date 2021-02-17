@@ -764,7 +764,8 @@
             }
             const leafMarker = L.marker(__xy(marker.crd), options);
 
-            if(marker.popupUrl && marker.popupUrl.toLowerCase().indexOf("mp4")) {
+            // if(marker.popupUrl && marker.popupUrl.toLowerCase().indexOf("mp4")) {
+            if(marker.popupUrl) {
 
                 const popup = __createVideoPopupContent(marker, '');
                 leafMarker.bindPopup(popup[0]);
@@ -778,7 +779,7 @@
                 });
                 defLeafMarker.resolve(leafMarker);
             } else {
-                console.error("нужно в popupUrl иметь ссылку на mp4");
+                console.error("нужно в popupUrl иметь ссылку  на видео");
                 leafMarker.reject();
             }
 
