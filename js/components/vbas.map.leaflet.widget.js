@@ -388,7 +388,7 @@
 
         function __createPopupHtmlContent(marker, html) {
             const content = L.DomUtil.create("div");
-            // $(content).width(300);
+            // $(content).width(150);
             $(content).html(html);
             return [L.popup().setContent(content),$(content)];
             // return $(content);
@@ -841,10 +841,37 @@
             const leafMarker = L.marker(__xy(marker.crd), options);
 
 
+
+
+            if(!marker.html) {
+                console.error("нужно в html валидный HTML код");
+                leafMarker.reject();
+                return defLeafMarker;
+            }
+
+            let $_tmp = $(marker.html);
+
+            let ch = document.createElement("div");
+            ch.innerHTML = marker.html;
+
+
+            VISIOBAS_MACRO.executeTemplate(ch, marker.replace || {}).done((fragment) => {
+                const popup = __createPopupHtmlContent(marker, fragment);
+                console.log("fragment:", fragment, $_tmp);
+                window._FR = fragment;
+
+                leafMarker.bindPopup(popup[0]);
+                defLeafMarker.resolve(leafMarker);
+            });
+
+
+
+
+            /*
             if( marker.html) {
 
                 const popup = __createPopupHtmlContent(marker, '');
-                
+                window._PP = popup;
                 leafMarker.bindPopup(popup[0]);
                 leafMarker.on({
                     click: function () {
@@ -867,15 +894,19 @@
                         window.setTimeout(()=>{
                             popup[1].parent().width(popup[1].children().width());
                             VB_UPDATER.requestData();
+
+
+
                         }, 3200);
                     }
                 });
+
                 defLeafMarker.resolve(leafMarker);
             } else {
                 console.error("нужно в html валидный HTML код");
                 leafMarker.reject();
             }
-
+            */
 
 
             return defLeafMarker;
