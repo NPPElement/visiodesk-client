@@ -864,6 +864,10 @@
                             popup[1].parent().width(popup[1].children().width());
                             VB_UPDATER.requestData();
                         }, 1200);
+                        window.setTimeout(()=>{
+                            popup[1].parent().width(popup[1].children().width());
+                            VB_UPDATER.requestData();
+                        }, 3200);
                     }
                 });
                 defLeafMarker.resolve(leafMarker);
