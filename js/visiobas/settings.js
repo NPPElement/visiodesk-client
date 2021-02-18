@@ -363,6 +363,10 @@ window.VB_OBJECTS_EDIT_PARAMS = {
             {value: 1, title: "Записывать лог"}
         ]
     },
+    110: {
+        type: "string",
+    },
+
     371: {
         type: "json",
         filter: function (x) {

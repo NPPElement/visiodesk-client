@@ -774,7 +774,7 @@
                         // $(popup).find("video").play();
 
                         // console.log("popup html", popup[1].html());
-                        popup[1].html(' <video class="video-ramka" src="' + marker.popupUrl + '" title="'+videoCaption+'" width="300" autoplay loop></video>');
+                        popup[1].html(' <video class="video-ramka" src="' + marker.popupUrl + '" title="'+videoCaption+'" width="300" crossorigin="anonymous" autoplay loop></video>');
                     }
                 });
                 defLeafMarker.resolve(leafMarker);
@@ -860,6 +860,10 @@
                             popup[1].parent().width(popup[1].children().width());
                             VB_UPDATER.requestData();
                         }, 120);
+                        window.setTimeout(()=>{
+                            popup[1].parent().width(popup[1].children().width());
+                            VB_UPDATER.requestData();
+                        }, 1200);
                     }
                 });
                 defLeafMarker.resolve(leafMarker);

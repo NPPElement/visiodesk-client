@@ -774,6 +774,7 @@
 
 
             $("body").mousedown(function (e) {
+                if(!$popup.length) return;
                 let xy0 = $popup.offset();
                 if( Math.abs(xy0.left + 75 - e.pageX) > 100 ||  Math.abs(xy0.top + 75 - e.pageY) > 100) {
                     $popup.hide();
