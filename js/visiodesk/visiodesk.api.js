@@ -1426,6 +1426,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         }
 
         $.ajax(ajaxParams).done(function (response) {
+            // console.log("ajax("+url+")", response.data);
             if (response.success) {
                 def.resolve({
                     'itemId': lastItemId,

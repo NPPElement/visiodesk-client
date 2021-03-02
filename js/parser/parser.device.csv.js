@@ -615,7 +615,7 @@ function VisiobaseDeviceCsvParser() {
                     const val = $.trim(kv.join(":"));
 
                     //check is val should be reference
-                    if (val.indexOf("Site:") !== -1 || val.indexOf("Map:") !== -1 || val.indexOf("Panel:") !== -1) {
+                    if (val.indexOf("Site:") !== -1 || val.indexOf("Map:") !== -1 || val.indexOf("Panel:") !== -1 || val.indexOf("Settings:") !== -1) {
                         replace[key] = VB_API.validateReference(val);
                     } else {
                         replace[key] = val;

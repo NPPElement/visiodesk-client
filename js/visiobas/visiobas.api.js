@@ -528,6 +528,7 @@
         function validateReference(reference) {
             if(reference.indexOf("Map:")===0) return  reference;
             if(reference.indexOf("Panel:")===0) return  reference;
+            if(reference.indexOf("Settings:")===0) return  reference;
             if (_.isEmpty(reference)) {
                 return null;
             }
@@ -617,7 +618,7 @@
                 return null;
             }
 
-            if (_ref[0].toLowerCase() != "site" && _ref[0].toLowerCase() != "map" && _ref[0].toLowerCase() != "panel") {
+            if (_ref[0].toLowerCase() != "site" && _ref[0].toLowerCase() != "map" && _ref[0].toLowerCase() != "panel" && _ref[0].toLowerCase() != "settings") {
                 _ref = ["Site"].concat(_ref);
             }
 

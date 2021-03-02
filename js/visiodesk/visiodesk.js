@@ -655,7 +655,7 @@ window.VD = (function Visiodesk() {
     }
 
     function SetStickers() {
-        return;
+        // if(window.location.host.indexOf("localhost")!==-1) return;
         let wrapperSelector = '#stickers';
         let $stickers = $(wrapperSelector);
         let closed_last_id = [];
@@ -663,6 +663,9 @@ window.VD = (function Visiodesk() {
         VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
             let stickerTemplate = templatesContent['stickers.item.html'];
             VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {
+
+                // console.log("SetStickers: ", topicsList);
+
 
                 // console.log("subscribe", itemId, topicsList);
                 let myself_changes = false;
@@ -682,29 +685,33 @@ window.VD = (function Visiodesk() {
                             if(lastItemId<item['id']) lastItemId = item['id'];
 
                             if (item['type']['id'] === 6) {
+                                // console.log("items6:", item);
                                 statusItemId = item['id'];
-                                myself_changes = item['author']['id'] === authorizedUserId;
+                                myself_changes = (item['author'] && item['author']['id'] === authorizedUserId) || (item['author_id'] && item['author_id'] === authorizedUserId);
                             } else {
                                break;
                             }
 
                         }
 
-                        // console.log("statusItemId : ", statusItemId);
+                        console.log("statusItemId : ", statusItemId);
 
                         if (!statusItemId) {
                             return;
                         }
 
                         if(closed_last_id.includes(lastItemId)) return;
+                        console.log("!closed_last_id");
 
                         let is_new = topic['status_id']===1, // new
                             is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
-                            is_not_linked = topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
+                            is_not_linked = topic['groups'] && topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
                             is_double_border = is_not_linked,
                             is_long_sound = is_new || is_incedent,
                             class_double_border = is_double_border ? " double_border" :""
                         ;
+
+                        // console.log("is_new = "+is_new);
 
                         let sound_fn = "";
                         switch(topic['status_id']) {
@@ -730,11 +737,12 @@ window.VD = (function Visiodesk() {
                                 sound_fn = 'R-Message';
                         }
 
+                        // console.log("sound_fn = "+sound_fn);
                         sound_fn = VB_SETTINGS.htmlDir + '/template/sound/' + sound_fn;
                         let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
                         if($('#sticker-' + topic['id']).length>0) audio_html = "";
 
-                        // console.log("myself_changes("+topic['id']+") = "+(myself_changes?"Yes":"No"));
+                        console.log("myself_changes("+topic['id']+") = "+(myself_changes?"Yes":"No"));
 
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',

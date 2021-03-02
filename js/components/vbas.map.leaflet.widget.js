@@ -857,7 +857,7 @@
 
             VISIOBAS_MACRO.executeTemplate(ch, marker.replace || {}).done((fragment) => {
                 const popup = __createPopupHtmlContent(marker, fragment);
-                console.log("fragment:", fragment, $_tmp);
+                // console.log("fragment:", fragment, $_tmp);
                 window._FR = fragment;
 
                 leafMarker.bindPopup(popup[0]);

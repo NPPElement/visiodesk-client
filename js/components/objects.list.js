@@ -26,7 +26,8 @@
         let _tree_current_title = {
             Site: "Объекты",
             Map: "Карты",
-            Panel: "Панели"
+            Panel: "Панели",
+            Settings: "Настройки"
         };
 
 
