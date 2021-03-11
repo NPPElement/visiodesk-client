@@ -25,7 +25,8 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
         let topicsIdList = [];
         topicsList.forEach(topicShort => {
             lastTopics.delete(topicShort['id']);
-            lastTopics.set(topicShort['id'], topicShort['id']);
+            lastTopics.set(topicShort['id'], topicShort);
+            // lastTopics.set(topicShort['id'], topicShort['id']);
             topicsIdList.push(topicShort['id']);
             checkedTopics.delete(topicShort['id']);
         });
@@ -84,7 +85,7 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
         },
 
         setChanged: (_changed) => {
-            changed = _changed;
+            changed = _.uniq(_changed);
             checked = [];
         },
 
@@ -95,6 +96,7 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
         get: () => {
             return pending.then(() => {
                 let lastTopicsIterator = lastTopics.values();
+                // console.log("get.lastTopics: ", lastTopics);
                 let items = Array.from(lastTopicsIterator).reverse();
                 let result = [];
                 items.forEach(item=>{
@@ -166,6 +168,7 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
         },
 
         getNewsCounterNow: () => {
+            // console.log("getNewsCounterNow: ",changed, checked);
             return _.difference(changed, checked).length;
         },
 
@@ -174,6 +177,7 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
                 // let items = lastTopics, result = [];
                 // lastTopics.forEach(item=>{ if(changed.includes(item.id) && !checked.includes(item.id)) result.push(item)});
                 // return result.length;
+                // console.log("getNewsCounter: ",changed, checked);
                 return _.difference(changed, checked).length;
                 // return lastTopics.size - checkedTopics.size;
             });

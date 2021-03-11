@@ -101,6 +101,7 @@ window.VD_News = (function () {
             serviceTemplatesData = templatesContent;
             return VD_NEWS_UPDATER.get();
         }).then((lastTopics) => {
+            // console.log("lastTopics: ", lastTopics);
             let loading = true;
             let position = 0;
 

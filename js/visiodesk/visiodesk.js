@@ -694,14 +694,14 @@ window.VD = (function Visiodesk() {
 
                         }
 
-                        console.log("statusItemId : ", statusItemId);
+                        // console.log("statusItemId : ", statusItemId);
 
                         if (!statusItemId) {
                             return;
                         }
 
                         if(closed_last_id.includes(lastItemId)) return;
-                        console.log("!closed_last_id");
+                        // console.log("!closed_last_id");
 
                         let is_new = topic['status_id']===1, // new
                             is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
@@ -742,7 +742,7 @@ window.VD = (function Visiodesk() {
                         let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
                         if($('#sticker-' + topic['id']).length>0) audio_html = "";
 
-                        console.log("myself_changes("+topic['id']+") = "+(myself_changes?"Yes":"No"));
+                        // console.log("myself_changes("+topic['id']+") = "+(myself_changes?"Yes":"No"));
 
                         let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
                             'description': '',
@@ -959,16 +959,19 @@ window.VD = (function Visiodesk() {
                     }
 
                     let itemTemplate = serviceTemplatesData['vd.topic.message.inline.html'];
+                    let auth_id = item['author'] && item['author']['id'] ? item['author']['id'] : item['author_id'];
                     let itemTemplateExec = _.template(itemTemplate)($.extend(true, {}, {
                         'author': emptyUserObject,
                         'last_user_id': lastUserId,
-                        'is_reply': item['author']['id'] === authorizedUserId,
+                        // 'is_reply': item['author']['id'] === authorizedUserId,
+                        'is_reply': auth_id,
                         'index': index,
                         'length': topicItems.length,
                         'created_date': VD.GetFormatedDate(item['created_at']),
                         'text': ''
                     }, item));
-                    lastUserId = item['author']['id'];
+                    lastUserId = auth_id;
+                    // lastUserId = item['author']['id'];
                     itemsListExec += itemTemplateExec;
                 }
 
