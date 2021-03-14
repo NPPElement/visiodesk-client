@@ -70,7 +70,12 @@
          * @private
          */
         function __rpc(method, params, rpcUrl) {
+
+            console.log("rpcUrl: ", rpcUrl);
+
             let url = (typeof rpcUrl === "undefined") ? VB_SETTINGS.jsonRpcUrl : rpcUrl;
+
+            if(window.location.host.indexOf("visiodesk.net")!==-1) url = "ws://user:user@visiodesk.net:15675/ws/Set";
 
             if(url.startsWith("ws://")) return __rpc_ws_mqtt(method, params, url);
 
@@ -127,6 +132,8 @@
         function __rpc_ws_mqtt(method, params, rpcUrl) {
             let def = $.Deferred();
 
+
+
             params['object_type_name'] = BACNET_OBJECT_TYPE_NAME[params['object_type']];
 
             // ws://user:user@visiodesk.net:15675/ws/Set;
@@ -150,6 +157,7 @@
             data = JSON.stringify(data);
             if(mqInfo.mqttClient.__connected)  {
                 mqInfo.mqttClient.publish(mqInfo.Topic, data, 2 , function (res) {
+                    console.log("RES:", res);
                     def.resolve(true);
                 });
             } else {
@@ -157,7 +165,8 @@
                     Topic: mqInfo.Topic,
                     data: data,
                     qos: 2,
-                    callback: function () {
+                    callback: function (res) {
+                        console.log("RES:", res);
                         def.resolve(true);
                     }
                 };

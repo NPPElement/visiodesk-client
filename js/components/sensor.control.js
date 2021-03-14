@@ -171,6 +171,7 @@
                                 return false;
                         }
 
+                        window._changed$ = changed$;
                         __sensorControlActions(object, changed$);
 
                         //VD.SetVisiobasHistory('#objects-list', _parentSelector);
