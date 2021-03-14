@@ -303,6 +303,9 @@
                     try {
                         rpcUrl = response.data[BACNET_CODE["device-address-binding"]]["url"];
                     } catch (ignore) {}
+
+                    // todo: приходит пустой объект
+                    if(response.data && response.data[BACNET_CODE["protocol-services-supported"]]) rpcUrl = response.data[BACNET_CODE["protocol-services-supported"]];
                 })
                 .always(() => {
                     if (setManualControl) {

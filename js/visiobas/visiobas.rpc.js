@@ -5,6 +5,9 @@
 
 (function () {
     function VisiobasRpc() {
+
+        let _mqtt_clients = {};
+
         return {
             bacwp: bacwp,
             writeSetPoint: writeSetPoint,
@@ -16,6 +19,49 @@
             __extractPriorityArray: __extractPriorityArray
         };
 
+        function __get_myqq_client(rpcUrl) {
+            if(_mqtt_clients[rpcUrl]) return _mqtt_clients[rpcUrl];
+
+            let Topic = rpcUrl.substr(rpcUrl.indexOf("/ws")+4);
+            let url = rpcUrl.substr(0, rpcUrl.indexOf("/ws")+3);
+            // "ws://user:user@visiodesk.net:15675/ws/Set005".substr(rpcUrl.indexOf("/ws"))
+
+
+            let request = {
+                // username: "user",
+                // password: "user",
+                keepalive: 10,
+                encoding: 'utf8',
+                clientId: "rpcclient"+Math.random().toString(16).substr(2, 8),
+                protocolId: 'MQIsdp',
+                protocolVersion: 3,
+            };
+            let mqttClient = mqtt.connect(url, request);
+            mqttClient.__connected = false;
+            mqttClient.__ready = false;
+            mqttClient.on('connect', function() {
+                mqttClient.__connected = true;
+                console.log("mqtt.rpc connected");
+                if(mqttClient.__ready) {
+                    mqttClient.publish(mqttClient.__ready.Topic, mqttClient.__ready.data, mqttClient.__ready.qos, function (r) {
+                        mqttClient.__ready.callback(r);
+                        mqttClient.__ready = false;
+                    });
+                }
+            });
+            mqttClient.on('disconnect', function () {
+                mqttClient.__connected = false;
+                console.log('mqtt disconnect, ', arguments);
+            });
+
+            _mqtt_clients[rpcUrl] = {
+                mqttClient: mqttClient,
+                Topic: Topic
+            };
+            return _mqtt_clients[rpcUrl];
+        }
+
+
         /**
          * invoke json-rpc
          * @param {String} method
@@ -24,7 +70,9 @@
          * @private
          */
         function __rpc(method, params, rpcUrl) {
-            let def = $.Deferred();
+            let url = (typeof rpcUrl === "undefined") ? VB_SETTINGS.jsonRpcUrl : rpcUrl;
+
+            if(url.startsWith("ws://")) return __rpc_ws_mqtt(method, params, url);
 
             const data = {
                 jsonrpc: "2.0",
@@ -33,7 +81,6 @@
                 id: ""
             };
 
-            const url = (typeof rpcUrl === "undefined") ? VB_SETTINGS.jsonRpcUrl : rpcUrl;
 
             console.log("POST " + url);
             console.log(JSON.stringify(data));
@@ -74,6 +121,51 @@
 
             return def;
         }
+
+
+
+        function __rpc_ws_mqtt(method, params, rpcUrl) {
+            let def = $.Deferred();
+
+            params['object_type_name'] = BACNET_OBJECT_TYPE_NAME[params['object_type']];
+
+            // ws://user:user@visiodesk.net:15675/ws/Set;
+
+            let mqInfo = __get_myqq_client(rpcUrl);
+
+            // {"jsonrpc":"2.0","method":"value","params":{"device_id":1300,"object_identifier":3903,"object_type":4,"priority":11,"value":1.0}}
+
+            let data = {
+                jsonrpc: "2.0",
+                method: 'value',
+                params: {
+                    device_id: parseInt(params['device_id']),
+                    object_identifier: parseInt(params['object_id']),
+                    object_type: parseInt(params['object_type']),
+                    priority: parseInt(params['priority']),
+                    value: parseFloat(params['value']),
+                },
+            };
+
+            data = JSON.stringify(data);
+            if(mqInfo.mqttClient.__connected)  {
+                mqInfo.mqttClient.publish(mqInfo.Topic, data, 2 , function (res) {
+                    def.resolve(true);
+                });
+            } else {
+                mqInfo.mqttClient.__ready = {
+                    Topic: mqInfo.Topic,
+                    data: data,
+                    qos: 2,
+                    callback: function () {
+                        def.resolve(true);
+                    }
+                };
+            }
+            return def;
+        }
+
+
 
         /**
          *

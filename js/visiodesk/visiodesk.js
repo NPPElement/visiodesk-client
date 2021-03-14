@@ -655,7 +655,7 @@ window.VD = (function Visiodesk() {
     }
 
     function SetStickers() {
-        // if(window.location.host.indexOf("localhost")!==-1) return;
+        if(window.location.host.indexOf("localhost")!==-1) return;
         let wrapperSelector = '#stickers';
         let $stickers = $(wrapperSelector);
         let closed_last_id = [];
