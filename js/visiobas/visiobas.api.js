@@ -937,7 +937,7 @@
                     }
 
                     _.defaults(data[BACNET_CODE["device-address-binding"]], {url: VB_SETTINGS.jsonRpcUrl});
-                    console.info(JSON.stringify(obj.data));
+                    // console.info(JSON.stringify(obj.data));
                 }
 
                 let result = Object.assign({

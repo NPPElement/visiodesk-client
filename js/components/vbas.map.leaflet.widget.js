@@ -990,7 +990,9 @@
                     let methods = $e.attr("data-value-method").split(",");
                     // console.log("__update_special_methods.methods =  ", methods);
 
+
                     methods.forEach((method)=>{
+                        console.log("set "+method+ "("+value+") for "+object['85']);
                         switch (method) {
                             case "bg-icon":
                                 $e.css({
