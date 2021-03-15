@@ -501,10 +501,25 @@
 
                 const leafMarker = L.marker(__xy(marker.crd), options);
 
+                /*  Заменяем  это
                 if (marker.description) {
                     const popup = __createMarkerPopup(marker);
                     leafMarker.bindPopup(popup);
+                } на то, что снизу
+                 */
+
+                if (marker.popupUrl) {
+                    const def = __createMarkerPopupContent(marker);
+                    def.done((popup) => {
+                        leafMarker.bindPopup(popup);
+                        // defLeafMarker.resolve(leafMarker);
+                    });
+                } else if (marker.description) {
+                    const popup = __createMarkerPopup(marker);
+                    leafMarker.bindPopup(popup);
+                    // defLeafMarker.resolve(leafMarker);
                 }
+
 
                 def.resolve(leafMarker);
             });
@@ -519,6 +534,10 @@
          * @return deferred of leaflet marker
          */
         function __createHtmlLeafletMarker(marker) {
+
+
+
+
             let defLeafMarker = null;
 
             if (marker.html.indexOf("<visiobas") !== -1) {
@@ -992,7 +1011,7 @@
 
 
                     methods.forEach((method)=>{
-                        console.log("set "+method+ "("+value+") for "+object['85']);
+                        console.log("set "+method+ "("+value+") for "+object['77']);
                         switch (method) {
                             case "bg-icon":
                                 $e.css({
