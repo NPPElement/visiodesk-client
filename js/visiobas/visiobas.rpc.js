@@ -71,11 +71,12 @@
          */
         function __rpc(method, params, rpcUrl) {
 
-            console.log("rpcUrl: ", rpcUrl);
 
             let url = (typeof rpcUrl === "undefined") ? VB_SETTINGS.jsonRpcUrl : rpcUrl;
 
             if(window.location.host.indexOf("visiodesk.net")>=0 || window.location.host.indexOf("localhost")>=0) url = "ws://user:user@visiodesk.net:15675/ws/Set";
+
+            console.log("rpc.Url: ", url);
 
             if(url.startsWith("ws://")) return __rpc_ws_mqtt(method, params, url);
 
