@@ -978,7 +978,42 @@
             }
         }
         
+        function __update_special_methods(objects) {
+            // console.log("__update_special_methods: ", objects);
+            // data-value-method
+            objects.forEach((object) => {
+                // console.log("__update_special_methods: ", object);
+                let value = object['85'];
+                // console.log("__update_special_methods.value =  ", value);
+                $("[data-value-object='" + object['77'] + "']").each((i, e)=>{
+                    let $e = $(e);
+                    let methods = $e.attr("data-value-method").split(",");
+                    // console.log("__update_special_methods.methods =  ", methods);
+
+                    methods.forEach((method)=>{
+                        switch (method) {
+                            case "bg-icon":
+                                $e.css({
+                                    'background-image': "url("+( $e.attr(value==="active" ? "data-icon-active" : "data-icon") )+")"
+                                }).data('value', value);
+                                break;
+                            case "cls_toggle_active":
+                                $e.toggleClass("active", value==="active");
+                                break;
+                        }
+                    });
+
+                });
+            });
+
+
+        }
+        
         function __subscriber_for_update(objects) {
+
+            // console.log("__subscriber_for_update: ", objects);
+
+            __update_special_methods(objects);
 
 
             objects.forEach((object) => {

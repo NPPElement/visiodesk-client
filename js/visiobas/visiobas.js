@@ -1075,6 +1075,9 @@ window.VB = (function Visiobas() {
                 // console.log("items.forEach.item: ", item, index, objects);
                 if (!_.isEmpty(object)) {
                     __createForMapController(item, object, $wrapper);
+
+                    VB_UPDATER.addObject(object, [77, 85, 111], "vbas.map.leaflet.widget")
+
                 }
             });
             // Эксперимент, уже не нужно
@@ -1272,7 +1275,9 @@ window.VB = (function Visiobas() {
                 let curIcon = value ? iconActive : icon;
                 let clsActive = value ? ' active' : '';
 
-                $item = $(`<div class="icon_item${clsActive}" id="${uniqId}"></div>`);
+                // $item = $(`<div class="icon_item${clsActive}" id="${uniqId}"></div>`);
+                //
+                $item = $(`<div data-value-object="${object['77']}" data-value-method="bg-icon,cls_toggle_active" class="icon_item${clsActive}" id="${uniqId}" data-icon-active="${iconActive}" data-icon="${icon}"></div>`);
                 $item.css({
                     'background-image': `url("${curIcon}")`
                 }).data('value', value);
