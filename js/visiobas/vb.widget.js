@@ -242,9 +242,14 @@ window.VBasWidget = (function () {
                     return __objectDoesNotHaveVisualization(object);
                 }
 
-
-                _replace = vis.replace;
-                __loadTemplate(vis, _replace, object);
+                if( __exists_object_replaces(vis.template)) {
+                    console.log("__preload_if_replace");
+                    __preload_if_replace(reference, vis, object);
+                } else {
+                    console.log("__loadTemplate");
+                    _replace = vis.replace;
+                    __loadTemplate(vis, _replace, object);
+                }
             })
             .fail((response) => {
                 console.error("Can't get object: " + reference);
@@ -252,6 +257,74 @@ window.VBasWidget = (function () {
                 __cantLoadWidget();
             });
     }
+
+    function __preload_if_replace(reference, vis, object) {
+        if(reference.indexOf("/")===-1 && Object.keys(vis.replace).length===0) {
+            _replace = vis.replace;
+            __loadTemplate(vis, _replace, object);
+        } else  VB_API.getAllChildren(reference)
+            .done((response) => {
+                if (!response.success) {
+                    console.error(`Possible not all child objects was received of parent: ${reference}`);
+                }
+
+                const children = response.data;
+                let replace = vis.replace;
+                let updating = [];
+
+                _replace = replace;
+
+                //register as required for update all children objects
+                VB_UPDATER.register(children,
+                    [
+                        BACNET_CODE["present-value"],
+                        BACNET_CODE["status-flags"]
+                    ],
+                    {
+                        "id": "vb.widget",
+                        "callback": __updateValues
+                    });
+
+                //additional register objects from property list if it has 'reference' value
+                for (let k in replace) {
+                    if (!replace.hasOwnProperty(k)) {
+                        continue;
+                    }
+                    if (replace[k].startsWith("Site:")) {
+                        const reference = replace[k];
+                        VB_API.getObject(reference)
+                            .done((response) => {
+                                VB_UPDATER.addObject(response.data,
+                                    [
+                                        BACNET_CODE["present-value"],
+                                        BACNET_CODE["status-flags"]
+                                    ],
+                                    "vb.widget");
+                            })
+                            .fail((response) => {
+                                console.log(`Can't get object '${reference}', error: '${response.data}'`);
+                            });
+                    }
+                }
+
+                children.forEach((o) => {
+                    const opl = VB_API.parsePropertyList(o[BACNET_CODE["property-list"]]);
+                    if (opl != null && !_.isEmpty(opl.alias)) {
+                        replace[opl.alias] = o[BACNET_CODE["object-property-reference"]];
+                    }
+                });
+
+                __loadTemplate(vis, replace, object);
+            })
+            .fail((response) => {
+                console.error("Can't get children objects, parent: " + reference);
+                console.error(response.error);
+
+                //trying to load template without replace data
+                __loadTemplate(vis);
+            })
+    }
+
 
     function __loadTemplate(vis, replace, object) {
         replace = replace || {};
@@ -647,4 +720,27 @@ window.VBasWidget = (function () {
     function __cantLoadWidget() {
         _$selector.html(I18N.get("visualization.cant.load.widget"));
     }
-})();
+
+
+
+    function __exists_object_replaces(url) {
+        var h = false;
+        $.ajax({
+            method:  "GET",
+            url: url,
+            dataType: "text",
+            async: false,
+            success: r=>h=r
+        });
+        let count = 0;
+        $("<div>"+h+"</div>").find("visiobas replace").each((i, e)=>{ if(!$(e).html().includes("Site")) count++; });
+        return count>0;
+        // return $("#visualization [reference]:not([reference*='/'],[reference*='.'],[reference*=':'])").length>0;
+    }
+
+})(); /*
+
+
+MEMO:
+$("#visualization [reference]:not([reference*='/'],[reference*='.'],[reference*=':'])").each((i,e)=>{            console.log($(e).attr("reference"));         });
+*/

@@ -11,6 +11,10 @@ window.VD = (function Visiodesk() {
 
     let lastCounter = -1;
 
+    let interval_sticker = false;
+    let closed_last_id = [];
+
+
     return {
         "StaticFunctions": StaticFunctions,
 
@@ -654,127 +658,292 @@ window.VD = (function Visiodesk() {
         });
     }
 
-    function SetStickers() {
-        if(window.location.host.indexOf("localhost")!==-1) return;
+
+    function __setStickerList(itemId, topicsList, stickerTemplate) {
         let wrapperSelector = '#stickers';
         let $stickers = $(wrapperSelector);
-        let closed_last_id = [];
+
+
+        console.log("SetStickers: ", topicsList);
+
+        let myself_changes = false;
+        if (topicsList.length && itemId >= 1) {
+            topicsList.forEach((topic) => {
+
+                let statusItemId = 0;
+                let lastItemId = 0;
+                if(topic['items']) for (let i = topic['items'].length - 1; i >= 0; i--) {
+                    // if(topic['items']) for (let i = 0; i< topic['items'].length; i++) {
+                    let item = topic['items'][i];
+
+                    if (item['type']['id'] === 14) continue;
+
+                    if (item['id'] <= itemId) {
+                        //   break;
+                    }
+
+                    if(lastItemId<item['id']) lastItemId = item['id'];
+
+                    if (item['type']['id'] === 6) {
+                        statusItemId = item['id'];
+                        myself_changes = item['author']['id'] === authorizedUserId;
+                        break;
+                    } else {
+                        break;
+                    }
+
+                }
+
+                // console.log("statusItemId : ", statusItemId);
+
+                if (!statusItemId) {
+                    console.log("!statusItemId: ", topic);
+                    return;
+                }
+
+                if(closed_last_id.includes(lastItemId)) {
+                    console.log("closed_last_id.includes(lastItemId): ", lastItemId);
+                    return;
+                }
+                // console.log("!closed_last_id");
+
+                let is_new = topic['status_id']===1, // new
+                    is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
+                    is_not_linked = topic['groups'] && topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
+                    is_double_border = is_not_linked,
+                    is_long_sound = is_new || is_incedent,
+                    class_double_border = is_double_border ? " double_border" :""
+                ;
+
+                // console.log("is_new = "+is_new);
+
+                let sound_fn = "";
+                switch(topic['status_id']) {
+                    case 1:  // Новая
+                        sound_fn = ( is_incedent ? 'R-Event' : 'R-Task' );
+                        break;
+                    case 2:  // Назначенный
+                        sound_fn = 'R-Message';
+                        break;
+                    case 3:  // В работе
+                        sound_fn = 'R-Work';
+                        break;
+                    case 4:  // Отложено
+                        sound_fn = 'R-Transfer';
+                        break;
+                    case 5:  // Выполнено
+                        sound_fn = 'R-Done';
+                        break;
+                    case 6:  // Закрыто
+                        sound_fn = 'R-Closed';
+                        break;
+                    default:
+                        sound_fn = 'R-Message';
+                }
+
+                // console.log("sound_fn = "+sound_fn);
+                sound_fn = VB_SETTINGS.htmlDir + '/template/sound/' + sound_fn;
+                let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
+                if($('#sticker-' + topic['id']).length>0) audio_html = "";
+
+                // console.log("myself_changes("+topic['id']+") = "+(myself_changes?"Yes":"No"));
+
+                let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
+                    'description': '',
+                    'audio': audio_html,
+                    'status_code': VD_SETTINGS['STATUS_TYPES'][topic['status_id']] + class_double_border,
+                    'status_item_id': statusItemId,
+                    'group': {
+                        'id': topic['groups'][0]['id'],
+                        'name': topic['groups'][0]['name']
+                    }
+                }, topic));
+
+                $('#sticker-' + topic['id']).remove();
+                if(!myself_changes) {
+                    $stickers.prepend(itemTemplateExec);
+                    console.log("prepend");
+                } else {
+                    console.log("!prepend", topic);
+                }
+
+                $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
+                    $(this).removeClass("sound_on_icon");
+                    $(this).addClass("sound_off_icon");
+                    $(this).find("audio")[0].pause();
+                    event.stopPropagation();
+                });
+
+                let stickerSelector = '#sticker-' + topic['id'];
+                ReferenceBindClick(wrapperSelector, stickerSelector);
+                $(`${stickerSelector}, ${stickerSelector} .close_icon`).click((event) => {
+                    event.stopPropagation();
+                    $(stickerSelector).remove();
+                    closed_last_id.push(lastItemId);
+                    VD_Topic.check(topic['id']);
+                });
+            });
+        }
+    }
+
+    function __setStickerList__2(itemId, topicsList, stickerTemplate) {
+        let wrapperSelector = '#stickers';
+        let $stickers = $(wrapperSelector);
+        topicsList.forEach((topic) => {
+
+            let statusItemId = 0;
+            let lastItemId = 0;
+
+            let is_new = topic['status_id']===1, // new
+                is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
+                is_not_linked = topic['groups'] && topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
+                is_double_border = is_not_linked,
+                is_long_sound = is_new || is_incedent,
+                class_double_border = is_double_border ? " double_border" :""
+            ;
+
+
+            // console.log("is_new = "+is_new);
+
+            let sound_fn = "";
+            switch(topic['status_id']) {
+                case 1:  // Новая
+                    sound_fn = ( is_incedent ? 'R-Event' : 'R-Task' );
+                    break;
+                case 2:  // Назначенный
+                    sound_fn = 'R-Message';
+                    break;
+                case 3:  // В работе
+                    sound_fn = 'R-Work';
+                    break;
+                case 4:  // Отложено
+                    sound_fn = 'R-Transfer';
+                    break;
+                case 5:  // Выполнено
+                    sound_fn = 'R-Done';
+                    break;
+                case 6:  // Закрыто
+                    sound_fn = 'R-Closed';
+                    break;
+                default:
+                    sound_fn = 'R-Message';
+            }
+
+            let status_code = VD_SETTINGS['STATUS_TYPES'][topic['status_id']];
+            // console.log("sound_fn = "+sound_fn);
+            sound_fn = VB_SETTINGS.htmlDir + '/template/sound/' + sound_fn;
+            let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
+            if($('#sticker-' + topic['id']+"."+status_code).length>0) audio_html = "";
+            if(window.location.host.indexOf("localhost")!==-1)  audio_html = "";
+
+
+            let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
+                'description': '',
+                'audio': audio_html,
+                'status_code': status_code + class_double_border,
+                'status_item_id': statusItemId,
+                'group': {
+                    'id': topic['groups'][0]['id'],
+                    'name': topic['groups'][0]['name']
+                }
+            }, topic));
+
+            $('#sticker-' + topic['id']).remove();
+            $stickers.prepend(itemTemplateExec);
+
+            $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
+                $(this).removeClass("sound_on_icon");
+                $(this).addClass("sound_off_icon");
+                $(this).find("audio")[0].pause();
+                event.stopPropagation();
+            });
+
+            let stickerSelector = '#sticker-' + topic['id'];
+            ReferenceBindClick(wrapperSelector, stickerSelector);
+            $(`${stickerSelector}, ${stickerSelector} .close_icon`).click((event) => {
+                event.stopPropagation();
+                $(stickerSelector).remove();
+                closed_last_id.push(lastItemId);
+            });
+        });
+
+    }
+
+
+
+
+
+    function SetStickers_NEW() {
+
+
+        function __load__topic() {
+            VD_API.GetTopicStickers().done(function (ids) {
+                $("[id^='sticker-']").each((i,e)=>{ if(!ids.includes(parseInt( $(e).attr("id").replace("sticker-","") ))) $(e).remove(); });
+
+                let new_ids = [];
+                ids.forEach(_id=>{ if($("#sticker-"+_id).length===0) new_ids.push(_id); });
+
+                if(new_ids.length===0) return;
+
+                /*
+                let loadedTopics = [];
+                VD_FEED_UPDATER.get().done(function (res) {
+                    res.forEach(item=>{ if( new_ids.includes(item.id) ) loadedTopics.push( item ); });
+                    console.log("RES:", loadedTopics);
+                    VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done(templatesContent =>  __setStickerList__2(1, loadedTopics, templatesContent['stickers.item.html']));
+
+                });
+                 */
+                VD_API.GetLastTopics(1, new_ids).done(function (res) {
+                    VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
+                        let stickerTemplate = templatesContent['stickers.item.html'];
+                        // __setStickerList(res.itemId, res.topicsList, stickerTemplate);
+                        __setStickerList__2(res.itemId, res.topicsList, stickerTemplate);
+
+                    });
+                });
+            });
+
+        }
+
+        function __load__topic2() {
+            VD_API.GetTopicStickers().done(function (ids) {
+                $("[id^='sticker-']").each((i,e)=>{ if(!ids.includes(parseInt( $(e).attr("id").replace("sticker-","") ))) $(e).remove(); });
+                if(ids.length===0) return;
+                VD_API.GetLastTopics(1, ids).done(function (res) {
+                    VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
+                        let stickerTemplate = templatesContent['stickers.item.html'];
+                        // __setStickerList(res.itemId, res.topicsList, stickerTemplate);
+                        __setStickerList__2(res.itemId, res.topicsList, stickerTemplate);
+
+                    });
+                });
+            });
+
+        }
+
+        if(!interval_sticker) {
+            interval_sticker = window.setInterval(__load__topic2, 15000);
+            __load__topic2();
+        }
+    }
+
+    function SetStickers() {
+        // if(window.location.host.indexOf("localhost")!==-1) return;
+        return SetStickers_NEW();
+        let wrapperSelector = '#stickers';
+        let $stickers = $(wrapperSelector);
+        // let closed_last_id = [];
+
+
+
 
         VB.LoadTemplatesList(['stickers.item.html'], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
             let stickerTemplate = templatesContent['stickers.item.html'];
-            VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {
-
-                // console.log("SetStickers: ", topicsList);
-
-
-                // console.log("subscribe", itemId, topicsList);
-                let myself_changes = false;
-                if (topicsList.length && itemId > 1) {
-                    topicsList.forEach((topic) => {
-                        let statusItemId = 0;
-                        let lastItemId = 0;
-                        for (let i = topic['items'].length - 1; i >= 0; i--) {
-                            let item = topic['items'][i];
-
-                            if (item['type']['id'] === 14) continue;
-
-                            if (item['id'] <= itemId) {
-                             //   break;
-                            }
-
-                            if(lastItemId<item['id']) lastItemId = item['id'];
-
-                            if (item['type']['id'] === 6) {
-                                // console.log("items6:", item);
-                                statusItemId = item['id'];
-                                myself_changes = (item['author'] && item['author']['id'] === authorizedUserId) || (item['author_id'] && item['author_id'] === authorizedUserId);
-                            } else {
-                               break;
-                            }
-
-                        }
-
-                        // console.log("statusItemId : ", statusItemId);
-
-                        if (!statusItemId) {
-                            return;
-                        }
-
-                        if(closed_last_id.includes(lastItemId)) return;
-                        // console.log("!closed_last_id");
-
-                        let is_new = topic['status_id']===1, // new
-                            is_incedent = topic['topic_type_id']===1, // event (инцендент, проиществие)
-                            is_not_linked = topic['groups'] && topic['groups'].length===1 &&  topic['groups'][0]['id']===1, // одна группа и равна 1 (Диспетчер)
-                            is_double_border = is_not_linked,
-                            is_long_sound = is_new || is_incedent,
-                            class_double_border = is_double_border ? " double_border" :""
-                        ;
-
-                        // console.log("is_new = "+is_new);
-
-                        let sound_fn = "";
-                        switch(topic['status_id']) {
-                            case 1:  // Новая
-                                sound_fn = ( is_incedent ? 'R-Event' : 'R-Task' );
-                                break;
-                            case 2:  // Назначенный
-                                sound_fn = 'R-Message';
-                                break;
-                            case 3:  // В работе
-                                sound_fn = 'R-Work';
-                                break;
-                            case 4:  // Отложено
-                                sound_fn = 'R-Transfer';
-                                break;
-                            case 5:  // Выполнено
-                                sound_fn = 'R-Done';
-                                break;
-                            case 6:  // Закрыто
-                                sound_fn = 'R-Closed';
-                                break;
-                            default:
-                                sound_fn = 'R-Message';
-                        }
-
-                        // console.log("sound_fn = "+sound_fn);
-                        sound_fn = VB_SETTINGS.htmlDir + '/template/sound/' + sound_fn;
-                        let audio_html = '<audio autoplay><source src="'+sound_fn+'.mp3" type="audio/mpeg"><source src="'+sound_fn+'.ogg" type="audio/ogg; codecs=vorbis"></audio>';
-                        if($('#sticker-' + topic['id']).length>0) audio_html = "";
-
-                        // console.log("myself_changes("+topic['id']+") = "+(myself_changes?"Yes":"No"));
-
-                        let itemTemplateExec = _.template(stickerTemplate)($.extend({}, {
-                            'description': '',
-                            'audio': audio_html,
-                            'status_code': VD_SETTINGS['STATUS_TYPES'][topic['status_id']] + class_double_border,
-                            'status_item_id': statusItemId,
-                            'group': {
-                                'id': topic['groups'][0]['id'],
-                                'name': topic['groups'][0]['name']
-                            }
-                        }, topic));
-
-                        $('#sticker-' + topic['id']).remove();
-                        if(!myself_changes) $stickers.prepend(itemTemplateExec);
-
-                        $('#sticker-' + topic['id'] + " .sound_on_icon").click(  function (event) {
-                            $(this).removeClass("sound_on_icon");
-                            $(this).addClass("sound_off_icon");
-                            $(this).find("audio")[0].pause();
-                            event.stopPropagation();
-                        });
-
-                        let stickerSelector = '#sticker-' + topic['id'];
-                        ReferenceBindClick(wrapperSelector, stickerSelector);
-                        $(`${stickerSelector}, ${stickerSelector} .close_icon`).click((event) => {
-                            event.stopPropagation();
-                            $(stickerSelector).remove();
-                            closed_last_id.push(lastItemId);
-                        });
-                    });
-                }
-            });
+                VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {
+                    __setStickerList(itemId, topicsList, stickerTemplate);
+                });
+            // VD_NEWS_UPDATER.listen().subscribe(({itemId, topicsList}) => {__setStickerList(itemId, topicsList, stickerTemplate)});
         });
     }
 

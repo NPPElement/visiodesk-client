@@ -20,6 +20,8 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
     }).flatMap((id) => {
         previosLastId = lastItemId;
         lastItemId = id;
+        // console.log("flatMap: "+ previosLastId);
+
         return Rx.Observable.fromPromise(VD_API.GetLastTopics(previosLastId));
     }).flatMap(({itemId, topicsList}) => {
         let topicsIdList = [];
@@ -48,6 +50,7 @@ window.VD_NEWS_UPDATER = (function NewsUpdater() {
             lastTopics.delete(topic['id']);
             lastTopics.set(topic['id'], topic);
         });
+        // VD.SetStickers(itemId,Array.from( lastTopics.values()).reverse());
 
         pending.resolve();
 

@@ -51,6 +51,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         "GetLastTopics": GetLastTopics,
         "GetLastItemId": GetLastItemId,
+        "GetTopicStickers": GetTopicStickers,
 
         "GetDetailedInfo": GetDetailedInfo,
         "GetClosedInfo": GetClosedInfo,
@@ -1445,6 +1446,39 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
         return def;
     }
+
+    /**
+     * @return {Deferred}
+     */
+    function GetTopicStickers() {
+        let def = $.Deferred();
+
+        let url = apiContext + '/getTopicStickers';
+
+        $.ajax({
+            method: "GET",
+            url: url,
+            type: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            if (response.success) {
+                def.resolve(response.data);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject();
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject();
+        });
+
+        return def;
+    }
+
+
 
     /**
      * @return {Deferred}

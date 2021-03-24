@@ -280,18 +280,18 @@
             let json = _json_modify ? _json_modify : gv();
             // _value = gv();
 
-            console.log("__edit_json: ", paths, json);
+            // console.log("__edit_json: ", paths, json);
 
             paths.forEach( path=> json = json[path] );
             _json_value = json;
 
-            console.log("DO JSON: ", json);
+            // console.log("DO JSON: ", json);
 
             option.json =  JSON.parse(JSON.stringify(json));
             option.scalar_key = _json_path && _json_path.length ? _json_path[_json_path.length-1] : "";
 
             option.paths = paths;
-            console.log("option.edit.json: ", option);
+            // console.log("option.edit.json: ", option);
             VD.SwitchVisiobasTab(_settingsMainSelector, _settingsEditSelector);
             VB.Load(_templatesDir + "/object.parameters.edit.json.html", _settingsEditSelector, {
                 "option": option
@@ -623,12 +623,12 @@
 
 
             $("#sensor-settings-edit-wrapper .back_json").click(function (event) {
-                console.log("BACK.PATH: ", _json_path);
+                // console.log("BACK.PATH: ", _json_path);
                 if(_json_path.length>0) {
                     // event.stopPropagation();
                     let new_paths = Array.from(_json_path);
                     new_paths.pop();
-                    console.log("new_paths.BACK: ", new_paths);
+                    // console.log("new_paths.BACK: ", new_paths);
                     __edit_json(new_paths);
                 } else {
                     $(_settingsEditSelector).hide();

@@ -235,6 +235,7 @@ window.VD_Socket = (function () {
 
     function replaceAjax() {
         let $_ajax = $.ajax;
+        $._ajax = $_ajax;
         let urlsCount = {};
         let cashResult = {};
         let cashResultDynamic = {};
@@ -243,6 +244,9 @@ window.VD_Socket = (function () {
         let isDynamic;
 
         $.ajax = function (options) {
+
+            if(_.isObject(options) && options.async===false) return $_ajax(options);
+
             var deferred = $.Deferred();
             if( !urlsCount[options.url] ) urlsCount[options.url] = 1;
             urlsCount[options.url]++;
