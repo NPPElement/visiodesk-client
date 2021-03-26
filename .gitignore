@@ -1,3 +1,5 @@
 visiodesk-client.iml
 .idea
 *.bak
+files/
+svg/

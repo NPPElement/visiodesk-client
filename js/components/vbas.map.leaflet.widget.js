@@ -228,7 +228,7 @@
             return def;
         }
         function __load() {
-            return __load_old();
+//            return __load_old();
             const def = $.Deferred();
             VB_API.getMap().done(result=> {
                 def.resolve(result.data);
