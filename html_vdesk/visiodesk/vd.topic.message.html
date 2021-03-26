@@ -14,6 +14,7 @@ if (author.id !== last_user_id) {
 
 let icon = (type.name === "status" || type.name === "priority") ? _.escape(text) : "empty";
 let message = (type.name === "status" || type.name === "priority") ? VD.HtmlFromBBCode(_.escape(name)) : VD.HtmlFromBBCode(_.escape(text));
+message = VD.MakeVbasLink(message);
 %>
     <div class="body<%= offline %>" id="topic-item-<%= id %>">
         <div class="cont">

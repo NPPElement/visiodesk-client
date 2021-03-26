@@ -165,7 +165,10 @@
 
             findMarkerByReference: findMarkerByReference,
             map: ()=>{return leafMap},
-            goLayer: goLayer
+            goLayer: goLayer,
+            goPosition: goPosition,
+            goMapObject: goMapObject,
+            goMapSite: goMapSite
         };
 
         function goLayer(name) {
@@ -173,6 +176,38 @@
                 let op = _leafBaseLayers[n].options;
                 if(op.id===name) return $(".leaflet-control-layers-base input")[op.zIndex-1].click();
             }
+        }
+
+
+        function goPosition(x,y,scale, layer) {
+            console.log("goPosition(",x,y,scale, layer,")");
+            if(layer) goLayer(layer);
+            leafMap.setView(__xy(x,y), scale);
+        }
+
+        function goMapSite(reference) {
+
+            VB_API.getObject(reference).done(r=>{
+                console.log("getObject: ", r);
+                if(r && r.data && r.data['885']) VB_API.getObjectById(r.data['885']).done(r2=>goMapObject(r2.data['77']));
+            })
+
+        }
+        
+        function goMapObject(reference) {
+
+
+            VB_API.getObject(reference).done(r=>{
+                if(r && r.data && r.data['371']) {
+                    // Map:base/light.1
+                    let info = JSON.parse(r.data['371']);
+                    console.log(info, r.data);
+                    let layer = r.data['77'].replace("/",":");
+                    layer = layer.split(":");
+                    layer = layer[1];
+                    goPosition(info.crd[0], info.crd[1], _.max(info.zooms), layer);
+                }
+            });
         }
 
 
@@ -228,10 +263,14 @@
             return def;
         }
         function __load() {
-            return __load_old();
+            // return __load_old();
             const def = $.Deferred();
             VB_API.getMap().done(result=> {
-                def.resolve(result.data);
+                if(result.data && result.data.map.layers.length>0) {
+                    def.resolve(result.data);
+                } else {
+                    __load_old().done(res_old=>def.resolve(res_old));
+                }
             });
             return def;
         }
