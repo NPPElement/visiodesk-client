@@ -36,7 +36,6 @@ window.VD = (function Visiodesk() {
         "HtmlFromBBCode": HtmlFromBBCode,
         "RemoveBBCode": RemoveBBCode,
         "EscapeSpecialCssChars": EscapeSpecialCssChars,
-        "MakeVbasLink": MakeVbasLink,
         "IsImage": IsImage,
         "IsVideo": IsVideo,
         "ReplaceHtmlEntity": ReplaceHtmlEntity,
@@ -476,11 +475,6 @@ window.VD = (function Visiodesk() {
     function EscapeSpecialCssChars(name) {
         let regex = /([!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~\s])/g;
         return name.replace(regex, '\\$1');
-    }
-
-
-    function MakeVbasLink(name) {
-        return   name.replace(/(Site:[\w]+[\w:\-.\/_]+)/g, "<a class='vbas_link'>$1</a>");
     }
 
     /**
@@ -1688,7 +1682,6 @@ window.VD = (function Visiodesk() {
                 16: {"id": 16, "name": 'removed_from_user', "title": 'Удален у пользователя'},
                 17: {"id": 17, "name": 'description', "title": 'Изменено описание'},
                 18: {"id": 18, "name": 'checklist', "title": 'Из чек-листа'},
-                // 19: {"id": 19, "name": 'object', "title": 'Объект'},
             }
         }
     }

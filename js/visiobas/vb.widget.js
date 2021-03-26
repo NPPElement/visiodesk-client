@@ -20,7 +20,6 @@ window.VBasWidget = (function () {
     let gr_date_start = null;
     let gr_date_end = null;
     let gr_names = {};
-    let obj_info = {};
 
     /**
      * Load necessary template
@@ -144,9 +143,6 @@ window.VBasWidget = (function () {
         const presentValue = o[BACNET_CODE["present-value"]];
 
         function __set_dom(dom, o) {
-
-            o = $.extend(obj_info[o['77']], o);
-
             const format = dom.attr("format");
             //update class status
             dom.removeClass("hide normal in-alarm fault overridden out-of-service");
@@ -263,7 +259,7 @@ window.VBasWidget = (function () {
     }
 
     function __preload_if_replace(reference, vis, object) {
-        if(reference.indexOf(":")===-1 && Object.keys(vis.replace).length===0) {
+        if(reference.indexOf("/")===-1 && Object.keys(vis.replace).length===0) {
             _replace = vis.replace;
             __loadTemplate(vis, _replace, object);
         } else  VB_API.getAllChildren(reference)
@@ -374,27 +370,16 @@ window.VBasWidget = (function () {
         });
     }
 
-
     function __subscribeOnSignal() {
-        var nominal_objects = [], obj_info_request=[]; // условный объект, т.к. поля известно какие нужны.В будущем уйти совсем от списка полей и на сервере и на клиенте
-        $("#visualization [reference^='Site:']").each((i, e) => {
-            obj_info_request.push({'77':$(e).attr("reference"),'fields':'77,79,4,46,110'}); // получить тексты подстановок (4-46 для бинари, 110 для мульти)
-        });
-
-        VB_API.getObjects(obj_info_request).done(r=> {
-            r.data.forEach(o=>{
-                obj_info[o['77']]=o;
-                nominal_objects.push({'77':o['77'],'79':o['79']});
+        var nominal_objects = []; // условный объект, т.к. поля известно какие нужны.В будущем уйти совсем от списка полей и на сервере и на клиенте
+        $("#visualization [reference^='Site:']").each((i, e) =>nominal_objects.push({'77':$(e).attr("reference"),'79':'accumulator'}));
+        if(nominal_objects.length>0) {
+            VB_UPDATER.register(nominal_objects, [BACNET_CODE["present-value"], BACNET_CODE["status-flags"]], {
+                "id": "vb.widget",
+                "callback": __updateValues
             });
-            if(nominal_objects.length>0) {
-                VB_UPDATER.register(nominal_objects, [BACNET_CODE["present-value"], BACNET_CODE["status-flags"]], {
-                    "id": "vb.widget",
-                    "callback": __updateValues
-                });
-                VB_UPDATER.requestData();
-            }
-
-        });
+            VB_UPDATER.requestData();
+        }
     }
 
 

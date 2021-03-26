@@ -16,7 +16,6 @@
             "getChildren": getChildren,
             "getAllChildren": getAllChildren,
             "getObject": getObject,
-            "getObjectById": getObjectById,
             "importObjects": importObjects,
             "getUserFile": getUserFile,
             "deleteObject": deleteObject,
@@ -1130,61 +1129,6 @@
             let url = VB_SETTINGS.apiContext +
                 "getObject/{reference}"
                     .replace("{reference}", _reference);
-
-            // console.log("GET " + url);
-
-            $.ajax({
-                method: "GET",
-                url: url,
-                type: "json",
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            }).done((obj, textStatus, jqXHR) => {
-                let result = Object.assign({
-                    textStatus: textStatus,
-                    jqXHR: jqXHR
-                }, obj);
-                if (obj.data['77'] !=null && obj.success == true) { // todo: подправить сервер. если нет объекта должна быть ошибка, ане объект с NULL-ами!!!
-                    //TODO temp, does data.presentValue still in response?
-                    if (result.data.presentValue) {
-                        result.data[85] = result.data.presentValue;
-                    }
-
-                    //clear all non digits keys ? why ?
-                    for (let k in result.data) {
-                        if (_.isNaN(parseInt(k))) {
-                            delete result.data[k];
-                        }
-                    }
-
-                    def.resolve(result);
-                } else {
-                    if(reference.indexOf(":")===-1) {
-                        result.data['77'] = reference;
-                        def.resolve(result);
-                    } else {
-                        def.reject(result);
-                    }
-                }
-
-            }).fail((jqXHR, textStatus, errorThrown) => {
-                def.reject({
-                    success: false,
-                    jqXHR: jqXHR,
-                    textStatus: textStatus,
-                    error: errorThrown
-                });
-            });
-
-            return def;
-        }
-
-        function getObjectById(id) {
-            let def = $.Deferred();
-
-
-            let url = VB_SETTINGS.apiContext + "getObjectById/"+id;
 
             // console.log("GET " + url);
 

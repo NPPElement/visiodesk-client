@@ -74,7 +74,7 @@
 
             let url = (typeof rpcUrl === "undefined") ? VB_SETTINGS.jsonRpcUrl : rpcUrl;
 
-            if(window.location.host.indexOf("visiodesk.net")===0 || window.location.host.indexOf("localhost")===0) url = "ws://user:user@visiodesk.net:15675/ws/Set";
+            if(window.location.host.indexOf("visiodesk.net")>=0 || window.location.host.indexOf("localhost")>=0) url = "ws://user:user@visiodesk.net:15675/ws/Set";
 
             console.log("rpc.Url: ", url);
 
