@@ -79,7 +79,8 @@ window.VD_SETTINGS = {
         15: 'removed_from_group',
         16: 'removed_from_user',
         17: 'description',
-        18: 'checklist'
+        18: 'checklist',
+        // 19: 'object',
     },
     'ITEM_TYPE_ID': {
         img: 1,
@@ -98,7 +99,9 @@ window.VD_SETTINGS = {
         check: 14,
         removed_from_group: 15,
         removed_from_user: 16,
-        description: 17
+        description: 17,
+        checklist: 18,
+        // object: 19,
     },
     'STATUS_TYPES': {
         1: 'new',

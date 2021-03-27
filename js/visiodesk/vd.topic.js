@@ -82,6 +82,12 @@ window.VD_Topic = (function () {
     window.imagesBuffer = imagesBuffer;
 
 
+    $("body").on("click", ".body .vbas_link", function (e) {
+        let siteHref = $(this).html();
+        VBasMapLeafletWidget.goMapSite(siteHref);
+    });
+
+
     //TODO: Дополнительные параметры итемов
     const extendedParams = {
         "like": 0
@@ -1844,7 +1850,6 @@ window.VD_Topic = (function () {
      */
     function __showItems(items) {
         let showTypes = [3, 4, 5, 6, 13, 15, 16, 17];
-
         //отрисовка итемов
         let lastUserId = 0;
         let itemsListExec = '';
@@ -1873,8 +1878,6 @@ window.VD_Topic = (function () {
                             item['name'] = `${item['name']}[br][i]до ${holdTo}[/i]`;
                         }
                     }
-
-
                 }
 
                 let itemTemplate = serviceTemplatesData['vd.topic.message.html'];
@@ -1891,6 +1894,7 @@ window.VD_Topic = (function () {
                 lastUserId = item['author']['id'];
                 itemsListExec += itemTemplateExec;
             }
+
 
             //файлы отдельно
             if (item['type']['id'] === 2) {
@@ -1918,12 +1922,17 @@ window.VD_Topic = (function () {
                     completeFileNames.push(fileItemExtended['text']);
                 }
 
+
+
                 if (!isBroken) {
                     let itemTemplateExec = _.template(itemTemplate)(fileItemExtended);
                     lastUserId = item['author']['id'];
                     itemsListExec += itemTemplateExec;
                 }
             }
+
+
+
         });
 
         $('.topic').append(itemsListExec);
@@ -2324,6 +2333,6 @@ window.VD_Topic = (function () {
           }
       });
 
-      
+
 
 })();
