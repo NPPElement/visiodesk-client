@@ -180,7 +180,7 @@
 
 
         function goPosition(x,y,scale, layer) {
-            console.log("goPosition(",x,y,scale, layer,")");
+            // console.log("goPosition(",x,y,scale, layer,")");
 
             if(layer) goLayer(layer);
             leafMap.setView(__xy(x,y), scale);
@@ -189,7 +189,7 @@
         function goMapSite(reference) {
 
             VB_API.getObject(reference).done(r=>{
-                console.log("getObject: ", r);
+                // console.log("getObject: ", r);
                 if(r && r.data && r.data['885']) VB_API.getObjectById(r.data['885']).done(r2=>goMapObject(r2.data['77']));
             })
 
@@ -200,9 +200,12 @@
 
             VB_API.getObject(reference).done(r=>{
                 if(r && r.data && r.data['371']) {
+
+                    window.location.href="#Map";
+
                     // Map:base/light.1
                     let info = JSON.parse(r.data['371']);
-                    console.log(info, r.data);
+                    // console.log(info, r.data);
                     let layer = r.data['77'].replace("/",":");
                     layer = layer.split(":");
                     layer = layer[1];
