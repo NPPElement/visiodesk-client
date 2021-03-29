@@ -201,7 +201,7 @@
             VB_API.getObject(reference).done(r=>{
                 if(r && r.data && r.data['371']) {
 
-                    window.location.href="#Map";
+                    if(window.innerWidth<375*2) window.location.href="#Map";
 
                     // Map:base/light.1
                     let info = JSON.parse(r.data['371']);
