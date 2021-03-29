@@ -1685,9 +1685,23 @@ window.VD_Topic = (function () {
             __saveLoadTopic(newTopicParams).then((resultTopicParams) => {
                 __updateTopicParams(resultTopicParams);
                 topicId = resultTopicParams['id'];
+
+                function _checkReadyUploaded() {
+                    if(!VD_API.FileUploader.inProgress()) {
+                        window.location.hash = window.location.hash.replace("Topic/New","Topic/"+topicId);
+                    } else {
+                        setTimeout(_checkReadyUploaded, 500);
+                    }
+                }
+
+                _checkReadyUploaded();
+
+                /*
                 if(window.location.hash.indexOf("Topic/New")>-1) {
                     window.setTimeout(()=>{window.location.hash = window.location.hash.replace("Topic/New","Topic/"+topicId);}, 1000);
                 }
+
+                 */
 
                 __clearChangedList();
                 __applyTopicParams(resultTopicParams);

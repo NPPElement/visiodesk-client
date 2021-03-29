@@ -121,6 +121,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         return {
             _clearFilenames: () => { filenames = {}; },
             _correctFilename: correctFilename,
+            inProgress: () => { return uploadQueue.size>0 },
 
 
             /**
