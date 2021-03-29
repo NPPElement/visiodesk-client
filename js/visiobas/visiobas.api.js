@@ -1186,7 +1186,6 @@
 
             let url = VB_SETTINGS.apiContext + "getObjectById/"+id;
 
-            // console.log("GET " + url);
 
             $.ajax({
                 method: "GET",
