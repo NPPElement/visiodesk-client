@@ -351,6 +351,7 @@
     "attr.385":"Transition",
     "attr.386":"Egress active",
     "attr.846":"Device Id",
+    "attr.885":"Map object Id",
 
     "attr.79.analog-input":"analog-input",
     "attr.79.analog-output":"analog-output",

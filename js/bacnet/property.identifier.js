@@ -356,7 +356,8 @@ window.BACNET_PROPERTY_ID = {
     "power": 384,
     "transition": 385,
     "egress-active": 386,
-    "device-id": 846
+    "device-id": 846,
+    "map-id": 885
 };
 
 window.BACNET_CODE = window.BACNET_PROPERTY_ID;
@@ -713,7 +714,8 @@ window.BACNET_CODE_NAME = {
     "384": "power",
     "385": "transition",
     "386": "egress-active",
-    "846": "device-id"
+    "846": "device-id",
+    "885": "map-id"
 };
 
 EVENTS
