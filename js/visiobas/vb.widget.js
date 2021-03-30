@@ -477,6 +477,8 @@ window.VBasWidget = (function () {
         $("#graphic_popup .close_icon").click(function () {
             $("#graphic_popup .layout").html('');
             $("#graphic_popup").hide();
+            chart_references=[];
+            $(".signal_in_trendlog").removeClass("signal_in_trendlog");
         });
 
 
@@ -589,6 +591,8 @@ window.VBasWidget = (function () {
                 chart_references=[];
                 $("#gr_chartist").html('');
                 $(".gr_controls").remove();
+                chart_references=[];
+                $(".signal_in_trendlog").removeClass("signal_in_trendlog");
             });
 
 
