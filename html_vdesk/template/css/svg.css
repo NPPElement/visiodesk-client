@@ -30,9 +30,9 @@
 
 /* Маркеры карты */
 #mapicon.sensor {
-    font-family: Antonio;
-    font-size: 24px;
-    text-align: center;
+  font-family: Antonio;
+  font-size: 24px;
+  text-align: center;
 }
 #mapicon.sensor.normal {
   fill: #00FF00;
@@ -355,4 +355,20 @@
 .generator.in-alarm {
   fill:  #e646e6;
   color: #e646e6;
+}
+
+
+/* Псевдокласс для отображения элемента FAULT   вэл.снабжение */
+.active .normal .qf,
+.active .in-alarm .qf,
+.inactive .normal .qf,
+.inactive .in-alarm .qf
+{
+  display: none;
+}
+.active .fault .qf,
+.inactive .fault .qf,
+.fault .qf
+{
+  display: block;
 }
