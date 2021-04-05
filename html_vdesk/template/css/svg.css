@@ -358,17 +358,14 @@
 }
 
 
-/* Псевдокласс для отображения элемента FAULT   вэл.снабжение */
-.active .normal .qf,
-.active .in-alarm .qf,
-.inactive .normal .qf,
-.inactive .in-alarm .qf
+/* Псевдокласс для отображения элемента FAULT   в эл.снабжение */
+.normal .qf,
+.in-alarm .qf
 {
   display: none;
 }
-.active .fault .qf,
-.inactive .fault .qf,
 .fault .qf
+
 {
   display: block;
 }
