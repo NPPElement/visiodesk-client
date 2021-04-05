@@ -496,6 +496,9 @@
     "vdesk.csv.topic.finished.datetime":"Finished date/time",
     "vdesk.csv.topic.closed.datetime":"Closed date/time",
     "vdesk.csv.note": "Note",
+    "vdesk.csv.user.in_progress": "User In progress",
+    "vdesk.csv.user.resoled": "User Resolved",
+    "vdesk.csv.user.closed": "User Closed",
 
     "vbas.widget.coped.to.clipboard":"Text coped to clipboard",
     "vbas.visualization.cant.load.widget": "Widget can't be loaded",

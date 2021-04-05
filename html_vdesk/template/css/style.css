@@ -7649,3 +7649,27 @@ label.input_group_title {
     color: #007AFF;
     cursor: pointer;
 }
+
+
+
+.object-changes {
+    border: 1px solid #FF9500;
+    width: 360px;
+    margin: 8px;
+}
+
+.object-changes td,
+.object-changes th {
+    padding: 4px 6px;
+    font-family: 'SF-PRO-Regular';
+    font-size: 13px;
+}
+
+.object-changes td {
+    color: white;
+}
+
+.object-changes th {
+    color: #FF9500;
+    text-align: left;
+}

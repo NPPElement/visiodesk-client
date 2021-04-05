@@ -16,6 +16,7 @@
             "getChildren": getChildren,
             "getAllChildren": getAllChildren,
             "getObject": getObject,
+            "getObjectLog": getObjectLog,
             "getObjectById": getObjectById,
             "importObjects": importObjects,
             "getUserFile": getUserFile,
@@ -1179,6 +1180,55 @@
 
             return def;
         }
+
+
+
+
+        function getObjectLog(reference) {
+            let def = $.Deferred();
+
+            let _reference = urlReference(reference);
+            if (_.isNull(_reference)) {
+                return def.reject({
+                    success: false,
+                    error: "reference value is not valid: " + reference
+                });
+            }
+
+            let url = VB_SETTINGS.apiContext + "trend/lastChanges/"+_reference;
+
+            // console.log("GET " + url);
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                type: "json",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }).done((obj, textStatus, jqXHR) => {
+                let result = Object.assign({
+                    textStatus: textStatus,
+                    jqXHR: jqXHR
+                }, obj);
+
+                console.log("getObjectLog["+reference+"].result ", result.data);
+                def.resolve(result);
+
+
+            }).fail((jqXHR, textStatus, errorThrown) => {
+                def.reject({
+                    success: false,
+                    jqXHR: jqXHR,
+                    textStatus: textStatus,
+                    error: errorThrown
+                });
+            });
+
+            return def;
+        }
+
+
 
         function getObjectById(id) {
             let def = $.Deferred();

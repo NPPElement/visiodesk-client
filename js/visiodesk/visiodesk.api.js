@@ -2295,6 +2295,42 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     }
 
 
+    function __extractUserName(user) {
+        let r = [];
+        if(user && user.last_name) r.push(user.last_name);
+        if(user && user.first_name) r.push(user.first_name);
+        if(user && user.middle_name) r.push(user.middle_name);
+        if(!r.length && user) r.push(user.login);
+        return r.join(" ");
+    }
+    
+    function ___getTopicClosingUser(topic) {
+        let r = [];
+        let ids = [];
+        if(!topic.items) return r;
+        topic.items.forEach(item=>{
+            if(item.type && item.type.id===6 && item.status && item.status.id && item.status.id===6 && !ids.includes(item.author.id) ) {
+                r.push(__extractUserName(item.author));
+                ids.push(item.author.id);
+            }
+        });
+        return r.join(", ");
+    }
+
+    function ___getTopicUserByStatus(topic, status_id) {
+        let r = [];
+        let ids = [];
+        if(!topic.items) return r;
+        topic.items.forEach(item=>{
+            if(item.type && item.type.id===6 && item.status && item.status.id && item.status.id===status_id && !ids.includes(item.author.id) ) {
+                r.push(__extractUserName(item.author));
+                ids.push(item.author.id);
+            }
+        });
+        return r.join(", ");
+    }
+
+
     /**
      * Prepare csv
      * @param {Array<Object>} groups
@@ -2306,10 +2342,20 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     function __TopicsToCsv(groups, topics, users) {
         const separator = ";";
         const lineSeparator = "\r\n";
+
+        console.log("__TopicsToCsv:");
+        console.log(":group: ", groups);
+        console.log(":users: ", users);
+        console.log(":topics: ", topics);
+
+
         let csvHeader = [[
             I18N.get("vdesk.csv.request.number"),
             I18N.get("vdesk.csv.department"),
             I18N.get("vdesk.csv.topic.created.user"),
+            I18N.get("vdesk.csv.user.in_progress"),
+            I18N.get("vdesk.csv.user.resoled"),
+            I18N.get("vdesk.csv.user.closed"),
             I18N.get("vdesk.csv.object"),
             I18N.get("vdesk.csv.topic.created.datetime"),
             I18N.get("vdesk.csv.description"),
@@ -2366,7 +2412,11 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             const requestNumber = topic.id;
             const department = __prepare(mapGroups[topic.group_id].name);
             const user = mapUsers[topic.author_id];
-            const userCreated = (user) ? (`${user.last_name} ${user.first_name} ${user.middle_name}`) : "";
+            // const userCreated = (user) ? (`${user.last_name} ${user.first_name} ${user.middle_name}`) : "";
+            const userCreated = __extractUserName(user);
+            const usersClosed = ___getTopicUserByStatus(topic, 6);
+            const usersResolved = ___getTopicUserByStatus(topic, 5);
+            const usersInProgress = ___getTopicUserByStatus(topic, 3);
             const object = __prepare(topic.name);
             const attachedUser = (itemAttachedUser) ? itemAttachedUser.name : "";
             const createdAt = VD.GetFormatedDate(topic.created_at);
@@ -2386,6 +2436,9 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 requestNumber,
                 department,
                 userCreated,
+                usersInProgress,
+                usersResolved,
+                usersClosed,
                 object,
                 createdAt,
                 description,

@@ -267,6 +267,7 @@ window.VD_Events = (function () {
      * @private
      */
     function __exportTopicList(groupId, start, end) {
+        console.log("__exportTopicList: ", groupId, start, end);
         const diffHours = (end -  new Date().getTime()) / 1000 / 60 / 60;
         let defCurrentTopics;
         let defTopicsByRange = VD_API.GetAllTopicsByGroup(groupId, true, start, end);
@@ -291,6 +292,10 @@ window.VD_Events = (function () {
                         topicIds.add(topic.id);
                     }
                 };
+                console.log(":group: ", group);
+                console.log(":users: ", users);
+                console.log(":currentTopics: ", currentTopics);
+                console.log(":topicsByRange: ", topicsByRange);
                 currentTopics.forEach(fncAdd);
                 topicsByRange.forEach(fncAdd);
 

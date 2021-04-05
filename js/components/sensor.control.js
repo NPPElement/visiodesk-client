@@ -185,6 +185,9 @@
                         VD.SetVisiobasAdminSubmenu(_parentSelector);
                     })
                     .then(() => {
+
+                        __setObjectChanges(object);
+
                         const deviceId = object[BACNET_CODE["device-id"]];
                         const objectTypeName = objectType;
                         const objectId = object[BACNET_CODE["object-identifier"]];
@@ -219,6 +222,62 @@
                     })
             });
         }
+
+
+
+        function __setObjectChanges(object) {
+
+            // Нет ничего другого
+            // let reference = "Site:Engineering/Electricity.TP_1002.Temperature.AI_700";
+            let reference = object[OBJECT_REFERENCE];
+            // console.log("__setObjectChanges: ",object);
+
+            let isBinary = object['79'].includes("binary");
+
+            VB_API.getObjectLog(reference).done(r=>{
+                console.log(r.data);
+                let items = r.data;
+                let h = "";
+                let SN = ["In alarm","Fault","Overridden", "Out of service"];
+
+
+
+                if(r.data) {
+                    h="<table class='object-changes'>";
+                    h+="<tr>";
+                    h+="<th>Дата / время</th>";
+                    h+="<th>Значение</th>";
+                    h+="<th>Статус</th>";
+                    h+="</tr>";
+
+                    r.data.forEach(item=>{
+                        var statuses = [];
+
+                        // item.status = (Math.random()*111)&7;
+
+                        for(let i=0;i<4;i++) if(item.status && (1<<i)) statuses.push(SN[i]);
+
+                        var value = "";
+                        if(isBinary) {
+                            value = item.value>0 ? object['4'] : object['46'];
+                        } else {
+                            value = (0+item.value).toFixed(1);
+                        }
+
+                        h+="<tr>";
+                        h+="<td>"+item.date+"</td>";
+                        h+="<td>"+value+"</td>";
+                        h+="<td>"+(statuses.length==0 ? "-" : statuses.join("<br>", statuses))+"</td>";
+                        h+="</tr>";
+                    });
+                    h+="</table>";
+                }
+
+                $("#object-changes-table").html(h);
+
+            });
+        }
+
 
         /**
          * @param {object} object
