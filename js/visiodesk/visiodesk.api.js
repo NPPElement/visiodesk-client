@@ -485,7 +485,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         }).done(function (response) {
 
             if (response.success) {
-                console.log("SetPriorityGroup: ",response.data);
                 def.resolve(response.data);
             } else {
                 VD.ErrorHandler('SERVER', response, url);
@@ -831,13 +830,19 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
     /**
      * Получение списка всех пользователей
-     * @param {int} id идентификатор пользователя
+     * @param {int} id идентификатор пользователя (не обязательно)
+     * @param {int} start начальная дата (не обязательно)
+     * @param {int} end конечная дата (не обязательно)
      * @return {Deferred}
      */
-    function GetUsers(id = 0) {
+    function GetUsers(id = 0, start = 0 , end = 0) {
+
         let def = $.Deferred();
 
         let url = apiContext + '/getUsers';
+
+        if(start>0 && end>0) url+="/"+start + "/"+end;
+
 
         $.ajax({
             method: "GET",
@@ -2330,6 +2335,17 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         return r.join(", ");
     }
 
+    function ___getTopicUserAttached(topic) {
+        let users = {};
+        if(!topic.items) return r;
+        topic.items.forEach(item=>{
+            if(!item.type) return;
+            if(item.type.id===3 ) users[item.user_id] = item.name;
+            if(item.type.id===16 )delete users[item.user_id];
+        });
+        return _.values(users).join(", ");
+    }
+
 
     /**
      * Prepare csv
@@ -2343,12 +2359,6 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         const separator = ";";
         const lineSeparator = "\r\n";
 
-        console.log("__TopicsToCsv:");
-        console.log(":group: ", groups);
-        console.log(":users: ", users);
-        console.log(":topics: ", topics);
-
-
         let csvHeader = [[
             I18N.get("vdesk.csv.request.number"),
             I18N.get("vdesk.csv.department"),
@@ -2356,6 +2366,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             I18N.get("vdesk.csv.user.in_progress"),
             I18N.get("vdesk.csv.user.resoled"),
             I18N.get("vdesk.csv.user.closed"),
+            I18N.get("vdesk.csv.user.attached"),
             I18N.get("vdesk.csv.object"),
             I18N.get("vdesk.csv.topic.created.datetime"),
             I18N.get("vdesk.csv.description"),
@@ -2417,6 +2428,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             const usersClosed = ___getTopicUserByStatus(topic, 6);
             const usersResolved = ___getTopicUserByStatus(topic, 5);
             const usersInProgress = ___getTopicUserByStatus(topic, 3);
+            const usersAttached = ___getTopicUserAttached(topic);
             const object = __prepare(topic.name);
             const attachedUser = (itemAttachedUser) ? itemAttachedUser.name : "";
             const createdAt = VD.GetFormatedDate(topic.created_at);
@@ -2439,6 +2451,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 usersInProgress,
                 usersResolved,
                 usersClosed,
+                usersAttached,
                 object,
                 createdAt,
                 description,

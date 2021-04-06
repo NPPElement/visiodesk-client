@@ -499,6 +499,7 @@
     "vdesk.csv.user.in_progress": "User In progress",
     "vdesk.csv.user.resoled": "User Resolved",
     "vdesk.csv.user.closed": "User Closed",
+    "vdesk.csv.user.attached": "User Binded",
 
     "vbas.widget.coped.to.clipboard":"Text coped to clipboard",
     "vbas.visualization.cant.load.widget": "Widget can't be loaded",

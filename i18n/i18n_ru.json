@@ -491,6 +491,7 @@
     "vdesk.csv.user.in_progress": "ФИО взявшего в работу",
     "vdesk.csv.user.resoled": "ФИО выполнившего",
     "vdesk.csv.user.closed": "ФИО закрывшего",
+    "vdesk.csv.user.attached": "ФИО прикреплённого",
 
     "vbas.widget.coped.to.clipboard":"Текст скопирован в буфер обмена",
     "vbas.visualization.cant.load.widget": "Невозможно загрузить визуализацию",

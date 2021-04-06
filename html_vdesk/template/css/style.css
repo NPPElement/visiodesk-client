@@ -2038,6 +2038,12 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     margin-left: -4px;
     background: #4CD964;
 }
+.group_item .desc .taskbar EM.closed {
+    z-index: 1;
+    margin-left: -4px;
+    background: #979797;
+}
+
 .group_item .desc .taskbar EM.hide {
     display: none;
 }

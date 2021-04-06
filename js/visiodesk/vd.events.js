@@ -292,10 +292,6 @@ window.VD_Events = (function () {
                         topicIds.add(topic.id);
                     }
                 };
-                console.log(":group: ", group);
-                console.log(":users: ", users);
-                console.log(":currentTopics: ", currentTopics);
-                console.log(":topicsByRange: ", topicsByRange);
                 currentTopics.forEach(fncAdd);
                 topicsByRange.forEach(fncAdd);
 

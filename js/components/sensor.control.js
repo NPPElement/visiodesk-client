@@ -249,7 +249,6 @@
                     h+="<th>Значение</th>";
                     h+="<th>Статус</th>";
                     h+="</tr>";
-
                     r.data.forEach(item=>{
                         var statuses = [];
 

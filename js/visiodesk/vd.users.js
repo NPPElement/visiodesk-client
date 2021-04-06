@@ -13,13 +13,24 @@ window.VD_Users = (function () {
         'position': '',
     };
 
+    /** @type {object} applied filter */
+    let _filter = {
+        date: {
+            start: 0,
+            end: 0
+        }
+    };
+
+
+    let _selector;
+
     /**
      * Request and display user topics counts
      * @private
      */
     function __refreshUserTopics() {
         VD_API
-            .GetUsers()
+            .GetUsers(0, _filter.date.start, _filter.date.end)
             .done((users) => {
                 users.forEach(__displayUserTopicsCounts);
             })
@@ -34,6 +45,8 @@ window.VD_Users = (function () {
      * @private
      */
     function __displayUserTopicsCounts(user) {
+
+
         try {
             const statusTypes = VD_SETTINGS['STATUS_TYPES'];
             const $taskbar = $(`#user-${user.id} .taskbar`);
@@ -58,7 +71,9 @@ window.VD_Users = (function () {
     };
 
     function run(reference, selector, params) {
-        handleUpdateTopics = window.setInterval(__refreshUserTopics, 5000);
+        _selector = selector;
+
+        handleUpdateTopics = window.setInterval(__refreshUserTopics, 10000);
 
         return VB
             .Load(VD_SETTINGS['TEMPLATE_DIR'] + "/vd.users.html", selector, {
@@ -66,6 +81,7 @@ window.VD_Users = (function () {
                 "{%lastReference%}": VD.GetHistory(1)
             })
             .then(() => {
+                __initializeCalendar(reference);
                 return VB.LoadTemplatesList(serviceTemplatesList, VD_SETTINGS['TEMPLATE_DIR']);
             })
             .then((templatesContent) => {
@@ -237,4 +253,98 @@ window.VD_Users = (function () {
             $('#user-' + deletedId).remove();
         });
     }
+
+
+
+
+
+
+    function __initializeCalendar(reference, params) {
+        const $clearRange = $(_selector).find('.calendar_wrapper').find('.clear-range');
+        $clearRange.on("click", () => {
+            __clearInterval();
+        });
+
+        //override default template for display 'Export' button
+        const template = '<div class="daterangepicker">' +
+            '<div class="ranges"></div>' +
+            '<div class="drp-calendar left">' +
+            '<div class="calendar-table"></div>' +
+            '<div class="calendar-time"></div>' +
+            '</div>' +
+            '<div class="drp-calendar right">' +
+            '<div class="calendar-table"></div>' +
+            '<div class="calendar-time"></div>' +
+            '</div>' +
+            '<div class="drp-buttons">' +
+            '<span class="drp-selected"></span>' +
+            '<button class="cancelBtn" type="button"></button>' +
+            '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
+            // `<button class="exportBtn cancelBtn btn btn-sm btn-default" type="button">${I18N.get("vocab.export")}</button>` +
+            // `<button class="showClosedBtn btn btn-sm btn-default" type="button" disabled="disabled">${I18N.get("vocab.show.closed")}</button>` +
+            '</div>' +
+            '</div>';
+
+        //Календарь
+        const $calendar = $('#calendar-icon');
+        $calendar.daterangepicker({
+            "autoApply": false,
+            "template": template,
+            "opens": "left",
+            "locale": VD_SETTINGS['DATERANGEPICKER_LOCALE']
+        }, (start, end) => {
+            // __setCalendarFilterDate(start, end);
+            // __buildTopicList(resultCache, _filter);
+        });
+
+        if (_filter.date.start && _filter.date.end) {
+            $calendar.data('daterangepicker').setStartDate(new Date(_filter.date.start));
+            $calendar.data('daterangepicker').setEndDate(new Date(_filter.date.end));
+            __setCalendarFilterDate(moment(_filter.date.start), moment(_filter.date.end));
+        }
+
+
+
+
+        //.dognail special class added 'cancelBtn' for emulate close calendar on export button
+        //but also need to change button of text (override default cancel title)
+        $(".show-calendar .exportBtn").html(I18N.get("vocab.export"));
+
+
+        function  __clearInterval() {
+            _filter.date.start = 0;
+            _filter.date.end = 0;
+            $(_selector).find('.calendar_wrapper').find('.range').html('');
+            $(_selector).find('.calendar_wrapper').find('.clear-range').hide();
+            __refreshUserTopics();
+
+        }
+
+        $calendar.on("cancel.daterangepicker", (e, picker) => {
+            __clearInterval();
+        });
+        $calendar.on("apply.daterangepicker", (e, picker) => {
+            const daterangepicker = $calendar.data('daterangepicker');
+            const start = daterangepicker.startDate;
+            const end = daterangepicker.endDate;
+            _filter.date.start = start;
+            _filter.date.end = end;
+
+            $(_selector).find('.calendar_wrapper').find('.range').html(start.format('DD.MM.YYYY') + ' - ' + end.format('DD.MM.YYYY'));
+            $(_selector).find('.calendar_wrapper').find('.clear-range').show();
+
+            __refreshUserTopics();
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
 })();
