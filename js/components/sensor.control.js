@@ -233,12 +233,13 @@
             // console.log("__setObjectChanges: ",object);
 
             let isBinary = object['79'].includes("binary");
+            let isMultistate = object['79'].includes("multi");
 
             VB_API.getObjectLog(reference).done(r=>{
                 console.log(r.data);
-                let items = r.data;
+                // let items = r.data;
                 let h = "";
-                let SN = ["In alarm","Fault","Overridden", "Out of service"];
+                // let SN = ["In alarm","Fault","Overridden", "Out of service"];
 
 
 
@@ -254,11 +255,15 @@
 
                         // item.status = (Math.random()*111)&7;
 
-                        for(let i=0;i<4;i++) if(item.status && (1<<i)) statuses.push(SN[i]);
+                        // for(let i=0;i<4;i++) if(item.status && (1<<i)) statuses.push(SN[i]);
+                        if(item.status && 4) statuses.push("“ручн”");
+
 
                         var value = "";
                         if(isBinary) {
                             value = item.value>0 ? object['4'] : object['46'];
+                        } else if(isMultistate) {
+                            value = object['110'][value];
                         } else {
                             value = (0+item.value).toFixed(1);
                         }
@@ -266,7 +271,7 @@
                         h+="<tr>";
                         h+="<td>"+item.date+"</td>";
                         h+="<td>"+value+"</td>";
-                        h+="<td>"+(statuses.length==0 ? "-" : statuses.join("<br>", statuses))+"</td>";
+                        h+="<td>"+(statuses.length===0 ? " " : statuses.join("<br>", statuses))+"</td>";
                         h+="</tr>";
                     });
                     h+="</table>";

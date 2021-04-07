@@ -77,6 +77,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         "DownloadAsCsvFile": DownloadAsCsvFile,
 
         "GetUserTopics": GetUserTopics,
+        "GetUserTopicsFiltered": GetUserTopicsFiltered,
 
         //"GetUserGroupSupportId": GetUserGroupSupportId, переделано АПИ теперь выдаёт вместе с группой
         "SetUserGroupSupportId": SetUserGroupSupportId,
@@ -1271,6 +1272,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
 
 
         if (!userId) {
+            // let url = apiContext + '/getTopicsByUser';
             let url = apiContext + '/getTopicsByUser2';
 
             $.ajax({
@@ -1295,6 +1297,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             });
         } else {
             const url = `${apiContext}/getUserTopics2`;
+            // const url = `${apiContext}/getUserTopics`;
             const token = docCookies.getItem("user.token");
 
             $.ajax({
@@ -1335,7 +1338,42 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             url: url,
             type: "json",
             headers: {
-                'Authorization': token,
+                'Authorization': 'Bearer ' + token,
+                "X-ID": userId
+            }
+        }).done((response) => {
+            if (response.success) {
+                def.resolve(response.data);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject(response.error);
+            }
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject(errorThrown);
+        });
+
+        return def;
+    }
+
+    /**
+     * Get topics by user id
+     * @param {number} userId
+     * @param {number} start
+     * @param {number} end
+     * @returns {Deferred}
+     */
+    function GetUserTopicsFiltered(userId, start, end) {
+        const def = $.Deferred();
+        const url = `${apiContext}/getUserTopicsFiltered/`+start+"/"+end;
+        const token = docCookies.getItem("user.token");
+
+        $.ajax({
+            method: "GET",
+            url: url,
+            type: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token,
                 "X-ID": userId
             }
         }).done((response) => {

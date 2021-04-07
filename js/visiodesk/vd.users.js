@@ -50,6 +50,12 @@ window.VD_Users = (function () {
         try {
             const statusTypes = VD_SETTINGS['STATUS_TYPES'];
             const $taskbar = $(`#user-${user.id} .taskbar`);
+
+            $("#user-"+user.id)
+                .attr("reference", ":UserEvents/"+user.id+__getFilterUrlAdds())
+                .find("[data-reference]").attr("data-reference", ":UserEvents/"+user.id+__getFilterUrlAdds());
+
+
             for (const statusType in statusTypes) {
                 if (statusTypes.hasOwnProperty(statusType)) {
                     const statusName = statusTypes[statusType];
@@ -73,6 +79,20 @@ window.VD_Users = (function () {
     function run(reference, selector, params) {
         _selector = selector;
 
+
+        let adds = reference.split("Users/");
+        adds = adds.length>1 ? adds[1].split(",") : [];
+        if(adds.length===2) {
+            _filter.date.start = moment(adds[0]);
+            _filter.date.end = moment(adds[1]+" 23:59:59");
+        } else {
+            _filter.date.start = 0;
+            _filter.date.end = 0;
+        }
+
+
+        console.log("Users._filter: ", _filter, adds);
+
         handleUpdateTopics = window.setInterval(__refreshUserTopics, 10000);
 
         return VB
@@ -81,20 +101,25 @@ window.VD_Users = (function () {
                 "{%lastReference%}": VD.GetHistory(1)
             })
             .then(() => {
+                console.log("ok1");
                 __initializeCalendar(reference);
                 return VB.LoadTemplatesList(serviceTemplatesList, VD_SETTINGS['TEMPLATE_DIR']);
             })
             .then((templatesContent) => {
+                console.log("ok2");
                 return $.when(templatesContent, VD_API.GetUsers());
             })
             .then((templatesContent, userItems) => {
+                console.log("ok3");
                 let itemTemplate = templatesContent['vd.users.item.html'];
-
+                let f = __getFilterUrlAdds();
                 userItems.forEach((item) => {
+                    item.filter = f;
                     let itemTemplateExec = _.template(itemTemplate)($.extend({}, emptyUserObject, item));
                     $('.group_list').append(itemTemplateExec);
                     __displayUserTopicsCounts(item);
                 });
+                __refreshUserTopics();
 
                 let touchedSwipeMenu = [];
 
@@ -191,6 +216,7 @@ window.VD_Users = (function () {
                 //});
             })
             .then(() => {
+                console.log("ok4");
                 $(selector).find(".back").click((event) => {
                     const reference = $(event.currentTarget).attr("reference");
                     VD.Controller(reference, selector);
@@ -199,11 +225,12 @@ window.VD_Users = (function () {
                 $(selector).find(".new_message").click((event) => {
                     const reference = $(event.currentTarget).attr("reference");
                     VD.Controller(reference, selector);
-                })
+                });
 
                 __initSearch();
             })
             .then(() => {
+                console.log("ok5");
                 //return empty selector to prevent default handler of 'reference' elements click
                 //default click over 'reference' handler does not allow to swipe user menu
                 return {
@@ -228,6 +255,11 @@ window.VD_Users = (function () {
 
     }
     
+    
+    function __getFilterUrlAdds(start_sym = ",") {
+        if(_filter.date.start===0 || _filter.date.end===0 ) return "";
+        return start_sym+moment(_filter.date.start).format("YYYY-MM-DD")+","+moment(_filter.date.end).format("YYYY-MM-DD");
+    }
     
     function __initSearch() {
         const $searchField = $(".search1 .search_field").find("input");
@@ -297,12 +329,9 @@ window.VD_Users = (function () {
             // __buildTopicList(resultCache, _filter);
         });
 
-        if (_filter.date.start && _filter.date.end) {
-            $calendar.data('daterangepicker').setStartDate(new Date(_filter.date.start));
-            $calendar.data('daterangepicker').setEndDate(new Date(_filter.date.end));
-            __setCalendarFilterDate(moment(_filter.date.start), moment(_filter.date.end));
-        }
+        __setCalendarFilterDate();
 
+        // if(_filter.date.start!==0) __refreshUserTopics();
 
 
 
@@ -311,11 +340,34 @@ window.VD_Users = (function () {
         $(".show-calendar .exportBtn").html(I18N.get("vocab.export"));
 
 
+        function __setCalendarFilterDate() {
+            if(_filter.date.start===0 || _filter.date.end===0) {
+                $(_selector).find('.calendar_wrapper').find('.range').html('');
+                $(_selector).find('.calendar_wrapper').find('.clear-range').hide();
+                window.history.pushState({
+                    reference: reference,
+                    parentSelector: _selector,
+                    params: params
+                }, '', window.location.origin + window.location.pathname+"#Users");
+
+            } else {
+                $(_selector).find('.calendar_wrapper').find('.range').html(moment(_filter.date.start).format('DD.MM.YYYY') + ' - ' + moment(_filter.date.end).format('DD.MM.YYYY'));
+                $(_selector).find('.calendar_wrapper').find('.clear-range').show();
+                window.history.pushState({
+                    reference: reference,
+                    parentSelector: _selector,
+                    params: params
+                }, '', window.location.origin + window.location.pathname+"#Users"+__getFilterUrlAdds("/"));
+
+            }
+        }
+
         function  __clearInterval() {
             _filter.date.start = 0;
             _filter.date.end = 0;
-            $(_selector).find('.calendar_wrapper').find('.range').html('');
-            $(_selector).find('.calendar_wrapper').find('.clear-range').hide();
+            // $(_selector).find('.calendar_wrapper').find('.range').html('');
+            // $(_selector).find('.calendar_wrapper').find('.clear-range').hide();
+            __setCalendarFilterDate();
             __refreshUserTopics();
 
         }
@@ -327,12 +379,10 @@ window.VD_Users = (function () {
             const daterangepicker = $calendar.data('daterangepicker');
             const start = daterangepicker.startDate;
             const end = daterangepicker.endDate;
-            _filter.date.start = start;
-            _filter.date.end = end;
+            _filter.date.start = +start;
+            _filter.date.end = +end;
 
-            $(_selector).find('.calendar_wrapper').find('.range').html(start.format('DD.MM.YYYY') + ' - ' + end.format('DD.MM.YYYY'));
-            $(_selector).find('.calendar_wrapper').find('.clear-range').show();
-
+            __setCalendarFilterDate();
             __refreshUserTopics();
         });
     }

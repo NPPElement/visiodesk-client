@@ -18,6 +18,9 @@ window.VD_UserEvents = ((function () {
      * @type {string} root selector
      */
     let _selector;
+    let _reference;
+    let _params;
+    let userId;
 
     /** @type {object} applied filter */
     let _filter = {
@@ -37,7 +40,20 @@ window.VD_UserEvents = ((function () {
 
     function run(reference, selector, params) {
         _selector = selector;
-        const userId = parseInt(VB_API.extractName(reference));
+        _reference = reference;
+        _params = params;
+        userId = parseInt(VB_API.extractName(reference));
+
+
+        let adds = reference.split("UserEvents/"+userId+",");
+        adds = adds.length>1 ? adds[1].split(",") : [];
+
+        if(adds.length>0) {
+            _filter.date.start  = moment(adds[0]);
+            _filter.date.end    = moment(adds[1]+" 23:59:59");
+        }
+
+
 
         return VD_API
             .GetUsers(userId)
@@ -51,8 +67,10 @@ window.VD_UserEvents = ((function () {
                 serviceTemplatesData = templates;
             })
             .then(() => {
-                return VD_API.GetTopicsByUser(userId);
+                return __loadTopicAndOthers();
+                // return VD_API.GetTopicsByUser(userId);
             })
+            /*
             .then((topics) => {
                 return __prepareTopics(topics);
             })
@@ -71,6 +89,32 @@ window.VD_UserEvents = ((function () {
             .fail((response) => {
                 console.error(`Failed to display user topics, user id: ${userId}, error: ${response}`);
             });
+             */
+    }
+
+
+    function __loadTopicAndOthers() {
+        // return VD_API.GetTopicsByUser(userId)
+        return VD_API.GetUserTopicsFiltered(userId, _filter.date.start,_filter.date.end)
+            .then((topics) => {
+                return __prepareTopics(topics);
+            })
+            .then((topics) => {
+                loadedTopics = topics;
+                __buildTopicList(loadedTopics, _filter);
+            })
+            .then(() => {
+                __initializeSearchField();
+                __initializeCalendar(_reference, _params);
+                __initializeTopFilterTab();
+                return {
+                    "selector": _selector
+                }
+            })
+            .fail((response) => {
+                console.error(`Failed to display user topics, user id: ${userId}, error: ${response}`);
+            });
+
     }
 
     function __initializeTopFilterTab() {
@@ -151,6 +195,7 @@ window.VD_UserEvents = ((function () {
      */
     function __applyFilter(filter, data) {
         return data.filter((topic) => {
+            if(true) return true;
             if (filter && filter.status_id) {
                 if (topic.status_id !== filter.status_id) {
                     return false;
@@ -270,6 +315,7 @@ window.VD_UserEvents = ((function () {
             } else {
                 __buildTopicList(loadedTopics, _filter);
             }
+            __loadTopicAndOthers();
         });
 
         //override default template for display 'Export' button
@@ -301,6 +347,7 @@ window.VD_UserEvents = ((function () {
             "locale": VD_SETTINGS['DATERANGEPICKER_LOCALE']
         }, (start, end) => {
             __setCalendarFilterDate(start, end);
+            __loadTopicAndOthers();
             __buildTopicList(loadedTopics, _filter);
         });
 
@@ -340,12 +387,22 @@ window.VD_UserEvents = ((function () {
 
         $calendar.on("cancel.daterangepicker", (e, picker) => {
             __clearCalendarFilterDate();
+            console.log("cancel.daterangepicker");
+            __loadTopicAndOthers();
         });
     }
 
     function __setCalendarFilterDate(start, end) {
         _filter.date.start = +start;
         _filter.date.end = +end;
+
+        window.history.pushState({
+            reference: +_reference,
+            parentSelector: _selector,
+            params: _params
+        }, '', window.location.origin + window.location.pathname+"#UserEvents/"+userId+","+start.format('YYYY-MM-DD')+","+end.format('YYYY-MM-DD'));
+
+
         $(_selector).find('.calendar_wrapper').find('.range').html(start.format('DD.MM.YYYY') + ' - ' + end.format('DD.MM.YYYY'));
         $(_selector).find('.calendar_wrapper').find('.clear-range').show();
     }
@@ -354,6 +411,11 @@ window.VD_UserEvents = ((function () {
         $('#calendar-icon').val('');
         _filter.date.start = 0;
         _filter.date.end = 0;
+        window.history.pushState({
+            reference: +_reference,
+            parentSelector: _selector,
+            params: _params
+        }, '', window.location.origin + window.location.pathname+"#UserEvents/"+userId);
         $(_selector).find('.calendar_wrapper').find('.range').html('');
         $(_selector).find('.calendar_wrapper').find('.clear-range').hide();
     }
