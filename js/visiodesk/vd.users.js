@@ -91,7 +91,6 @@ window.VD_Users = (function () {
         }
 
 
-        console.log("Users._filter: ", _filter, adds);
 
         handleUpdateTopics = window.setInterval(__refreshUserTopics, 10000);
 
@@ -101,16 +100,13 @@ window.VD_Users = (function () {
                 "{%lastReference%}": VD.GetHistory(1)
             })
             .then(() => {
-                console.log("ok1");
                 __initializeCalendar(reference);
                 return VB.LoadTemplatesList(serviceTemplatesList, VD_SETTINGS['TEMPLATE_DIR']);
             })
             .then((templatesContent) => {
-                console.log("ok2");
                 return $.when(templatesContent, VD_API.GetUsers());
             })
             .then((templatesContent, userItems) => {
-                console.log("ok3");
                 let itemTemplate = templatesContent['vd.users.item.html'];
                 let f = __getFilterUrlAdds();
                 userItems.forEach((item) => {
@@ -216,7 +212,6 @@ window.VD_Users = (function () {
                 //});
             })
             .then(() => {
-                console.log("ok4");
                 $(selector).find(".back").click((event) => {
                     const reference = $(event.currentTarget).attr("reference");
                     VD.Controller(reference, selector);
@@ -230,7 +225,6 @@ window.VD_Users = (function () {
                 __initSearch();
             })
             .then(() => {
-                console.log("ok5");
                 //return empty selector to prevent default handler of 'reference' elements click
                 //default click over 'reference' handler does not allow to swipe user menu
                 return {
