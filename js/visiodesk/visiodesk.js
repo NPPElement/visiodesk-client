@@ -585,7 +585,7 @@ window.VD = (function Visiodesk() {
     }
 
     function SetTabBarNav(hide) {
-        var selector = '.tabbar > NAV';
+        var selector = '.tabbar > NAV, .menu-bar > NAV';
 
         if (hide) {
             $(selector).addClass('hide');
@@ -954,7 +954,7 @@ window.VD = (function Visiodesk() {
     }
 
     function __lightTabBarNav(reference) {
-        var $items = $('.tabbar > NAV').children('A');
+        var $items = $('.tabbar > NAV, .menu-bar > NAV').children('A');
         $items.removeClass('active');
         $items.each((i, e) => {
             var ref = $(e).attr("reference");
@@ -989,6 +989,7 @@ window.VD = (function Visiodesk() {
 
 
     function Controller(reference, selector, params, force_refresh) {
+        console.log("Controller: ", reference);
         LOGGER.vd_controller(reference, selector, params, force_refresh);
         let state_data =  {
             reference: reference,

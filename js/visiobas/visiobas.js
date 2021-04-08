@@ -56,6 +56,7 @@ window.VB = (function Visiobas() {
 
         "redirect": redirect,
         "goBack": goBack,
+        "CloseVbasPanel": CloseVbasPanel,
 
     };
 
@@ -113,6 +114,19 @@ window.VB = (function Visiobas() {
             reference = "Site";
         }
         redirect({reference: reference});
+    }
+
+    function CloseVbasPanel() {
+        var $obj = $('.tabbar');
+        var $cur = $('.modal_bar > .top');
+        if ($obj.hasClass('full')) {
+            $obj.removeClass('full');
+            $obj.children('NAV').show();
+            $cur.removeClass('bottom_dark');
+
+            $('HTML').removeClass('hide_scroll');
+            $('.visioBAS > .data').removeClass('show');
+        }
     }
     
     /**

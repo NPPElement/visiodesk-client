@@ -1,6 +1,6 @@
 * { padding: 0; margin: 0; box-sizing: border-box; }
 HTML { height: 100%; overflow-x: hidden;}
-HTML.hide_scroll { overflow-y: hidden }
+/*HTML.hide_scroll { overflow-y: hidden }*/
 BODY { height: 100%; background: #fff; }
 TABLE { border-collapse: collapse; border: 0; }
 P { margin: 0 }
@@ -33,7 +33,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     position: absolute;
     z-index: 2;
     top: 0;
-    right: 0;
+    right: 85px;
     background: #E2E7E9;
     box-shadow: 0px 19px 38px rgba(0, 0, 0, 0.3), 0px 15px 12px rgba(0, 0, 0, 0.22);
 }
@@ -524,6 +524,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 }
 
 /*Навигация внизу*/
+
 .tabbar {
     position: fixed;
     bottom: 0;
@@ -535,15 +536,19 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     justify-content: flex-end;
     z-index: 10;
 }
+
 .tabbar.half {
     height: 50%;
 }
 .tabbar.full {
     height: 100%;
 }
+
 .tabbar.hide {
     display: none;
+    /*display: flex;*/
 }
+
 
 .tabbar > NAV {
     display: flex;
@@ -552,6 +557,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 .tabbar > NAV.hide {
     display: none;
 }
+/*
 .tabbar > NAV A {
     position: relative;
     width: 25%;
@@ -564,6 +570,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     letter-spacing: 0.012em;
     color: #929292;
 }
+ */
 .tabbar > NAV A.active {
     color: #007AFF;
 }
@@ -7337,7 +7344,8 @@ label.input_group_title {
 
 .dropdown.site {
     align-items: flex-start;
-    padding-top: 86px;
+    /*padding-top: 86px;*/
+    padding-top: 58px;
 }
 
 .dropdown.site UL LI:hover {
@@ -7679,3 +7687,349 @@ label.input_group_title {
     color: #FF9500;
     text-align: left;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+.tabbar > NAV A.checklist {
+    background: url('../images/icon_checklist.svg') 50% 8px no-repeat;
+}
+.tabbar > NAV A.checklist.active {
+    background-image: url('../images/icon_checklist_active.svg');
+}
+
+.tabbar > NAV A.users {
+    background: url('../images/icon_users.svg') 50% 8px no-repeat;
+}
+.tabbar > NAV A.users.active {
+    background-image: url('../images/icon_users_active.svg');
+}
+
+.tabbar > NAV A.settings {
+    background: url('../images/icon_settings.png') 50% 6px no-repeat;
+}
+.tabbar > NAV A.settings.active {
+    background-image: url('../images/icon_settings_active.png');
+}
+
+
+@media (min-device-width: 813px) {
+    .tabbar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        max-width: 82px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        z-index: 10;
+        height: 100%;
+    }
+
+    .tabbar > NAV {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        box-shadow: 2px -1px 4px rgba(0, 0, 0, 0.19987);
+        align-content: center;
+        height: 100%;
+    }
+
+    .tabbar > NAV A {
+        position: relative;
+        width: 100%;
+        height: 49px;
+        padding-top: 36px;
+        padding-bottom: 28px;
+        font-family: 'SF-PRO-Regular';
+        line-height: normal;
+        font-size: 11px;
+        text-align: center;
+        letter-spacing: 0.012em;
+        color: #929292;
+    }
+
+}
+
+
+
+@media (max-device-width: 812px) {
+    #screen {
+        right: 0;
+    }
+
+    .tabbar {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        max-width: 375px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        z-index: 10;
+    }
+
+    .tabbar > NAV A {
+        position: relative;
+        width: 25%;
+        height: 49px;
+        padding-top: 36px;
+        font-family: 'SF-PRO-Regular';
+        line-height: normal;
+        font-size: 11px;
+        text-align: center;
+        letter-spacing: 0.012em;
+        color: #929292;
+    }
+
+    .tabbar > NAV {
+        display: flex;
+        box-shadow: 2px -1px 4px rgba(0, 0, 0, 0.19987);
+    }
+
+    .tabbar.hide {
+        display: none;
+    }
+
+
+}
+
+*/
+
+
+
+
+
+
+
+
+.menu-bar > NAV A.active {
+    color: #007AFF;
+}
+.menu-bar > NAV A.map {
+    background: url('../images/icon_map.svg') 50% 8px no-repeat;
+}
+.menu-bar > NAV A.map.active {
+    background-image: url('../images/icon_map_active.svg');
+}
+.menu-bar > NAV A.automatic {
+    background: url('../images/icon_automatic.svg') 50% 8px no-repeat;
+}
+.menu-bar > NAV A.automatic.active {
+    background-image: url('../images/icon_automatic_active.svg');
+}
+.menu-bar > NAV A.events {
+    background: url('../images/icon_events.svg') 50% 9px no-repeat;
+}
+.menu-bar > NAV A.events.active {
+    background-image: url('../images/icon_events_active.svg');
+}
+.menu-bar > NAV A.news {
+    background: url('../images/icon_news.svg') 50% 9px no-repeat;
+}
+.menu-bar > NAV A.news.active {
+    background-image: url('../images/icon_news_active.svg');
+}
+.menu-bar > NAV A.feed {
+    background: url('../images/icon_feed.svg') 50% 8px no-repeat;
+}
+.menu-bar > NAV A.feed.active {
+    background-image: url('../images/icon_feed_active.svg');
+}
+.menu-bar > NAV A SPAN {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+.menu-bar > NAV A EM {
+    left: 17px;
+    top: 14px;
+    padding: 0 5px 0 4px;
+    background: #EB5757;
+    position: absolute;
+    border-radius: 100px;
+    font-family: 'SF-PRO-Medium';
+    line-height: normal;
+    font-size: 12px;
+    text-align: center;
+    letter-spacing: -0.016em;
+    color: #FFFFFF;
+}
+.menu-bar > NAV A EM.blue {
+    background: #007AFF;
+}
+#news-counter, #feed-counter {
+    display: none;
+}
+
+.map .menu-bar > NAV {
+    display: none;
+}
+
+.menu-bar > NAV A.checklist {
+    background: url('../images/icon_checklist.svg') 50% 8px no-repeat;
+}
+.menu-bar > NAV A.checklist.active {
+    background-image: url('../images/icon_checklist_active.svg');
+}
+
+.menu-bar > NAV A.users {
+    background: url('../images/icon_users.svg') 50% 8px no-repeat;
+}
+.menu-bar > NAV A.users.active {
+    background-image: url('../images/icon_users_active.svg');
+}
+
+.menu-bar > NAV A.settings {
+    background: url('../images/icon_settings.png') 50% 6px no-repeat;
+}
+.menu-bar > NAV A.settings.active {
+    background-image: url('../images/icon_settings_active.png');
+}
+
+
+
+@media (min-device-width: 813px) {
+    .menu-bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        max-width: 82px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        z-index: 10;
+        height: 100%;
+    }
+
+    .menu-bar > NAV {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        box-shadow: 2px -1px 4px rgba(0, 0, 0, 0.19987);
+        align-content: center;
+        height: 100%;
+    }
+
+    .menu-bar > NAV A {
+        position: relative;
+        width: 100%;
+        height: 49px;
+        padding-top: 36px;
+        padding-bottom: 28px;
+        font-family: 'SF-PRO-Regular';
+        line-height: normal;
+        font-size: 11px;
+        text-align: center;
+        letter-spacing: 0.012em;
+        color: #929292;
+    }
+
+    .dropdown.site {
+        left: auto;
+        right: 85px;
+    }
+
+}
+
+
+
+@media (max-device-width: 812px) {
+    #screen {
+        right: 0;
+    }
+
+    .menu-bar {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        max-width: 375px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        z-index: 10;
+    }
+
+    .menu-bar > NAV A {
+        position: relative;
+        width: 25%;
+        height: 49px;
+        padding-top: 36px;
+        font-family: 'SF-PRO-Regular';
+        line-height: normal;
+        font-size: 11px;
+        text-align: center;
+        letter-spacing: 0.012em;
+        color: #929292;
+    }
+
+    .menu-bar > NAV {
+        display: flex;
+        box-shadow: 2px -1px 4px rgba(0, 0, 0, 0.19987);
+    }
+
+    .menu-bar.hide {
+        display: none;
+    }
+
+
+}
+
+.map .menu-bar {
+    display: none;
+}
+
+.modal_bar .top.bottom_dark {
+    display: none!important;
+}
+
+.visioBAS .caption {
+    top: 0;
+}
+
+
+/*
+
+Тогда в облачке вдеск будет
+- Экспорт
+- Обновить
+
+В облачке вбас
+- Импорт
+- Обновить
+- Удилить
+- Админ (заменить название нужно на Slicer)
+
+ */
