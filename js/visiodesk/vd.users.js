@@ -53,7 +53,7 @@ window.VD_Users = (function () {
 
             $("#user-"+user.id)
                 .attr("reference", ":UserEvents/"+user.id+__getFilterUrlAdds())
-                .find("[data-reference]").attr("data-reference", ":UserEvents/"+user.id+__getFilterUrlAdds());
+                .find(".group_item [data-reference]").attr("data-reference", ":UserEvents/"+user.id+__getFilterUrlAdds());
 
 
             for (const statusType in statusTypes) {
