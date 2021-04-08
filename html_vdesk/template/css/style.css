@@ -7961,6 +7961,14 @@ label.input_group_title {
         right: 85px;
     }
 
+    .leaflet-right {
+        right: 460px;
+    }
+
+    #group_table_control {
+        left: calc(100% - 500px);
+    }
+
 }
 
 
@@ -8033,3 +8041,4 @@ label.input_group_title {
 - Админ (заменить название нужно на Slicer)
 
  */
+
