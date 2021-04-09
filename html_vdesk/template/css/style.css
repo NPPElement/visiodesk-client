@@ -8001,11 +8001,13 @@ label.input_group_title {
         text-align: center;
         letter-spacing: 0.012em;
         color: #929292;
+        flex: 1 0 25%;
     }
 
     .menu-bar > NAV {
         display: flex;
         box-shadow: 2px -1px 4px rgba(0, 0, 0, 0.19987);
+        overflow-x: scroll;
     }
 
     .menu-bar.hide {
