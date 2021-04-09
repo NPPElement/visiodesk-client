@@ -1,8 +1,9 @@
 <div class="caption t_pad">
+<!--    -< <%= parent.name %>-->
     <nav>
         <div class="bar">
             <% if (!_.isEmpty(parent.reference)) { %>
-            <a class="back navigate" data-reference="<%= parent.reference %>"><%= parent.name %></a>
+            <a class="back navigate" data-reference="<%= parent.reference %>">Назад</a>
             <% } else { %>
             <a class="list"></a>
             <% }  %>

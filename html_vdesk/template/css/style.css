@@ -298,6 +298,9 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     overflow: hidden;
     padding: 0 7px;
     white-space: nowrap;
+    /*overflow: hidden;*/
+    max-width: 200px;
+    text-overflow: ellipsis;
 }
 .caption NAV .text SPAN {
     display: block;
