@@ -5,8 +5,14 @@
          */
         let _parent;
 
+        let actions = [];
+        let $am = $("#admin-menu");
+        let show = false;
+
         return {
-            "create": create
+            "create": create,
+            "Set": Set,
+            "_init_default": _init_default,
         };
 
         /**
@@ -80,6 +86,38 @@
             });
         }
 
+
+
+        /*
+
+        action = {name=>[title, callback]}
+
+         */
+        function Set(element, _actions) {
+            let $e = $(element);
+
+            actions = _actions;
+            let h = "";
+            for(let mnemo in actions) h+='<a class="'+mnemo+'" action="'+mnemo+'">'+actions[mnemo][0]+'</a>';
+            $am.find(".body").html(h);
+
+            $am.find("a").click(e=>{
+                console.log($(e.target));
+            });
+
+            $am.find("submenu").removeClass("show");
+
+            $e.click(e=>{
+                show=!show;
+                $am.find("submenu").toggleClass("show", show);
+            });
+
+            $e.click()
+
+
+
+        }
+
         function __delete() {
             ModalObjectsDelete.show();
         }
@@ -105,7 +143,22 @@
         function __showObjectTrendLogs() {
             ModalTrendLogs.showForObject(24 * 8 * 60 * 60, 100);
         }
+        
+        function __export() {
+            VD.ShowErrorMessage('Будет экспорт', 'Вместо этого должен быть экспорт', '', 1000);
+
+        }
+
+
+        function _init_default() {
+            Set(".list", {
+                export:["Экспорт",null],
+                settings:["Настройки",null],
+            });
+        }
     }
 
     window.TableDropdown = TableDropdown;
+
+
 })();

@@ -24,6 +24,7 @@ window.VD = (function Visiodesk() {
         "SetVisiobasHistory": SetVisiobasHistory,
         "GetVisiobasActiveTabSelector": GetVisiobasActiveTabSelector,
         "SetVisiobasAdminSubmenu": SetVisiobasAdminSubmenu,
+        "SetVisiodeskAdminSubmenu": SetVisiodeskAdminSubmenu,
 
         /*Universal interface utilites*/
         "CreateConfirmDialog": CreateConfirmDialog,
@@ -161,9 +162,25 @@ window.VD = (function Visiodesk() {
     }
 
     function SetVisiobasAdminSubmenu(curTabSelector) {
+        console.log("SetVisiobasAdminSubmenu: "+curTabSelector);
         TableDropdown().create(curTabSelector);
 
         $(curTabSelector).children('.caption').find('.update').click((event) => {
+            event.stopPropagation();
+
+            var $submenu = $(curTabSelector).children('.caption').find('.submenu');
+            if ($submenu.hasClass('show')) {
+                $submenu.removeClass('show');
+            } else {
+                $submenu.addClass('show');
+            }
+        });
+    }
+    function SetVisiodeskAdminSubmenu() {
+        console.log("SetVisiodeskAdminSubmenu: ");
+        TableDropdown().create2();
+//////////////////////////////////////////////////////
+        $("body").children('.caption').find('.update').click((event) => {
             event.stopPropagation();
 
             var $submenu = $(curTabSelector).children('.caption').find('.submenu');
@@ -531,9 +548,15 @@ window.VD = (function Visiodesk() {
 
     function SideBarIconBindClick(selector) {
         $(selector).find('.caption').find('.list').click((event) => {
-            event.stopPropagation();
-            $('#sidebar-wrapper').show();
+            console.log("click here: ", selector);
         });
+        /*
+        $(selector).find('.caption').find('.list').click((event) => {
+            event.stopPropagation();
+             $('#sidebar-wrapper').show();
+        });
+
+         */
     }
 
     function SetSideBarNav() {

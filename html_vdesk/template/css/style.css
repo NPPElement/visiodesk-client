@@ -642,12 +642,14 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 }
 
 .map .content_open {
+
     display: block;
     width: 50px;
     height: 50px;
     position: absolute;
-    right: 20px;
-    bottom: 13.3%;
+    right: 10px;
+    top: 103px;
+    /*bottom: 13.3%;*/
     z-index: 1;
     background: url("../images/content_open.svg") 0 0 no-repeat;
 }
@@ -6441,7 +6443,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     top: 0;
     bottom: 0;
     left: 0;
-    width: calc(100% - 375px);
+    /*width: calc(100% - 375px);*/
     height: 100%;
     margin: auto 0;
     padding: 0;
@@ -7972,6 +7974,9 @@ label.input_group_title {
         left: calc(100% - 500px);
     }
 
+    #group_table {
+        width: calc(100% - 460px);
+    }
 }
 
 
@@ -8017,6 +8022,9 @@ label.input_group_title {
         display: none;
     }
 
+    #group_table {
+        width: calc(100% - 375px);
+    }
 
 }
 
@@ -8033,6 +8041,30 @@ label.input_group_title {
 }
 
 
+
+.visioBAS .caption NAV .as_list .submenu {
+    right: auto;
+    left: -20px;
+}
+
+.visioBAS .caption NAV .as_list .submenu .header {
+    background: url(../images/submenu_angle.svg) calc(19px) 0 no-repeat;
+}
+/*
+.visioBAS .caption NAV .as_list .update
+ */
+.visioBAS .caption NAV .as_list .update {
+    /*margin-left: 14px;*/
+    background-image: url('../images/list_dark.svg');
+
+}
+
+.caption NAV .min_width_auto {
+    min-width: auto!important;
+}
+
+
+
 /*
 
 Тогда в облачке вдеск будет
@@ -8046,4 +8078,55 @@ label.input_group_title {
 - Админ (заменить название нужно на Slicer)
 
  */
+
+
+
+
+
+
+
+
+
+
+#admin-menu .submenu {
+    display: none;
+    z-index: 10;
+    position: absolute;
+    top: 30px;
+    left: -20px;
+    min-width: 199px;
+}
+#admin-menu .submenu.show {
+    display: block;
+}
+#admin-menu .submenu .header {
+    height: 13px;
+    background: url("../images/submenu_angle.svg") 19px 0 no-repeat;
+}
+#admin-menu .submenu .body {
+    display: flex;
+    flex-direction: column;
+    background: #DADADA;
+    border-radius: 13px;
+    padding-top: 17px;
+    padding-left: 32px;
+}
+#admin-menu .submenu A {
+    display: block;
+    padding: 2px 0 2px 42px;
+    font-family: 'SF-PRO-Regular';
+    line-height: normal;
+    font-size: 19px;
+    letter-spacing: -0.0257895em;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+#admin-menu  .submenu A.delete {
+    background: url("../images/submenu_delete.svg") 0 50% no-repeat;
+}
+
+#admin-menu .submenu A.import {
+    background: url("../images/submenu_import.svg") 0 50% no-repeat;
+}
 

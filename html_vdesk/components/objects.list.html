@@ -1,13 +1,13 @@
 <div class="caption t_pad">
-<!--    -< <%= parent.name %>-->
     <nav>
-        <div class="bar">
+<!--        <div class="bar">-->
             <% if (!_.isEmpty(parent.reference)) { %>
             <a class="back navigate" data-reference="<%= parent.reference %>">Назад</a>
             <% } else { %>
-            <a class="list"></a>
+<!--            <a class="list"></a>-->
+            <div class="bar for_submenu min_width_auto as_list"><a class="update"></a></div>
             <% }  %>
-        </div>
+<!--        </div>-->
         <% if (!_.isEmpty(parent.reference)) { %>
         <div class="text"><%= parent.name %></div>
         <% } else { %>
@@ -16,9 +16,9 @@
             <%= folder.items[folder.current] %>
 <!--        <div class="text">visioBAS</div>-->
         <% } %>
-        <div class="bar for_submenu">
-            <a class="update"></a>
-            <!--<a class="search"></a>-->
+        <div class="bar min_width_auto for_submenu___">
+<!--            <a class="update"></a>-->
+<!--            <a class="search"></a>-->
             <a data-reference="<%= object.reference %>" href="#visualization" class="graphic"></a>
         </div>
     </nav>
