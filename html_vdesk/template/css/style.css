@@ -9,12 +9,6 @@ A { cursor: pointer; text-decoration: none }
 EM { font-style: normal }
 INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; padding: 0; outline: none }
 
-:root{
-  --vd-menu-background-color: #242629;
-  --vd-menu-text-active-color: #FF9500;
-  --vd-menu-marker-color: #FF9500;
-}
-
 @media (max-device-width: 812px) {
     #vbas-widget{
             transform: rotate(90deg);
@@ -7963,7 +7957,7 @@ label.input_group_title {
         font-size: 11px;
         text-align: center;
         letter-spacing: 0.012em;
-        color: #929292;
+        color: var(--vd-menu-text-color, #929292);
     }
 
     .dropdown.site {
