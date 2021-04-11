@@ -7830,8 +7830,9 @@ label.input_group_title {
 
 
 
-
-
+/*********************************************************************/
+/*                             Menu-bar                              */
+/*********************************************************************/
 
 .menu-bar > NAV A.active {
     color: var(--vd-menu-text-active-color, #007AFF);
@@ -7887,13 +7888,16 @@ label.input_group_title {
     font-size: 12px;
     text-align: center;
     letter-spacing: -0.016em;
-    color: #FFFFFF;
+    background: var(--vd-menu-background-color, #ffffff);
 }
+.visioBAS .menu-bar > NAV A EM {
+        background: var(--vb-menu-background-color, #242629);
+    }
 .menu-bar > NAV A EM.blue {
     background: var(--vd-menu-marker-color, #007AFF);
 }
-#news-counter, #feed-counter {
-    display: none;
+.visioBAS .menu-bar > NAV A EM.blue {
+    background: var(--vb-menu-marker-color, #FF9500);
 }
 
 .map .menu-bar > NAV {
@@ -7937,6 +7941,10 @@ label.input_group_title {
         height: 100%;
     }
 
+    .visioBAS .menu-bar {
+        background: var(--vb-menu-background-color, #242629);
+    }
+
     .menu-bar > NAV {
         display: flex;
         flex-direction: column;
@@ -7960,6 +7968,10 @@ label.input_group_title {
         color: var(--vd-menu-text-color, #929292);
     }
 
+    .visioBAS .menu-bar > NAV A {
+        color: var(--vb-menu-text-color, #C8C8C8);
+    }
+
     .dropdown.site {
         left: auto;
         right: 85px;
@@ -7977,7 +7989,6 @@ label.input_group_title {
         width: calc(100% - 460px);
     }
 }
-
 
 
 @media (max-device-width: 812px) {
@@ -8031,6 +8042,10 @@ label.input_group_title {
     display: none;
 }
 
+/*********************************************************************/
+/*                             Submenu                               */
+/*********************************************************************/
+
 .modal_bar .top.bottom_dark {
     display: none!important;
 }
@@ -8038,7 +8053,6 @@ label.input_group_title {
 .visioBAS .caption {
     top: 0;
 }
-
 
 
 .visioBAS .caption NAV .as_list .submenu {
@@ -8077,14 +8091,6 @@ label.input_group_title {
 - Админ (заменить название нужно на Slicer)
 
  */
-
-
-
-
-
-
-
-
 
 
 #admin-menu .submenu {
