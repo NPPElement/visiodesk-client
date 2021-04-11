@@ -3393,7 +3393,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 }
 
 .visioBAS .caption {
-    background: #202124;
+    background: #242629;
     top: 33px;
     max-width: 375px;
 }
@@ -7930,7 +7930,7 @@ label.input_group_title {
         right: 0;
         width: 100%;
         max-width: 82px;
-        background: #333436;
+        background: #242629;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
