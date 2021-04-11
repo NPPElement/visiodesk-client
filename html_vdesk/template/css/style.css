@@ -12,6 +12,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 :root{
   --vd-menu-background-color: #242629;
   --vd-menu-text-active-color: #FF9500;
+  --vd-menu-marker-color: #FF9500;
 }
 
 @media (max-device-width: 812px) {
@@ -7895,7 +7896,7 @@ label.input_group_title {
     color: #FFFFFF;
 }
 .menu-bar > NAV A EM.blue {
-    background: #007AFF;
+    background: var(--vd-menu-marker-color, #007AFF);
 }
 #news-counter, #feed-counter {
     display: none;
@@ -7925,8 +7926,6 @@ label.input_group_title {
 .menu-bar > NAV A.settings.active {
     background-image: url('../images/icon_settings_active.png');
 }
-
-
 
 @media (min-device-width: 813px) {
 
