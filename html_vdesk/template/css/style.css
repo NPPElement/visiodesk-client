@@ -8065,9 +8065,11 @@ label.input_group_title {
     }
 .menu-bar > NAV A EM.blue {
     background: var(--vd-menu-marker-color, #007AFF);
+    color: var(--vd-menu-marker-text-color, #ffffff);
 }
 .visioBAS .menu-bar > NAV A EM.blue {
     background: var(--vb-menu-marker-color, #FF9500);
+    color: var(--vd-menu-marker-text-color, #ffffff);
 }
 
 .map .menu-bar > NAV {
