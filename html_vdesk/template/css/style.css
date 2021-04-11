@@ -7837,104 +7837,104 @@ label.input_group_title {
     color: var(--vd-menu-text-active-color, #007AFF);
 }
 .menu-bar > NAV A.map {
-    background: url(--vd-menu-icon-map-url, '/html_vdesk/template/theme/dark/icon_map.svg') 50% 8px no-repeat;
+    background: var(--vd-menu-icon-map-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.map.active {
-    background-image: url(--vd-menu-icon-map-active-url, '/html_vdesk/template/theme/dark/icon_map_active.svg');
+    background-image: var(--vd-menu-icon-map-active-url);
 }
 .menu-bar > NAV A.automatic {
-    background: url(--vd-menu-icon-automatic-url, '/html_vdesk/template/theme/dark/icon_automatic_active.svg') 50% 8px no-repeat;
+    background: var(--vd-menu-icon-automatic-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.automatic.active {
-    background-image: url(--vd-menu-icon-automatic-active-url, '/html_vdesk/template/theme/dark/icon_automatic_active.svg');
+    background-image: var(--vd-menu-icon-automatic-active-url);
 }
 .menu-bar > NAV A.events {
-    background: url(--vd-menu-icon-events-url) 50% 8px no-repeat;
+    background: var(--vd-menu-icon-events-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.events.active {
-    background-image: url(--vd-menu-icon-events-active-url);
+    background-image: var(--vd-menu-icon-events-active-url);
 }
 .menu-bar > NAV A.news {
-    background: url(--vd-menu-icon-news-url) 50% 8px no-repeat;
+    background: var(--vd-menu-icon-news-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.news.active {
-    background-image: url(--vd-menu-icon-news-active-url);
+    background-image: var(--vd-menu-icon-news-active-url);
 }
 .menu-bar > NAV A.feed {
-    background: url(--vd-menu-icon-feed-url) 50% 8px no-repeat;
+    background: var(--vd-menu-icon-feed-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.feed.active {
-    background-image: url(--vd-menu-icon-feed-active-url);
+    background-image: var(--vd-menu-icon-feed-active-url);
 }
 .menu-bar > NAV A.checklist {
-    background: url(--vd-menu-icon-checklist-url) 50% 8px no-repeat;
+    background: var(--vd-menu-icon-checklist-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.checklist.active {
-    background-image: url(--vd-menu-icon-checklist-active-url);
+    background-image: var(--vd-menu-icon-checklist-active-url);
 }
 .menu-bar > NAV A.users {
-    background: url(--vd-menu-icon-users-url) 50% 8px no-repeat;
+    background: var(--vd-menu-icon-users-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.users.active {
-    background-image: url(--vd-menu-icon-users-active-url);
+    background-image: var(--vd-menu-icon-users-active-url);
 }
 .menu-bar > NAV A.settings {
-    background: url(--vd-menu-icon-settings-url) 50% 8px no-repeat;
+    background: var(--vd-menu-icon-settings-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.settings.active {
-    background-image: url(--vd-menu-icon-settings-active-url);
+    background-image: var(--vd-menu-icon-settings-active-url);
 }
 
 .visioBAS .menu-bar > NAV A.active {
     color: var(--vb-menu-text-active-color, #FF9500);
 }
 .visioBAS .menu-bar > NAV A.map {
-    background: url(--vb-menu-icon-map-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-map-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.map.active {
-    background-image: url(--vb-menu-icon-map-active-url);
+    background-image: var(--vb-menu-icon-map-active-url);
 }
 .visioBAS .menu-bar > NAV A.automatic {
-    background: url(--vb-menu-icon-automatic-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-automatic-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.automatic.active {
-    background-image: url(--vb-menu-icon-automatic-active-url);
+    background-image: var(--vb-menu-icon-automatic-active-url);
 }
 .visioBAS .menu-bar > NAV A.events {
-    background: url(--vb-menu-icon-events-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-events-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.events.active {
-    background-image: url(--vb-menu-icon-events-active-url);
+    background-image: var(--vb-menu-icon-events-active-url);
 }
 .visioBAS .menu-bar > NAV A.news {
-    background: url(--vb-menu-icon-news-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-news-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.news.active {
-    background-image: url(--vb-menu-icon-news-active-url);
+    background-image: var(--vb-menu-icon-news-active-url);
 }
 .visioBAS .menu-bar > NAV A.feed {
-    background: url(--vb-menu-icon-feed-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-feed-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.feed.active {
-    background-image: url(--vb-menu-icon-feed-active-url);
+    background-image: var(--vb-menu-icon-feed-active-url);
 }
 .visioBAS .menu-bar > NAV A.checklist {
-    background: url(--vb-menu-icon-checklist-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-checklist-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.checklist.active {
-    background-image: url(--vb-menu-icon-checklist-active-url);
+    background-image: var(--vb-menu-icon-checklist-active-url);
 }
 .visioBAS .menu-bar > NAV A.users {
-    background: url(--vb-menu-icon-users-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-users-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.users.active {
-    background-image: url(--vb-menu-icon-users-active-url);
+    background-image: var(--vb-menu-icon-users-active-url);
 }
 .visioBAS .menu-bar > NAV A.settings {
-    background: url(--vb-menu-icon-settings-url) 50% 8px no-repeat;
+    background: var(--vb-menu-icon-settings-url) 50% 8px no-repeat;
 }
 .visioBAS .menu-bar > NAV A.settings.active {
-    background-image: url(--vb-menu-icon-settings-active-url);
+    background-image: var(--vb-menu-icon-settings-active-url);
 }
 
 
