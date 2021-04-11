@@ -9,6 +9,10 @@ A { cursor: pointer; text-decoration: none }
 EM { font-style: normal }
 INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; padding: 0; outline: none }
 
+:root{
+  --menu-background-color: #242629;
+}
+
 @media (max-device-width: 812px) {
     #vbas-widget{
             transform: rotate(90deg);
@@ -7924,22 +7928,19 @@ label.input_group_title {
 
 
 @media (min-device-width: 813px) {
+
     .menu-bar {
         position: fixed;
         top: 0;
         right: 0;
         width: 100%;
         max-width: 82px;
-        background: #ffffff;
+        background: var(--menu-background-color, #ffffff);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         z-index: 10;
         height: 100%;
-    }
-
-    .visioBAS .menu-bar {
-        background: #242629;
     }
 
     .menu-bar > NAV {
