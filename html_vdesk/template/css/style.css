@@ -10,7 +10,8 @@ EM { font-style: normal }
 INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; padding: 0; outline: none }
 
 :root{
-  --menu-background-color: #242629;
+  --vd-menu-background-color: #242629;
+  --vd-menu-text-active-color: #FF9500;
 }
 
 @media (max-device-width: 812px) {
@@ -7838,7 +7839,7 @@ label.input_group_title {
 
 
 .menu-bar > NAV A.active {
-    color: #007AFF;
+    color: var(--vd-menu-text-active-color, #007AFF);
 }
 .menu-bar > NAV A.map {
     background: url('../images/icon_map.svg') 50% 8px no-repeat;
@@ -7935,7 +7936,7 @@ label.input_group_title {
         right: 0;
         width: 100%;
         max-width: 82px;
-        background: var(--menu-background-color, #ffffff);
+        background: var(--vd-menu-background-color, #ffffff);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
