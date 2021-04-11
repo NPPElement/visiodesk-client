@@ -7843,10 +7843,10 @@ label.input_group_title {
     background-image: url(--vd-menu-icon-map-active-url, '../theme/dark/icon_map_active.svg');
 }
 .menu-bar > NAV A.automatic {
-    background: url(--vd-menu-icon-automatic-url) 50% 8px no-repeat;
+    background: url(--vd-menu-icon-automatic-url, '../theme/dark/icon_automatic_active.svg') 50% 8px no-repeat;
 }
 .menu-bar > NAV A.automatic.active {
-    background-image: url(--vd-menu-icon-automatic-active-url);
+    background-image: url(--vd-menu-icon-automatic-active-url, '../theme/dark/icon_automatic_active.svg');
 }
 .menu-bar > NAV A.events {
     background: url(--vd-menu-icon-events-url) 50% 8px no-repeat;
