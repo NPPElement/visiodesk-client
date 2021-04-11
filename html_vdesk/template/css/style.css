@@ -7945,6 +7945,7 @@ label.input_group_title {
         box-shadow: 2px -1px 4px rgba(0, 0, 0, 0.19987);
         align-content: center;
         height: 100%;
+        color: #202124;
     }
 
     .menu-bar > NAV A {
@@ -7958,7 +7959,7 @@ label.input_group_title {
         font-size: 11px;
         text-align: center;
         letter-spacing: 0.012em;
-        color: #202124;
+        color: #929292;
     }
 
     .dropdown.site {
