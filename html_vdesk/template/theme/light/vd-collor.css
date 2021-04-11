@@ -3,4 +3,21 @@
   --vd-menu-text-color: #929292;
   --vd-menu-text-active-color: #007AFF;
   --vd-menu-marker-color: #007AFF;
+
+  --vd-menu-icon-map-url: url("../theme/light/icon_map.svg");
+  --vd-menu-icon-map-active-url: url("../theme/light/icon_map_active.svg");
+  --vd-menu-icon-automatic-url: url("../theme/light/icon_automatic.svg");
+  --vd-menu-icon-automatic-active-url: url("../theme/light/icon_automatic_active.svg");
+  --vd-menu-icon-events-url: url("../theme/light/icon_events.svg");
+  --vd-menu-icon-events-active-url: url("../theme/light/icon_events_active.svg");
+  --vd-menu-icon-news-url: url("../theme/light/icon_news.svg");
+  --vd-menu-icon-news-active-url: url("../theme/light/icon_news_active.svg");
+  --vd-menu-icon-feed-url: url("../theme/light/icon_feed.svg");
+  --vd-menu-icon-feed-active-url: url("../theme/light/icon_feed_active.svg");
+  --vd-menu-icon-checklist-url: url("../theme/light/icon_checklist.svg");
+  --vd-menu-icon-checklist-active-url: url("../theme/light/icon_checklist_active.svg");
+  --vd-menu-icon-users-url: url("../theme/light/icon_users.svg");
+  --vd-menu-icon-users-active-url: url("../theme/light/icon_users_active.svg");
+  --vd-menu-icon-users-url: url("../theme/light/icon_settings.svg");
+  --vd-menu-icon-users-active-url: url("../theme/light/icon_settings_active.svg");
 }

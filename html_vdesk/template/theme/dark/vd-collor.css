@@ -3,4 +3,21 @@
   --vd-menu-text-color: #C8C8C8;
   --vd-menu-text-active-color: #FF9500;
   --vd-menu-marker-color: #FF9500;
+
+  --vd-menu-icon-map-url: url("../theme/dark/icon_map.svg");
+  --vd-menu-icon-map-active-url: url("../theme/dark/icon_map_active.svg");
+  --vd-menu-icon-automatic-url: url("../theme/dark/icon_automatic.svg");
+  --vd-menu-icon-automatic-active-url: url("../theme/dark/icon_automatic_active.svg");
+  --vd-menu-icon-events-url: url("../theme/dark/icon_events.svg");
+  --vd-menu-icon-events-active-url: url("../theme/dark/icon_events_active.svg");
+  --vd-menu-icon-news-url: url("../theme/dark/icon_news.svg");
+  --vd-menu-icon-news-active-url: url("../theme/dark/icon_news_active.svg");
+  --vd-menu-icon-feed-url: url("../theme/dark/icon_feed.svg");
+  --vd-menu-icon-feed-active-url: url("../theme/dark/icon_feed_active.svg");
+  --vd-menu-icon-checklist-url: url("../theme/dark/icon_checklist.svg");
+  --vd-menu-icon-checklist-active-url: url("../theme/dark/icon_checklist_active.svg");
+  --vd-menu-icon-users-url: url("../theme/dark/icon_users.svg");
+  --vd-menu-icon-users-active-url: url("../theme/dark/icon_users_active.svg");
+  --vd-menu-icon-users-url: url("../theme/dark/icon_settings.svg");
+  --vd-menu-icon-users-active-url: url("../theme/dark/icon_settings_active.svg");
 }
