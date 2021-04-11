@@ -7930,12 +7930,16 @@ label.input_group_title {
         right: 0;
         width: 100%;
         max-width: 82px;
-        background: #242629;
+        background: #ffffff;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         z-index: 10;
         height: 100%;
+    }
+
+    .visioBAS .menu-bar {
+        background: #242629;
     }
 
     .menu-bar > NAV {
