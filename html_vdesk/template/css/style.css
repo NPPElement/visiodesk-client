@@ -1,33 +1,12 @@
 /*********************************************************************/
 /*                          visioBAS theme                           */
 /*********************************************************************/
-:root{
-  --vb-menu-background-color: #242629;
-  --vb-menu-text-color: #C8C8C8;
-  --vb-menu-text-active-color: #FF9500;
-  --vb-menu-marker-color: #FF9500;
-  --vb-menu-icon-map-url: url("../theme/dark/icon_map.svg");
-  --vb-menu-icon-map-active-url: url("../theme/dark/icon_map_active.svg");
-  --vb-menu-icon-automatic-url: url("../theme/dark/icon_automatic.svg");
-  --vb-menu-icon-automatic-active-url: url("../theme/dark/icon_automatic_active.svg");
-  --vb-menu-icon-events-url: url("../theme/dark/icon_events.svg");
-  --vb-menu-icon-events-active-url: url("../theme/dark/icon_events_active.svg");
-  --vb-menu-icon-news-url: url("../theme/dark/icon_news.svg");
-  --vb-menu-icon-news-active-url: url("../theme/dark/icon_news_active.svg");
-  --vb-menu-icon-feed-url: url("../theme/dark/icon_feed.svg");
-  --vb-menu-icon-feed-active-url: url("../theme/dark/icon_feed_active.svg");
-  --vb-menu-icon-checklist-url: url("../theme/dark/icon_checklist.svg");
-  --vb-menu-icon-checklist-active-url: url("../theme/dark/icon_checklist_active.svg");
-  --vb-menu-icon-users-url: url("../theme/dark/icon_users.svg");
-  --vb-menu-icon-users-active-url: url("../theme/dark/icon_users_active.svg");
-  --vb-menu-icon-users-url: url("../theme/dark/icon_settings.svg");
-  --vb-menu-icon-users-active-url: url("../theme/dark/icon_settings_active.svg");
-}
 :root[vb-theme='light']{
   --vb-menu-background-color: #ffffff;
   --vb-menu-text-color: #929292;
   --vb-menu-text-active-color: #007AFF;
   --vb-menu-marker-color: #007AFF;
+  --vb-menu-marker-text-color: #ffffff;
   --vb-menu-icon-map-url: url("../theme/light/icon_map.svg");
   --vb-menu-icon-map-active-url: url("../theme/light/icon_map_active.svg");
   --vb-menu-icon-automatic-url: url("../theme/light/icon_automatic.svg");
@@ -42,17 +21,41 @@
   --vb-menu-icon-checklist-active-url: url("../theme/light/icon_checklist_active.svg");
   --vb-menu-icon-users-url: url("../theme/light/icon_users.svg");
   --vb-menu-icon-users-active-url: url("../theme/light/icon_users_active.svg");
-  --vb-menu-icon-users-url: url("../theme/light/icon_settings.svg");
-  --vb-menu-icon-users-active-url: url("../theme/light/icon_settings_active.svg");
+  --vb-menu-icon-settings-url: url("../theme/light/icon_settings.svg");
+  --vb-menu-icon-settings-active-url: url("../theme/light/icon_settings_active.svg");
+}
+:root[vb-theme='dark']{
+  --vb-menu-background-color: #242629;
+  --vb-menu-text-color: #C8C8C8;
+  --vb-menu-text-active-color: #FF9500;
+  --vb-menu-marker-color: #FF9500;
+  --vb-menu-marker-text-color: #ffffff;
+  --vb-menu-icon-map-url: url("../theme/dark/icon_map.svg");
+  --vb-menu-icon-map-active-url: url("../theme/dark/icon_map_active.svg");
+  --vb-menu-icon-automatic-url: url("../theme/dark/icon_automatic.svg");
+  --vb-menu-icon-automatic-active-url: url("../theme/dark/icon_automatic_active.svg");
+  --vb-menu-icon-events-url: url("../theme/dark/icon_events.svg");
+  --vb-menu-icon-events-active-url: url("../theme/dark/icon_events_active.svg");
+  --vb-menu-icon-news-url: url("../theme/dark/icon_news.svg");
+  --vb-menu-icon-news-active-url: url("../theme/dark/icon_news_active.svg");
+  --vb-menu-icon-feed-url: url("../theme/dark/icon_feed.svg");
+  --vb-menu-icon-feed-active-url: url("../theme/dark/icon_feed_active.svg");
+  --vb-menu-icon-checklist-url: url("../theme/dark/icon_checklist.svg");
+  --vb-menu-icon-checklist-active-url: url("../theme/dark/icon_checklist_active.svg");
+  --vb-menu-icon-users-url: url("../theme/dark/icon_users.svg");
+  --vb-menu-icon-users-active-url: url("../theme/dark/icon_users_active.svg");
+  --vb-menu-icon-settings-url: url("../theme/dark/icon_settings.svg");
+  --vb-menu-icon-settings-active-url: url("../theme/dark/icon_settings_active.svg");
 }
 /*********************************************************************/
 /*                          visioDESK theme                          */
 /*********************************************************************/
-:root{
+:root[vd-theme='light']{
   --vd-menu-background-color: #ffffff;
   --vd-menu-text-color: #929292;
   --vd-menu-text-active-color: #007AFF;
   --vd-menu-marker-color: #007AFF;
+  --vd-menu-marker-text-color: #ffffff;
   --vd-menu-icon-map-url: url("../theme/light/icon_map.svg");
   --vd-menu-icon-map-active-url: url("../theme/light/icon_map_active.svg");
   --vd-menu-icon-automatic-url: url("../theme/light/icon_automatic.svg");
@@ -67,14 +70,15 @@
   --vd-menu-icon-checklist-active-url: url("../theme/light/icon_checklist_active.svg");
   --vd-menu-icon-users-url: url("../theme/light/icon_users.svg");
   --vd-menu-icon-users-active-url: url("../theme/light/icon_users_active.svg");
-  --vd-menu-icon-users-url: url("../theme/light/icon_settings.svg");
-  --vd-menu-icon-users-active-url: url("../theme/light/icon_settings_active.svg");
+  --vd-menu-icon-settings-url: url("../theme/light/icon_settings.svg");
+  --vd-menu-icon-settings-active-url: url("../theme/light/icon_settings_active.svg");
 }
 :root[vd-theme='dark']{
   --vd-menu-background-color: #242629;
   --vd-menu-text-color: #C8C8C8;
   --vd-menu-text-active-color: #FF9500;
   --vd-menu-marker-color: #FF9500;
+  --vd-menu-marker-text-color: #ffffff;
   --vd-menu-icon-map-url: url("../theme/dark/icon_map.svg");
   --vd-menu-icon-map-active-url: url("../theme/dark/icon_map_active.svg");
   --vd-menu-icon-automatic-url: url("../theme/dark/icon_automatic.svg");
@@ -89,8 +93,8 @@
   --vd-menu-icon-checklist-active-url: url("../theme/dark/icon_checklist_active.svg");
   --vd-menu-icon-users-url: url("../theme/dark/icon_users.svg");
   --vd-menu-icon-users-active-url: url("../theme/dark/icon_users_active.svg");
-  --vd-menu-icon-users-url: url("../theme/dark/icon_settings.svg");
-  --vd-menu-icon-users-active-url: url("../theme/dark/icon_settings_active.svg");
+  --vd-menu-icon-settings-url: url("../theme/dark/icon_settings.svg");
+  --vd-menu-icon-settings-active-url: url("../theme/dark/icon_settings_active.svg");
 }
 
 * { padding: 0; margin: 0; box-sizing: border-box; }
