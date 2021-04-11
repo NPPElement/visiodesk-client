@@ -8069,7 +8069,7 @@ label.input_group_title {
 }
 .visioBAS .menu-bar > NAV A EM.blue {
     background: var(--vb-menu-marker-color, #FF9500);
-    color: var(--vd-menu-marker-text-color, #ffffff);
+    color: var(--vb-menu-marker-text-color, #ffffff);
 }
 
 .map .menu-bar > NAV {
