@@ -8146,6 +8146,10 @@ label.input_group_title {
         top: 11px;
     }
 
+    #topic-export-calendar_wrap {
+        right: 425px;
+        top: 41px;
+    }
 }
 
 
@@ -8199,6 +8203,10 @@ label.input_group_title {
         top: 11px;
     }
 
+    #topic-export-calendar_wrap {
+        right: 340px;
+        top: 41px;
+    }
 
 }
 
@@ -8290,6 +8298,9 @@ label.input_group_title {
 }
 
 
+#topic-export-calendar_wrap {
+    position: absolute;
+}
 
 
 

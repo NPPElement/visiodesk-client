@@ -179,6 +179,7 @@
 
     <div class="popup" id="popup" style="display: none"></div>
     <div class="popup" id="popup_calendar" style="display: none"></div>
+    <div class="wrap_calendar" id="topic-export-calendar_wrap"></div>
 <!--    <div class="tools" id="tools"></div>-->
 
     <!--Parameters-->
@@ -389,7 +390,8 @@
             '</div>';
 
         // const $calendar = $("#topic-export-calendar");
-        const $calendar = $(".export");
+        // const $calendar = $(".export");
+        const $calendar = $("#topic-export-calendar_wrap");
         $calendar.daterangepicker({
             "autoApply": false,
             "opens": "left",
