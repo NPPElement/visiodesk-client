@@ -8083,6 +8083,11 @@ label.input_group_title {
 
 @media (min-device-width: 813px) {
 
+    html {
+        overflow-y: scroll!important;
+    }
+
+
     .menu-bar {
         position: fixed;
         top: 0;
@@ -8318,8 +8323,6 @@ label.input_group_title {
 #topic-export-calendar_wrap {
     position: absolute;
 }
-
-
 
 
 
