@@ -37,4 +37,7 @@ $(function() {
         //закрыть панель статусов для ввода сообщения
         $('#main-container').find('.icon_list').addClass('hide');
     });
+
+
+
 });

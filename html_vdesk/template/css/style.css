@@ -706,6 +706,14 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 .tabbar > NAV A.feed.active {
     background-image: url('../images/icon_feed_active.svg');
 }
+
+
+.tabbar > NAV A.automatic {
+    background: url('../images/icon_automatic.svg') 50% 8px no-repeat;
+}
+
+
+
 .tabbar > NAV A SPAN {
     width: 25px;
     height: 25px;
@@ -8163,6 +8171,30 @@ label.input_group_title {
     .map .content_open {
         display: none;
     }
+
+
+    .menu_logo {
+        z-index: 18;
+        position: fixed;
+        width: 82px;
+        height: 70px;
+        overflow: hidden;
+        bottom: 10px;
+        right: 0;
+        background: var(--vb-menu-background-color);
+        transition:width 400ms ease-in-out;
+        cursor: pointer;
+    }
+
+    .menu_logo > div {
+        width: 300px;
+        height: 64px;
+        background: url("../images/Logo_Protei-rus.svg") 12px 3px no-repeat;
+    }
+
+    .menu_logo.slide {
+        width: 270px;
+    }
 }
 
 
@@ -8325,18 +8357,3 @@ label.input_group_title {
 }
 
 
-
-
-/*
-
-Тогда в облачке вдеск будет
-- Экспорт
-- Обновить
-
-В облачке вбас
-- Импорт
-- Обновить
-- Удилить
-- Админ (заменить название нужно на Slicer)
-
- */

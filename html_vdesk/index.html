@@ -133,6 +133,11 @@
     <div id="group_table_control"><a></a></div>
     <div id="group_table"></div>
 
+    <div class="menu_logo">
+        <div></div>
+    </div>
+
+
     <div class="visualization visioBAS" id="visualization0"></div>
     <div class="visualization " id="graphic_popup">
         <div class="caption t_pad mobile">
@@ -712,6 +717,10 @@
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    let $ml = $(".menu_logo");
+    $ml.click(x=>$ml.toggleClass("slide"));
+
 </script>
 </body>
 </html>
