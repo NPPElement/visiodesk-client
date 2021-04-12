@@ -27,14 +27,11 @@
     }
 
     function __export() {
-        /*
-        VD.ShowErrorMessage({
-            'caption': 'Будет экспорт',
-            'description': 'Вместо этого должен быть экспорт',
-            'timer': 1000
-        });
-         */
         $("#topic-export-calendar_wrap").trigger("click");
+    }
+
+    function __reload() {
+        window.location.reload();
     }
 
 
@@ -42,6 +39,7 @@
         console.log("__doAction: ", action);
         switch (action) {
             case "export": return __export();
+            case "reload": return __reload();
         }
     }
 
@@ -210,6 +208,7 @@
         function init() {
             Set(".list", {
                 export:["Экспорт",null],
+                reload:["Обновить",null],
                 // settings:["Настройки",null],
             });
 

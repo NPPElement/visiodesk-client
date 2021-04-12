@@ -831,6 +831,15 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     background: url('../images/export.svg') 0 0 no-repeat;
 }
 
+
+.reload {
+    width: 30px;
+    height: 30px;
+    right: 14px;
+    bottom: 13.3%;
+    background: url('../images/upgrade.svg') 0 0 no-repeat;
+}
+
 /*Кнопки для карты*/
 .mapbar {
     position: absolute;
