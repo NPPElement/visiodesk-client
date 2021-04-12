@@ -2,11 +2,11 @@ window.Map_Simulation = (function MapSimulation() {
     let sims = {
         'Map:base/location.3': [
             {set: [185,-200]},
-            {go: [185,-240, 5], id: "back"},
-            {go: [220,-240, 5]},
+            {go: [185,-240, 30], id: "back"},
+            {go: [220,-240, 40]},
             {wait: 2},
-            {go: [220,-200, 3]},
-            {go: [185,-200, 5]},
+            {go: [220,-200, 30]},
+            {go: [185,-200, 30]},
             {circle: "back"}
         ],
     };
