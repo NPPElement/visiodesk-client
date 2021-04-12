@@ -1430,7 +1430,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 return;
 
             }
-            if(topic["status_id"]) $t.find(".status").replaceWith("<span class='status "+VD_SETTINGS["STATUS_TYPES"][topic["status_id"]]+"'>"+I18N.get(`vdesk.topic.status.${topic["status_id"]}`)+"</span>");
+            if(topic["status_id"]) $t.find(".status").replaceWith("<span class='icon status "+VD_SETTINGS["STATUS_TYPES"][topic["status_id"]]+"'></span>"); //"+I18N.get(`vdesk.topic.status.${topic["status_id"]}`)+"
             if(topic["priority_id"]) $t.find(".priority").replaceWith("<span class='priority "+VD_SETTINGS["PRIORITY_TYPES"][topic["priority_id"]]+"'></span>");
             VD_FEED_UPDATER.topicUpdate(topic);
             VD_NEWS_UPDATER.topicUpdate(topic);

@@ -1243,12 +1243,8 @@ window.VD = (function Visiodesk() {
             }
         });
 
-        if(topicParams.last_checked_id) {
-            window.setTimeout(function () {
-                ShowLastItems($topic.find(".last_items"), topicParams.items, topicParams.last_checked_id);
-            }, 500);
+        if(topicParams.last_checked_id) ShowLastItems($topic.find(".last_items"), topicParams.items, topicParams.last_checked_id);
 
-        }
     }
 
     function SetTopicSlider(topicSelector, images) {
@@ -1262,8 +1258,8 @@ window.VD = (function Visiodesk() {
 
         $images
             .append($frame)
-                .append($left)
-                    .append($right);
+            .append($left)
+            .append($right);
 
         images.forEach((item, index) => {
             let uploadName = item['text'];

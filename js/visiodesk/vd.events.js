@@ -52,7 +52,7 @@ window.VD_Events = (function () {
         showClosed: false
     };
 
-    const LIMIT_TOPIC = 50;
+    const LIMIT_TOPIC = 200;
 
     /**
      * @typedef {object} User
@@ -209,7 +209,7 @@ window.VD_Events = (function () {
 
         });
 
-        if($(".topic_list").length>0) {
+        if(!_filter.showClosed && $(".topic_list").length>0) {
             window.clearTimeout(timer);
             timer = window.setTimeout(loadLazy, __lastLoadTopicCount===0  ? 10000 : 300);
         }
