@@ -1,0 +1,120 @@
+window.Map_Simulation = (function MapSimulation() {
+    let sims = {
+        'Map:base/location.3': [
+            {set: [185,-200]},
+            {go: [185,-240, 5], id: "back"},
+            {go: [220,-240, 5]},
+            {go: [220,-200, 5]},
+            {go: [185,-200, 5]},
+            {circle: "back"}
+        ],
+    };
+    // {wait: 2},
+
+    let coords = {};
+
+    const dT = 50;
+    
+    let state = {};
+
+    let now = 0;
+
+    function setCoords(ref, x, y) {
+        VBasMapLeafletWidget.SetMapIconCoords(ref, x,y);
+        coords[ref].x = x;
+        coords[ref].y = y;
+
+        // console.log("setCoords: " , ref , x, y);
+    }
+    
+    function time() {
+        return (new Date()).valueOf();
+    }
+    
+    function start() {
+        
+    }
+
+
+    
+    function stepRef(ref) {
+        let dT = now - state[ref].time;
+
+        let sim = sims[ref][ state[ref].pos ];
+        // console.log("sim: ", sim, state[ref].pos, state[ref]);
+
+        if( sim["set"] ) {
+            setCoords(ref, sim.set[0], sim.set[1]);
+            if(sims[ref].length-1>state[ref].pos) {
+                state[ref] = { pos: state[ref].pos+1 };
+            }
+        }
+
+        else if( sim.go ) {
+            if(!state[ref].param) {
+                state[ref].time = now;
+                state[ref].param = {
+                    x0: coords[ref].x,
+                    y0: coords[ref].y,
+                    t: 0
+                }
+            } else {
+                let isDone = false;
+                state[ref].param.t = now - state[ref].time;
+                if(state[ref].param.t>=sim.go[2]*1000) {
+                    isDone = true;
+                    state[ref].param.t = sim.go[2]*1000;
+                }
+
+                let x = (state[ref].param.x0 * (sim.go[2]*1000 - state[ref].param.t) + sim.go[0] * state[ref].param.t) / (sim.go[2]*1000);
+                let y = (state[ref].param.y0 * (sim.go[2]*1000 - state[ref].param.t) + sim.go[1] * state[ref].param.t) / (sim.go[2]*1000);
+                // console.log("calc ( "+x + " , "+y+" )");
+                setCoords(ref, x, y);
+
+                if(isDone && sims[ref].length-1>state[ref].pos) state[ref] = { pos: state[ref].pos+1 };
+
+            }
+
+
+
+        }
+
+        else if( sim.wait ) {
+            if(!state[ref].param) {
+                state[ref].param = { t: 0}
+                state[ref].time = now;
+            } else {
+                state[ref].param.t = now - state[ref].time;
+                // console.log("wait tile = " +state[ref].param.t);
+                if(state[ref].param.t>=sim.wait*1000 && sims[ref].length-1>state[ref].pos) state[ref] = { pos: state[ref].pos+1 };
+            }
+
+        }
+
+        else if(sim.circle) {
+            for(let i=0;i<sims[ref].length;i++) if( sims[ref][i].id===sim.circle) {
+                state[ref] = { pos: i };
+                break;
+            }
+        }
+
+
+
+    }
+
+    function run() {
+        for(let ref in sims) {
+            now = time();
+            if(!state[ref]) {
+                coords[ref] = {x: 0, y: 0};
+                state[ref] = {pos: 0};
+            }
+            stepRef(ref);
+        }
+    }
+
+
+    window.setInterval(run, dT);
+    
+
+})();

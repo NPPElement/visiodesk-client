@@ -7006,7 +7006,6 @@ var Icon = Class.extend({
 
 		var img = this._createImg(src, oldIcon && oldIcon.tagName === 'IMG' ? oldIcon : null);
 		this._setIconStyles(img, name);
-
 		return img;
 	},
 
@@ -7038,6 +7037,7 @@ var Icon = Class.extend({
 	_createImg: function (src, el) {
 		el = el || document.createElement('img');
 		el.src = src;
+		if(this.options.attributes) for(let aName in this.options.attributes) el.setAttribute(aName, this.options.attributes[aName]);
 		return el;
 	},
 

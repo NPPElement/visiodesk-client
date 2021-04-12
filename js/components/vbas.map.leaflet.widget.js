@@ -66,6 +66,7 @@
 
 
 
+
     function DefManager() {
         let data = {};
 
@@ -155,12 +156,13 @@
 
         let _timerLookRefs = false;
         let _lastRefs = false;
+        let Markers = {};
+
 
         __lookSignal();
 
         return {
             create: create,
-            test: test,
             __subscribeOnSignal: __subscribeOnSignal,
 
             findMarkerByReference: findMarkerByReference,
@@ -168,7 +170,9 @@
             goLayer: goLayer,
             goPosition: goPosition,
             goMapObject: goMapObject,
-            goMapSite: goMapSite
+            goMapSite: goMapSite,
+            Markers: Markers,
+            SetMapIconCoords: SetMapIconCoords
         };
 
         function goLayer(name) {
@@ -663,7 +667,17 @@
                 iconOptions["popupAnchor"] = marker.popupAnchor;
             }
 
+            if (marker.self) {
+                if(!iconOptions.attributes) iconOptions.attributes = {};
+                iconOptions.attributes["self"] = marker.self;
+            }
+
+
             const leafIcon = L.icon(iconOptions);
+            console.log("iconOptions: ", iconOptions, marker, ", res: ", leafIcon);
+
+            if(!window._ICONS) window._ICONS = [];
+            window._ICONS.push(leafIcon);
 
             let options = {
                 icon: leafIcon
@@ -1361,8 +1375,14 @@
                         }
                     }, _markerLoadTimeoutMs);
 
+                    // Сохраняем все объекты
                     if (defLeafMarker != null) {
+                        defLeafMarker.done(x=>{
+                            if(marker.self) Markers[marker.self] = x;
+                        });
                         defManagerLeafMarkers.register(defLeafMarker);
+
+
 
                         if (!_.isEmpty(marker.reference)) {
                             VB_API.getObject(marker.reference).done((response) => {
@@ -1501,10 +1521,18 @@
                 }
             }
         }
+
+
+        function SetMapIconCoords(reference, x, y) {
+            if(Markers[reference]) Markers[reference].setLatLng({lat: y, lng: x})
+        }
+
+
     }
 
-    function test() {
 
-    }
+
+
+
     window.VBasMapLeafletWidget = VBasMapLeafletWidget();
 })();

@@ -38,6 +38,4 @@ $(function() {
         $('#main-container').find('.icon_list').addClass('hide');
     });
 
-
-
 });

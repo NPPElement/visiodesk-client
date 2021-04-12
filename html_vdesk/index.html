@@ -314,8 +314,8 @@
 <script src="/js/chartlist/0.11.4/chartist-plugin-legend.js"></script>
 
 <!-- leaflet -->
-<script src="/js/leaflet/leaflet.js" type="text/javascript"></script>
-<!--<script src="/js/leaflet/leaflet-src.js" type="text/javascript"></script>&lt;!&ndash; На время отладки &ndash;&gt;-->
+<!--<script src="/js/leaflet/leaflet.js" type="text/javascript"></script>-->
+<script src="/js/leaflet/leaflet-src.js" type="text/javascript"></script><!-- На время отладки -->
 <script src="/js/leaflet/plugins/coordinates/Leaflet.Coordinates-0.1.5.min.js"></script>
 <script src="/js/leaflet/plugins/Leaflet.MousePosition/L.Control.MousePosition.js"></script>
 
@@ -371,6 +371,8 @@
 <script src="/js/parser/parser.device.csv.js" type="text/javascript"></script>
 
 <script src="/js/logger.js" type="text/javascript"></script>
+
+<script src="/js/simulation.map.js" type="text/javascript"></script>
 
 
 <script>
@@ -706,6 +708,7 @@
 
 <script>
     // Your web app's Firebase configuration
+    /*
     var firebaseConfig = {
         apiKey: "AIzaSyBrW06vFGCV-60SHZwl5WOjcJvhNxQR68o",
         authDomain: "api-project-837581051619.firebaseapp.com",
@@ -717,7 +720,7 @@
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
+    */
     let $ml = $(".menu_logo");
     $ml.click(x=>$ml.toggleClass("slide"));
 
