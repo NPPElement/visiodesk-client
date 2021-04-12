@@ -67,10 +67,10 @@
             _parent = parent;
 
             let dropdown = [
-                /*{
-                    "name": "Refresh",
+                {
+                    "name": "Обновить",
                     "action": "refresh"
-                },*/
+                },
                 {
                     "name": "Удалить",
                     "action": "delete"
