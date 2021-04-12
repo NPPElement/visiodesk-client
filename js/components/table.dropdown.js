@@ -1,5 +1,51 @@
 (function () {
 
+    function __delete() {
+        ModalObjectsDelete.show();
+    }
+
+    function __refresh() {
+        EVENTS.onNext({
+            type: "dashboard.refresh"
+        })
+    }
+
+    function __import() {
+        ModalObjectsImport.show();
+    }
+
+    function __admin() {
+        ModalAdminPanel.show();
+    }
+
+    function __showAllTrendLogs() {
+        ModalTrendLogs.showAll(24 * 8 * 60 * 60, 100);
+    }
+
+    function __showObjectTrendLogs() {
+        ModalTrendLogs.showForObject(24 * 8 * 60 * 60, 100);
+    }
+
+    function __export() {
+        VD.ShowErrorMessage({
+            'caption': 'Будет экспорт',
+            'description': 'Вместо этого должен быть экспорт',
+            'timer': 1000
+        });
+    }
+
+
+    function __doAction(action) {
+        console.log("__doAction: ", action)
+        switch (action) {
+            case "export": return __export();
+        }
+    }
+
+
+
+
+
 
     function TableDropdown() {
         /**
@@ -84,37 +130,23 @@
         }
 
 
+        /* funcs */
 
 
-        function __delete() {
-            ModalObjectsDelete.show();
-        }
-
-        function __refresh() {
-            EVENTS.onNext({
-                type: "dashboard.refresh"
-            })
-        }
-
-        function __import() {
-            ModalObjectsImport.show();
-        }
-
-        function __admin() {
-            ModalAdminPanel.show();
-        }
-
-        function __showAllTrendLogs() {
-            ModalTrendLogs.showAll(24 * 8 * 60 * 60, 100);
-        }
-
-        function __showObjectTrendLogs() {
-            ModalTrendLogs.showForObject(24 * 8 * 60 * 60, 100);
-        }
 
     }
 
     window.TableDropdown = TableDropdown;
+
+
+
+
+
+
+
+
+
+
 
 
     window.VD_AdminMenu = (function () {
@@ -126,7 +158,7 @@
             Set: Set,
             show: show,
             hide: hide,
-            _init_default: _init_default,
+            init: init,
         };
 
 
@@ -151,46 +183,36 @@
          */
         function Set(element, _actions) {
             let $e = $(element);
-
             actions = _actions;
             let h = "";
             for(let mnemo in actions) h+='<a class="'+mnemo+'" action="'+mnemo+'">'+actions[mnemo][0]+'</a>';
             $am.find(".body").html(h);
 
-            $am.find("a").click(e=>{
-                console.log($(e.target).attr("action"));
-            });
+            $am.find("a").off("click");
+            $am.find("a").click(e=>__doAction($(e.target).attr("action")));
 
-            $am.find("submenu").removeClass("show");
+            hide();
 
             $e.click(e=>{
                 isVisible=!isVisible;
                 console.log("elenent click: "+isVisible);
-                $am.find(".submenu").toggleClass("show", isVisible);
+                if(isVisible) show(); else hide();
             });
-            $e.click()
         }
 
 
 
 
 
-        function _init_default() {
+        function init() {
             Set(".list", {
                 export:["Экспорт",null],
-                settings:["Настройки",null],
-            });
-        }
-
-
-        function __export() {
-            VD.ShowErrorMessage({
-                'caption': 'Будет экспорт',
-                'description': 'Вместо этого должен быть экспорт',
-                'timer': 1000
+                // settings:["Настройки",null],
             });
 
         }
+
+
 
 
     })();

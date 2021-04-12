@@ -114,9 +114,10 @@ window.VD = (function Visiodesk() {
                 event.stopPropagation();
             });
 
-            $(document).click(() => {
+            $(document).click((e) => {
                 //закрыть админ-меню visioBAS
                 $('#objects-list').children('.caption').find('.submenu').removeClass('show');
+                if(!$(e.target).hasClass("list")) VD_AdminMenu.hide();
                 //закрыть панель статусов для ввода сообщения
                 $('#main-container').find('.icon_list').addClass('hide');
             });
@@ -1012,10 +1013,12 @@ window.VD = (function Visiodesk() {
 
 
     function Controller(reference, selector, params, force_refresh) {
+        /*
         if(reference.includes("visualization")) {
             console.log("block visualization");
             return;
         }
+         */
         console.log("Controller: ", reference);
         LOGGER.vd_controller(reference, selector, params, force_refresh);
         let state_data =  {
@@ -1065,6 +1068,8 @@ window.VD = (function Visiodesk() {
                     data: state_data
                 });
                 if(!history.state || !history.state.reference || history.state.reference!==reference) window.history.pushState(state_data, '', reference.replace(":", "/html_vdesk/#"));
+
+                VD_AdminMenu.init();
             });
 
         } else {

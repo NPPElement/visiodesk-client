@@ -8140,6 +8140,12 @@ label.input_group_title {
     #group_table {
         width: calc(100% - 460px);
     }
+
+    #admin-menu {
+        right: 455px;
+        top: 11px;
+    }
+
 }
 
 
@@ -8188,6 +8194,12 @@ label.input_group_title {
         width: calc(100% - 375px);
     }
 
+    #admin-menu {
+        right: 370px;
+        top: 11px;
+    }
+
+
 }
 
 .map .menu-bar {
@@ -8230,20 +8242,10 @@ label.input_group_title {
 
 
 
-/*
 
-Тогда в облачке вдеск будет
-- Экспорт
-- Обновить
-
-В облачке вбас
-- Импорт
-- Обновить
-- Удилить
-- Админ (заменить название нужно на Slicer)
-
- */
-
+#admin-menu {
+    position: absolute;
+}
 
 #admin-menu .submenu {
     display: none;
@@ -8287,3 +8289,26 @@ label.input_group_title {
     background: url("../images/submenu_import.svg") 0 50% no-repeat;
 }
 
+
+
+
+
+
+
+
+
+
+
+/*
+
+Тогда в облачке вдеск будет
+- Экспорт
+- Обновить
+
+В облачке вбас
+- Импорт
+- Обновить
+- Удилить
+- Админ (заменить название нужно на Slicer)
+
+ */
