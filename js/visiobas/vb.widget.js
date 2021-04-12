@@ -250,7 +250,6 @@ window.VBasWidget = (function () {
                     console.log("__preload_if_replace");
                     __preload_if_replace(reference, vis, object);
                 } else {
-                    console.log("__loadTemplate");
                     _replace = vis.replace;
                     __loadTemplate(vis, _replace, object);
                 }
@@ -332,7 +331,7 @@ window.VBasWidget = (function () {
 
     function __loadTemplate(vis, replace, object) {
         replace = replace || {};
-        _$selector.show();
+        // _$selector.show();
 
         _template.done((response) => {
             const template = _.template( _clear_template ? '<div class="layout" id="vbas-widget"></div>' : response.data)({
@@ -364,6 +363,7 @@ window.VBasWidget = (function () {
                         __prepareVisualization();
                         __subscribeOnSignal();
                         __initTrendLog();
+                        _$selector.show();
                     })
                     .fail((response) => {
                         console.error("Can't load template: " + vis.template);
@@ -743,6 +743,7 @@ window.VBasWidget = (function () {
 
 
     function __exists_object_replaces(url) {
+        if(url.toLowerCase().includes("menu")) return false;
         var h = false;
         $.ajax({
             method:  "GET",
@@ -753,6 +754,7 @@ window.VBasWidget = (function () {
         });
         let count = 0;
         $("<div>"+h+"</div>").find("visiobas replace").each((i, e)=>{ if(!$(e).html().includes("Site")) count++; });
+        // console.log("__exists_object_replaces:", h, "count = "+count);
         return count>0;
         // return $("#visualization [reference]:not([reference*='/'],[reference*='.'],[reference*=':'])").length>0;
     }

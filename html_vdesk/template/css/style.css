@@ -5609,11 +5609,11 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     position: fixed;
     top: 0;
     bottom: 0;
-    left: calc((100% - 375px)*0.05);
-    width: calc((100% - 375px)*0.9);
+    left: calc((100% - 375px - 82px)*0.01);
+    width: calc((100% - 375px - 82px)*0.98);
+    padding: 10px 10px;
     height: 90%;
     margin: auto 0;
-    padding: 10px 20px;
     background: #2F3235;
     /*backdrop-filter: blur(10px);
     background-color: rgba(47, 50, 53, 0.9);*/
@@ -5768,7 +5768,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 }
 
 .visualization.fullscreen {
-    width: 100%;
+    width: calc((100% - 82px));
+    padding: 10px 50px;
     height: 100%;
     left: 0;
 }

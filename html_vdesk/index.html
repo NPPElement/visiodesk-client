@@ -526,6 +526,7 @@
         else VD.Controller(window.location.hash.replace("#", ":"), '#main-container');
 
         $(window).on('hashchange', ()=> {
+            console.log("hashchange: ", window.location.hash);
             let reference = window.location.hash.replace("#", ":");
             VD.Controller(reference, '#main-container');
 

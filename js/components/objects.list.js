@@ -31,6 +31,9 @@
         };
 
 
+        const win_id_attr = "data-href";
+
+
 
         /**
          * currently selected object in list
@@ -301,7 +304,7 @@
                             const reference = $(e).attr("data-reference");
                             if(reference.indexOf("Map:")===-1) {
                                 __select(reference, e);
-                                __logWindowOpen($(e).attr("href"), $(e).data());
+                                __logWindowOpen($(e).attr(win_id_attr), $(e).data());
                             } else {
                                 // MAP
                                 if(reference.indexOf("/")===-1) {
@@ -341,7 +344,7 @@
                                     });
                                 } else if ($parent.hasClass('contextmenu') || $parent.hasClass('group_chain')) {
                                     __select(reference, e);
-                                    __logWindowOpen($(e).attr("href"), $(e).data());
+                                    __logWindowOpen($(e).attr(win_id_attr), $(e).data());
                                 }
                             }
                         })
@@ -365,7 +368,7 @@
                                     __open(reference);
                                 } else if ($parent.hasClass('contextmenu') || $parent.hasClass('group_chain')) {
                                     __select(reference, e);
-                                    __logWindowOpen($(e).attr("href"), $(e).data());
+                                    __logWindowOpen($(e).attr(win_id_attr), $(e).data());
                                 }
                             }
                         });
@@ -519,6 +522,8 @@
                     case '#vbas-widget-window':
                         $window.find('.editbar').find('.save').addClass('hide');
                         $window.find('.editbar').find('.edit').removeClass('hide');
+                        $window.children('.layout').html('<div class="preloader"></div>');
+                        $window.show();
                         break;
                     case "#visualization":
                         VBasWidget.show("#visualization", dataObj.reference);
@@ -527,11 +532,13 @@
                         if (dataObj['header']) {
                             $window.find('.header').html(dataObj['header']);
                         }
+                        $window.children('.layout').html('<div class="preloader"></div>');
+                        $window.show();
                         break;
                 }
 
-                $window.children('.layout').html('<div class="preloader"></div>');
-                $window.show();
+                // $window.children('.layout').html('<div class="preloader"></div>');
+                // $window.show();
             }
         }
     }

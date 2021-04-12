@@ -1,18 +1,15 @@
 (function () {
+
+
     function TableDropdown() {
         /**
          * {string} parent selector
          */
         let _parent;
 
-        let actions = [];
-        let $am = $("#admin-menu");
-        let show = false;
 
         return {
             "create": create,
-            "Set": Set,
-            "_init_default": _init_default,
         };
 
         /**
@@ -88,35 +85,6 @@
 
 
 
-        /*
-
-        action = {name=>[title, callback]}
-
-         */
-        function Set(element, _actions) {
-            let $e = $(element);
-
-            actions = _actions;
-            let h = "";
-            for(let mnemo in actions) h+='<a class="'+mnemo+'" action="'+mnemo+'">'+actions[mnemo][0]+'</a>';
-            $am.find(".body").html(h);
-
-            $am.find("a").click(e=>{
-                console.log($(e.target));
-            });
-
-            $am.find("submenu").removeClass("show");
-
-            $e.click(e=>{
-                show=!show;
-                $am.find("submenu").toggleClass("show", show);
-            });
-
-            $e.click()
-
-
-
-        }
 
         function __delete() {
             ModalObjectsDelete.show();
@@ -143,11 +111,68 @@
         function __showObjectTrendLogs() {
             ModalTrendLogs.showForObject(24 * 8 * 60 * 60, 100);
         }
-        
-        function __export() {
-            VD.ShowErrorMessage('Будет экспорт', 'Вместо этого должен быть экспорт', '', 1000);
 
+    }
+
+    window.TableDropdown = TableDropdown;
+
+
+    window.VD_AdminMenu = (function () {
+        let actions = [];
+        let $am = $("#admin-menu");
+        let isVisible = false;
+
+        return {
+            Set: Set,
+            show: show,
+            hide: hide,
+            _init_default: _init_default,
+        };
+
+
+
+        function show() {
+            $am.find(".submenu").addClass("show");
+            isVisible = true;
         }
+
+        function hide() {
+            $am.find(".submenu").removeClass("show");
+            isVisible = false;
+        }
+
+
+
+
+        /*
+
+        action = {name=>[title, callback]}
+
+         */
+        function Set(element, _actions) {
+            let $e = $(element);
+
+            actions = _actions;
+            let h = "";
+            for(let mnemo in actions) h+='<a class="'+mnemo+'" action="'+mnemo+'">'+actions[mnemo][0]+'</a>';
+            $am.find(".body").html(h);
+
+            $am.find("a").click(e=>{
+                console.log($(e.target).attr("action"));
+            });
+
+            $am.find("submenu").removeClass("show");
+
+            $e.click(e=>{
+                isVisible=!isVisible;
+                console.log("elenent click: "+isVisible);
+                $am.find(".submenu").toggleClass("show", isVisible);
+            });
+            $e.click()
+        }
+
+
+
 
 
         function _init_default() {
@@ -156,9 +181,19 @@
                 settings:["Настройки",null],
             });
         }
-    }
 
-    window.TableDropdown = TableDropdown;
+
+        function __export() {
+            VD.ShowErrorMessage({
+                'caption': 'Будет экспорт',
+                'description': 'Вместо этого должен быть экспорт',
+                'timer': 1000
+            });
+
+        }
+
+
+    })();
 
 
 })();

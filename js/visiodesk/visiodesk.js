@@ -1012,6 +1012,10 @@ window.VD = (function Visiodesk() {
 
 
     function Controller(reference, selector, params, force_refresh) {
+        if(reference.includes("visualization")) {
+            console.log("block visualization");
+            return;
+        }
         console.log("Controller: ", reference);
         LOGGER.vd_controller(reference, selector, params, force_refresh);
         let state_data =  {
