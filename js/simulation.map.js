@@ -4,7 +4,8 @@ window.Map_Simulation = (function MapSimulation() {
             {set: [185,-200]},
             {go: [185,-240, 5], id: "back"},
             {go: [220,-240, 5]},
-            {go: [220,-200, 5]},
+            {wait: 2},
+            {go: [220,-200, 3]},
             {go: [185,-200, 5]},
             {circle: "back"}
         ],
