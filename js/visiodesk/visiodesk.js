@@ -1207,6 +1207,7 @@ window.VD = (function Visiodesk() {
 
 
         $target.show();
+
     }
 
     function SetTopicSubmenu(selector, topicParams) {
@@ -1242,7 +1243,12 @@ window.VD = (function Visiodesk() {
             }
         });
 
-        if(topicParams.last_checked_id) ShowLastItems($topic.find(".last_items"), topicParams.items, topicParams.last_checked_id);
+        if(topicParams.last_checked_id) {
+            window.setTimeout(function () {
+                ShowLastItems($topic.find(".last_items"), topicParams.items, topicParams.last_checked_id);
+            }, 500);
+
+        }
     }
 
     function SetTopicSlider(topicSelector, images) {
