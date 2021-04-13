@@ -8378,7 +8378,7 @@ label.input_group_title {
 }
 
 
-.group_item .desc,
-.group_item .header {
+.with_photo.group_item .desc,
+.with_photo.group_item .header {
     padding-left: 4px;
 }
