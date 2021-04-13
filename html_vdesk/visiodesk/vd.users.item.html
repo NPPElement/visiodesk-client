@@ -7,6 +7,9 @@
         </div>  
 
         <a class="group_item item" user-id="<%= id %>" data-action="user-list" data-reference=":UserEvents/<%= id %>">
+            <div class="u_photo">
+                <div style="background-image: url(<%- avatar_href %>)"></div>
+            </div>
             <div class="header">
                 <div class="name"><span class="crop"><%- last_name %> <%- first_name %> <%- middle_name %></span></div>
             </div>

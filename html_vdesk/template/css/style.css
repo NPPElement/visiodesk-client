@@ -8361,3 +8361,24 @@ label.input_group_title {
 }
 
 
+
+.u_photo {
+    width: 76px;
+    height: 76px;
+    padding: 6px;
+    margin: 1px;
+    float: left;
+}
+
+.u_photo > div {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background-size: cover;
+}
+
+
+.group_item .desc,
+.group_item .header {
+    padding-left: 4px;
+}
