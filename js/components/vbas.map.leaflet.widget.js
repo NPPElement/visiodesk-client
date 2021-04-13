@@ -66,6 +66,36 @@
 
 
 
+    function __extractUserIdIfExists(marker) {
+        if( typeof marker=== "string") {
+            let t = marker.split("UserEvents/");
+            return t.length===2 ?  t[1] : false;
+        } else if( typeof marker=== "object") {
+
+            for(let k in marker) {
+                let t = __extractUserIdIfExists(marker[k]);
+                if(t!==false) return t;
+            }
+        }
+        return false;
+    }
+
+    let user_avatars = {};
+
+    function replaceUserImageMarkers() {
+        VD_API.GetUsers().done(x=>{
+            x.forEach(u=>user_avatars[u.id]=u.avatar_href);
+            $("img[user_id]").each((i,e)=>{
+                let user_id = $(e).attr("user_id");
+                $(e).attr("src",user_avatars[user_id]);
+                $(e).css("border-radius", "50%");
+                $(e).css("border", "2px solid #4cd964");
+            });
+
+        });
+
+    }
+    
 
     function DefManager() {
         let data = {};
@@ -533,6 +563,10 @@
                     iconOptions["popupAnchor"] = marker.popupAnchor;
                 }
 
+                if (marker.attributes) {
+                    iconOptions["attributes"] = marker.attributes;
+                }
+
                 const leafDivIcon = L.divIcon(iconOptions);
 
                 let options = {
@@ -607,6 +641,11 @@
                     iconOptions["iconSize"] = marker.iconSize;
                 }
 
+                if (marker.attributes) {
+                    iconOptions["attributes"] = marker.attributes;
+                }
+
+
                 const leafDivIcon = L.divIcon(iconOptions);
 
                 let options = {
@@ -671,14 +710,30 @@
                 iconOptions["popupAnchor"] = marker.popupAnchor;
             }
 
+            if (marker.attributes) {
+                iconOptions["attributes"] = marker.attributes;
+            }
+
+            /*
             if (marker.self) {
+                console.log("marker.self: ", marker);
                 if(!iconOptions.attributes) iconOptions.attributes = {};
                 iconOptions.attributes["self"] = marker.self;
+
+                if(marker.self.includes("UserEvents/")) {
+                    console.log("marker.self: "+marker.self);
+                    let userId = marker.self.explode("UserEvents/");
+                    userId = userId[1];
+                    iconOptions.attributes["user_id"] = userId;
+                }
+
             }
+             */
+
 
 
             const leafIcon = L.icon(iconOptions);
-            console.log("iconOptions: ", iconOptions, marker, ", res: ", leafIcon);
+            // console.log("iconOptions: ", iconOptions, marker, ", res: ", leafIcon);
 
             if(!window._ICONS) window._ICONS = [];
             window._ICONS.push(leafIcon);
@@ -741,6 +796,11 @@
             if (marker.popupAnchor) {
                 iconOptions["popupAnchor"] = marker.popupAnchor;
             }
+
+            if (marker.attributes) {
+                iconOptions["attributes"] = marker.attributes;
+            }
+
 
             const leafIcon = L.icon(iconOptions);
 
@@ -828,6 +888,11 @@
                 iconOptions["popupAnchor"] = marker.popupAnchor;
             }
 
+            if (marker.attributes) {
+                iconOptions["attributes"] = marker.attributes;
+            }
+
+
             const leafIcon = L.icon(iconOptions);
 
             let videoCaption = marker.name;
@@ -903,6 +968,11 @@
             if (marker.popupAnchor) {
                 iconOptions["popupAnchor"] = marker.popupAnchor;
             }
+
+            if (marker.attributes) {
+                iconOptions["attributes"] = marker.attributes;
+            }
+
 
             const leafIcon = L.icon(iconOptions);
 
@@ -1250,6 +1320,7 @@
                     overlays[leafGroup.options.caption] = leafGroup;
                 });
 
+                replaceUserImageMarkers();
                 window.setTimeout(__subscribeOnSignal, 1400);
                 // __subscribeOnSignal();
 
@@ -1340,6 +1411,18 @@
                     if (!marker.parentLayerId) {
                         marker.parentLayerId = layer.map.id;
                     }
+
+
+                    if (marker.self) {
+                        let attributes = false;
+                        if(!marker.attributes) marker.attributes = {};
+                        marker.attributes["self"] = marker.self;
+
+                        let userId = __extractUserIdIfExists(marker);
+                        if(userId) marker.attributes["user_id"] = userId;
+                    }
+
+
 
                     let defLeafMarker = null;
                     if (marker.kind === "marker") {
@@ -1463,6 +1546,8 @@
             });
 
             __selectLeafletLayer(selectedLayerId);
+
+
 
             L.control.mousePosition({
                 numDigits: 2,
