@@ -113,6 +113,7 @@ window.window.VD_Settings = (function () {
 
                 $(".js_logout").click(x=>{
                     VD_API.Logout();
+
                 });
 
 
