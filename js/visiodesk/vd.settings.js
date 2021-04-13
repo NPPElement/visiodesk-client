@@ -111,6 +111,10 @@ window.window.VD_Settings = (function () {
                 __loadUser(userId);
                 $(".user-avatar_upload").click(() => { $("#user-avatar_upload").click(); });
 
+                $(".js_logout").click(x=>{
+                    VD_API.Logout();
+                });
+
 
                 $("#user-avatar_upload")
                     .fileupload({

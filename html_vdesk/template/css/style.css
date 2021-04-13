@@ -8195,6 +8195,10 @@ label.input_group_title {
     .menu_logo.slide {
         width: 270px;
     }
+
+    .dropdown {
+        padding: 30px 95px;
+    }
 }
 
 
