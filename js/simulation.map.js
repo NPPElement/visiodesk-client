@@ -19,7 +19,7 @@ window.Map_Simulation = (function MapSimulation() {
             {go: [320,-255, 30]},
             {go: [396,-263, 200]},
             {go: [304,-284, 250]},
-            {wait: 0},
+            {wait: 2},
             {circle: "back"}
         ],
     };

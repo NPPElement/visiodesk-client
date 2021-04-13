@@ -110,7 +110,6 @@ window.VD_Users = (function () {
                 let itemTemplate = templatesContent['vd.users.item.html'];
                 let f = __getFilterUrlAdds();
                 userItems.forEach((item) => {
-                    console.log(item);
                     item.filter = f;
                     let itemTemplateExec = _.template(itemTemplate)($.extend({}, emptyUserObject, item));
                     $('.group_list').append(itemTemplateExec);

@@ -184,7 +184,6 @@
 
 
         function goPosition(x,y,scale, layer) {
-            // console.log("goPosition(",x,y,scale, layer,")");
 
             if(layer) goLayer(layer);
             leafMap.setView(__xy(x,y), scale);
@@ -200,7 +199,12 @@
         }
         
         function goMapObject(reference) {
-
+            if(Markers[reference]) {
+                let x = Markers[reference]._latlng.lng;
+                let y = Markers[reference]._latlng.lat;
+                goPosition(x, y, 5);
+                return;
+            }
 
             VB_API.getObject(reference).done(r=>{
                 if(r && r.data && r.data['371']) {
@@ -1532,6 +1536,11 @@
 
 
 
+    $("#map").on("click", "[reference^=':']", function (e) {
+        let reference = $(this).attr("reference");
+        VD.Controller(reference.replace("#", ":"), '#main-container')
+
+    });
 
 
     window.VBasMapLeafletWidget = VBasMapLeafletWidget();

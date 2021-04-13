@@ -498,7 +498,7 @@ window.VD = (function Visiodesk() {
 
 
     function MakeVbasLink(name) {
-        return   name.replace(/(Site:[\w]+[\w:\-.\/_]+)/g, "<a class='vbas_link'>$1</a>");
+        return   name.replace(/(Site:[\w]+[\w:\-.\/_]+)/g, "<a class='vbas_link'>$1</a>").replace(/(Map:[\w]+[\w:\-.\/_]+)/g, "<a class='map_link'>$1</a>");
     }
 
     /**

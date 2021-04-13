@@ -87,6 +87,11 @@ window.VD_Topic = (function () {
         VBasMapLeafletWidget.goMapSite(siteHref);
     });
 
+    $("body").on("click", ".body .map_link", function (e) {
+        let mapHref = $(this).html();
+        VBasMapLeafletWidget.goMapObject(mapHref);
+    });
+
 
     //TODO: Дополнительные параметры итемов
     const extendedParams = {
