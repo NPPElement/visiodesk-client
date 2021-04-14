@@ -6487,7 +6487,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
 
 #assortment_tools {
     position: fixed;
-    right: 2px;
+    /*right: 2px;*/
     max-height: 400px;
     overflow-y: auto;
     background: white;
@@ -8199,6 +8199,10 @@ label.input_group_title {
     .dropdown {
         padding: 30px 95px;
     }
+
+    #assortment_tools {
+        right: 87px;
+    }
 }
 
 
@@ -8268,6 +8272,11 @@ label.input_group_title {
     .map .content_open {
         display: block;
     }
+
+    #assortment_tools {
+        right: 2px;
+    }
+
 
 }
 
