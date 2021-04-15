@@ -230,6 +230,7 @@
         
         function goMapObject(reference) {
             if(Markers[reference]) {
+                console.log("M("+reference+")");
                 let x = Markers[reference]._latlng.lng;
                 let y = Markers[reference]._latlng.lat;
                 goPosition(x, y, 5);
@@ -247,6 +248,7 @@
                     let layer = r.data['77'].replace("/",":");
                     layer = layer.split(":");
                     layer = layer[1];
+                    console.log("MO: ", info.crd, layer, _.max(info.zooms));
                     goPosition(info.crd[0], info.crd[1], _.max(info.zooms), layer);
                 }
             });
