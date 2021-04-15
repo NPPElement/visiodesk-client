@@ -1,7 +1,9 @@
 <div class="caption t_pad">
     <nav>
-        <a reference="{%lastReference%}" class="back" id="topic_back_back" data-params='{ "lastTopicId": {%topicId%} }'>Назад</a>
-        <a reference=":Groups" class="back hide" id="topic_back_group">Назад</a>
+<!--        <a reference="{%lastReference%}" class="back" id="topic_back_back" data-params='{ "lastTopicId": {%topicId%} }'>Назад</a>-->
+        <a reference=":Events/{%eventId%}" class="back" id="topic_back_back" data-params='{ "lastTopicId": {%topicId%} }'>Назад</a>
+        <a reference=":Events/{%eventId%}" class="back hide" id="topic_back_group">Назад</a>
+<!--        <a reference=":Groups" class="back hide" id="topic_back_group">Назад</a>-->
 
         <div class="text">
             <span>{%topicCaption%}</span><!--TODO topic_type_name -->

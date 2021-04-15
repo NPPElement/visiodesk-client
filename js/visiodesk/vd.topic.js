@@ -397,6 +397,7 @@ window.VD_Topic = (function () {
             "{%imgDir%}": VD_SETTINGS['IMG_DIR'],
             "{%lastReference%}": VD.GetHistory(1),
             "{%topicId%}": topicId,
+            "{%eventId%}": groupId,
             "{%topicCaption%}": topicCaption,
             "createTopic": {
                 "create": !topicId,
