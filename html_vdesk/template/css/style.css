@@ -8141,6 +8141,11 @@ label.input_group_title {
         color: var(--vb-menu-text-color, #C8C8C8);
     }
 
+
+    .menu-bar.hide {
+        display: flex;
+    }
+
     .dropdown.site {
         left: auto;
         right: 85px;
