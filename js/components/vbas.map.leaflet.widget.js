@@ -223,13 +223,13 @@
 
             VB_API.getObject(reference).done(r=>{
                 // console.log("getObject: ", r);
-                if(r && r.data && r.data['885']) VB_API.getObjectById(r.data['885']).done(r2=>goMapObject(r2.data['77']));
+                if(r && r.data && r.data['885']) VB_API.getObjectById(r.data['885']).done(r2=>goMapObject(r2.data['77'], true));
             })
 
         }
         
-        function goMapObject(reference) {
-            if(Markers[reference]) {
+        function goMapObject(reference, now_cash) {
+            if(Markers[reference] && !now_cash) {
                 console.log("M("+reference+")");
                 let x = Markers[reference]._latlng.lng;
                 let y = Markers[reference]._latlng.lat;
