@@ -380,6 +380,7 @@ window.VD_Topic = (function () {
 
         $('#screen').addClass('hotels');
         $('#visiobas-tabbar').addClass('hide');
+        $('.menu-bar').addClass('hide');
         $('#main-container').removeClass().addClass('extra_pad2');
 
         var topicCaption = !topicId ? 'Создать новый' : '';

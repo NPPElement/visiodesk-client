@@ -1535,6 +1535,7 @@ window.VD = (function Visiodesk() {
         }
 
         $('#visiobas-tabbar').removeClass('hide');
+        $('.menu-bar').removeClass('hide');
         $('#main-container').removeClass().addClass('extra_pad1');
 
         __lightTabBarNav(reference);
