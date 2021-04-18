@@ -57,7 +57,7 @@ window.VD_Groups = (function () {
                         let itemExtended = $.extend({}, emptyGroupObject, {
                             'status_types': statusTypes
                         }, {level: 0}, item);
-
+                        itemExtended.attr_user_role= itemExtended.support_id===0 ? "viewAllGroups" : "";
                         let itemTemplateExec = _.template(itemTemplate)({
                             'item': itemExtended
                         });
@@ -127,6 +127,7 @@ window.VD_Groups = (function () {
                         $('#group-' + itemId)
                             .find(".level").attr("data-id", item['support_id'])
                             .find(".result_field").val(item['support_id']);
+                        $('#group-' + itemId).attr("user-role", item.attr_user_role= item.support_id===0 ? "viewAllGroups" : "");
                     }
 
                 });
