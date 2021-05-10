@@ -834,7 +834,7 @@ window.VD = (function Visiodesk() {
 
 
             // console.log("is_new = "+is_new);
-
+            // if(topic['status_id']!==5) return;
             let sound_fn = "";
             switch(topic['status_id']) {
                 case 1:  // Новая

@@ -4854,8 +4854,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     position: fixed;
     top: 0;
     bottom: 0;
-    left: calc((100% - 375px)*0.05);
-    width: calc((100% - 375px)*0.9);
+    left: calc((100% - 375px - 85px)*0.05);
+    width: calc((100% - 375px - 85px)*0.9);
     height: 90%;
     margin: auto 0;
     padding: 10px 20px 20px;

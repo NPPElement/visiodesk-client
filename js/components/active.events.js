@@ -410,7 +410,7 @@
          */
         function __start() {
             __clear();
-            _timerHandle = setInterval(__ping, 5000);
+            _timerHandle = setInterval(__ping, 30000);
         }
     }
 

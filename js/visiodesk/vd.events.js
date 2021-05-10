@@ -209,7 +209,7 @@ window.VD_Events = (function () {
 
         });
 
-        if(!_filter.showClosed && $(".topic_list").length>0) {
+        if(!_filter.showClosed && $(".topic_list").length>LIMIT_TOPIC-2) {
             window.clearTimeout(timer);
             timer = window.setTimeout(loadLazy, __lastLoadTopicCount===0  ? 10000 : 300);
         }
