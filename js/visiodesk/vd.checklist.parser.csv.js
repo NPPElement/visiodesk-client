@@ -54,6 +54,7 @@ function ChecklistCsvParser() {
         for (let l = 0, len = texts.length; l < len; ++l) {
             let d = [];
             let lineText = $.trim(texts[l]);
+            console.log("lineText: ", lineText);
             // noinspection ES6ModulesDependencies
             if (_.isEmpty(lineText) || _.isNull(lineText)) {
                 continue;
@@ -71,11 +72,13 @@ function ChecklistCsvParser() {
             })) {
                 continue;
             }
+            console.log("lineText2: ", lineText);
 
             //remove all unecessary data line
             if (d.length < 3) {
                 continue;
             }
+            console.log("lineText3: ", lineText, d);
 
             data.push(d);
         }
@@ -100,13 +103,15 @@ function ChecklistCsvParser() {
                 continue;
             }
 
-            if (!fieldNames.length || objectArray.length != fieldNames.length) {
+            // if (!fieldNames.length || objectArray.length != fieldNames.length) {
+            if (!fieldNames.length) {
                 continue;
             }
 
-            for (let j = 0; j < objectArray.length; j++) {
+            // for (let j = 0; j < objectArray.length; j++) {
+            for (let j = 0; j < fieldNames.length; j++) {
                 let name = fieldNames[j];
-                let value = objectArray[j];
+                let value = objectArray[j] || '';
                 if (!_.isEmpty(name) && value !== '') {
                     if (name === 'check_period') {
                         objectResult[name] = (parseInt(value) || 0)*1000;

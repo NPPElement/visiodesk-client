@@ -61,6 +61,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         "GetChecklist": GetChecklist,
         "GetChecklistById": GetChecklistById,
         "CheckChecklist": CheckChecklist,
+        "UncheckChecklist": UncheckChecklist,
         "DelChecklist": DelChecklist,
         "GetTopicsByChecklist": GetTopicsByChecklist,
 
@@ -1904,7 +1905,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 def.resolve(response.data);
             } else {
                 VD.ErrorHandler('SERVER', response, url);
-                def.reject();
+                def.reject(response.error);
             }
 
         }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -1993,6 +1994,39 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         let def = $.Deferred();
 
         let url = VD_SETTINGS['CHECKLIST_CONTEXT'] + '/check';
+        let query = JSON.stringify(objectsIdList);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: query,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            if (response.success) {
+                def.resolve(response.data);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject();
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject();
+        });
+
+        return def;
+    }
+    /**
+     * @param {Array} objectsIdList
+     * @return {Deferred}
+     */
+    function UncheckChecklist(objectsIdList) {
+        let def = $.Deferred();
+
+        let url = VD_SETTINGS['CHECKLIST_CONTEXT'] + '/uncheck';
         let query = JSON.stringify(objectsIdList);
 
         $.ajax({

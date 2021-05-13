@@ -1392,6 +1392,7 @@ window.VD = (function Visiodesk() {
      * @private
      */
     function ErrorHandler(type, responseObject, url = '') {
+        console.log("ErrorHandler: ", type, responseObject, url);
         if (type === 'HTTP') {
             let status = responseObject['status'];
             switch (status) {

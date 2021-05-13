@@ -1,8 +1,6 @@
-window.VD_Checklist = (function () {
+window.VD_ChecklistPlan = (function () {
     /** @const {array} serviceTemplatesList - массив имен вспомогательных шаблонов модуля */
     const serviceTemplatesList = [
-        'vd.checklist.item.html',
-        'vd.checklist.item.report.html',
         'vd.checklist.item.plan.html',
         'vd.checklist.dropdown.html'
     ];
@@ -52,12 +50,7 @@ window.VD_Checklist = (function () {
         var status = $.Deferred();
         parentId = parseInt(VB_API.extractName(reference)) || 0;
 
-
-        if(parentId>0) {
-            return VD_ChecklistReport.run("Checklist/"+parentId, selector);
-        }
-
-
+        console.log("PLAN:  " + parentId);
 
         VD_API.GetChecklistById(parentId).then((parentObject) => {
             let caption = _.isEmpty(parentObject) ? 'Журнал работ' : parentObject['name'];
@@ -73,27 +66,24 @@ window.VD_Checklist = (function () {
             return VD_API.GetChecklist(parentId);
         }).then((childItems) => {
             let $checkList = $(selector).find('.check_list');
-            let itemTemplate = serviceTemplatesData['vd.checklist.item.html'];
+            let itemTemplate = serviceTemplatesData['vd.checklist.item.plan.html'];
             let checklistElementsCache = {};
 
             childItems.forEach((item) => {
                 if (item['name'] && item['name'] !== '') {
                     let itemId = item['id'];
 
-                    let status_types = $.extend({}, VD_SETTINGS['STATUS_TYPES']);
-                    if(item.type!=="plan") delete status_types[6];
                     let itemExtended = $.extend({}, {
-                        'status_types': status_types,
-                        'check_date_formated': item['check_next_date'] ? VD.GetFormatedDate(item['check_next_date']) : ''
+                        'status_types': VD_SETTINGS['STATUS_TYPES'],
+                        'check_date_formated': item['check_next_date'] ? VD.GetFormatedDate(item['check_next_date']) : '',
+                        'check_date': item['check_date'] ? VD.GetFormatedDate(item['check_date']) : ''
                     }, item);
 
-                    console.log("itemExtended: ", itemExtended);
-
-                    let itemTemplateExec = _.template(serviceTemplatesData['vd.checklist.item.'+item.type+'.html'])({
+                    let itemTemplateExec = _.template(itemTemplate)({
                         'item': itemExtended
                     });
 
-
+                    console.log("itemExtended.plan: ", itemExtended);
 
                     $checkList.append(itemTemplateExec);
 
@@ -145,8 +135,8 @@ window.VD_Checklist = (function () {
                     // if (item['type'] !== 'folder') {
                     if (item['type'] === 'object') {
                         let $time = checklistElementsCache[itemId]['time'];
-                        let check_date_formated = item['check_next_date'] ? VD.GetFormatedDate(item['check_next_date']) : '';
-                        $time.html(check_date_formated);
+                        let check_date = item['check_date'] ? VD.GetFormatedDate(item['check_date']) : '';
+                        $time.html(check_date);
                     }
 
                     // if ((item['type'] === 'folder' && !_.isEmpty(item['nested_status']))) {
@@ -180,6 +170,10 @@ window.VD_Checklist = (function () {
                             break;
                         case "verified":
                             __checkChecklist(parseInt(e.dataset.id));
+                            sm.reset();
+                            break;
+                        case "cancel_verified":
+                            __uncheckChecklist(parseInt(e.dataset.id));
                             sm.reset();
                             break;
                     }
@@ -217,7 +211,7 @@ window.VD_Checklist = (function () {
     }
 
     function unload() {
-        console.log("VD_Checklist.unload("+parentId+")");
+        console.log("VD_ChecklistPlan.unload("+parentId+")");
         _subscription && _subscription.completed();
     }
 
@@ -257,7 +251,6 @@ window.VD_Checklist = (function () {
 
                 let parser = ChecklistCsvParser();
                 objectsList = parser.parse(text);
-                console.log("objectsList: ", objectsList);
             });
         });
 
@@ -267,15 +260,11 @@ window.VD_Checklist = (function () {
                 $('#checklist-import-button-text').hide();
                 $('#checklist-import-loading-spinner').removeClass('hide');
 
-                VD_API.ImportChecklist(objectsList).done((x) => {
+                VD_API.ImportChecklist(objectsList).done(() => {
                     __closeImportDialog();
                     VD.Controller(':Checklist', selector);
-                    VD.ShowErrorMessage({caption: "Загружено", timer: 2000});
-
-                }).fail((error) => {
-                    // console.log("ImportChecklist.FAIL: ", error);
+                }).fail(() => {
                     __closeImportDialog();
-                    VD.ShowErrorMessage({caption: "Не выполнено", description: error, timer: 2000});
                 });
             } else {
                 __closeImportDialog();
@@ -300,13 +289,25 @@ window.VD_Checklist = (function () {
                 let $wrapper = $('#checklist-' + item['id']).find('.group_item').find('.header');
                 $wrapper.find('.check_status').removeClass('unread expired');
                 $wrapper.find('.time').html(VD.GetFormatedDate(item['check_next_date']));
+                $('#checklist-' + item['id']+" .to_verified").addClass("hide");
+                $('#checklist-' + item['id']+" .to_cancel_verified").removeClass("hide");
             });
         });
     }
-
-    function selfUrl() {
-        return "Checklist"+(parentId>0?("/"+parentId):"");
+    function __uncheckChecklist(id) {
+        let objectsIdList = [{'id': id}];
+        VD_API.UncheckChecklist(objectsIdList).then((checkResult) => {
+            checkResult.forEach((item) => {
+                let $wrapper = $('#checklist-' + item['id']).find('.group_item').find('.header');
+                $wrapper.find('.check_status').addClass('unread expired');
+                $wrapper.find('.time').html('');
+                $('#checklist-' + item['id']+" .to_cancel_verified").addClass("hide");
+                $('#checklist-' + item['id']+" .to_verified").removeClass("hide");
+            });
+        });
     }
-
-
+    
+    function selfUrl() {
+        return "ChecklistPlan/"+parentId;
+    }
 })();

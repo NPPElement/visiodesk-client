@@ -1,12 +1,13 @@
 <%
 let reference = '';
-if (item.type === 'report') {
+if (item.type !== 'object') {
     reference=":ChecklistReport/" + item.id
-}  else if (item.type === 'plan') {
-    reference=":ChecklistPlan/" + item.id
-} else {
+}  else {
     reference=":ChecklistEvents/" + item.id
 }
+
+<!--reference=":ChecklistReport/" + item.id-->
+
 
 let check_status = '';
 if (item.check_status == 1) {

@@ -1775,7 +1775,7 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     z-index: 100;
 }
 .info_button A {
-    height: 53px;
+    height: 93px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -1944,6 +1944,30 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     letter-spacing: 0.012em;
     color: #FFFFFF;
 }
+
+
+
+.group_chain .to_cancel_verified,
+.group_chain .to_settings {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 19.2%;
+    background: #FF3B30;
+}
+.group_chain .to_cancel_verified SPAN {
+    height: 41px;
+    padding-top: 29px;
+    background: url("../images/to_verified.svg") 50% 1px no-repeat;
+    font-family: 'SF-PRO-Regular';
+    line-height: normal;
+    font-size: 11px;
+    text-align: center;
+    letter-spacing: 0.012em;
+    color: #FFFFFF;
+}
+
 .group_chain .to_settings SPAN {
     height: 41px;
     padding-top: 29px;
@@ -8395,5 +8419,14 @@ label.input_group_title {
 .with_photo.group_item .desc,
 .with_photo.group_item .header {
     padding-left: 4px;
+}
+
+
+.to_cancel_verified.hide {
+    display: none;
+}
+
+.to_verified.hide {
+    display: none;
 }
 
