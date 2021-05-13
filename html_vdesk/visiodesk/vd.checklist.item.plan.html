@@ -1,6 +1,6 @@
 <%
 let reference = '';
-if (item.type === 'folder') {
+if (item.type !== 'object') {
     reference=":ChecklistPlan/" + item.id
 }  else {
     reference=":ChecklistEvents/" + item.id
