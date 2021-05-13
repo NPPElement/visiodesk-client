@@ -59,13 +59,14 @@ if (item.check_status == 1) {
                 <span>Событие</span>
             </a>
             <% } else { %>
+            <!--
                 <a class="to_verified item item-right default-action<%= item.check_date ? ' hide' : '' %>" data-action="verified" data-id="<%= item.id %>">
                     <span>Проверено</span>
                 </a>
                 <a class="to_cancel_verified item item-right default-action<%= item.check_date ? '' : ' hide' %>" data-action="cancel_verified" data-id="<%= item.id %>">
                     <span>Не&nbsp;проверено</span>
                 </a>
-
+            -->
             <% } %>
         </div>
     </div>
