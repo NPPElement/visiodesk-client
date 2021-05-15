@@ -84,12 +84,14 @@ window.VD_Topic = (function () {
 
     $("body").on("click", ".body .vbas_link", function (e) {
         let siteHref = $(this).html();
-        VBasMapLeafletWidget.goMapSite(siteHref);
+        Spliter.goMapSite(siteHref);
+        // VBasMapLeafletWidget.goMapSite(siteHref);
     });
 
     $("body").on("click", ".body .map_link", function (e) {
         let mapHref = $(this).html();
-        VBasMapLeafletWidget.goMapObject(mapHref);
+        Spliter.goMapObject(mapHref);
+        // VBasMapLeafletWidget.goMapObject(mapHref);
     });
 
 

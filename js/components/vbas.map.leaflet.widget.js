@@ -201,6 +201,7 @@
             goPosition: goPosition,
             goMapObject: goMapObject,
             goMapSite: goMapSite,
+            goUser: goUser,
             Markers: Markers,
             SetMapIconCoords: SetMapIconCoords
         };
@@ -227,6 +228,19 @@
             })
 
         }
+
+
+        function getMarkerByUserLogin(login) {
+            for(let reference in Markers) if(Markers[reference].login === login) return reference;
+            return false;
+        }
+
+        function goUser(login) {
+            let reference = getMarkerByUserLogin(login);
+            console.log("found reference to map object: "+reference);
+            if(reference) goMapObject(reference, false);
+        }
+
         
         function goMapObject(reference, now_cash) {
             if(Markers[reference] && !now_cash) {
@@ -1422,6 +1436,9 @@
 
                         let userId = __extractUserIdIfExists(marker);
                         if(userId) marker.attributes["user_id"] = userId;
+
+                        // console.log("marker["+marker.self+"]: ", marker);
+
                     }
 
 
@@ -1467,7 +1484,10 @@
                     // Сохраняем все объекты
                     if (defLeafMarker != null) {
                         defLeafMarker.done(x=>{
-                            if(marker.self) Markers[marker.self] = x;
+                            if(marker.self) {
+                                Markers[marker.self] = x;
+                                if(marker.login) Markers[marker.self].login = marker.login;
+                            }
                         });
                         defManagerLeafMarkers.register(defLeafMarker);
 
