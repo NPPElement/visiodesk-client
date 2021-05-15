@@ -192,10 +192,11 @@ window.Spliter = (function () {
 
     function onMqttMessage(topic, messageText) {
         let message = JSON.parse(messageText);
+         console.log("onMqttMessage: ", onMqttMessage);
         if(!message) return;
         if(message['call']==='goMapSite' && isRole("map")) goMapSite_local(message.reference);
         if(message['call']==='goMapObject' && isRole("map")) goMapObject_local(message.reference);
-        if(message['User']==='goMapUser' && isRole("map")) goMapUser_local(message.User);
+        if(message['User'] && isRole("map")) goMapUser_local(message.User);
     }
 
     
