@@ -136,6 +136,7 @@ window.Spliter = (function () {
         goMapSite: goMapSite,
         goMapObject: goMapObject,
         goMapUser: goMapUser,
+        goVisualization: goVisualization,
     };
     
     function isSplit() {
@@ -153,7 +154,7 @@ window.Spliter = (function () {
     }
 
     function goMapSite(siteHref) {
-        if(!isSplit()) return goMapSite_local(siteHref);
+        if(!isSplit() || !isRole("map")) return goMapSite_local(siteHref);
         MqttSignal.publish(getTopic(), {call: "goMapSite", reference: siteHref});
     }
     function goMapSite_local(siteHref) {
@@ -162,7 +163,7 @@ window.Spliter = (function () {
 
 
     function goMapObject(mapHref) {
-        if(!isSplit()) return goMapObject_local(mapHref);
+        if(!isSplit() || !isRole("map")) return goMapObject_local(mapHref);
         MqttSignal.publish(getTopic(), {call: "goMapObject", reference: mapHref});
     }
     function goMapObject_local(mapHref) {
@@ -170,12 +171,22 @@ window.Spliter = (function () {
     }
 
     function goMapUser(login) {
-        if(!isSplit()) return goMapUser_local(login);
+        if(!isSplit() || !isRole("map")) return goMapUser_local(login);
         MqttSignal.publish(getTopic(), {User: login});
     }
 
-    function goMapUser_local() {
+    function goMapUser_local(login) {
         VBasMapLeafletWidget.goUser(login);
+    }
+
+
+    function goVisualization(reference) {
+        if(!isSplit() || !isRole("visio")) return goVisualization_local(reference);
+        VBasWidget.show("#visualization", reference);
+    }
+
+    function goVisualization_local(reference) {
+        VBasWidget.show("#visualization", reference);
     }
 
 
