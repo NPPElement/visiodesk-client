@@ -74,7 +74,8 @@ window.MqttSignal = (function () {
     function __receive_message(idx, topic, messageStr, packet) {
         cnt++;
         // if(cnt%1000==0)
-            console.log("__receive_message: ", idx, topic, messageStr);
+
+        console.log("__receive_message: ", idx, topic, messageStr);
 
         for(let ti in conn[idx].subscribes) {
             console.log("ti: "+ti);

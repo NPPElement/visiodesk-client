@@ -5,7 +5,8 @@ window.WORKSPACE = {
     mqtt: {
         username: "user",
         password: "user",
-        broker_url: "ws://185.184.55.73:5045/ws",
+        // broker_url_: "ws://185.184.55.73:5045/ws",
+        broker_url: "ws://visiodesk.net:15675/ws",
     },
     roles: [
         "map",
@@ -21,3 +22,5 @@ window.WORKSPACE = {
     
 
 };
+
+// window.WORKSPACE.split = false;

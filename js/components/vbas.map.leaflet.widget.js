@@ -262,7 +262,7 @@
                     let layer = r.data['77'].replace("/",":");
                     layer = layer.split(":");
                     layer = layer[1];
-                    // console.log("MO: ", info.crd, layer, _.max(info.zooms));
+                    console.log("MO: ", info, layer, _.max(info.zooms));
                     goPosition(info.crd[0], info.crd[1], _.max(info.zooms), layer);
                 }
             });
