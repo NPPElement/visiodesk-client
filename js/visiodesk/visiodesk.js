@@ -1089,6 +1089,7 @@ window.VD = (function Visiodesk() {
             $(e).off('click').click((event) => {
                 event.preventDefault();
                 event.stopPropagation();
+                $('.dropdown').remove();
 
                 var reference = $(e).attr("reference");
                 var parentSelector =  $(e).attr('href') || $(e).data('parent') || selector;

@@ -8172,7 +8172,7 @@ label.input_group_title {
 
     .dropdown.site {
         left: auto;
-        right: 85px;
+        /*right: 85px;*/
     }
 
     .leaflet-right {
