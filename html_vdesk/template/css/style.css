@@ -23,6 +23,8 @@
   --vb-menu-icon-users-active-url: url("../theme/light/icon_users_active.svg");
   --vb-menu-icon-settings-url: url("../theme/light/icon_settings.svg");
   --vb-menu-icon-settings-active-url: url("../theme/light/icon_settings_active.svg");
+  --vb-menu-icon-group_role-url: url("../theme/light/icon_group_role.svg");
+  --vb-menu-icon-group_role-active-url: url("../theme/light/icon_group_role_active.svg");
 }
 :root[vb-theme='dark']{
   --vb-menu-background-color: #242629;
@@ -46,6 +48,8 @@
   --vb-menu-icon-users-active-url: url("../theme/dark/icon_users_active.svg");
   --vb-menu-icon-settings-url: url("../theme/dark/icon_settings.svg");
   --vb-menu-icon-settings-active-url: url("../theme/dark/icon_settings_active.svg");
+  --vb-menu-icon-group_role-url: url("../theme/dark/icon_group_role.svg");
+  --vb-menu-icon-group_role-active-url: url("../theme/dark/icon_group_role_active.svg");
 }
 /*********************************************************************/
 /*                          visioDESK theme                          */
@@ -8017,11 +8021,19 @@ label.input_group_title {
 .menu-bar > NAV A.users.active {
     background-image: var(--vd-menu-icon-users-active-url);
 }
+
 .menu-bar > NAV A.settings {
     background: var(--vd-menu-icon-settings-url) 50% 8px no-repeat;
 }
 .menu-bar > NAV A.settings.active {
     background-image: var(--vd-menu-icon-settings-active-url);
+}
+
+.menu-bar > NAV A.group_role {
+    background: var(--vb-menu-icon-group_role-url) 50% 8px no-repeat;
+}
+.menu-bar > NAV A.group_role.active {
+    background-image: var(--vb-menu-icon-group_role-active-url);
 }
 
 .visioBAS .menu-bar > NAV A.active {
@@ -8076,6 +8088,14 @@ label.input_group_title {
     background-image: var(--vb-menu-icon-settings-active-url);
 }
 
+.visioBAS .menu-bar > NAV A.group_role {
+    background: var(--vb-menu-icon-group_role-url) 50% 8px no-repeat;
+}
+
+.visioBAS .menu-bar > NAV A.group_role.active {
+    background-image: var(--vb-menu-icon-group_role-active-url);
+}
+
 
 .menu-bar > NAV A SPAN {
     width: 25px;
@@ -8125,13 +8145,14 @@ label.input_group_title {
         top: 0;
         right: 0;
         width: 100%;
-        max-width: 82px;
+        max-width: 85px;
         background: var(--vd-menu-background-color, #ffffff);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         z-index: 10;
         height: 100%;
+        border-left: 3px solid #000000;
     }
 
     .visioBAS .menu-bar {
@@ -8236,10 +8257,10 @@ label.input_group_title {
 
 
     .slide_button {
-        z-index: 17;
+        z-index: 19;
         position: fixed;
         width: 375px;
-        height: 300px;
+        height: 330px;
         overflow: hidden;
         bottom: 0;
         right: -460px;
@@ -8331,12 +8352,12 @@ label.input_group_title {
 
 
     .slide_button {
-        z-index: 17;
+        z-index: 19;
         position: fixed;
         width: 375px;
-        height: 300px;
+        height: 330px;
         overflow: hidden;
-        bottom: -300px;
+        bottom: -330px;
         right: 0;
         background: var(--vb-menu-background-color);
         transition:all 400ms ease-in-out;
@@ -8496,7 +8517,8 @@ label.input_group_title {
     font-size: 19px;
     font-weight: normal;
     color: #FF9500;
-    margin-bottom: 12px;
+    margin-bottom: 19px;
+
 }
 .slide_button label {
     font-family: 'SF-PRO-Regular';
@@ -8523,3 +8545,21 @@ input.group_role_name {
 }
 
 
+.close_slide_btn {
+    background: url(../images/close_slide.svg) no-repeat;
+}
+
+.choise_role_in_group > div {
+    width: 335px;
+    min-height: 44px;
+    padding: 12px 12px 2px 18px;
+    font-family: 'SF-PRO-Regular';
+    /*border-bottom: 1px solid white;*/
+}
+
+.choise_role_in_group > div.checked {
+    background-image: url("../images/checkmark.svg");
+    background-repeat: no-repeat;
+    background-position: 320px 20px;
+
+}
