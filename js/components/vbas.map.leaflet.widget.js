@@ -217,7 +217,7 @@
         function goPosition(x,y,scale, layer) {
 
             if(layer) goLayer(layer);
-            leafMap.setView(__xy(x,y), scale);
+            if(leafMap && leafMap.setView) leafMap.setView(__xy(x,y), scale);
         }
 
         function goMapSite(reference) {

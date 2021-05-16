@@ -127,7 +127,7 @@
                 <a reference=":Checklist" href="#main-container" class="checklist">Журнал<span id="checklist"></span></a>
                 <a reference=":Users" href="#main-container" class="users">Пользователи<span id="users"></span></a>
                 <a reference=":Settings" href="#main-container" class="settings">Настройки<span id="settings"></span></a>
-                <a class="group_role">Группа/роль<span id="group_role"></span></a>
+                <a class="group_role">АРМ<span id="group_role"></span></a>
             </nav>
         </div>
     </div>
@@ -144,35 +144,30 @@
     </div>
 
 
+    <script>
+        function isNumberKey(evt,inp) {
+            console.log($(inp).val());
+            let chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM/_";
+            let charCode = (evt.which) ? evt.which : event.keyCode;
+            let sym = String.fromCharCode(charCode);
+            if($(inp).val()==="" && sym==="/") return false;
+            if(chars.indexOf( String.fromCharCode(charCode))!==-1) return true;
+            return false;
+        }
+
+    </script>
     <div id="group_role_settings" class="slide_button">
         <div>
-
             <div class="close_slide_btn"></div>
-
             <b>Группа: </b><br>
-            <input class="group_role_name" value="dispatcher">
+            <input class="group_role_name" id="group_role_name" value="dispatcher" onkeypress="return isNumberKey(event, this)">
             <b>Роль:</b><br>
 
             <div class="choise_role_in_group">
-                <div class="checked" data-value="none">Не выполнять действий</div>
+                <div data-value="none" class="checked">Не выполнять действий</div>
                 <div data-value="map">Найти на карте</div>
                 <div data-value="visio">Открыть визуализацию</div>
             </div>
-
-                <!--
-                <div class="choise_role_in_group">
-                    <input type="radio" id="group_role_none" name="group_role" value="none">
-                    <label for="group_role_none">Не выполнять действий</label>
-                    <br>
-
-                    <input type="radio" id="group_role_map" name="group_role" value="map">
-                    <label for="group_role_map">Найти на карте</label>
-                    <br>
-                    <input type="radio" id="group_role_visio" name="group_role" value="visio">
-                    <label for="group_role_visio">Открыть визуализацию</label>
-                    <br>
-                </div>
-                -->
 
         </div>
     </div>
@@ -604,6 +599,7 @@
             let reference = $(this).attr("reference");
             console.log("click.parent_reference: ", reference);
             if(reference) VB.redirect({reference: reference});
+            $(".slide_button").removeClass("slide");
         });
 
         // $("body").on("click","#tab-content-leaflet", e=>$("#popup").hide().html(''));
@@ -770,13 +766,49 @@
     $ml.click(x=>$ml.toggleClass("slide"));
 
 
-    $("#group_role").click(x=>{
+    $("#group_role").click(event=>{
+        event.stopPropagation();
         $(".slide_button").toggleClass("slide");
+
+        let opened = $(".slide_button").hasClass("slide");
+
+
         $(".group_role").toggleClass("active", $(".slide_button").hasClass("slide"));
 
+        if(opened) {
+            $("#group_role_name").val(WORKSPACE.group);
+            $(".choise_role_in_group > div").removeClass("checked");
+            $(".choise_role_in_group > div[data-value='"+WORKSPACE.role+"']").addClass("checked");
+
+        } else {
+            let new_gn = $("#group_role_name").val();
+            console.log("new_gn: ", new_gn);
+            if(new_gn!==WORKSPACE.group) {
+                // WORKSPACE.group = $("#group_role_name").val();
+                Spliter.setGroup($("#group_role_name").val());
+            }
+
+        }
     });
 
-    // $(".slide_button").click(x=>$(".slide_button").toggleClass("slide"))
+    $(".choise_role_in_group > div").click(function (event) {
+        event.stopPropagation();
+        let $e = $(this);
+        let new_role = $e.attr("data-value");
+        console.log("set role: "+new_role);
+        $(".choise_role_in_group > div").removeClass("checked");
+        $e.addClass("checked");
+        Spliter.setRole(new_role);
+        // WORKSPACE.role = new_role;
+    });
+
+     $(".close_slide_btn").click(x=>$(".slide_button").removeClass("slide"));
+
+
+    $("#screen").click(function () {
+        $(".slide_button").removeClass("slide");
+    });
+
 
 </script>
 </body>

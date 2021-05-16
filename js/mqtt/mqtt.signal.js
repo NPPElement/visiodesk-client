@@ -55,12 +55,14 @@ window.MqttSignal = (function () {
 
 
     function subscribe(topic, callback, broker_index = 0) {
+        console.log("subscribe["+broker_index+"]: "+topic);
         conn[broker_index].mqtt.subscribe(topic);
         conn[broker_index].subscribes[topic] = callback;
         __setCallBack(broker_index, topic, callback);
     }
 
-    function unsubscribe(topic, broker_index) {
+    function unsubscribe(topic, broker_index = 0) {
+        console.log("unsubscribe["+broker_index+"]: "+topic);
         conn[broker_index].mqtt.unsubscribe(topic);
         if(conn[broker_index] && conn[broker_index].subscribes[topic]) delete conn[broker_index].subscribes[topic];
     }
@@ -137,7 +139,29 @@ window.Spliter = (function () {
         goMapObject: goMapObject,
         goMapUser: goMapUser,
         goVisualization: goVisualization,
+        setRole: setRole,
+        setGroup: setGroup,
+        isSplit: isSplit,
     };
+
+    function setRole(role) {
+        localStorage.setItem("group_role", role);
+        if(role==="none") {
+            MqttSignal.unsubscribe(getTopic(), broker);
+            WORKSPACE.role = role;
+            // MqttSignal.subscribe(getTopic(), onMqttMessage, broker);
+        } else {
+            WORKSPACE.role = role;
+            if(WORKSPACE.role==="none") _init();
+        }
+    }
+
+    function setGroup(newGroup) {
+        localStorage.setItem("group_name", newGroup);
+        MqttSignal.unsubscribe(getTopic(), broker);
+        WORKSPACE.group = newGroup;
+        MqttSignal.subscribe(getTopic(), onMqttMessage, broker);
+    }
     
     function isSplit() {
         let r =  WORKSPACE && WORKSPACE.split;
@@ -146,11 +170,17 @@ window.Spliter = (function () {
     }
 
     function isRole(role) {
-        return WORKSPACE.roles.includes(role);
+        return WORKSPACE.role===role;
     }
 
     function getTopic() {
-        return "action/dispatcher";
+        return "action/"+WORKSPACE.group;
+    }
+    
+    function changeGroup(new_group) {
+        MqttSignal.unsubscribe(getTopic());
+        WORKSPACE.group = new_group;
+        _init();
     }
 
     function goMapSite(siteHref) {

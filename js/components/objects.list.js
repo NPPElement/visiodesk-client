@@ -462,6 +462,7 @@
                         update({"reference": _tree_path});
                     }
                     $('.dropdown').remove();
+                    $(".slide_button").removeClass("slide");
                 });
                 return;
 

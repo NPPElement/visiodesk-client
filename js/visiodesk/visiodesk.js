@@ -120,6 +120,8 @@ window.VD = (function Visiodesk() {
                 if(!$(e.target).hasClass("list")) VD_AdminMenu.hide();
                 //закрыть панель статусов для ввода сообщения
                 $('#main-container').find('.icon_list').addClass('hide');
+
+
             });
         });
     }
@@ -1090,6 +1092,7 @@ window.VD = (function Visiodesk() {
                 event.preventDefault();
                 event.stopPropagation();
                 $('.dropdown').remove();
+                $(".slide_button").removeClass("slide");
 
                 var reference = $(e).attr("reference");
                 var parentSelector =  $(e).attr('href') || $(e).data('parent') || selector;

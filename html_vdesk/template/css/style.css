@@ -8276,6 +8276,10 @@ label.input_group_title {
         right: 85px;
     }
 
+    .close_slide_btn {
+        display: none;
+    }
+
 }
 
 
@@ -8372,6 +8376,13 @@ label.input_group_title {
     }
 
 
+
+    .close_slide_btn {
+        background: url(../images/close_slide.svg) 50% 50% no-repeat;
+        height: 16px;
+        width: 100%;
+        cursor: pointer;
+    }
 
 
 
@@ -8546,7 +8557,10 @@ input.group_role_name {
 
 
 .close_slide_btn {
-    background: url(../images/close_slide.svg) no-repeat;
+    background: url(../images/close_slide.svg) 50% 50% no-repeat;
+    height: 16px;
+    width: 100%;
+    cursor: pointer;
 }
 
 .choise_role_in_group > div {
@@ -8555,6 +8569,7 @@ input.group_role_name {
     padding: 12px 12px 2px 18px;
     font-family: 'SF-PRO-Regular';
     /*border-bottom: 1px solid white;*/
+    cursor: pointer;
 }
 
 .choise_role_in_group > div.checked {

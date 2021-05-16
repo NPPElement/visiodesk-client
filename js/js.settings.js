@@ -8,19 +8,15 @@ window.WORKSPACE = {
         // broker_url_: "ws://185.184.55.73:5045/ws",
         broker_url: "ws://visiodesk.net:15675/ws",
     },
-    roles: [
-        "map",
-        "visio"
-    ],
+    role: localStorage.getItem("group_role") || 'none',
 
     roles_available: [
         "map",
         "visio",
-        "topic"
     ],
-    group: "dispatcher"
+    group: localStorage.getItem("group_name") || "dispatcher"
     
 
 };
 
-window.WORKSPACE.split = false;
+// window.WORKSPACE.split = false;
