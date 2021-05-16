@@ -8232,6 +8232,29 @@ label.input_group_title {
     #assortment_tools {
         right: 87px;
     }
+
+
+
+    .slide_button {
+        z-index: 17;
+        position: fixed;
+        width: 375px;
+        height: 300px;
+        overflow: hidden;
+        bottom: 0;
+        right: -460px;
+        background: var(--vb-menu-background-color);
+        transition:all 400ms ease-in-out;
+        background: var(--vb-menu-background-color, #242629);
+    }
+
+    .slide_button > div {
+    }
+
+    .slide_button.slide {
+        right: 85px;
+    }
+
 }
 
 
@@ -8305,6 +8328,30 @@ label.input_group_title {
     #assortment_tools {
         right: 2px;
     }
+
+
+    .slide_button {
+        z-index: 17;
+        position: fixed;
+        width: 375px;
+        height: 300px;
+        overflow: hidden;
+        bottom: -300px;
+        right: 0;
+        background: var(--vb-menu-background-color);
+        transition:all 400ms ease-in-out;
+        background: var(--vb-menu-background-color, #242629);
+    }
+
+    .slide_button > div {
+    }
+
+    .slide_button.slide {
+        bottom: 0;
+    }
+
+
+
 
 
 }
@@ -8429,4 +8476,9 @@ label.input_group_title {
 .to_verified.hide {
     display: none;
 }
+
+
+
+
+
 

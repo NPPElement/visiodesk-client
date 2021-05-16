@@ -126,6 +126,7 @@
                 <a reference=":Checklist" href="#main-container" class="checklist">Журнал<span id="checklist"></span></a>
                 <a reference=":Users" href="#main-container" class="users">Пользователи<span id="users"></span></a>
                 <a reference=":Settings" href="#main-container" class="settings">Настройки<span id="settings"></span></a>
+                <a class="settings">Группа/роль<span id="group_role"></span></a>
             </nav>
         </div>
     </div>
@@ -138,6 +139,10 @@
     </div>
 
     <div class="menu_logo">
+        <div></div>
+    </div>
+
+    <div id="group_role_settings" class="slide_button">
         <div></div>
     </div>
 
@@ -732,6 +737,13 @@
     */
     let $ml = $(".menu_logo");
     $ml.click(x=>$ml.toggleClass("slide"));
+
+
+    $("#group_role").click(x=>{
+        $(".slide_button").toggleClass("slide");
+    });
+
+    $(".slide_button").click(x=>$(".slide_button").toggleClass("slide"))
 
 </script>
 </body>
