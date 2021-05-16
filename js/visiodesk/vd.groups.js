@@ -127,7 +127,8 @@ window.VD_Groups = (function () {
                         $('#group-' + itemId)
                             .find(".level").attr("data-id", item['support_id'])
                             .find(".result_field").val(item['support_id']);
-                        $('#group-' + itemId + " > div").attr("user-role", item.attr_user_role= item.support_id===0 ? "viewAllGroups" : "");
+                        // $('#group-' + itemId + " > div").attr("user-role", item.attr_user_role= item.support_id===0 ? "viewAllGroups" : "");
+                        $('#group-' + itemId).attr("user-role", item.attr_user_role= item.support_id===0 ? "viewAllGroups" : "");
                     }
 
                 });
