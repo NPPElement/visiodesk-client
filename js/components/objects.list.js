@@ -463,6 +463,7 @@
                     }
                     $('.dropdown').remove();
                     $(".slide_button").removeClass("slide");
+                    $(".block_shaddow").hide();
                 });
                 return;
 

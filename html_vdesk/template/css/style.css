@@ -8280,6 +8280,16 @@ label.input_group_title {
         display: none;
     }
 
+
+    .block_shaddow {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: calc(100% - 85px);
+        height: 100%;
+        z-index: 18;
+        background-color: rgba(0, 0, 0, 0.45);
+    }
 }
 
 
@@ -8385,6 +8395,16 @@ label.input_group_title {
     }
 
 
+
+    .block_shaddow {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 18;
+        background-color: rgba(0, 0, 0, 0.45);
+    }
 
 }
 
@@ -8578,3 +8598,4 @@ input.group_role_name {
     background-position: 320px 20px;
 
 }
+

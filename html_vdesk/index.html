@@ -156,7 +156,11 @@
         }
 
     </script>
+
+    <div class="block_shaddow" style="display: none"></div>
+
     <div id="group_role_settings" class="slide_button">
+
         <div>
             <div class="close_slide_btn"></div>
             <b>Группа: </b><br>
@@ -771,16 +775,16 @@
         $(".slide_button").toggleClass("slide");
 
         let opened = $(".slide_button").hasClass("slide");
-
-
         $(".group_role").toggleClass("active", $(".slide_button").hasClass("slide"));
 
         if(opened) {
+            $(".block_shaddow").show();
             $("#group_role_name").val(WORKSPACE.group);
             $(".choise_role_in_group > div").removeClass("checked");
             $(".choise_role_in_group > div[data-value='"+WORKSPACE.role+"']").addClass("checked");
 
         } else {
+            $(".block_shaddow").hide();
             let new_gn = $("#group_role_name").val();
             console.log("new_gn: ", new_gn);
             if(new_gn!==WORKSPACE.group) {
@@ -802,11 +806,15 @@
         // WORKSPACE.role = new_role;
     });
 
-     $(".close_slide_btn").click(x=>$(".slide_button").removeClass("slide"));
+     $(".close_slide_btn").click(x=>{
+         $(".slide_button").removeClass("slide");
+         $(".block_shaddow").hide();
+     });
 
 
     $("#screen").click(function () {
         $(".slide_button").removeClass("slide");
+        $(".block_shaddow").hide();
     });
 
 

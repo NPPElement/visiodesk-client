@@ -1093,7 +1093,7 @@ window.VD = (function Visiodesk() {
                 event.stopPropagation();
                 $('.dropdown').remove();
                 $(".slide_button").removeClass("slide");
-
+                $(".block_shaddow").hide();
                 var reference = $(e).attr("reference");
                 var parentSelector =  $(e).attr('href') || $(e).data('parent') || selector;
                 const params = $(e).data('params') || {};
