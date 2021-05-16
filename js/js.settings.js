@@ -23,4 +23,4 @@ window.WORKSPACE = {
 
 };
 
-// window.WORKSPACE.split = false;
+window.WORKSPACE.split = false;

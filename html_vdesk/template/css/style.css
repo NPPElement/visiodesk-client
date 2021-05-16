@@ -8478,7 +8478,38 @@ label.input_group_title {
 }
 
 
+.slide_button {
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    -moz-border-radius-topleft: 14px;
+    -moz-border-radius-topright: 14px;
+}
 
+.slide_button > div {
+    padding: 16px;
+    color: white;
+}
 
+.slide_button b {
+    font-family: 'SF-PRO-Regular';
+    line-height: 22px;
+    font-size: 17px;
+    font-weight: normal;
+    color: #FF9500;
+    margin-bottom: 12px;
+}
+
+input.group_role_name {
+    width: 100%;
+    padding: 2px 22px 2px 8px;
+    font-family: 'SF-PRO-Regular';
+    line-height: 22px;
+    font-size: 17px;
+    text-align: left;
+    letter-spacing: -0.0141176em;
+    color: #FFFFFF;
+    background: transparent;
+    border: none;
+}
 
 

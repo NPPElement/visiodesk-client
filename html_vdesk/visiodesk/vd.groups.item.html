@@ -1,5 +1,5 @@
-<a class="group_item" id="group-<%= item.id %>" reference=":Events/<%= item.id %>">
-    <div user-role="<%= item.attr_user_role %>">
+<a class="group_item" id="group-<%= item.id %>" reference=":Events/<%= item.id %>" user-role="<%= item.attr_user_role %>">
+    <div>
         <div class="header">
             <div class="name"><span class="crop"><%- item.name %></span></div>
             <div class="level" data-id="<%- item.support_id %>"><input class="result_field" type="hidden" value="<%- item.support_id %>"></div>
