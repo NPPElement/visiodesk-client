@@ -1278,7 +1278,8 @@ window.VB = (function Visiobas() {
                 $item.on('click', (event) => {
                     event.stopPropagation();
                     VD.ShowVisiobasTabbar();
-                    VBasWidget.show("#visualization", reference);
+                    // VBasWidget.show("#visualization", reference);
+                    Spliter.goVisualization(reference);
                 });
                 break;
 

@@ -435,7 +435,8 @@ window.VBasWidget = (function () {
                     });
 
             } else if (reference.startWith("Site:")){
-                VBasWidget.show("#visualization", reference);
+                // VBasWidget.show("#visualization", reference);
+                Spliter.goVisualization(reference);
             }
 
         });

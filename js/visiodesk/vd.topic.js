@@ -85,6 +85,7 @@ window.VD_Topic = (function () {
     $("body").on("click", ".body .vbas_link", function (e) {
         let siteHref = $(this).html();
         Spliter.goMapSite(siteHref);
+        // Spliter.goMapSite(siteHref);
         // VBasMapLeafletWidget.goMapSite(siteHref);
     });
 

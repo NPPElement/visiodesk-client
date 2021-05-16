@@ -363,7 +363,8 @@
 
                     const hasVisualization = (marker.hasOwnProperty("visualization") ? marker.visualization : true);
                     if (hasVisualization) {
-                        VBasWidget.show("#visualization", objectReference);
+                        // VBasWidget.show("#visualization", objectReference);
+                        Spliter.goVisualization(objectReference);
                     }
 
                     VB_API.getObject(reference)

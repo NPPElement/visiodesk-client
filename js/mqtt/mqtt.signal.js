@@ -184,8 +184,8 @@ window.Spliter = (function () {
     }
 
     function goMapSite(siteHref) {
-        if(!isSplit() || !isRole("map")) return goMapSite_local(siteHref);
-        MqttSignal.publish(getTopic(), {call: "goMapSite", reference: siteHref});
+        if(!isSplit()) return goMapSite_local(siteHref);
+        MqttSignal.publish(getTopic(), {call: "goSite", reference: siteHref});
     }
     function goMapSite_local(siteHref) {
         VBasMapLeafletWidget.goMapSite(siteHref);
@@ -211,11 +211,15 @@ window.Spliter = (function () {
 
 
     function goVisualization(reference) {
-        if(!isSplit() || !isRole("visio")) return goVisualization_local(reference);
-        VBasWidget.show("#visualization", reference);
+        console.log("goVisualization: ", reference);
+
+        // if(!isSplit() || !isRole("visio")) return goVisualization_local(reference);
+        // VBasWidget.show("#visualization", reference);
+        MqttSignal.publish(getTopic(), {call: "goSite", reference: reference});
     }
 
     function goVisualization_local(reference) {
+        VD.ShowVisiobasTabbar();
         VBasWidget.show("#visualization", reference);
     }
 
@@ -224,8 +228,10 @@ window.Spliter = (function () {
         let message = JSON.parse(messageText);
          console.log("onMqttMessage: ", messageText);
         if(!message) return;
-        if(message['call']==='goMapSite' && isRole("map")) goMapSite_local(message.reference);
+        if(message['call']==='goSite' && isRole("map")) goMapSite_local(message.reference);
+        if(message['call']==='goSite' && isRole("visio")) goVisualization_local(message.reference);
         if(message['call']==='goMapObject' && isRole("map")) goMapObject_local(message.reference);
+        // if(message['call']==='goVisualization' && isRole("map")) goMapObject_local(message.reference);
         if(message['User'] && isRole("map")) goMapUser_local(message.User);
     }
 

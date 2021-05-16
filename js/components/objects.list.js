@@ -528,7 +528,8 @@
                         $window.show();
                         break;
                     case "#visualization":
-                        VBasWidget.show("#visualization", dataObj.reference);
+                        // VBasWidget.show("#visualization", dataObj.reference);
+                        Spliter.goVisualization(dataObj.reference);
                         break;
                     case '#object-contents-window':
                         if (dataObj['header']) {
