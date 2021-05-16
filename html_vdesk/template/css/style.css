@@ -8492,24 +8492,34 @@ label.input_group_title {
 
 .slide_button b {
     font-family: 'SF-PRO-Regular';
-    line-height: 22px;
-    font-size: 17px;
+    line-height: 30px;
+    font-size: 19px;
     font-weight: normal;
     color: #FF9500;
     margin-bottom: 12px;
+}
+.slide_button label {
+    font-family: 'SF-PRO-Regular';
+    line-height: 26px;
+    font-size: 17px;
+    font-weight: lighter;
+    color: #ffffff;
+    margin-bottom: 12px;
+    cursor: pointer;
 }
 
 input.group_role_name {
     width: 100%;
     padding: 2px 22px 2px 8px;
     font-family: 'SF-PRO-Regular';
-    line-height: 22px;
-    font-size: 17px;
+    line-height: 26px;
+    font-size: 19px;
     text-align: left;
     letter-spacing: -0.0141176em;
     color: #FFFFFF;
     background: transparent;
     border: none;
+    margin-bottom: 20px;
 }
 
 
