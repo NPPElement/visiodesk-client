@@ -16,9 +16,8 @@ window.WORKSPACE = {
     ],
     group_pub: localStorage.getItem("group_name_pub") || '',
     group_sub: localStorage.getItem("group_name_sub") || ''
-
-
-
 };
+
+window.DEFAULT_OBJECT_REFERENCE = "Site:Engineering";
 
 // window.WORKSPACE.split = false;

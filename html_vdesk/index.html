@@ -796,11 +796,8 @@
             $(".block_shaddow").hide();
             let new_g_pub = $("#group_role_name_pub").val();
             let new_g_sub = $("#group_role_name_sub").val();
-            console.log("new_g_pub: ", new_g_pub);
-            console.log("new_g_sub: ", new_g_sub);
-
-            if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub($("#group_role_name_pub").val());
-            if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub($("#group_role_name_sub").val());
+            if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub(new_g_pub);
+            if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub(new_g_sub);
 
         }
     });
@@ -822,8 +819,8 @@
 
          let new_g_pub = $("#group_role_name_pub").val();
          let new_g_sub = $("#group_role_name_sub").val();
-         if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub($("#group_role_name_pub").val());
-         if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub($("#group_role_name_sub").val());
+         if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub(new_g_pub);
+         if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub(new_g_sub);
 
      });
 

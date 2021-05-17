@@ -1,7 +1,9 @@
 window.VD_Visio = (function () {
+    let need_reference = DEFAULT_OBJECT_REFERENCE;
     return {
         "run": run,
-        "unload": unload
+        "unload": unload,
+        "show": show
     };
 
     function run(reference, selector, params) {
@@ -19,13 +21,26 @@ window.VD_Visio = (function () {
 
         def.resolve(true);
 
+
         def.done(x=>{
             // VBasWidget.openWindow(reference);
-            VBasWidget.show("#visualization", reference);
-            $("#visualization").addClass("fullscreen");
+            // VBasWidget.show("#visualization", reference);
+            // $("#visualization").addClass("fullscreen");
+            show(need_reference);
         });
 
         return def;
+    }
+
+    function show(reference) {
+        console.log("VD_Visio.show: "+reference);
+        need_reference = reference;
+        if(window.location.href.includes("#Visio")) {
+            VBasWidget.show("#visualization", reference);
+            $("#visualization").addClass("fullscreen");
+        } else {
+            window.location.href = "#Visio";
+        }
     }
 
     function unload() {

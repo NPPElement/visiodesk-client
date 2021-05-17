@@ -235,8 +235,9 @@ window.Spliter = (function () {
     }
 
     function goVisualization_local(reference) {
-        VD.ShowVisiobasTabbar();
-        VBasWidget.show("#visualization", reference);
+        VD_Visio.show(reference);
+        // VD.ShowVisiobasTabbar();
+        // VBasWidget.show("#visualization", reference);
     }
 
 
