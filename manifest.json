@@ -2,7 +2,7 @@
   "name": "VisioDESK",
   "short_name": "VisioDESK",
   "description": "",
-  "start_url": "/ru-RU",
+  "start_url": "/",
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "orientation": "portrait",
