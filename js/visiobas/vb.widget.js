@@ -112,6 +112,8 @@ window.VBasWidget = (function () {
 
             _$selector.html(template);
             _$selector.find("#vbas-widget").html("");
+
+
             _$selector.find(".window_header .close_icon").click(() => {
                 if(before_close) before_close();
                 _$selector.html('');
@@ -353,6 +355,12 @@ window.VBasWidget = (function () {
                 VB_UPDATER.unregister("vb.widget");
                 _$selector.hide();
             });
+
+            if(location.href.includes("#Visio")) {
+                _$selector.find(".fullscreen_icon").remove();
+                _$selector.find(".close_icon").remove();
+            }
+
 
             _$selector.find(".window_header .home_icon").click(() => {
                 VD_Visio.show(DEFAULT_OBJECT_REFERENCE);
