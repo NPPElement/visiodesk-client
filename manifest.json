@@ -2,7 +2,7 @@
   "name": "VisioDESK",
   "short_name": "VisioDESK",
   "description": "",
-  "start_url": "/",
+  "start_url": "/ru-RU",
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "orientation": "portrait",
@@ -10,7 +10,12 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon/icon-72",
+      "src": "favicon.svg",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/svg-xml"
+    },
+    {
+      "src": "icon/icon-72.png",
       "sizes": "72x72",
       "type": "image/png"
     },
