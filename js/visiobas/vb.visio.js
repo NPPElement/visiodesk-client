@@ -26,7 +26,10 @@ window.VD_Visio = (function () {
             // VBasWidget.openWindow(reference);
             // VBasWidget.show("#visualization", reference);
             // $("#visualization").addClass("fullscreen");
-            show(need_reference);
+            window.setTimeout(function () {
+                show(need_reference);
+            }, 500);
+
         });
 
         return def;
@@ -34,7 +37,9 @@ window.VD_Visio = (function () {
 
     function show(reference) {
         console.log("VD_Visio.show: "+reference);
+        if(!reference) reference = DEFAULT_OBJECT_REFERENCE;
         need_reference = reference;
+
         if(window.location.href.includes("#Visio")) {
             VBasWidget.show("#visualization", reference);
             $("#visualization").addClass("fullscreen");
@@ -45,6 +50,9 @@ window.VD_Visio = (function () {
 
     function unload() {
         VB.CloseVbasPanel();
+        $("#visualization")
+            .html('')
+            .hide();
     }
 
 

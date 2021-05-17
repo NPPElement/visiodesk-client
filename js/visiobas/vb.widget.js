@@ -117,7 +117,6 @@ window.VBasWidget = (function () {
                 _$selector.html('');
                 _$selector.hide();
             });
-
             if(callback) callback();
         });
     }
@@ -226,7 +225,8 @@ window.VBasWidget = (function () {
 
     function __init(reference) {
         if (reference == null || _.isEmpty(reference)) {
-            _$selector.hide();
+            // скрыл чтобы показыавть всё время
+            // _$selector.hide();
             return;
         }
 
@@ -353,6 +353,12 @@ window.VBasWidget = (function () {
                 VB_UPDATER.unregister("vb.widget");
                 _$selector.hide();
             });
+
+            _$selector.find(".window_header .home_icon").click(() => {
+                VD_Visio.show(DEFAULT_OBJECT_REFERENCE);
+            });
+
+
 
             if (vis.template.endsWith(".svg") ||
                 vis.template.endsWith(".html")) {
