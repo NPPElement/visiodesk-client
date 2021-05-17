@@ -819,12 +819,21 @@
      $(".close_slide_btn").click(x=>{
          $(".slide_button").removeClass("slide");
          $(".block_shaddow").hide();
+
+         let new_g_pub = $("#group_role_name_pub").val();
+         let new_g_sub = $("#group_role_name_sub").val();
+         if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub($("#group_role_name_pub").val());
+         if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub($("#group_role_name_sub").val());
+
      });
 
 
     $("#screen").click(function () {
+
         $(".slide_button").removeClass("slide");
         $(".block_shaddow").hide();
+
+
     });
 
 
