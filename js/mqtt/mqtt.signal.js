@@ -70,7 +70,7 @@ window.MqttSignal = (function () {
     function publish(topic, message, broker_index = 0) {
         if(_.isObject(message)) message = JSON.stringify(message);
         console.log("publish["+topic+"] =  "+message);
-        conn[broker_index].mqtt.publish(topic, message, {qos: 0, retain: true});
+        conn[broker_index].mqtt.publish(topic, message, {qos: 0, retain: false});
     }
 
     function __receive_message(idx, topic, messageStr, packet) {
@@ -115,7 +115,6 @@ window.MqttSignal = (function () {
 
 
 
-    window.TERMINAL_MODE = "user";
 
 })();
 
@@ -140,14 +139,15 @@ window.Spliter = (function () {
         goMapUser: goMapUser,
         goVisualization: goVisualization,
         setRole: setRole,
-        setGroup: setGroup,
+        setGroupPub: setGroupPub,
+        setGroupSub: setGroupSub,
         isSplit: isSplit,
     };
 
     function setRole(role) {
         localStorage.setItem("group_role", role);
         if(role==="none") {
-            MqttSignal.unsubscribe(getTopic(), broker);
+            MqttSignal.unsubscribe(getTopicSub(), broker);
             WORKSPACE.role = role;
             // MqttSignal.subscribe(getTopic(), onMqttMessage, broker);
         } else {
@@ -156,36 +156,54 @@ window.Spliter = (function () {
         }
     }
 
-    function setGroup(newGroup) {
-        localStorage.setItem("group_name", newGroup);
-        MqttSignal.unsubscribe(getTopic(), broker);
-        WORKSPACE.group = newGroup;
-        MqttSignal.subscribe(getTopic(), onMqttMessage, broker);
+    function setGroupPub(newGroup) {
+        localStorage.setItem("group_name_pub", newGroup);
+        WORKSPACE.group_pub = newGroup;
     }
-    
+
+    function setGroupSub(newGroup) {
+        console.log("setGroupSub: ", newGroup);
+        if(canSubscribe()) MqttSignal.unsubscribe(getTopicSub(), broker);
+        WORKSPACE.group_sub = newGroup;
+        localStorage.setItem("group_name_sub", newGroup);
+
+
+
+        if(canSubscribe()) {
+            if(broker===false) _init();
+            MqttSignal.subscribe(getTopicSub(), onMqttMessage, broker);
+        }
+    }
+
     function isSplit() {
-        let r =  WORKSPACE && WORKSPACE.split;
+        let r =  WORKSPACE && WORKSPACE.split && WORKSPACE.group_sub && WORKSPACE.group_sub;
         console.log("isSplit: " + r);
         return r;
+    }
+
+    function canSubscribe() {
+        return WORKSPACE && WORKSPACE.split && WORKSPACE.group_sub;
+    }
+
+    function canPublish() {
+        return WORKSPACE && WORKSPACE.split && WORKSPACE.group_pub;
     }
 
     function isRole(role) {
         return WORKSPACE.role===role;
     }
 
-    function getTopic() {
-        return "action/"+WORKSPACE.group;
+    function getTopicSub() {
+        return "action/"+WORKSPACE.group_sub;
     }
-    
-    function changeGroup(new_group) {
-        MqttSignal.unsubscribe(getTopic());
-        WORKSPACE.group = new_group;
-        _init();
+
+    function getTopicPub() {
+        return "action/"+WORKSPACE.group_pub;
     }
 
     function goMapSite(siteHref) {
-        if(!isSplit()) return goMapSite_local(siteHref);
-        MqttSignal.publish(getTopic(), {call: "goSite", reference: siteHref});
+        // if(!isSplit()) return goMapSite_local(siteHref);
+        if(canPublish()) MqttSignal.publish(getTopicPub(), {call: "goSite", reference: siteHref});
     }
     function goMapSite_local(siteHref) {
         VBasMapLeafletWidget.goMapSite(siteHref);
@@ -193,16 +211,16 @@ window.Spliter = (function () {
 
 
     function goMapObject(mapHref) {
-        if(!isSplit() || !isRole("map")) return goMapObject_local(mapHref);
-        MqttSignal.publish(getTopic(), {call: "goMapObject", reference: mapHref});
+        // if(!isSplit() || !isRole("map")) return goMapObject_local(mapHref);
+        if(canPublish()) MqttSignal.publish(getTopicPub(), {call: "goMapObject", reference: mapHref});
     }
     function goMapObject_local(mapHref) {
         VBasMapLeafletWidget.goMapObject(mapHref);
     }
 
     function goMapUser(login) {
-        if(!isSplit() || !isRole("map")) return goMapUser_local(login);
-        MqttSignal.publish(getTopic(), {User: login});
+        // if(!isSplit() || !isRole("map")) return goMapUser_local(login);
+        if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
     }
 
     function goMapUser_local(login) {
@@ -213,9 +231,7 @@ window.Spliter = (function () {
     function goVisualization(reference) {
         console.log("goVisualization: ", reference);
 
-        // if(!isSplit() || !isRole("visio")) return goVisualization_local(reference);
-        // VBasWidget.show("#visualization", reference);
-        MqttSignal.publish(getTopic(), {call: "goSite", reference: reference});
+        if(canPublish()) MqttSignal.publish(getTopicPub(), {call: "goSite", reference: reference});
     }
 
     function goVisualization_local(reference) {
@@ -239,7 +255,7 @@ window.Spliter = (function () {
     function _init() {
         if(isSplit()) {
             broker = MqttSignal.addBroker();
-            MqttSignal.subscribe(getTopic(), onMqttMessage, broker);
+            MqttSignal.subscribe(getTopicSub(), onMqttMessage, broker);
         }
     }
 

@@ -11,6 +11,8 @@
   --vb-menu-icon-map-active-url: url("../theme/light/icon_map_active.svg");
   --vb-menu-icon-automatic-url: url("../theme/light/icon_automatic.svg");
   --vb-menu-icon-automatic-active-url: url("../theme/light/icon_automatic_active.svg");
+  --vb-menu-icon-visio-url: url("../theme/light/icon_visio.svg");
+  --vb-menu-icon-visio-active-url: url("../theme/light/icon_visio_active.svg");
   --vb-menu-icon-events-url: url("../theme/light/icon_events.svg");
   --vb-menu-icon-events-active-url: url("../theme/light/icon_events_active.svg");
   --vb-menu-icon-news-url: url("../theme/light/icon_news.svg");
@@ -36,6 +38,8 @@
   --vb-menu-icon-map-active-url: url("../theme/dark/icon_map_active.svg");
   --vb-menu-icon-automatic-url: url("../theme/dark/icon_automatic.svg");
   --vb-menu-icon-automatic-active-url: url("../theme/dark/icon_automatic_active.svg");
+  --vb-menu-icon-visio-url: url("../theme/dark/icon_visio.svg");
+  --vb-menu-icon-visio-active-url: url("../theme/dark/icon_visio_active.svg");
   --vb-menu-icon-events-url: url("../theme/dark/icon_events.svg");
   --vb-menu-icon-events-active-url: url("../theme/dark/icon_events_active.svg");
   --vb-menu-icon-news-url: url("../theme/dark/icon_news.svg");
@@ -64,6 +68,8 @@
   --vd-menu-icon-map-active-url: url("../theme/light/icon_map_active.svg");
   --vd-menu-icon-automatic-url: url("../theme/light/icon_automatic.svg");
   --vd-menu-icon-automatic-active-url: url("../theme/light/icon_automatic_active.svg");
+  --vd-menu-icon-visio-url: url("../theme/light/icon_visio.svg");
+  --vd-menu-icon-visio-active-url: url("../theme/light/icon_visio_active.svg");
   --vd-menu-icon-events-url: url("../theme/light/icon_events.svg");
   --vd-menu-icon-events-active-url: url("../theme/light/icon_events_active.svg");
   --vd-menu-icon-news-url: url("../theme/light/icon_news.svg");
@@ -87,6 +93,8 @@
   --vd-menu-icon-map-active-url: url("../theme/dark/icon_map_active.svg");
   --vd-menu-icon-automatic-url: url("../theme/dark/icon_automatic.svg");
   --vd-menu-icon-automatic-active-url: url("../theme/dark/icon_automatic_active.svg");
+  --vd-menu-icon-visio-url: url("../theme/dark/icon_visio.svg");
+  --vd-menu-icon-visio-active-url: url("../theme/dark/icon_visio_active.svg");
   --vd-menu-icon-events-url: url("../theme/dark/icon_events.svg");
   --vd-menu-icon-events-active-url: url("../theme/dark/icon_events_active.svg");
   --vd-menu-icon-news-url: url("../theme/dark/icon_news.svg");
@@ -7988,8 +7996,14 @@ label.input_group_title {
 .menu-bar > NAV A.automatic {
     background: var(--vd-menu-icon-automatic-url) 50% 8px no-repeat;
 }
+.menu-bar > NAV A.visio {
+    background: var(--vd-menu-icon-visio-url) 50% 8px no-repeat;
+}
 .menu-bar > NAV A.automatic.active {
     background-image: var(--vd-menu-icon-automatic-active-url);
+}
+.menu-bar > NAV A.visio.active {
+    background-image: var(--vd-menu-icon-visio-active-url);
 }
 .menu-bar > NAV A.events {
     background: var(--vd-menu-icon-events-url) 50% 8px no-repeat;
@@ -8050,6 +8064,13 @@ label.input_group_title {
 }
 .visioBAS .menu-bar > NAV A.automatic.active {
     background-image: var(--vb-menu-icon-automatic-active-url);
+}
+
+.visioBAS .menu-bar > NAV A.visio {
+    background: var(--vb-menu-icon-visio-url) 50% 8px no-repeat;
+}
+.visioBAS .menu-bar > NAV A.visio.active {
+    background-image: var(--vb-menu-icon-visio-active-url);
 }
 .visioBAS .menu-bar > NAV A.events {
     background: var(--vb-menu-icon-events-url) 50% 8px no-repeat;
@@ -8260,7 +8281,7 @@ label.input_group_title {
         z-index: 19;
         position: fixed;
         width: 375px;
-        height: 330px;
+        height: 380px;
         overflow: hidden;
         bottom: 0;
         right: -460px;
@@ -8369,9 +8390,9 @@ label.input_group_title {
         z-index: 19;
         position: fixed;
         width: 375px;
-        height: 330px;
+        height: 380px;
         overflow: hidden;
-        bottom: -330px;
+        bottom: -380px;
         right: 0;
         background: var(--vb-menu-background-color);
         transition:all 400ms ease-in-out;
@@ -8573,6 +8594,7 @@ input.group_role_name {
     background: transparent;
     border: none;
     margin-bottom: 20px;
+    border: 1px solid #666;
 }
 
 

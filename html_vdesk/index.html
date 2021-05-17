@@ -118,14 +118,14 @@
         <div class="menu-bar">
             <nav class="b_pad">
                 <a reference=":Map" href="#main-container" class="map">Карта</a>
-<!--                <a class="automatic">АСДКУ</a>-->
-                <a reference=":Vbas" href="#main-container" class="automatic">АСДКУ</a>
+                <a reference=":Visio" href="#main-container" class="visio">АСУТП</a>
                 <a reference=":Groups" href="#main-container" class="events">Группы</a>
                 <a reference=":News" href="#main-container" class="news">Новые<span id="news-counter"><em>0</em></span></a>
                 <a reference=":Feed" href="#main-container" class="feed">Лента<span id="feed-counter"><em>0</em></span></a>
 
                 <a reference=":Checklist" href="#main-container" class="checklist">Журнал<span id="checklist"></span></a>
                 <a reference=":Users" href="#main-container" class="users">Пользователи<span id="users"></span></a>
+                <a reference=":Vbas" href="#main-container" class="automatic">АСДКУ</a>
                 <a reference=":Settings" href="#main-container" class="settings">Настройки<span id="settings"></span></a>
                 <a class="group_role">АРМ<span id="group_role"></span></a>
             </nav>
@@ -147,7 +147,7 @@
     <script>
         function isNumberKey(evt,inp) {
             console.log($(inp).val());
-            let chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM/_";
+            let chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM/_*#";
             let charCode = (evt.which) ? evt.which : event.keyCode;
             let sym = String.fromCharCode(charCode);
             if($(inp).val()==="" && sym==="/") return false;
@@ -163,8 +163,12 @@
 
         <div>
             <div class="close_slide_btn"></div>
-            <b>Группа: </b><br>
-            <input class="group_role_name" id="group_role_name" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+            <b>Управление: </b><br>
+            <input class="group_role_name" id="group_role_name_pub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+
+            <b>Отображение: </b><br>
+            <input class="group_role_name" id="group_role_name_sub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+
             <b>Роль:</b><br>
 
             <div class="choise_role_in_group">
@@ -275,7 +279,7 @@
 
 
 <!--<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>-->
-<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+<!--<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>-->
 
 
 <!-- Firebase 
@@ -384,6 +388,7 @@
 <!--<script src="/js/visiobas/visiobas.updater.mqtt.js" type="text/javascript"></script>-->
 <script src="/js/visiobas/visiobas.object.js" type="text/javascript"></script>
 <script src="/js/visiobas/vb.objects.js" type="text/javascript"></script>
+<script src="/js/visiobas/vb.visio.js" type="text/javascript"></script>
 <script src="/js/windows/window.object.js" type="text/javascript"></script>
 
 <!-- custom components -->
@@ -779,18 +784,21 @@
 
         if(opened) {
             $(".block_shaddow").show();
-            $("#group_role_name").val(WORKSPACE.group);
+            $("#group_role_name_pub").val(WORKSPACE.group_pub);
+            $("#group_role_name_sub").val(WORKSPACE.group_sub);
+
             $(".choise_role_in_group > div").removeClass("checked");
             $(".choise_role_in_group > div[data-value='"+WORKSPACE.role+"']").addClass("checked");
 
         } else {
             $(".block_shaddow").hide();
-            let new_gn = $("#group_role_name").val();
-            console.log("new_gn: ", new_gn);
-            if(new_gn!==WORKSPACE.group) {
-                // WORKSPACE.group = $("#group_role_name").val();
-                Spliter.setGroup($("#group_role_name").val());
-            }
+            let new_g_pub = $("#group_role_name_pub").val();
+            let new_g_sub = $("#group_role_name_sub").val();
+            console.log("new_g_pub: ", new_g_pub);
+            console.log("new_g_sub: ", new_g_sub);
+
+            if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub($("#group_role_name_pub").val());
+            if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub($("#group_role_name_sub").val());
 
         }
     });

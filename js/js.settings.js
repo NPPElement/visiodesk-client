@@ -14,8 +14,10 @@ window.WORKSPACE = {
         "map",
         "visio",
     ],
-    group: localStorage.getItem("group_name") || "dispatcher"
-    
+    group_pub: localStorage.getItem("group_name_pub") || '',
+    group_sub: localStorage.getItem("group_name_sub") || ''
+
+
 
 };
 
