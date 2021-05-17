@@ -813,7 +813,7 @@
         // WORKSPACE.role = new_role;
     });
 
-     $(".close_slide_btn").click(x=>{
+     $(".close_slide_btn, .block_shaddow").click(x=>{
          $(".slide_button").removeClass("slide");
          $(".block_shaddow").hide();
 
@@ -823,6 +823,8 @@
          if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub(new_g_sub);
 
      });
+
+
 
 
     $("#screen").click(function () {
