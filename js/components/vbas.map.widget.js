@@ -451,12 +451,12 @@
 
 
 
+    /* Это для выставки. никаких защит и прочего */
     $("body").on("click", '[reference^="Phone:"]', function (e) {
         let reference = $(this).attr("reference");
         let tel = reference.replace("Phone:","");
-        console.log("Позвонить: "+reference);
-
-        $.get("http://kanaris.ru").done(x=>console.log);
+        console.log("Звоним: "+tel);
+        $.get("/vbas/external/call_user/"+tel).done(x=>console.log);
     });
 
 
