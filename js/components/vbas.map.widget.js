@@ -447,4 +447,19 @@
     }
 
     window.VBasMapWidget = VBasMapWidget;
+
+
+
+
+    $("body").on("click", '[reference^="Phone:"]', function (e) {
+        let reference = $(this).attr("reference");
+        let tel = reference.replace("Phone:","");
+        console.log("Позвонить: "+reference);
+
+        $.get("http://kanaris.ru").done(x=>console.log);
+    });
+
+
+
+
 })();
