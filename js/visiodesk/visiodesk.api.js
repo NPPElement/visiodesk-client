@@ -31,6 +31,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         "GetUserById": GetUserById,
         "GetUserByIdSecure": GetUserByIdSecure,
         "GetUsers": GetUsers,
+        "getUserByLogin": getUserByLogin,
         "DelUser": DelUser,
         "DelUserSecure": DelUserSecure,
 
@@ -925,6 +926,38 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
             } else {
                 VD.ErrorHandler('SERVER', response, url);
                 def.reject();
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+            def.reject();
+        });
+
+        return def;
+    }
+    /**
+     * Получение пользователя по логину
+     * @param {int} id идентификатор пользователя
+     * @return {Deferred}
+     */
+    function getUserByLogin(login) {
+        let def = $.Deferred();
+
+        let url = apiContext + '/getUserByLogin/' + login;
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json;charset=UTF-8",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).done(function (response) {
+            if (response.success) {
+                def.resolve(response.data);
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+                def.reject(false);
             }
 
         }).fail(function (jqXHR, textStatus, errorThrown) {

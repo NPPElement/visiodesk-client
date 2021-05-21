@@ -2357,6 +2357,4 @@ window.VD_Topic = (function () {
           }
       });
 
-
-
 })();

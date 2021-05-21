@@ -177,6 +177,7 @@
                 <div data-value="none" class="checked">Не выполнять действий</div>
                 <div data-value="map">Найти на карте</div>
                 <div data-value="visio">Открыть визуализацию</div>
+                <div data-value="vdesk">Открыть задачи</div>
             </div>
 
         </div>
@@ -834,6 +835,14 @@
 
 
     });
+
+
+    $("body").on("click", '.pen-red', function () {
+        let login = $(this).html();
+        if(!login) return;
+        login = login.replace("@","");
+        Spliter.goUser(login);
+    })
 
 
 </script>

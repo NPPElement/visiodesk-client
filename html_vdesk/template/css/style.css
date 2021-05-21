@@ -8288,7 +8288,7 @@ label.input_group_title {
         z-index: 19;
         position: fixed;
         width: 375px;
-        height: 380px;
+        height: 420px;
         overflow: hidden;
         bottom: 0;
         right: -460px;
@@ -8397,9 +8397,9 @@ label.input_group_title {
         z-index: 19;
         position: fixed;
         width: 375px;
-        height: 380px;
+        height: 420px;
         overflow: hidden;
-        bottom: -380px;
+        bottom: -420px;
         right: 0;
         background: var(--vb-menu-background-color);
         transition:all 400ms ease-in-out;
@@ -8628,3 +8628,7 @@ input.group_role_name {
 
 }
 
+
+.pen-red {
+    cursor: pointer;
+}

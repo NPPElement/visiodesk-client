@@ -460,6 +460,15 @@
     });
 
 
+    /* Это для выставки. никаких защит и прочего */
+    $("body").on("click", '[reference^="User:"]', function (e) {
+        let reference = $(this).attr("reference");
+        let login = reference.replace("User:","");
+        console.log("Посылаем: "+login);
+        Spliter.goUser(login);
+    });
+
+
 
 
 })();

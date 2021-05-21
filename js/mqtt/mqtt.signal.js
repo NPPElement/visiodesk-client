@@ -141,6 +141,7 @@ window.Spliter = (function () {
         setRole: setRole,
         setGroupPub: setGroupPub,
         setGroupSub: setGroupSub,
+        goUser: goMapUser,
         isSplit: isSplit,
     };
 
@@ -223,8 +224,18 @@ window.Spliter = (function () {
         if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
     }
 
+    function goChatUser(login) {
+        if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
+    }
+
     function goMapUser_local(login) {
         VBasMapLeafletWidget.goUser(login);
+    }
+
+    function goChatUser_local(login) {
+        VD_API.getUserByLogin(login).done(u=>{
+            if(u && u.id) window.location.href = "#UserEvents/"+u.id;
+        });
     }
 
 
@@ -250,6 +261,7 @@ window.Spliter = (function () {
         if(message['call']==='goMapObject' && isRole("map")) goMapObject_local(message.reference);
         // if(message['call']==='goVisualization' && isRole("map")) goMapObject_local(message.reference);
         if(message['User'] && isRole("map")) goMapUser_local(message.User);
+        if(message['User'] && isRole("vdesk")) goChatUser_local(message.User);
     }
 
     
