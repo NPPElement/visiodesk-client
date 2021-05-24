@@ -229,7 +229,9 @@ window.Spliter = (function () {
             a = a[1].split(":");
             let pn = a[0];
             let pv = a[1];
-            if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login, pn:pv});
+            let json = {User: login};
+            json[pn] = pv;
+            if(canPublish()) MqttSignal.publish(getTopicPub(), json);
         } else {
             if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
         }
