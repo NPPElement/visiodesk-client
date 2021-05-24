@@ -342,6 +342,17 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     color: #007AFF;
 }
 
+.caption NAV .new {
+    display: flex;
+    align-items: center;
+    padding: 11px 0 11px 15px ;
+    font-family: 'SF-PRO-Regular';
+    line-height: 22px;
+    font-size: 17px;
+    letter-spacing: -0.0141176em;
+    color: #007AFF;
+}
+
 .caption NAV .cancel {
     display: flex;
     align-items: center;

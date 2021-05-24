@@ -219,9 +219,21 @@ window.Spliter = (function () {
         VBasMapLeafletWidget.goMapObject(mapHref);
     }
 
+    //User:ekaterinna,Call:video
     function goMapUser(login) {
         // if(!isSplit() || !isRole("map")) return goMapUser_local(login);
-        if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
+
+        if(login.indexOf(",")>0) {
+            let a = login.split(",");
+            login = a[0];
+            a = a[1].split(":");
+            let pn = a[0];
+            let pv = a[1];
+            if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login, pn:pv});
+        } else {
+            if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
+        }
+
     }
 
     function goChatUser(login) {
