@@ -226,8 +226,8 @@
          */
         function start() {
             console.log("UPDATER.start");
-            //mqttClient = mqtt.connect("ws://visiodesk.net:15675/ws", {
-            mqttClient = mqtt.connect(WORKSPACE.mqtt.broker_url, {
+            mqttClient = mqtt.connect("ws://10.100.2.131:15675/ws", {
+            //mqttClient = mqtt.connect(WORKSPACE.mqtt.broker_url, {
                 
                 username: "user",
                 password: "user",
