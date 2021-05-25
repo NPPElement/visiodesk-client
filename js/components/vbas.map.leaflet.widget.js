@@ -249,6 +249,7 @@
                 // console.log("M("+reference+")");
                 let x = Markers[reference]._latlng.lng;
                 let y = Markers[reference]._latlng.lat;
+                // goPosition(x, y, 5);
                 goPosition(x, y, 5, baseLayer);
                 return;
             }

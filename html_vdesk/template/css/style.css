@@ -8643,3 +8643,13 @@ input.group_role_name {
 .pen-red {
     cursor: pointer;
 }
+
+
+
+#g_user_call_btn:active,
+#g_user_char_btn:active,
+#g_user_video_btn:active
+{
+    display: none;
+}
+

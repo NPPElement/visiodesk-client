@@ -21,3 +21,7 @@ window.WORKSPACE = {
 window.DEFAULT_OBJECT_REFERENCE = "Site:Engineering";
 
 // window.WORKSPACE.split = false;
+
+$('g[reference^="User"]').keydown(function () {
+    $(this).hide();
+});
