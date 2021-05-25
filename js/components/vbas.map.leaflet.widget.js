@@ -188,6 +188,8 @@
         let _lastRefs = false;
         let Markers = {};
 
+        let baseLayer = false;
+
 
         __lookSignal();
 
@@ -247,7 +249,7 @@
                 // console.log("M("+reference+")");
                 let x = Markers[reference]._latlng.lng;
                 let y = Markers[reference]._latlng.lat;
-                goPosition(x, y, 5);
+                goPosition(x, y, 5, baseLayer);
                 return;
             }
 
@@ -1531,6 +1533,7 @@
 
         function __createLeafletMap(containerId, data) {
             const selectedLayerId = data.map.selectedLayerId;
+            baseLayer = selectedLayerId;
             let selectedLayer = null;
             //let leafSelectedLayer = null;
             let _unorderedLeafBaseLayers = {};
