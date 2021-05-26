@@ -876,10 +876,14 @@ window.VD_Topic = (function () {
     function __selectUser(value, name, description) {
         let valueInt = parseInt(value);
         if (!_.isNaN(valueInt)) {
+            let user = VD_API.GetUserByIdNow(valueInt);
+            let login_adds = "";
+            if(user && user.login) login_adds = ` [mark data-id=${value} class=pen-red]@${user.login}[/mark]`;
+
             var itemObject = {
                 "type": { 'id': 3 },
                 "user_id": value,
-                "text": `прикреплен сотрудник [mark class=pen-red]@${name}[/mark]`,
+                "text": `прикреплен сотрудник ${name}${login_adds}`,
                 "name": name,
                 "temp_id": VD_SETTINGS['ITEM_TYPES'][3] + '_' + value,
                 "description": description
@@ -935,10 +939,15 @@ window.VD_Topic = (function () {
     function __selectRemovedUser(value, name, description) {
         let valueInt = parseInt(value);
         if (!_.isNaN(valueInt)) {
+            let user = VD_API.GetUserByIdNow(valueInt);
+            let login_adds = "";
+            if(user && user.login) login_adds = ` [mark data-id=${value} class=pen-red]@${user.login}[/mark]`;
+
+
             var itemObject = {
                 "type": { 'id': 16 },
                 "user_id": value,
-                "text": `откреплен сотрудник [mark class=pen-red][s]@${name}[/s][/mark]`,
+                "text": `откреплен сотрудник ${name}${login_adds}`,
                 "name": name,
                 "temp_id": VD_SETTINGS['ITEM_TYPES'][16] + '_' + value,
                 "description": description
@@ -1091,6 +1100,7 @@ window.VD_Topic = (function () {
         });
 
         VD_API.GetUsers().done((userItems) => {
+
             let itemTemplate = serviceTemplatesData['vd.topic.selected.item.html'];
 
             userItems.forEach((item) => {

@@ -29,6 +29,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
         "AddUserSecure": AddUserSecure,
         "ChangePasswordSecure": ChangePasswordSecure,
         "GetUserById": GetUserById,
+        "GetUserByIdNow": GetUserByIdNow,
         "GetUserByIdSecure": GetUserByIdSecure,
         "GetUsers": GetUsers,
         "getUserByLogin": getUserByLogin,
@@ -775,6 +776,39 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     }
 
     /**
+     * Пользователь по id
+     * @param userId
+     * @return {JQuery.Deferred<any, any, any> | *}
+     * @constructor
+     */
+    function GetUserByIdNow(userId = 0) {
+        let result = false;
+        let url = apiContext + '/getUserById';
+
+        $.ajax({
+            method: "GET",
+            url: url,
+            type: "json",
+            async : false,
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'X-ID': userId
+            }
+        }).done(function (response) {
+            if (response.success) {
+                result = response.data;
+            } else {
+                VD.ErrorHandler('SERVER', response, url);
+            }
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            VD.ErrorHandler('HTTP', jqXHR, url);
+        });
+
+        return result;
+    }
+
+    /**
      * Получение прав пользователя по id
      * @param userId
      * @return {JQuery.Deferred<any, any, any> | *}
@@ -937,7 +971,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
     }
     /**
      * Получение пользователя по логину
-     * @param {int} id идентификатор пользователя
+     * @param {int} login идентификатор пользователя
      * @return {Deferred}
      */
     function getUserByLogin(login) {

@@ -470,6 +470,22 @@ window.VD = (function Visiodesk() {
      * @return (string)
      */
     function HtmlFromBBCode(message) {
+        let attrs = "";
+        let reg_attr = /(\sdata[a-z0-9\-]+)\=([a-z0-9\-\.]+)/gi;
+
+        message = message.replace(reg_attr, (str, match1, match2)=>{
+            attrs+=" "+match1+"='"+match2+"'";
+            return "";
+        });
+
+        let regex = /\[(\/?(?:mark|b|i|s|p|br))(?: class=([a-z\-]+?))?]/gi;
+        return message.replace(regex, (str, match1, match2) => {
+            let classStr = match2 ? ' class=' + match2 : '';
+            return '<' + match1 + classStr + attrs + '>';
+        });
+    }
+
+    function HtmlFromBBCode__old(message) {
         let regex = /\[(\/?(?:mark|b|i|s|p|br))(?: class=([a-z\-]+?))?]/gi;
         return message.replace(regex, (str, match1, match2) => {
             let classStr = match2 ? ' class=' + match2 : '';
