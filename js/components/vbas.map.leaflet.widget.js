@@ -246,11 +246,11 @@
         
         function goMapObject(reference, now_cash) {
             if(Markers[reference] && !now_cash) {
-                // console.log("M("+reference+")");
                 let x = Markers[reference]._latlng.lng;
                 let y = Markers[reference]._latlng.lat;
                 // goPosition(x, y, 5);
                 goPosition(x, y, 5, baseLayer);
+                if(!$('[owner-reference="'+reference+'"]').length) $('[self="'+reference+'"]').trigger("click");
                 return;
             }
 
@@ -265,7 +265,7 @@
                     let layer = r.data['77'].replace("/",":");
                     layer = layer.split(":");
                     layer = layer[1];
-                    console.log("MO: ", info, layer, _.max(info.zooms));
+                    // console.log("MO: ", info, layer, _.max(info.zooms));
                     goPosition(info.crd[0], info.crd[1], _.max(info.zooms), layer);
                 }
             });
@@ -345,7 +345,11 @@
         }
 
         function __createMarkerPopup(marker) {
+
+
             const content = L.DomUtil.create("div");
+            content.setAttribute("owner-reference", marker.self);
+
             content.innerHTML = marker.description;
             L.DomEvent.addListener(content, "click", (e) => {
                 const reference = marker.reference;
@@ -434,7 +438,6 @@
                     console.error(sprintf("Unknown reference format: %s", reference));
                 }
             });
-
             return L.popup().setContent(content);
         }
 
@@ -459,6 +462,7 @@
                 VB.Load(marker.popupUrl, void 0, marker.replace || {}, true)
                     .done((response) => {
                         const content = L.DomUtil.create("div");
+                        content.setAttribute("owner-reference", marker.self);
                         $(content).append(response.data);
                         const popup = L.popup().setContent(content);
                         for (let i in response.data) {
@@ -473,6 +477,7 @@
 
         function __createSVGPopupContent(marker) {
             const content = L.DomUtil.create("div");
+            content.setAttribute("owner-reference", marker.self);
             $(content).width(300);
             VBasWidget.show(content, marker.reference, true);
             return L.popup().setContent(content);
@@ -481,6 +486,7 @@
 
         function __createVideoPopupContent(marker, html) {
             const content = L.DomUtil.create("div");
+            content.setAttribute("owner-reference", marker.self);
             $(content).width(300);
             $(content).html(html);
             return [L.popup().setContent(content),$(content)];
@@ -489,6 +495,7 @@
 
         function __createPopupHtmlContent(marker, html) {
             const content = L.DomUtil.create("div");
+            content.setAttribute("owner-reference", marker.self);
             // $(content).width(150);
             $(content).html(html);
             return [L.popup().setContent(content),$(content)];
@@ -499,6 +506,7 @@
         function __createMarkerMapControllerPopupContent(marker) {
             const def = $.Deferred();
             const content = L.DomUtil.create("div");
+            content.setAttribute("owner-reference", marker.self);
             VB.CreateForMapControllers(marker)
                 .done((data) => {
                     $(content).append(data);
@@ -1493,6 +1501,7 @@
                                 if(marker.login) Markers[marker.self].login = marker.login;
                             }
                         });
+
                         defManagerLeafMarkers.register(defLeafMarker);
 
 
@@ -1514,7 +1523,6 @@
                         const state = defLeafMarkers[i].state();
                         if (state === "resolved" && leafMarkers[i] !== void 0) {
                             resolvedLeafMarkers.push(leafMarkers[i]);
-                            // console.log("leafMarkers["+i+"]", leafMarkers[i]);
                         }
                     }
 
