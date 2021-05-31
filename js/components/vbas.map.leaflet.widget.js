@@ -368,10 +368,13 @@
                         objectReference = marker.object;
                     }
 
+                    console.log("marker.object: "+objectReference);
+
                     const hasVisualization = (marker.hasOwnProperty("visualization") ? marker.visualization : true);
                     if (hasVisualization) {
                         // VBasWidget.show("#visualization", objectReference);
                         Spliter.goVisualization(objectReference);
+                        return;
                     }
 
                     VB_API.getObject(reference)
@@ -652,6 +655,10 @@
 
 
             let defLeafMarker = null;
+
+            if (marker.html && marker.html.indexOf("</") === -1 && marker.html.indexOf(".svg") !== -1) {
+                marker.html = "<visiobas src='"+marker.html+"'></visiobas>";
+            }
 
             if (marker.html.indexOf("<visiobas") !== -1) {
                 defLeafMarker = __createVisiobasLeafletMarker(marker);
@@ -1433,7 +1440,7 @@
                         console.error("missing marker coordinates");
                         return;
                     }
-                    if (marker.visible === false) {
+                    if (!marker.visible) {
                         return;
                     }
                     if (!marker.parentLayerId) {

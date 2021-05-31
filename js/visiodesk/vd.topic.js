@@ -376,7 +376,8 @@ window.VD_Topic = (function () {
 
         if (typeof defaultAssignedUser === "undefined") {
             //create topic from group events
-            groupId = parseInt(VB_API.extractName(VD.GetHistory(1))) || 0;
+            // groupId = parseInt(VB_API.extractName(VD.GetHistory(1))) || 0;
+            groupId = _getGroupId(reference);
         }
 
         topicId = parseInt(refName) || 0;
@@ -2311,6 +2312,15 @@ window.VD_Topic = (function () {
         });
         console.log("__getPriorityId() = ", res);
         return res;
+    }
+
+
+    function _getGroupId(reference) {
+        let r = reference.split("/");
+        for(let i=0;i<r.length-1;i++) {
+            if(r[i].indexOf("Events")>0) return parseInt(r[i+1]);
+        }
+        return 0;
     }
 
     function __getGroupIds() {

@@ -370,6 +370,17 @@ window.VB_OBJECTS_EDIT_PARAMS = {
         type: "string",
         filter: function (x) {
             if(!x) return x;
+            // x=x.replace(/\]|\[/g,"");
+            x=x.split("&quot;").join("\"");
+            return x;
+        }
+    },
+
+    30: {
+        type: "string",
+        filter: function (x) {
+            if(!x) return x;
+            // x=x.replace(/\]|\[/g,"");
             x=x.split("&quot;").join("\"");
             return x;
         }
