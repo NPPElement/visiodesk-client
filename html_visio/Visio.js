@@ -193,7 +193,7 @@ function CreateVisio(selector) {
 
 
         if(!svgs[e.iconUrl]) svgs[e.iconUrl] = API.svg(e.iconUrl);
-        // if(!svgs[e.iconUrl]) return false;
+        if(!svgs[e.iconUrl]) return false;
 
 
         let $g = $("g[reference='"+e.self+"']");
