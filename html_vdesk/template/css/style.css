@@ -5715,15 +5715,8 @@ INPUT[type='text'], INPUT[type='password'], INPUT[type='number'] { border: 0; pa
     background-size: 38px;
 }
 
-.visualization .window_header .fullscreen_icon {
-    width: 24px;
-    height: 24px;
-    background: url("../images/fullscreen_icon_dark.svg") 50% 50% no-repeat;
-}
 
 .visualization .window_header .close_icon {
-    width: 24px;
-    height: 24px;
     background: url("../images/close_icon_dark.svg") 50% 50% no-repeat;
 }
 

@@ -403,6 +403,7 @@ window.VD_Events = (function () {
                     const priorityName = I18N.get(`vdesk.topic.priority.${topic.priority_id}`);
                     const statusName = I18N.get(`vdesk.topic.status.${topic.status_id}`);
                     return topic.name.toLowerCase().indexOf(query) !== -1 ||
+                        ("#"+topic.id).indexOf(query) !== -1 ||
                         (""+topic.id).indexOf(query) !== -1 ||
                         topic.description.toLowerCase().indexOf(query) !== -1 ||
                         priorityName.toLowerCase().indexOf(query) !== -1 ||

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html vd-theme='dark' vb-theme='dark' lang="ru">
+<head>
+    <title>visioDESK - Visio</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, height=device-height">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="../icon/icon-180.png">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="manifest" href="../manifest.json">
+
+    <meta name="apple-mobile-web-app-title" content="Visio">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Visio">
+
+
+
+    <link href="/html_vdesk/template/css/fonts.css" rel="stylesheet">
+<!--    <link href="/html_vdesk/template/css/style.css" rel="stylesheet">-->
+    <link href="/html_visio/template/css/style.css" rel="stylesheet">
+    <link href="/html_vdesk/template/css/svg.css" rel="stylesheet">
+</head>
+<body>
+<div id="wrapper">
+    <div class="visualization visioBAS" id="visualization">
+
+        <div class="caption t_pad mobile">
+            <nav>
+                <div class="bar">
+                    <a class="back">Назад</a>
+                </div>
+                <div class="text">
+                    <span data-var="object_description"></span>
+<!--                    <em>[Тут будет название визуализации]</em>-->
+                </div>
+                <div class="bar for_submenu">
+                    <a></a>
+                    <a></a>
+                </div>
+
+            </nav>
+        </div>
+
+        <div class="window_header desktop">
+            <nav>
+                <div class="bar_home">
+                    <a class="back_icon" href="javascript:history.go(-1)"></a>
+                    <a class="home_icon" href="#Viso:home"></a>
+                </div>
+
+                <div class="text">
+                    <span data-var="object_description"></span>
+<!--                    <em><%= object.description %></em>-->
+                </div>
+                <div class="bar">
+                    <a class="edit_icon"></a>
+                    <a class="close_icon"></a>
+                </div>
+            </nav>
+        </div>
+        <div class="visio-svg"></div>
+
+    </div>
+
+</div>
+
+
+<!-- jQuery Library -->
+<script src="/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script src="/js/jquery-ui-1.12.1.min.js"></script> <!-- jQuery UI -->
+<!--script src="/js/jquery-mobile/jquery.mobile-1.4.5.min.js"></script> --> <!-- jQuery Mobile -->
+<script src="/js/jquery.scrollTo.min.js"></script>
+
+
+
+
+
+
+
+<!-- well known library -->
+<script src="/js/underscore-min.js" type="text/javascript"></script>
+<script src="/js/underscore.string.min.js" type="text/javascript"></script>
+<script src="/js/sprintf.min.js" type="text/javascript"></script>
+<script src="/js/cookies.min.js" type="text/javascript"></script>
+<!--<script src="/js/flotr2.min.js" type="text/javascript" ></script>-->
+
+
+<script type="text/javascript" src="/js/daterangepicker/moment.min.js"></script>
+
+
+
+<!-- polyfills -->
+<script src="/js/polyfill/object.js" type="text/javascript"></script>
+<script src="/js/polyfill/array.js" type="text/javascript"></script>
+<script src="/js/polyfill/string.js" type="text/javascript"></script>
+<script src="/js/polyfill/add_wheel_listener.js" type="text/javascript"></script>
+
+<script src="/js/js.settings.js" type="text/javascript"></script>
+
+
+
+<script src="Api.js"></script>
+<script src="Visio.js"></script>
+
+
+<script>
+
+    function setHtmlVariable(name, value) {
+        $("[data-var='"+name+"']").html(value);
+    }
+
+    let Visio = {
+        data: {},
+
+        getElementByReference: function(reference) {
+
+        },
+
+        getElementReferences: function() {
+            let r = [];
+
+        },
+
+        crd: function(vx, vy) {
+
+            if(Array.isArray(vx)) {
+                vy = vx[1];
+                vx = vx[0];
+            }
+            return {x: vx, y: vy+50};
+        },
+
+        setElementAsBG: function (element) {
+            let $el = $("<div self='"+element.self+"' class='visio_element e_wrap'></div>");
+            let crd = Visio.crd(element.crd);
+            let svg = element.iconUrl;
+            $el.css({
+                top: crd.y,
+                left: crd.x,
+                'background-image': "url("+svg+")"
+            });
+            // $el.css('backgroundImage:svgData', "https://tse3.mm.bing.net/th?id=OIP.4yyqfFC0O0e9ygKSDvlzRwHaHa&pid=Api");
+
+            $("#visualization").append($el);
+
+        },
+
+        setElementAsImg: function (element) {
+            // let $el = $("<img class='visio_element' src='http://localhost:8080/svg/marker/user_1.svg'>");
+            let $el = $("<img class='visio_element' src='"+element.iconUrl+"'>");
+            let crd = Visio.crd(element.crd);
+            let svg = element.iconUrl;
+            console.log("svg: "+svg);
+            $el.css({top: crd.y,left: crd.x });
+            $("#visualization").append($el);
+        },
+
+        setElementAsSvg: function (element) {
+
+            function setSvg(html) {
+                let $svg = $(html);
+                let crd = Visio.crd(element.crd);
+                $svg.css({top: crd.y,left: crd.x, position: "absolute" });
+                $svg.css("border", "1px solid transparent");
+                $("#visualization").append($svg);
+                console.log($svg.width()+" x " + $svg.height());
+
+
+                $svg.on("mouseover", function () {
+                    $(this).css("border", "1px solid white");
+                });
+                $svg.on("mouseout", function () {
+                    $(this).css("border", "1px solid transparent");
+                })
+                // $("#visualization").html(  $("#visualization").html() + html );
+
+            }
+
+
+            $.get(element.iconUrl, function (x, y, z) {
+                setSvg(z.responseText);
+            });
+        },
+
+
+
+        setVisualization: function (reference) {
+            let data  = serverApi(reference);
+            setHtmlVariable("object_description", data.description);
+            let elements = data.elements;
+            // elements.forEach(e=>Visio.setElementAsImg(e));
+            elements.forEach(e=>Visio.setElementAsSvg(e));
+        }
+    };
+
+
+
+    function serverApi(api_url, method = "GET", params = undefined) {
+        let request = {
+            method: method,
+            url: api_url,
+            type: "json",
+            contentType: "application/json; charset=utf-8",
+            headers: { 'Authorization': 'Bearer ' + docCookies.getItem("user.token") }
+        };
+        if(method==="POST") {
+            request.data = JSON.stringify(params);
+        }
+
+        let result = undefined;
+        request.async = false;
+        request.success = x=>result=x.data;
+        request.fail = x=>result=":error";
+
+        let r = $.ajax(request);
+        return result;
+    }
+
+    // let r = serverApi("/vbas/arm/getVisio/Visio/ovik/ventilation/AHU_01");
+    let r = serverApi("/vbas/arm/getVisio/Visio/ovik/ventilation");
+    console.log(r);
+    // Visio.setVisualization("/vbas/arm/getVisio/Visio/ovik/ventilation/AHU_02");
+
+
+
+
+    $.fn.visio =  function() {
+
+        function CreateVisio($selector) {
+            $selector = $($selector);
+            console.log($selector.html());
+
+            $selector.html("<img src='http://localhost:8080/svg/marker/user_1.svg'>");
+
+            $selector.click(function (e) {
+                e.stopPropagation();
+                $(this).remove();
+            })
+        }
+
+
+        return this.each(function(i, e) {
+            CreateVisio($(e));
+        });
+    };
+
+
+    $(function () {
+        // $("#visio1").visio();
+        // $("visio").visio();
+        CreateVisio("#visualization");
+    });
+
+    $("body").click( function() {
+        $("#visualization").append($("<visio reference=\"Visio:ovik/ventilation.AHU_02\"></visio>"));
+        // $("visio").visio();
+        });
+</script>
+</body>
+</html>
