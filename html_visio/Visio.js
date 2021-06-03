@@ -193,7 +193,7 @@ function CreateVisio(selector) {
 
 
         if(!svgs[e.iconUrl]) svgs[e.iconUrl] = API.svg(e.iconUrl);
-
+        if(!svgs[e.iconUrl]) return false;
 
 
         let $g = $("g[reference='"+e.self+"']");
@@ -211,6 +211,7 @@ function CreateVisio(selector) {
             $g.html(getSvgWithReplace(e.iconUrl, e.replace))
                 .attr("transform", getElementTransformAttributes(e))
         }
+        return true;
     }
 
     function getElementTransformAttributes(element) {
