@@ -110,123 +110,6 @@
 
 <script>
 
-    function setHtmlVariable(name, value) {
-        $("[data-var='"+name+"']").html(value);
-    }
-
-    let Visio = {
-        data: {},
-
-        getElementByReference: function(reference) {
-
-        },
-
-        getElementReferences: function() {
-            let r = [];
-
-        },
-
-        crd: function(vx, vy) {
-
-            if(Array.isArray(vx)) {
-                vy = vx[1];
-                vx = vx[0];
-            }
-            return {x: vx, y: vy+50};
-        },
-
-        setElementAsBG: function (element) {
-            let $el = $("<div self='"+element.self+"' class='visio_element e_wrap'></div>");
-            let crd = Visio.crd(element.crd);
-            let svg = element.iconUrl;
-            $el.css({
-                top: crd.y,
-                left: crd.x,
-                'background-image': "url("+svg+")"
-            });
-            // $el.css('backgroundImage:svgData', "https://tse3.mm.bing.net/th?id=OIP.4yyqfFC0O0e9ygKSDvlzRwHaHa&pid=Api");
-
-            $("#visualization").append($el);
-
-        },
-
-        setElementAsImg: function (element) {
-            // let $el = $("<img class='visio_element' src='http://localhost:8080/svg/marker/user_1.svg'>");
-            let $el = $("<img class='visio_element' src='"+element.iconUrl+"'>");
-            let crd = Visio.crd(element.crd);
-            let svg = element.iconUrl;
-            console.log("svg: "+svg);
-            $el.css({top: crd.y,left: crd.x });
-            $("#visualization").append($el);
-        },
-
-        setElementAsSvg: function (element) {
-
-            function setSvg(html) {
-                let $svg = $(html);
-                let crd = Visio.crd(element.crd);
-                $svg.css({top: crd.y,left: crd.x, position: "absolute" });
-                $svg.css("border", "1px solid transparent");
-                $("#visualization").append($svg);
-                console.log($svg.width()+" x " + $svg.height());
-
-
-                $svg.on("mouseover", function () {
-                    $(this).css("border", "1px solid white");
-                });
-                $svg.on("mouseout", function () {
-                    $(this).css("border", "1px solid transparent");
-                })
-                // $("#visualization").html(  $("#visualization").html() + html );
-
-            }
-
-
-            $.get(element.iconUrl, function (x, y, z) {
-                setSvg(z.responseText);
-            });
-        },
-
-
-
-        setVisualization: function (reference) {
-            let data  = serverApi(reference);
-            setHtmlVariable("object_description", data.description);
-            let elements = data.elements;
-            // elements.forEach(e=>Visio.setElementAsImg(e));
-            elements.forEach(e=>Visio.setElementAsSvg(e));
-        }
-    };
-
-
-
-    function serverApi(api_url, method = "GET", params = undefined) {
-        let request = {
-            method: method,
-            url: api_url,
-            type: "json",
-            contentType: "application/json; charset=utf-8",
-            headers: { 'Authorization': 'Bearer ' + docCookies.getItem("user.token") }
-        };
-        if(method==="POST") {
-            request.data = JSON.stringify(params);
-        }
-
-        let result = undefined;
-        request.async = false;
-        request.success = x=>result=x.data;
-        request.fail = x=>result=":error";
-
-        let r = $.ajax(request);
-        return result;
-    }
-
-    // let r = serverApi("/vbas/arm/getVisio/Visio/ovik/ventilation/AHU_01");
-    let r = serverApi("/vbas/arm/getVisio/Visio/ovik/ventilation");
-    console.log(r);
-    // Visio.setVisualization("/vbas/arm/getVisio/Visio/ovik/ventilation/AHU_02");
-
-
 
 
     $.fn.visio =  function() {
@@ -250,16 +133,7 @@
     };
 
 
-    $(function () {
-        // $("#visio1").visio();
-        // $("visio").visio();
-        CreateVisio("#visualization");
-    });
 
-    $("body").click( function() {
-        $("#visualization").append($("<visio reference=\"Visio:ovik/ventilation.AHU_02\"></visio>"));
-        // $("visio").visio();
-        });
 </script>
 </body>
 </html>
