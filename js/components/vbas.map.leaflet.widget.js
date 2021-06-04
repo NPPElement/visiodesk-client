@@ -83,7 +83,6 @@
     let user_avatars = {};
 
     function replaceUserImageMarkers() {
-        /*
         VD_API.GetUsers().done(x=>{
             x.forEach(u=>user_avatars[u.id]=u.avatar_href);
             $("img[user_id]").each((i,e)=>{
@@ -94,7 +93,7 @@
             });
 
         });
-        */
+
     }
     
 
