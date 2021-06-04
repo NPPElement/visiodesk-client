@@ -61,7 +61,6 @@ b,strong {
 
 .visualization .window_header .home_icon {
     background: url("../images/home_icon_dark.svg") 50% 50% no-repeat;
-    background-size: 38px;
 }
 
 .visualization .window_header .back_icon {
