@@ -2,7 +2,7 @@ function CreateVisio(selector) {
 
     const VISIO_WIDTH = 1280;
     const VISIO_HEIGHT = 720;
-
+    let $selector = $(selector);
     let $selectorSvg = $(selector+" .visio-svg");
     if($selectorSvg.length===0) return error("Не найден "+selector);
 
@@ -186,7 +186,24 @@ function CreateVisio(selector) {
         $selectorSvg.html(h+'</svg>');
         data.elements.forEach(e=>paintElement(e));
 
+        setSvgSize();
+        $( window ).resize(setSvgSize);
+
         subscribeSignals();
+    }
+
+
+    function setSvgSize() {
+        let $svg = $selectorSvg.find(".main_svg");
+        let r1 = window.innerWidth / (window.innerHeight-50);
+        if(r1>VISIO_WIDTH/VISIO_HEIGHT) {
+            $svg.height(window.innerHeight-50);
+            $svg.width((window.innerHeight-50)*VISIO_WIDTH/VISIO_HEIGHT);
+        } else {
+            $svg.width(window.innerWidth);
+            $svg.height(window.innerWidth/VISIO_WIDTH*VISIO_HEIGHT);
+        }
+        $svg.position({left: 0, top: 0});
     }
 
     function paintElement(e) {
