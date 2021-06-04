@@ -1,0 +1,21 @@
+<div class="group_chain buttons2" id="group-<%= id %>">
+    <a class="group_item">
+        <div class="header">
+            <div class="name"><span class="crop"><%- name %></span></div>
+            <div class="time"></div>
+        </div>
+        <div class="desc">
+            <div class="text">
+                <%- description %>
+            </div>
+        </div>
+        <div class="line"><div></div></div>
+    </a>
+
+    <a class="to_edit" reference=":GroupsChange/<%= id %>">
+        <span>Изменить</span>
+    </a>
+    <a class="to_delete" data-id="<%= id %>" data-name="<%- name %>">
+        <span>Удалить</span>
+    </a>
+</div>

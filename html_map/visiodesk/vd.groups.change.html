@@ -1,0 +1,162 @@
+<div class="caption t_pad">
+    <nav>
+        <a reference__=":GroupsAdmin" class="back" href="javascript:history.go(-1)">Назад</a>
+        <% if (createGroup) { %>
+        <div class="text">
+            <span>{%caption%}</span>
+            <em></em>
+        </div>
+        <% } else { %>
+        <!--
+        <div class="flags">
+            <span class="false" data-value=".user_list_all">Все</span>
+            <span class="true" data-value=".user_list_binded">Группа</span>
+        </div>
+        -->
+        <% } %>
+        <a class="save_icon" title="Сохранить"></a>
+    </nav>
+    <div class="full">
+        <h1 class="lr_pad">{%caption%}</h1>
+        <div class="search1">
+            <div class="search_field">
+                <input type="text" value="Имя пользователя" data-placeholder="Имя пользователя">
+                <!--<a class="voice"></a>-->
+                <a class="clear hide"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="pref_delimiter"></div>-->
+
+
+
+<div id="group_support_settings" class="not_user_control">
+    <% for (let priority_id in priorities) { %>
+    <% const priority = priorities[priority_id]; %>
+    <div class="level_term_group">
+        <label class="input_group_title"><%= priority.title %></label>
+        <div class="opt_item">
+            <div class="field">
+                <span class="label_level label_level_time">В работу</span>
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_inwork_days" value="<%= priority.values.inwork.days %>">
+                    <option value="0">-</option>
+                    <% for (var i = 1; i <= 31; i++) { %>
+                    <option <% if(i==priority.values.inwork.days) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>дн.
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_inwork_hours" value="<%= priority.values.inwork.hours %>">
+                    <% for (var i = 0; i <= 23; i++) { %>
+                    <option <% if(i==priority.values.inwork.hours) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>ч.
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_inwork_mins" value="<%= priority.values.inwork.mins %>">
+                    <% for (var i = 0; i <= 59; i++) { %>
+                    <option <% if(i==priority.values.inwork.mins) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>м.
+            </div>
+        </div>
+
+        <div class="opt_item">
+            <div class="field">
+                <span class="label_level label_level_time">Выполнить</span>
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_ready_days" value="<%= priority.values.ready.days %>">
+                    <option value="0">-</option>
+                    <% for (var i = 1; i <= 31; i++) { %>
+                    <option <% if(i==priority.values.ready.days) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>дн.
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_ready_hours" value="<%= priority.values.inwork.hours %>">
+                    <option value="0">-</option>
+                    <% for (var i = 0; i <= 23; i++) { %>
+                    <option <% if(i==priority.values.ready.hours) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>ч.
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_ready_mins" value="<%= priority.values.ready.mins %>">
+                    <option value="0">-</option>
+                    <% for (var i = 0; i <= 59; i++) { %>
+                    <option <% if(i==priority.values.ready.mins) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>м.
+            </div>
+        </div>
+
+        <div class="opt_item">
+            <div class="field">
+                <span class="label_level label_level_time">Проверить</span>
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_verify_days" value="<%= priority.values.verify.days %>">
+                    <option value="0">-</option>
+                    <% for (var i = 1; i <= 31; i++) { %>
+                    <option <% if(i==priority.values.verify.days) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>дн.
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_verify_hours" value="<%= priority.values.inwork.hours %>">
+                    <option value="0">-</option>
+                    <% for (var i = 0; i <= 23; i++) { %>
+                    <option <% if(i==priority.values.verify.hours) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>ч.
+                <select id="id_p_<%= priority_id %>_<%- priority.id %>_verify_mins" value="<%= priority.values.verify.mins %>">
+                    <option value="0">-</option>
+                    <% for (var i = 0; i <= 59; i++) { %>
+                    <option <% if(i==priority.values.verify.mins) { %> selected <% } %> value="<%- i %>"><%- i %></option>
+                    <% } %>
+                </select>м.
+            </div>
+        </div>
+
+
+
+    </div>
+    <% } %>
+
+
+    <div class="level_term_group level_k_group">
+        <label class="input_group_title">Информирование при достижении</label>
+        <div class="opt_item">
+            <div class="field">
+                <span class="label_level label_level_k">2 уровень поддержки</span><input type="number" class="left_align" value="" id="group-percent_support2">%
+                <!--            <div class="clear"></div>-->
+            </div>
+        </div>
+        <div class="opt_item">
+            <div class="field">
+                <span class="label_level label_level_k">3 уровень поддержки</span><input type="number" class="left_align" value="" id="group-percent_support3">%
+                <!--            <div class="clear"></div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="not_user_control">
+
+<div class="pref_delimiter"></div>
+
+<label class="input_group_title">Название</label>
+<div class="opt_item">
+    <div class="field">
+        <input type="text" class="left_align" value="" id="group-name">
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="line1"><div></div></div>
+
+<label class="input_group_title">Описание</label>
+<div class="opt_item">
+    <div class="field">
+        <input type="text" class="left_align" value="" id="group-description">
+        <div class="clear"></div>
+    </div>
+</div>
+</div>
+<div class="pref_delimiter"></div>
+
+<div class="user_list_all switch_layer user_compact">
+</div>
+
+<div class="user_list_binded switch_layer user_compact">
+</div>

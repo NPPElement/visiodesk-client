@@ -1,0 +1,57 @@
+<!-- Modal window "vbas element widget property" -->
+<div class="modal draggable fade" id="dashboard-modal-vbas-widget-element" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title pull-left">Properties</h5>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab-content-visual" role="tab">Visual</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tab-content-system" role="tab">System</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tab-content-visual">
+                        <div>
+                            <label style="display: block" for="input-vbas-widget-element-x">Position</label>
+                            <input type="number" id="input-vbas-widget-element-x" step="1"
+                                   value="<%= property.translate.x %>"
+                                   class="form-control"/>
+                            <input type="number" id="input-vbas-widget-element-y" step="1"
+                                   value="<%= property.translate.y %>"
+                                   class="form-control"/>
+                        </div>
+                        <div>
+                            <label style="display: block" for="input-vbas-widget-element-scale-x">Scale</label>
+                            <input type="number" id="input-vbas-widget-element-scale-x" step="0.1"
+                                   value="<%= property.scale.x %>" class="form-control"/>
+                            <input type="number" id="input-vbas-widget-element-scale-y" step="0.1"
+                                   value="<%= property.scale.y %>" class="form-control"/>
+                        </div>
+                        <div>
+                            <label style="display: block" for="input-vbas-widget-element-rotate">Rotate</label>
+                            <input type="number" id="input-vbas-widget-element-rotate" step="15"
+                                   value="<%= property.rotate %>"
+                                   class="form-control" min="0" max="360"/>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab-content-system">
+                        <div>
+                            <label style="display: block" for="input-vbas-widget-element-reference">Reference</label>
+                            <input type="text" class="reference form-control" id="input-vbas-widget-element-reference"
+                                   value="<%= property.reference %>"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

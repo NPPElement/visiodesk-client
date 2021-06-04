@@ -1,0 +1,26 @@
+<% for (let i = 0; i < parameters.length; ++i) { %>
+    <% if (parameters[i].code == "111") { %>
+    <div class="item">
+        <div class="name"><%= parameters[i].code %> - <%= parameters[i].name %></div>
+        <div class="field">
+            <div class="data">
+                <% let statusFlags = parameters[i].value || [false, false, false, false]; %>
+                <div style="display: block;"><%= I18N.get("vocab.status_flags.in_alarm") %>: <%= statusFlags[0] %></div>
+                <div style="display: block;"><%= I18N.get("vocab.status_flags.fault")%>: <%= statusFlags[1] %></div>
+                <div style="display: block;"><%= I18N.get("vocab.status_flags.overridden")%>: <%= statusFlags[2] %></div>
+                <div style="display: block;"><%= I18N.get("vocab.status_flags.out_of_service")%>: <%= statusFlags[3] %></div>
+            </div>
+            <a class="info"></a>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="item">
+        <div class="name"><%= parameters[i].code %> - <%= parameters[i].name %></div>
+        <div class="field">
+            <input type="text" class="form-control" name="<%= parameters[i].code %>" value="<%= parameters[i].value %>">
+            <a class="clear"></a>
+        </div>
+    </div>
+    <% } %>
+    <div class="line"><div></div></div>
+<% } %>

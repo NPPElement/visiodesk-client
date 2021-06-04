@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html vd-theme='dark' vb-theme='dark' lang="ru">
+<head>
+    <title>visioDESK - visioBAS-menu</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, height=device-height">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="../icon/icon-180.png">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="manifest" href="../manifest.json">
+
+    <meta name="apple-mobile-web-app-title" content="visioDESK">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="visioDESK">
+
+
+    <!--TODO вернуть css для jquery ui -->
+    <!--<link rel="stylesheet" href="/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="/css/jquery-ui.theme.min.css">-->
+
+    <!-- leaflet -->
+    <link rel="stylesheet" href="/js/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/js/leaflet/plugins/coordinates/Leaflet.Coordinates-0.1.5.css">
+    <link rel="stylesheet" href="/js/leaflet/plugins/Leaflet.MousePosition/L.Control.MousePosition.css">
+
+    <link href="/html_vdesk/template/css/fonts.css" rel="stylesheet">
+    <link href="/html_vdesk/template/css/style.css" rel="stylesheet">
+    <link href="/html_vdesk/template/css/svg.css" rel="stylesheet">
+    <link href="/html_vdesk/template/css/oldver.css" rel="stylesheet">
+</head>
+<body>
+<div id="wrapper">
+    <div id="screen">
+
+        <div id="main-container"></div>
+
+        <!-- File Uploader -->
+        <input type="file" accept="video/*;capture=camcorder" id="cameraInput" name="files[]" multiple>
+
+
+        <!--Sidebar-->
+        <div id="sidebar-wrapper">
+            <div class="sidebar t_pad">
+                <ul>
+                    <li class="events"><a reference=":Groups" href="#main-container">События</a></li>
+                    <li class="topic-export line"><a id="topic-export-calendar" href="#main-container">Экспорт</a></li>
+                    <li class="journal"><a reference=":Checklist" href="#main-container">Журнал работ</a></li>
+                    <li class="users line"><a reference=":Users" href="#main-container">Пользователи</a></li>
+                    <li class="automatic"><a>Автоматика</a></li>
+                    <li class="action"><a>Активные события</a></li>
+                    <li class="last_actions line"><a>Последние действия</a></li>
+                    <!--<li class="groups"><a reference=":GroupsAdmin" href="#main-container">Группы</a></li>-->
+                    <!--<li class="pref"><a reference=":Settings" href="#main-container">Настройки</a></li>-->
+                    <li class="subscribe" id="subscribePush"><a>Получать уведомления</a></li>
+                    <li class="upgrade line"><a>Обновить</a></li>
+                    <li class="get_ident"><a>Получить идентификатор</a></li>
+                    <li class="logout"><a>Выйти</a></li>
+
+                    <div class="userinfo">
+                        Вы:
+                        <b settings-txt-val='last_name'></b>
+                        <b settings-txt-val='first_name'></b>
+                        <b settings-txt-val='middle_name'></b>
+                        <br>
+                        Должность: <b settings-txt-val='position'></b><br>
+                        Логин: <b settings-txt-val='login'></b><br>
+<!--                        <a class="avatar_upload" settings-data-val="id"><img width="100%" settings-img-download="avatar"></a>-->
+<!--                        <input type="file" accept="image/*" id="avatar_upload" name="files[]" settings-data-val="id">-->
+                    </div>
+
+
+
+
+                </ul>
+                <div class="copyright"><span>© Company NPP "Element" LLC</span></div>
+            </div>
+        </div>
+
+
+
+        <!--Меню-->
+
+
+
+        <div class="tabbar" id="visiobas-tabbar">
+            <!--
+            <nav class="b_pad">
+                <a reference=":Map" href="#main-container" class="map">Карта</a>
+                <a class="automatic">АСДКУ</a>
+                <a reference=":Groups" href="#main-container" class="events">Группы</a>
+                <a reference=":News" href="#main-container" class="news">Новые<span id="news-counter"><em>0</em></span></a>
+                <a reference=":Feed" href="#main-container" class="feed">Лента<span id="feed-counter"><em>0</em></span></a>
+
+                <a reference=":Checklist" href="#main-container" class="checklist">Журнал<span id="checklist"></span></a>
+                <a reference=":Users" href="#main-container" class="users">Пользователи<span id="users"></span></a>
+                <a reference=":Settings" href="#main-container" class="settings">Настройки<span id="settings"></span></a>
+
+            </nav>
+            -->
+
+            <div class="modal_bar visioBAS">
+                <a class="top"></a>
+                <div class="data b_pad">
+                    <div id="objects-list"></div>
+                    <div id="active-events"></div>
+                    <div id="sensor-control-wrapper"></div>
+                    <div id="sensor-settings-wrapper"></div>
+                    <div id="sensor-settings-edit-wrapper"></div>
+                    <div class="visualization visioBAS" id="visualization"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-bar">
+            <nav class="b_pad">
+                <a reference=":Map" href="#main-container" class="map">Карта</a>
+                <a reference=":Visio" href="#main-container" class="visio">АСУТП</a>
+                <a reference=":Groups" href="#main-container" class="events">Группы</a>
+                <a reference=":News" href="#main-container" class="news">Новые<span id="news-counter"><em>0</em></span></a>
+                <a reference=":Feed" href="#main-container" class="feed">Лента<span id="feed-counter"><em>0</em></span></a>
+
+                <a reference=":Checklist" href="#main-container" class="checklist">Журнал<span id="checklist"></span></a>
+                <a reference=":Users" href="#main-container" class="users">Пользователи<span id="users"></span></a>
+                <a reference=":Vbas" href="#main-container" class="automatic">АСДКУ</a>
+                <a reference=":Settings" href="#main-container" class="settings">Настройки<span id="settings"></span></a>
+                <a class="group_role">АРМ<span id="group_role"></span></a>
+            </nav>
+        </div>
+    </div>
+
+    <div id="group_table_control"><a></a></div>
+    <div id="group_table"></div>
+
+    <div class="ws_group">
+        <div></div>
+    </div>
+
+    <div class="menu_logo">
+        <div></div>
+    </div>
+
+
+    <script>
+        function isNumberKey(evt,inp) {
+            console.log($(inp).val());
+            let chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM/_*#";
+            let charCode = (evt.which) ? evt.which : event.keyCode;
+            let sym = String.fromCharCode(charCode);
+            if($(inp).val()==="" && sym==="/") return false;
+            if(chars.indexOf( String.fromCharCode(charCode))!==-1) return true;
+            return false;
+        }
+
+    </script>
+
+    <div class="block_shaddow" style="display: none"></div>
+
+    <div id="group_role_settings" class="slide_button">
+
+        <div>
+            <div class="close_slide_btn"></div>
+            <b>Управление: </b><br>
+            <input class="group_role_name" id="group_role_name_pub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+
+            <b>Отображение: </b><br>
+            <input class="group_role_name" id="group_role_name_sub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+
+            <b>Роль:</b><br>
+
+            <div class="choise_role_in_group">
+                <div data-value="none" class="checked">Не выполнять действий</div>
+                <div data-value="map">Найти на карте</div>
+                <div data-value="visio">Открыть визуализацию</div>
+                <div data-value="vdesk">Открыть задачи</div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="visualization visioBAS" id="visualization0"></div>
+    <div class="visualization " id="graphic_popup">
+        <div class="caption t_pad mobile">
+            <nav>
+                <div class="bar">
+                    <a class="back">Назад</a>
+                </div>
+                <div class="text">
+                    <em></em>
+                </div>
+                <div class="bar for_submenu">
+                    <a></a>
+                    <a></a>
+                </div>
+
+            </nav>
+        </div>
+        <div class="window_header desktop">
+            <nav>
+                <div class="text">
+                    <!--<span></span>-->
+                    <em></em>
+                </div>
+                <div class="bar">
+<!--                    <a class="edit_icon"></a>-->
+<!--                    <a class="fullscreen_icon"></a>-->
+                    <a class="close_icon"></a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- substitution of visualizations -->
+        <div class="layout" id="graphic_full"></div>
+    </div>
+
+
+    <div id="gray-bg"></div>
+
+    <!--visioDESK reports -->
+    <div class="reports" id="reports"></div>
+
+    <!--visioDESK stickers -->
+    <div class="stickers" id="stickers"></div>
+
+    <div class="popup" id="popup" style="display: none"></div>
+    <div class="popup" id="popup_calendar" style="display: none"></div>
+    <div class="wrap_calendar" id="topic-export-calendar_wrap"></div>
+<!--    <div class="tools" id="tools"></div>-->
+
+    <!--Parameters-->
+    <div class="log custom" id="object-parameters-window">
+        <div class="bar">
+            <a class="expand"></a>
+            <a class="close"></a>
+        </div>
+        <div class="header">Parameters</div>
+        <div class="layout sensor_admin" id="object-parameters-container"></div>
+    </div>
+
+    <!--Contents-->
+    <div class="log custom" id="object-contents-window">
+        <div class="bar">
+            <a class="expand"></a>
+            <a class="close"></a>
+        </div>
+        <div class="header"></div>
+        <div class="layout" id="object-contents-container"></div>
+    </div>
+
+    <!--Trend log-->
+    <div class="log custom" id="object-trendlogs-window">
+        <div class="bar">
+            <a class="expand"></a>
+            <a class="close"></a>
+        </div>
+        <div class="header"></div>
+        <div class="layout" id="object-trendlogs-container"></div>
+    </div>
+
+    <div id="admin-menu">
+        <div class="submenu">
+            <div class="header"></div>
+            <div class="body">
+                <a class="delete" action="delete">Удалить</a>
+                <a class="import" action="import">Импорт</a>
+                <a class="admin" action="admin">Админ</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="map">
+        <div id="tab-content-leaflet" style="left:0;right:0;top:0;bottom:0;position:absolute;"></div>
+    </div>
+
+</div>
+
+
+<!--<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>-->
+<!--<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>-->
+
+
+<!-- Firebase 
+<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-messaging.js"></script>
+-->
+
+<!-- <script type="text/javascript" src="/js/firebase/firebase_subscribe.js"></script>-->
+
+<!-- jQuery Library -->
+<script src="/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script src="/js/jquery-ui-1.12.1.min.js"></script> <!-- jQuery UI -->
+<!--script src="/js/jquery-mobile/jquery.mobile-1.4.5.min.js"></script> --> <!-- jQuery Mobile -->
+<script src="/js/jquery.easing.1.3.js"></script> <!-- jQuery Easing - Requirred for Lightbox + Pie Charts-->
+<script src="/js/jquery.scrollTo.min.js"></script>
+
+
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="/js/load-image/load-image.all.min.js"></script>
+
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="/js/canvas-to-blob/canvas-to-blob.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="/js/jquery-file-upload/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/js/jquery-file-upload/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="/js/jquery-file-upload/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="/js/jquery-file-upload/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="/js/jquery-file-upload/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="/js/jquery-file-upload/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="/js/jquery-file-upload/jquery.fileupload-validate.js"></script>
+
+<!-- Ckeditor 5 build -->
+<script src="/js/ckeditor5/ckeditor.js"></script>
+
+<!-- Photoswipe -->
+<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">
+<script src="/js/photoswipe/photoswipe.js"></script>
+<script src="/js/photoswipe/photoswipe-ui-default.js"></script>
+
+<!-- jQuery Daterangepicker -->
+<script type="text/javascript" src="/js/daterangepicker/moment.min.js"></script>
+<script type="text/javascript" src="/js/daterangepicker/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="/js/daterangepicker/daterangepicker.css" />
+
+<!-- jQuery Chosen -->
+<link rel="stylesheet" href="/js/chosen/chosen.css">
+<link rel="stylesheet" href="/js/chosen/chosen-dark.css">
+<script src="/js/chosen/chosen.jquery.js"></script>
+
+<!-- IndexedDB Promised API -->
+<script src="/js/idb/idb.js"></script>
+<script src="/js/idb/idb.operations.js"></script>
+<script src="/js/catalog/catalog.js"></script>
+
+<!-- well known library -->
+<script src="/js/underscore-min.js" type="text/javascript"></script>
+<script src="/js/underscore.string.min.js" type="text/javascript"></script>
+<script src="/js/rx.lite.min.js" type="text/javascript"></script>
+<script src="/js/sprintf.min.js" type="text/javascript"></script>
+<script src="/js/cookies.min.js" type="text/javascript"></script>
+<script src="/js/hammer.min.js"></script>
+<!--<script src="/js/flotr2.min.js" type="text/javascript" ></script>-->
+
+<!-- chartlist -->
+<link rel="stylesheet" href="/js/chartlist/0.11.4/chartist.min.css">
+<script src="/js/chartlist/0.11.4/chartist.min.js"></script>
+<script src="/js/chartlist/0.11.4/chartist-plugin-legend.js"></script>
+
+<!-- leaflet -->
+<!--<script src="/js/leaflet/leaflet.js" type="text/javascript"></script>-->
+<script src="/js/leaflet/leaflet-src.js" type="text/javascript"></script><!-- На время отладки -->
+<script src="/js/leaflet/plugins/coordinates/Leaflet.Coordinates-0.1.5.min.js"></script>
+<script src="/js/leaflet/plugins/Leaflet.MousePosition/L.Control.MousePosition.js"></script>
+
+<!-- polyfills -->
+<script src="/js/polyfill/object.js" type="text/javascript"></script>
+<script src="/js/polyfill/array.js" type="text/javascript"></script>
+<script src="/js/polyfill/string.js" type="text/javascript"></script>
+<script src="/js/polyfill/add_wheel_listener.js" type="text/javascript"></script>
+
+<script src="/js/js.settings.js" type="text/javascript"></script>
+
+<!-- custom project library -->
+<script src="/js/events/events.js" type="text/javascript"></script>
+<script src="/js/md5-min.js" type="text/javascript"></script>
+<script src="/js/i18n/i18n.js" type="text/javascript"></script>
+<script src="/js/bacnet/property.identifier.js" type="text/javascript"></script>
+<script src="/js/bacnet/object.types.js" type="text/javascript"></script>
+<script src="/js/visiobas/settings.js" type="text/javascript"></script>
+<script src="/js/visiobas/visiobas.api.js" type="text/javascript"></script>
+<script src="/js/visiobas/visiobas.rpc.js" type="text/javascript"></script>
+<script src="/js/visiobas/macro.js" type="text/javascript"></script>
+<script src="/js/visiobas/visiobas.js" type="text/javascript"></script>
+<!--<script src="/js/visiobas/visiobas.updater.js" type="text/javascript"></script>-->
+<script src="/js/visiobas/visiobas.updater.socket.js" type="text/javascript"></script>
+<script src="/js/mqtt/browserMqtt.js" type="text/javascript"></script>
+<script src="/js/mqtt/mqtt.signal.js" type="text/javascript"></script>
+<!--<script src="/js/visiobas/visiobas.updater.mqtt.js" type="text/javascript"></script>-->
+<script src="/js/visiobas/visiobas.object.js" type="text/javascript"></script>
+<script src="/js/visiobas/vb.objects.js" type="text/javascript"></script>
+<script src="/js/visiobas/vb.visio.js" type="text/javascript"></script>
+<script src="/js/windows/window.object.js" type="text/javascript"></script>
+
+<!-- custom components -->
+<script src="/js/components/object.parameters.js" type="text/javascript"></script>
+<script src="/js/components/object.contents.js" type="text/javascript"></script>
+<script src="/js/components/sensor.control.js" type="text/javascript"></script>
+<script src="/js/components/sensor.settings.js" type="text/javascript"></script>
+<script src="/js/components/active.events.js" type="text/javascript"></script>
+<script src="/js/components/vbas.map.widget.js" type="text/javascript"></script>
+<script src="/js/components/vbas.map.leaflet.widget.js" type="text/javascript"></script>
+<script src="/js/components/reference.breadcrumb.js" type="text/javascript"></script>
+<script src="/js/components/objects.list.js" type="text/javascript"></script>
+<script src="/js/components/table.dropdown.js" type="text/javascript"></script>
+<script src="/js/visiobas/vb.objects.delete.js" type="text/javascript"></script>
+<script src="/js/visiobas/vb.objects.import.js" type="text/javascript"></script>
+<script src="/js/visiobas/vb.widget.js" type="text/javascript"></script>
+<script src="/js/modal/modal.admin.panel.js" type="text/javascript"></script>
+<script src="/js/modal/modal.trend.logs.js" type="text/javascript"></script>
+
+
+
+<!-- TODO устаревшие модули - на удаление -->
+<script src="/js/user.js" type="text/javascript"></script>
+<script src="/js/dashboard.js" type="text/javascript"></script>
+
+<script src="/js/file/reader.js" type="text/javascript"></script>
+<script src="/js/parser/parser.device.csv.js" type="text/javascript"></script>
+
+<script src="/js/logger.js" type="text/javascript"></script>
+
+<script src="/js/simulation.map.js" type="text/javascript"></script>
+
+
+<script>
+    function initializeExportTopicCalendar() {
+        //override default template for display 'Export' button
+        const template = '<div class="daterangepicker">' +
+            '<div class="ranges"></div>' +
+            '<div class="drp-calendar left">' +
+            '<div class="calendar-table"></div>' +
+            '<div class="calendar-time"></div>' +
+            '</div>' +
+            '<div class="drp-calendar right">' +
+            '<div class="calendar-table"></div>' +
+            '<div class="calendar-time"></div>' +
+            '</div>' +
+            '<div class="drp-buttons">' +
+            '<span class="drp-selected"></span>' +
+            '<div class="export-group-list-box"><select id="export-group-list" data-placeholder="Выберите группы..." multiple></select></div>' +
+            '<div><button class="cancelBtn" type="button"></button>' +
+            '<button class="applyBtn" disabled="disabled" type="button"></button>' +
+            '</div>' +
+            '</div>';
+
+        // const $calendar = $("#topic-export-calendar");
+        // const $calendar = $(".export");
+        const $calendar = $("#topic-export-calendar_wrap");
+        $calendar.daterangepicker({
+            "autoApply": false,
+            "opens": "left",
+            "locale": VD_SETTINGS['DATERANGEPICKER_LOCALE'],
+            "template": template
+        }, (start, end) => {
+        });
+
+        $calendar.on("apply.daterangepicker", (ev, picker) => {
+            const process = Process({
+                hasTitle: false,
+                title: "Экспорт журнала",
+                hasCancel: false,
+                status: "waiting"
+            });
+            process.on("select", (e) => {
+                const action = e.dataset.action;
+                if (action === "cancel") {
+                    process.close();
+                }
+            });
+
+            const start = picker.startDate;
+            const end = picker.endDate;
+            const selectedGroups = $("#export-group-list").val();
+            const allGroups = 0;
+            let selectedGroupIds;
+            if (_.isArray(selectedGroups)) {
+                selectedGroupIds = selectedGroups.map((id) => {
+                    return parseInt(id)
+                });
+
+                //verify multiply all group selection
+                //if all groups element selected it is like only 'all groups' element selected (ignore other groups)
+                if (typeof selectedGroupIds.find((id) => {
+                    return id === allGroups;
+                }) !== "undefined") {
+                    selectedGroupIds = [allGroups];
+                }
+            } else {
+                selectedGroupIds = [parseInt(selectedGroups)];
+            }
+
+            if (selectedGroupIds[0] === allGroups) {
+                VD_API
+                    .GetGroups()
+                    .then((groups) => {
+                        process.setStatus("loading");
+
+                        const groupIds = groups.map((group) => {
+                            return group.id
+                        });
+                        return VD_API.DownloadTopicsAsCsv(groupIds, +start, +end);
+                    })
+                    .then(() => {
+                        process.setStatus("done");
+                        process.close(1500);
+                    })
+                    .fail((response) => {
+                        process.showError(I18N.get("vdesk.export.failed"));
+                        console.error(`${I18N.get("vdesk.export.failed")}  ${JSON.stringify(response)}`);
+                    });
+            } else {
+                process.setStatus("loading");
+
+                VD_API
+                    .DownloadTopicsAsCsv(selectedGroupIds, +start, +end)
+                    .then(() => {
+                        process.setStatus("done");
+                        process.close(1500);
+                    })
+                    .fail((response) => {
+                        process.showError(I18N.get("vdesk.export.failed"));
+                        console.error(`${I18N.get("vdesk.export.failed")}  ${JSON.stringify(response)}`);
+                    });
+            }
+        });
+
+        $calendar.on("showCalendar.daterangepicker", () => {
+            VD_API
+                .GetGroups()
+                .done((groups) => {
+                    const $select = $("#export-group-list");
+                    $select.empty();
+                    $select.append(`<option value="0">${I18N.get("vocab.all_groups")}</option>`);
+                    groups.forEach((group) => {
+                        $select.append(`<option value="${group.id}">${group.name}</option>`);
+                    });
+                    $("#export-group-list").chosen({width: "100%"});
+                })
+                .fail((response) => {
+                    console.error("Failed get groups: ${response}");
+                })
+        });
+    }
+
+    $(function () {
+        let objectsList = ObjectsList();
+        window.objectsList = objectsList;
+        objectsList.create("#objects-list");
+        objectsList.update();
+
+        VBasMapLeafletWidget.create("tab-content-leaflet");
+
+        //TODO some where should be special handler of current work log events (Unusual events of system working)
+        VB_UPDATER.subscribeForWorkLog({
+            id: "handler.worklog.global",
+            callback: (data) => {
+                //TODO it should be some vbas.component to display that
+                console.log("new worklog data recived...");
+            }
+        });
+
+        //журнал событий
+        let activeEvents = ActiveEvents();
+        activeEvents.create();
+
+        //visioDESK
+        VD_NEWS_UPDATER.run();
+        VD_FEED_UPDATER.run();
+        VD_API.FileUploader.init(VD_SETTINGS['UPLOADER_SELECTOR']);
+        VD.StaticFunctions();
+        VD.SetSideBarNav();
+        VD.SetTabBarNav();
+        VD.SetTabBarCounters();
+        VD.SetStickers();
+        VD_API.LoadUserSettings();
+        VD_API.CheckPushKey();
+        VB.LoadTemplatesList([
+            'photoswipe.html'
+        ], VD_SETTINGS['TEMPLATE_DIR']).done((templatesContent) => {
+            $('BODY').append(templatesContent['photoswipe.html'])
+        });
+        if(!window.location.hash) VD.Controller(':Groups', '#main-container');
+        else VD.Controller(window.location.hash.replace("#", ":"), '#main-container');
+
+        $(window).on('hashchange', ()=> {
+            console.log("hashchange: ", window.location.hash);
+            let reference = window.location.hash.replace("#", ":");
+            VD.Controller(reference, '#main-container');
+
+            initializeExportTopicCalendar();
+        });
+
+
+        window.onpopstate = function(e) {
+            if(e.state && e.state.reference) VD.Controller(e.state.reference, e.state.parentSelector, e.state.params);
+        };
+
+        initializeExportTopicCalendar();
+
+        VD.ref$.subscribe((ref_event) => {
+            if (ref_event.type === "after.run.done") {
+                let need = "visioDESK: "  + $("h1").text();
+                if(need!==window.document.title) window.document.title = need;
+            }
+        });
+
+        $("body").on("click",".parent_reference", function (e) {
+            let reference = $(this).attr("reference");
+            console.log("click.parent_reference: ", reference);
+            if(reference) VB.redirect({reference: reference});
+            $(".slide_button").removeClass("slide");
+        });
+
+        // $("body").on("click","#tab-content-leaflet", e=>$("#popup").hide().html(''));
+        // $("body").on("mouseout","#popup > div", e=>$("#popup").hide().html(''));
+
+
+
+        $(".avatar_upload").click(() => { $("#avatar_upload").click(); });
+         $(".user-avatar_upload").click(() => { $("#avatar_upload").click(); });
+// .avatar_upload,
+
+        $("#avatar_upload")
+            .fileupload({
+                pasteZone: $("body"),
+                url: VD_SETTINGS['API_CONTEXT'] + '/upload_avatar', // _avatar
+                dataType: 'json',
+                autoUpload: true,
+                acceptFileTypes: /(\.|\/)*$/i,
+                maxFileSize: 30000000,
+                maxChunkSize: 3000000,
+                disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+                previewMaxWidth: 74,
+                previewMaxHeight: 74,
+                messages: {
+                    maxNumberOfFiles: 'Превышено максимальное количество файлов',
+                    acceptFileTypes: 'Файл данного типа не поддерживается',
+                    maxFileSize: 'Превышен максимальный размер файла',
+                    minFileSize: 'Размер файла меньше допустимого значения'
+                }
+            })
+            .on('fileuploaddone', function (e, data) {
+                VD.SettingsManager.Reload();
+            })
+
+            .on('fileuploadadd', (e, data) => {
+                let avatar_user_id = $(e).attr("data-id");
+                if(!avatar_user_id) avatar_user_id = VD.SettingsManager.Get("id");
+                let fileToSendSize = data['files'][0]['size'];
+                data['files'][0]['name'] = "avatar_uploaded_file___" + data['files'][0]['name'];
+                data['headers'] = data['headers'] || {};
+                data['headers']['Content-Range'] = `bytes 0-${fileToSendSize - 1}/${fileToSendSize}`;
+                data['headers']['Authorization'] = 'Bearer ' + window.token;
+                // data['headers']['X-ID'] = window.authorizedUserId;
+                data['headers']['Avatar-ID'] = avatar_user_id; //VD.SettingsManager.Get("id");
+                // data.submit();
+            });
+
+
+
+        $(".get_ident a").click(function (e) {
+            var $tmp = $("<textarea>");
+            $("body").append($tmp);
+            let key = VD_API.MyUniqCode();
+            $tmp.val(key).select();
+            document.execCommand("copy");
+            $tmp.remove();
+            VD.ShowErrorMessage({description: 'Персональный ключ скопирован', timer: 2000});
+        });
+
+    });
+
+
+    let MPoint = {
+        $point: null,
+        m: {},
+        p: {},
+        init: function ($point) {
+            MPoint.$point = $point;
+
+            MPoint.$point.mousedown = MPoint.mousedown;
+            MPoint.$point.mouseup = MPoint.mouseup;
+            MPoint.$point.mousemove = MPoint.mousemove;
+        },
+        
+        mousedown: function () {
+
+        },
+
+        mouseup: function () {
+
+        },
+        mousemove: function () {
+
+        },
+
+    };
+
+    function init_mover($point) {
+        
+    }
+
+
+
+
+
+
+
+
+</script>
+
+
+<!-- visioDESK -->
+<script src="/html_vdesk/template/js/util.js" type="text/javascript"></script>
+<script src="/html_vdesk/template/js/modal.js" type="text/javascript"></script>
+<script src="/js/visiodesk/visiodesk.api.js" type="text/javascript"></script>
+<!--<script src="/js/firebase/firebase.init.js" type="text/javascript"></script>-->
+<script src="/js/visiodesk/visiodesk.news.updater.js" type="text/javascript"></script>
+<script src="/js/visiodesk/visiodesk.feed.updater.js" type="text/javascript"></script>
+<script src="/js/visiodesk/visiodesk.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.map.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.groups.js" type="text/javascript"></script>
+<!--<script src="/js/visiodesk/vd.topic.export.js" type="text/javascript"></script>-->
+<script src="/js/visiodesk/vd.checklist.parser.csv.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.checklist.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.checklist.report.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.checklist.plan.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.checklist.events.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.news.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.reports.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.report.history.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.events.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.event.history.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.feed.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.settings.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.users.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.user.events.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.users.change.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.user.history.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.topic.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.topic.settings.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.rights.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.journal.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.groups.admin.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.groups.change.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.group.table.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.swipe.menu.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.process.js" type="text/javascript"></script>
+<script src="/js/visiodesk/vd.socket.js" type="text/javascript"></script>
+
+<!-- visioBAS -->
+<!-- <script src="/js/visiobas/vb.history.js" type="text/javascript"></script>-->
+
+<!-- Touch -->
+<!--<script  src="examples/hammer.js"></script>
+<script  src="examples/index.js"></script>-->
+
+<script>
+    // Your web app's Firebase configuration
+    /*
+    var firebaseConfig = {
+        apiKey: "AIzaSyBrW06vFGCV-60SHZwl5WOjcJvhNxQR68o",
+        authDomain: "api-project-837581051619.firebaseapp.com",
+        databaseURL: "https://api-project-837581051619.firebaseio.com",
+        projectId: "api-project-837581051619",
+        storageBucket: "api-project-837581051619.appspot.com",
+        messagingSenderId: "837581051619",
+        appId: "1:837581051619:web:b7424529e85bbe229d57d6"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    */
+    let $ml = $(".menu_logo");
+    $ml.click(x=>$ml.toggleClass("slide"));
+
+
+    $("#group_role").click(event=>{
+        event.stopPropagation();
+        $(".slide_button").toggleClass("slide");
+
+        let opened = $(".slide_button").hasClass("slide");
+        $(".group_role").toggleClass("active", $(".slide_button").hasClass("slide"));
+
+        if(opened) {
+            $(".block_shaddow").show();
+            $("#group_role_name_pub").val(WORKSPACE.group_pub);
+            $("#group_role_name_sub").val(WORKSPACE.group_sub);
+
+            $(".choise_role_in_group > div").removeClass("checked");
+            $(".choise_role_in_group > div[data-value='"+WORKSPACE.role+"']").addClass("checked");
+
+        } else {
+            $(".block_shaddow").hide();
+            let new_g_pub = $("#group_role_name_pub").val();
+            let new_g_sub = $("#group_role_name_sub").val();
+            if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub(new_g_pub);
+            if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub(new_g_sub);
+
+        }
+    });
+
+    $(".choise_role_in_group > div").click(function (event) {
+        event.stopPropagation();
+        let $e = $(this);
+        let new_role = $e.attr("data-value");
+        console.log("set role: "+new_role);
+        $(".choise_role_in_group > div").removeClass("checked");
+        $e.addClass("checked");
+        Spliter.setRole(new_role);
+        // WORKSPACE.role = new_role;
+    });
+
+     $(".close_slide_btn, .block_shaddow").click(x=>{
+         $(".slide_button").removeClass("slide");
+         $(".block_shaddow").hide();
+
+         let new_g_pub = $("#group_role_name_pub").val();
+         let new_g_sub = $("#group_role_name_sub").val();
+         if(new_g_pub!==WORKSPACE.group_pub) Spliter.setGroupPub(new_g_pub);
+         if(new_g_sub!==WORKSPACE.group_sub) Spliter.setGroupSub(new_g_sub);
+
+     });
+
+
+
+
+    $("#screen").click(function () {
+
+        $(".slide_button").removeClass("slide");
+        $(".block_shaddow").hide();
+
+
+    });
+
+
+    $("body").on("click", '.pen-red', function () {
+        let login = $(this).html();
+        if(!login) return;
+        login = login.replace("@","");
+        Spliter.goUser(login);
+    })
+
+
+</script>
+</body>
+</html>

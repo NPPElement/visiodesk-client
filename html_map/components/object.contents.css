@@ -1,0 +1,44 @@
+#table-object-contents {
+    display: block;
+    width: 100%;
+    height: 500px;
+    overflow-y: scroll;
+}
+
+#table-object-contents .row:nth-child(even) {
+    background: #1A1A1A;
+}
+
+#table-object-contents .header {
+    background: linear-gradient(to bottom, #252525 0%,#333333 100%);
+}
+
+#table-object-contents .header,
+#table-object-contents .row {
+    display: table-row;
+    height: 2em;
+}
+
+#table-object-contents .row:hover {
+    background: #545454;
+}
+
+#table-object-contents .header div,
+#table-object-contents .row div {
+    display: table-cell;
+    padding-left: 2em;
+    vertical-align: middle;
+}
+
+#table-object-contents .object-name.in-alarm {
+    color: #BD362F;
+}
+#table-object-contents .object-name.fault {
+    color: #00f9a6;
+}
+#table-object-contents .object-name.overridden {
+    color: #00cc66;
+}
+#table-object-contents .object-name.out-of-service {
+    color: #8d8687;
+}

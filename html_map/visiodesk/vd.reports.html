@@ -1,0 +1,110 @@
+<!-- mobile caption -->
+<div class="caption t_pad mobile">
+    <nav>
+        <div class="bar">
+            <a class="back" href="javascript:history.go(-1)">Назад</a>
+        </div>
+        <div class="text">
+            <span>SLA</span>
+            <em>Поддержка соглашения</em>
+        </div>
+        <div class="bar"></div>
+    </nav>
+</div>
+<!-- desktop caption -->
+<div class="window_header desktop">
+    <nav>
+        <div class="text">
+            <span>SLA</span>
+            <em>Поддержка соглашения об уровне обслуживания</em>
+        </div>
+        <div class="bar">
+            <a class="edit_icon"></a>
+            <a class="fullscreen_icon"></a>
+            <a class="close_icon"></a>
+        </div>
+    </nav>
+</div>
+<!-- reports data -->
+<div class="grid">
+    <div class="col1">
+        <div class="row1">
+            <div class="layout" id="report-detailed-info">
+                <div class="filters_chosen">
+                    <div class="change_group">
+                        <select data-placeholder="Фильтр" data-source="report-detailed-info" data-type="group"></select>
+                    </div>
+                    <div class="change_period">
+                        <select data-placeholder="Период" data-source="report-detailed-info" data-type="period"></select>
+                    </div>
+                </div>
+                <div class="by_days">
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th><div><span>Принято</span></div></th>
+                            <th><div><span>Закрыто</span></div></th>
+                            <th><div><span>Просроч</span></div></th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col2">
+        <div class="row2">
+            <div class="layout" id="report-closed-info">
+                <div class="filters_chosen">
+                    <div class="change_group">
+                        <select data-placeholder="Фильтр" data-source="report-closed-info" data-type="group"></select>
+                    </div>
+                    <div class="change_period">
+                        <select data-placeholder="Период" data-source="report-closed-info" data-type="period"></select>
+                    </div>
+                </div>
+                <div class="summary_text">
+                    <div class="closed">
+                        <span class="title">Закрыто</span>
+                        <span class="result"></span>
+                    </div>
+                    <div class="expired">
+                        <span class="title">Из&nbsp;них&nbsp;просроч.</span>
+                        <span class="result"></span>
+                    </div>
+                    <div class="atime">
+                        <span class="title">Среднее&nbsp;время</span>
+                        <span class="result"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row2">
+            <div class="layout" id="report-opened-info">
+                <div class="filters_chosen">
+                    <div class="change_group">
+                        <select data-placeholder="Фильтр" data-source="report-opened-info" data-type="group"></select>
+                    </div>
+                    <div class="change_period"></div>
+                </div>
+                <div class="pie_chart">
+                    <div class="chart_data">
+                        <div class="sum"></div>
+                        <div class="fill_area"></div>
+                    </div>
+                    <div class="chart_legend">
+                        <span class="new">Новые</span>
+                        <span class="in_progress">В&nbsp;работе</span>
+                        <span class="on_hold">Отложено</span>
+                        <span class="resolved">Выполнено</span>
+                        <span class="all">Всего</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row3">
+            <div class="layout">
+
+            </div>
+        </div>
+    </div>
+</div>

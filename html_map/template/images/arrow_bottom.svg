@@ -1,0 +1,14 @@
+<svg width="34" height="10" viewBox="0 0 34 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title> Arrow</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(1375 6687)">
+<g id="Graphics / Custom Icons / iMessage / Arrow">
+<g id="Arrow">
+<use xlink:href="#path0_fill" transform="matrix(-1 -1.22465e-16 1.22465e-16 -1 -1341.44 -6677)" fill="#C8C7CC"/>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" fill-rule="evenodd" d="M 30.8323 9.94353C 30.5758 9.94353 30.3148 9.89758 30.0609 9.8005L 16.5 4.6376L 2.93828 9.8005C 1.82093 10.2296 0.568342 9.66614 0.142724 8.54705C -0.283762 7.42882 0.277951 6.17624 1.39617 5.75062L 16.5 0L 31.6038 5.75062C 32.722 6.17624 33.2838 7.42882 32.8573 8.54705C 32.5287 9.41129 31.7052 9.94353 30.8323 9.94353Z"/>
+</defs>
+</svg>

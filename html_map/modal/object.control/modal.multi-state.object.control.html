@@ -1,0 +1,45 @@
+<div class="modal fade" id="dashboard-modal-object-control" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title pull-left">{%title%}</h5>
+            </div>
+            <div class="modal-body">
+                <div style="margin: 10px;">
+                    <!-- object description -->
+                    <div style="display: block; width: 100%"><%= object[28] %></div>
+                    <% let statusFlags = object[111] || [false, false, false, false] %>
+                    <% let overridden = statusFlags[2] %>
+                    <% let value = object[85] %>
+
+                    <label class="custom-control custom-radio">
+                        <input id="object-control-auto" name="manual-control" type="radio" class="custom-control-input" value="auto" <%= (overridden) ? "" : "checked" %> >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><%= I18N.get("vocab.object.control.auto") %></span>
+                    </label>
+                    <label class="custom-control custom-radio">
+                        <input id="object-control-manual" name="manual-control" type="radio" class="custom-control-input" value="manual" <%= (overridden) ? "checked" : "" %> >
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description"><%= I18N.get("vocab.object.control.manual") %></span>
+                    </label>
+
+                    <div class="form-group">
+                        <div class="select">
+                            <select id="object-control-set-point" class="form-control" <%= (overridden) ? "" : 'disabled="disabled"' %> >
+                            <% for (let i = 0; i < multiStates.length; ++i) { %>
+                                <% let caption = multiStates[i]; %>
+                                <option value="<%= (i + 1) %>" <%= (overridden && value === (i + 1)) ? "selected" : "" %>><%= caption %></option>
+                            <% } %>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" id="modal-object-control-button-set">Set</button>
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

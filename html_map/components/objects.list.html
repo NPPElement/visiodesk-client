@@ -1,0 +1,86 @@
+<div class="caption t_pad">
+    <nav>
+<!--        <div class="bar">-->
+            <% if (!_.isEmpty(parent.reference)) { %>
+            <a class="back navigate" data-reference="<%= parent.reference %>">Назад</a>
+            <% } else { %>
+<!--            <a class="list"></a>-->
+            <div class="bar for_submenu min_width_auto as_list"><a class="update"></a></div>
+            <% }  %>
+<!--        </div>-->
+        <% if (!_.isEmpty(parent.reference)) { %>
+        <div class="text"><%= parent.name %></div>
+        <% } else { %>
+
+        <div class="text pointer" id="folder_name"><%= folder.current %></div>
+            <%= folder.items[folder.current] %>
+<!--        <div class="text">visioBAS</div>-->
+        <% } %>
+        <div class="bar min_width_auto for_submenu___">
+<!--            <a class="update"></a>-->
+<!--            <a class="search"></a>-->
+            <a data-reference="<%= object.reference %>" data-href="#visualization" class="graphic"></a>
+        </div>
+    </nav>
+</div>
+
+<div class="visioBAS_menu">
+    <% for (let i in objects) {%>
+        <% const object = objects[i]; %>
+        <% if (object.type !== "folder") { %>
+        <% let inAlarm = object.status[0]; %>
+        <% let fault = object.status[1]; %>
+        <% let overridden = object.status[2]; %>
+        <% let outOfService = object.status[3]; %>
+        <% let statusClass = $.trim([inAlarm ? "in-alarm" : "", fault ? "fault" : "", overridden ? "overridden" :
+        "", outOfService ? "out-of-service" : ""].join(" ")); %>
+
+        <div class="group_chain">
+            <a class="group_item">
+                <div class="header">
+                    <div class="unread <%= statusClass %>" data-reference="<%= object.reference %>"><em></em></div>
+                    <div class="name navigate" data-reference="<%= object.reference %>"><span class="crop"><%= object.name %></span></div>
+                    <div class="time" reference="<%= object.reference %>"><%= object.value %></div>
+                </div>
+                <div class="desc navigate" data-reference="<%= object.reference %>">
+                    <div class="text">
+                        <%= object.description %>
+                    </div>
+                </div>
+                <div class="timestamp" data-reference="<%= object.reference %>"><%= object.timestamp %></div>
+                <div class="line"><div></div></div>
+            </a>
+
+            <a class="to_history chain_button" reference="<%= object.reference %>" data-action="show.history">
+                <span>История</span>
+            </a>
+
+            <% if (editableObjectTypes.indexOf(object.type) > -1) { %>
+            <a class="to_edit chain_button" data-reference="<%= object.reference %>">
+                <span>Изменить</span>
+            </a>
+            <% } %>
+
+            <a class="to_settings chain_button" data-reference="<%= object.reference %>">
+                <span>Свойства</span>
+            </a>
+        </div>
+        <% } else { %>
+        <div class="node">
+                <div class="header">
+                    <div class="name navigate" data-reference="<%= object.reference %>">
+                        <a reference="<%= object.reference %>"><%= object.name %></a>
+                    </div>
+                    <div class="contextmenu">
+                        <a data-reference="<%= object.reference %>" data-href="#visualization" class="graphic"></a>
+                        <a data-reference="<%= object.reference %>" class="parameters"></a>
+                    </div>
+                </div>
+                <div class="desc navigate" data-reference="<%= object.reference %>">
+                    <div class="text"><%= object.description %></div>
+                </div>
+        </div>
+        <div class="line"><div></div></div>
+        <% } %>
+    <% } %>
+</div>

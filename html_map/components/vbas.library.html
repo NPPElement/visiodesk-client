@@ -1,0 +1,10 @@
+<div>
+    <!-- search field if required -->
+    <!-- list of elements -->
+    <div id="vbas-library-elements">
+        <% for (let i = 0; i < library.elements.length; ++i) { %>
+        <% const element = library.elements[i]; %>
+        <div id="<%= element.id %>" class="vbas-library-element" draggable="true"><%= element.name %></div>
+        <% } %>
+    </div>
+</div>

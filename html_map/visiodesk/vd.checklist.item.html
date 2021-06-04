@@ -1,0 +1,70 @@
+<%
+let reference = '';
+if (item.type === 'report') {
+    reference=":ChecklistReport/" + item.id
+}  else if (item.type === 'plan') {
+    reference=":ChecklistPlan/" + item.id
+} else {
+    reference=":ChecklistEvents/" + item.id
+}
+
+let check_status = '';
+if (item.check_status == 1) {
+    check_status = 'unread';
+} else if (item.check_status == 2) {
+    check_status = 'expired';
+}
+%>
+<div class="group_chain" id="checklist-<%= item.id %>">
+    <div class="swipe">
+        <div class="buttons-left">
+            <a class="to_delete item item-left" data-action="delete" data-id="<%= item.id %>" data-fullname="<%- item.name %>">
+                <span>Удалить</span>
+            </a>
+        </div>
+
+        <a class="group_item item" data-action="reference" data-reference="<%= reference %>">
+            <div class="header">
+                <div class="check_status <%= check_status %>"><em></em></div>
+                <div class="name"><span class="crop"><%- item.name %></span></div>
+                <div class="time"><%= item.check_date_formated %></div>
+            </div>
+            <div class="desc">
+                <div class="text <%= item.type === 'object' ? 'high' : '' %>">
+                    <%- item.description %>
+                </div>
+            </div>
+            <div class="desc">
+                <% if (item.type !== 'object' && !_.isEmpty(item.nested_status)) { %>
+                <div class="nested">
+                    <span class="await"><%= item.nested_status[0] %></span>
+                    <span class="expired"><%= item.nested_status[1] %></span>
+                </div>
+                <% } else { %>
+                <div class="empty"></div>
+                <% } %>
+                <div class="taskbar">
+                    <% for (let status_id in item.status_types) {
+                    let status_name = item.status_types[status_id];
+                    let counter = item[status_id] || 0;
+                    %>
+                    <em class="<%= !counter ? 'hide' : '' %> <%= status_name %>"><%= counter %></em>
+                    <% } %>
+                </div>
+            </div>
+            <div class="line"><div></div></div>
+        </a>
+
+        <div class="buttons-right">
+            <% if (item.type !== 'object') { %>
+            <a class="to_event item item-right default-action" data-action="reference" data-reference=":ChecklistEvents/<%= item.id %>">
+                <span>Событие</span>
+            </a>
+            <% } else { %>
+            <a class="to_verified item item-right default-action" data-action="verified" data-id="<%= item.id %>">
+                <span>Проверено</span>
+            </a>
+            <% } %>
+        </div>
+    </div>
+</div>

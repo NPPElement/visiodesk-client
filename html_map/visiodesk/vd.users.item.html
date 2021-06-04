@@ -1,0 +1,44 @@
+<div class="group_chain buttons2" id="user-<%= id %>" reference=":UserEvents/<%= id %>">
+    <div class="swipe">
+        <div class="buttons-left">
+            <a class="to_delete item item-left" data-action="delete" data-id="<%= id %>" data-fullname="<%- last_name %> <%- first_name %> <%- middle_name %>">
+                <span>Удалить</span>
+            </a>
+        </div>  
+
+        <a class="group_item item with_photo" user-id="<%= id %>" data-action="user-list" data-reference=":UserEvents/<%= id %>">
+            <div class="u_photo">
+                <div style="background-image: url(<%- avatar_href %>)"></div>
+            </div>
+            <div class="header">
+                <div class="name"><span class="crop"><%- last_name %> <%- first_name %> <%- middle_name %></span></div>
+            </div>
+            <div class="desc">
+                <div class="text">
+                    <%- position %>
+                </div>
+                <div class="taskbar">
+                    <em class="hide new">0</em>
+                    <em class="hide assigned">0</em>
+                    <em class="hide in_progress">0</em>
+                    <em class="hide on_hold">0</em>
+                    <em class="hide resolved">0</em>
+                    <em class="hide closed">0</em>
+                </div>
+            </div>
+            <div class="line"><div></div></div>
+        </a>
+
+        <div class="buttons-right" user-role="addUser">
+        <!--
+            <a class="to_history item secondary" data-action="edit" data-reference=":UserEvents/<%= id %>">
+                <span>Лента</span>
+            </a>
+        -->
+            <a class="to_edit item item-right default-action" data-action="edit" data-reference=":UsersChange/<%= id %>">
+                <span>Изменить</span>
+            </a>
+        </div>
+
+    </div>
+</div>

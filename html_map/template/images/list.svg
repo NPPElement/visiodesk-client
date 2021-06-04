@@ -1,0 +1,12 @@
+<svg width="21" height="14" viewBox="0 0 21 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>Wish List</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(1539 9484)">
+<g id="Wish List">
+<use xlink:href="#path0_fill" transform="translate(-1539 -9484)" fill="#007AFF"/>
+</g>
+</g>
+<defs>
+<path id="path0_fill" fill-rule="evenodd" d="M 2 0L 0 0L 0 2L 2 2L 2 0ZM 21 0.5L 4 0.5L 4 1.5L 21 1.5L 21 0.5ZM 0 6L 2 6L 2 8L 0 8L 0 6ZM 21 6.5L 4 6.5L 4 7.5L 21 7.5L 21 6.5ZM 0 12L 2 12L 2 14L 0 14L 0 12ZM 21 12.5L 4 12.5L 4 13.5L 21 13.5L 21 12.5Z"/>
+</defs>
+</svg>

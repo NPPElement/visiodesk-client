@@ -152,7 +152,6 @@ function CreateVisio(selector) {
 
             if(Updater.isConnect) {
                 Updater.ws.close();
-
             } else {
                 Updater.init();
             }

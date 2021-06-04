@@ -1,0 +1,119 @@
+<div class="caption t_pad">
+    <nav>
+        <a class="back back_json">Назад</a>
+        <div class="text"><%= option.paths.length>0 ? option.paths.join(".") : option.name  %></div>
+        <div class="bar">
+            <a class="save inactive"></a>
+        </div>
+
+    </nav>
+</div>
+
+<div class="pref_delimiter"></div>
+<div class="line2"><div></div></div>
+
+
+
+<% let json = option.json; %>
+<% if ( _.isObject(json) && !_.isArray(json) )  { %>
+<div class="opt_list sensor_admin json_item">
+    <% for (let key in option.json) { %>
+    <div class="opt_item item json_node" data-item-key="<%= key %>">
+        <% if (_.isArray(json[key])) { %>
+        <a class="json_node_type" title="Массив значений">[]</a>
+        <% } else if (_.isObject(json[key])) { %>
+        <a class="json_node_type" title="Объект">{}</a>
+        <% } else if (_.isNumber(json[key])) { %>
+        <a class="json_node_type" title="Число">#</a>
+        <% } else { %>
+        <a class="json_node_type" title="Строка">$</a>
+        <% } %>
+        <div class="field">
+            <input type="text" class="left_align json_key" data-json_key="<%= key %>" data-value_origin="<%= key %>" value="<%= key %>" autocomplete="on">
+        </div>
+
+        <% if (_.isObject(json[key])) { %>
+        <a data-key="<%= key %>" title="<%= json[key] %>"></a>
+        <% } else { %>
+        <a  data-key="<%= key %>" title="<%= json[key] %>"><%= json[key] %></a>
+        <% } %>
+    </div>
+    <div class="line2"><div></div></div>
+    <% } %>
+
+
+</div>
+
+
+<% } else if ( _.isArray(json) ) { %>
+<div class="opt_list sensor_admin json_item sortable">
+
+    <% for (let key=0; key < option.json.length; key++) { %>
+    <div class="opt_item json_node item" data-item-key="<%= key %>">
+
+        <% if (_.isArray(json[key])) { %>
+        <a class="json_node_type" title="Массив значений">[] <span class="json_idx"><%= key %></span></a>
+        <% } else if (_.isObject(json[key])) { %>
+        <a class="json_node_type" title="Объект">{} <span class="json_idx"><%= key %></span></a>
+        <% } else if (_.isNumber(json[key])) { %>
+        <a class="json_node_type" title="Число"># <span class="json_idx"><%= key %></span></a>
+        <% } else { %>
+        <a class="json_node_type" title="Строка">$ <span class="json_idx"><%= key %></span></a>
+        <% } %>
+        <% if (_.isObject(json[key])) { %>
+        <a data-key="<%= key %>" title="<%= json[key] %>"></a>
+        <% } else { %>
+        <a data-key="<%= key %>" data-index="true" data-num="<%= _.isString(json[key]) ? '' : 'true' %>" title="<%= json[key] %>"><%= json[key] %></a>
+        <% } %>
+    </div>
+
+    <% } %>
+</div>
+
+
+
+
+
+<% } else { %>
+<div class="sensor_admin json_item">
+    <div class="item">
+        <div class="field">
+            <input type="text" class="left_align json_scalar_value<%= _.isNumber(option.json) ? ' json_num': ' json_str' %>" data-scalar_key="<%= option.scalar_key %>" data-value_origin="<%= option.json %>" value="<%= option.json  %>">
+            <a class="clear"></a>
+        </div>
+    </div>
+</div>
+
+<div class="line2"><div></div></div>
+<% } %>
+
+
+
+<% if ( _.isArray(json) ||  _.isObject(json)) { %>
+<div class="pref_delimiter"></div>
+<div class="line2"><div></div></div>
+
+<div class="opt_item select_node_add_type">
+    <span class="label">Добавить узел: </span>
+    <a class="json_node_type" data-type="str" title="Добавить строковый параметр">$</a>
+    <a class="json_node_type" data-type="num" title="Добавить числовой параметр">#</a>
+    <a class="json_node_type" data-type="arr" title="Добавить массив">[]</a>
+    <a class="json_node_type" data-type="obj" title="Добавно объект">{}</a>
+</div>
+<div class="line2"><div></div></div>
+<% } %>
+
+
+
+
+<div id="popup_select_node_type">
+    <div>
+        <div data-action="del"><span>x</span> удалить</div>
+        <div data-action="str"><span>$</span> строка</div>
+        <div data-action="num"><span>#</span>  число</div>
+        <div data-action="obj"><span>{}</span> объект</div>
+        <div data-action="arr"><span>[]</span> массив</div>
+        <div data-action="cancel"><span></span> [отмена]</div>
+    </div>
+
+</div>

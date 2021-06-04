@@ -1,0 +1,16 @@
+<div id="vb-objects-import-dropdown" class="dropdown">
+    <input type="file" id="vb-objects-import-files" style="display: none">
+    <textarea id="vb-objects-import-text-content" style="display:none;"></textarea>
+    <ul class="confirm">
+        <li class="head">
+            <em><%= I18N.get("window.import.from.csv") %></em>
+        </li>
+        <li>
+            <em id="vb-objects-import-selected-file"><%= I18N.get("window.import.select.file") %></em>
+        </li>
+        <li id="vb-objects-import-button-import" class="active"><%= I18N.get("vocab.import") %>
+            <img id="vb-objects-import-loading-spinner" src="/html_vdesk/template/images/loader.svg" class="loading-spinner hide">
+        </li>
+        <li id="vb-objects-import-button-close"><%= I18N.get("vocab.close") %></li>
+    </ul>
+</div>

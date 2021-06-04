@@ -1,0 +1,66 @@
+<div class="caption t_pad">
+    <nav>
+        <a class="back">Назад</a>
+        <div class="bar">
+            <a class="update"></a>
+            <a class="search"></a>
+        </div>
+    </nav>
+</div>
+
+<div class="pref_delimiter"></div>
+
+<% if (object.type !== "folder") { %>
+<% let inAlarm = object.status[0]; %>
+<% let fault = object.status[1]; %>
+<% let overridden = object.status[2]; %>
+<% let outOfService = object.status[3]; %>
+<% let statusClass = $.trim([inAlarm ? "in-alarm" : "", fault ? "fault" : "", overridden ? "overridden" :
+"", outOfService ? "out-of-service" : ""].join(" ")); %>
+
+<div class="line2"><div></div></div>
+<a class="group_item">
+    <div class="header">
+        <div class="unread <%= statusClass %>"><em></em></div>
+        <div class="name"><span class="crop"><%= object.name %></span></div>
+        <div class="time"><%= object.value %></div>
+    </div>
+    <div class="desc">
+        <div class="text">
+            <%= object.description %>
+        </div>
+    </div>
+</a>
+<div class="line2"><div></div></div>
+
+<div class="pref_delimiter"></div>
+<% } %>
+
+<div class="opt_list">
+    <div class="line2"><div></div></div>
+    <% for (let i = 0; i < parameters.length; ++i) { %>
+        <% if (parameters[i].code == "111") { %>
+        <div class="opt_item">
+            <span class="label" title="<%= parameters[i].code %> - <%= parameters[i].name %>"><%= parameters[i].name %></span>
+            <div class="flags">
+                <% let statusFlags = parameters[i].value || [false, false, false, false]; %>
+                <span title="<%= I18N.get('vocab.status_flags.in_alarm') %>" class="<%= statusFlags[0] %>">alarm</span>
+                <span title="<%= I18N.get('vocab.status_flags.fault')%>" class="<%= statusFlags[1] %>">fault</span>
+                <span title="<%= I18N.get('vocab.status_flags.overridden')%>" class="<%= statusFlags[2] %>">overr</span>
+                <span title="<%= I18N.get('vocab.status_flags.out_of_service')%>" class="<%= statusFlags[3] %>">in`t<br>serv</span>
+            </div>
+        </div>
+        <% } else { %>
+        <div class="opt_item" data-code="<%= parameters[i].code %>">
+            <span class="label" title="<%= parameters[i].code %> - <%= parameters[i].name %>"><%= parameters[i].name %></span>
+            <a title="<%= parameters[i].value %>"><%= parameters[i].value %></a>
+        </div>
+        <% } %>
+        <% if (i < parameters.length - 1) { %>
+        <div class="line1"><div></div></div>
+        <% } %>
+    <% } %>
+    <div class="line2"><div></div></div>
+</div>
+
+<div class="pref_delimiter"></div>

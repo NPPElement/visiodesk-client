@@ -1,0 +1,22 @@
+<div title="{%title%}">
+    <div style="margin: 10px;">
+        <!-- object description -->
+        <div style="display: block; width: 100%"><%= object[28] %></div>
+        <% let statusFlags = object[111] || [false, false, false, false] %>
+        <% let overridden = statusFlags[2] %>
+
+        <input id="object-control-auto" type="radio" name="manual-control" value="auto" <%= (overridden) ? "" : "checked" %> > <%= I18N.get("vocab.object.control.auto") %><br>
+        <input id="object-control-manual" type="radio" name="manual-control" value="manual" <%= (overridden) ? "checked" : "" %> > <%= I18N.get("vocab.object.control.manual") %><br>
+
+        <input id="manual-control-value" type="text" value="<%= (overridden) ? object[85] : '' %>" style="width:100%;" <%= (overridden) ? "" : 'disabled="disabled"' %> />
+    </div>
+    <script>
+        //basic script to enable / disable elements when user click on radio buttons
+        $("#object-control-auto").change((e) => {
+            $("#manual-control-value").prop("disabled", "disabled");
+        });
+        $("#object-control-manual").change((e) => {
+            $("#manual-control-value").prop("disabled", false);
+        });
+    </script>
+</div>
