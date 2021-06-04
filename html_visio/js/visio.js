@@ -170,10 +170,11 @@ function CreateVisio(selector) {
 
 
         win_hash =  window.location.hash;
-        data = API.get(apiUrl(win_hash));
+        if(win_hash.length>5) data = API.get(apiUrl(win_hash));
 
         if(!data.elements) {
-            $selectorSvg.html("<div class='visio_not_found'>Визуализация не найдена</div>");
+            if(!win_hash) win_hash = " - не указано - ";
+            $selectorSvg.html("<div class='visio_not_found'>Визуализация <u>\""+win_hash+"\"</u> не найдена</div>");
             return;
         }
 
