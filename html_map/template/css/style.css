@@ -8654,25 +8654,29 @@ input.group_role_name {
 
 .menu-top-left {
     position: fixed;
-    left: 12px;
-    top: 12px;
+    left: 10px;
+    top: 10px;
     z-index: 1000;
-    width: 30px;
-    height: 30px;
-    background-color: #fff;
-    border-radius: 2px;
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    border: 2px solid rgba(0,0,0,0.2);
 }
+
+
 
 .menu-top-left:hover {
     background-color: #f4f4f4;
 }
 
 .menu-top-left__button {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
     background-image: url(../images/Menu.svg);
     background-position: 3px 3px;
     cursor: pointer;
+    border-radius: 2px;
+    background-color: #fff;
 }
 
 #group_name_settings * {
