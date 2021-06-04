@@ -1590,6 +1590,11 @@
                 maxBoundsViscosity: 0.85
             });
 
+            if(leafMap.pm && leafMap.pm.addControls) leafMap.pm.addControls({
+                position: 'topleft',
+                drawCircle: false,
+            });
+
             __selectLeafletLayer(selectedLayerId);
 
 
