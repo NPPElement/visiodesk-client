@@ -216,10 +216,14 @@
     }
 
     $(".menu-top-left").click(function () {
-        $("#group_role_name_pub").val(WORKSPACE.group_pub);
-        $("#group_role_name_sub").val(WORKSPACE.group_sub);
-        $("#group_name_settings").addClass("opened");
-        $("#group_name_settings__shaddow").addClass("opened");
+        if(!$("#group_name_settings").hasClass("opened")) {
+            $("#group_role_name_pub").val(WORKSPACE.group_pub);
+            $("#group_role_name_sub").val(WORKSPACE.group_sub);
+            $("#group_name_settings").addClass("opened");
+            $("#group_name_settings__shaddow").addClass("opened");
+        } else {
+            group_name_save();
+        }
     });
 
     function  group_name_save() {
