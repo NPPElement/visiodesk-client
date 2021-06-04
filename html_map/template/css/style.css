@@ -8664,11 +8664,6 @@ input.group_role_name {
 }
 
 
-
-.menu-top-left:hover {
-    background-color: #f4f4f4;
-}
-
 .menu-top-left__button {
     width: 30px;
     height: 30px;
@@ -8676,6 +8671,10 @@ input.group_role_name {
     cursor: pointer;
     border-radius: 2px;
     background-color: #fff;
+}
+
+.menu-top-left__button:hover {
+    background-color: #f4f4f4;
 }
 
 #group_name_settings * {
