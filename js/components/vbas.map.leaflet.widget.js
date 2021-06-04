@@ -1592,8 +1592,16 @@
 
             if(leafMap.pm && leafMap.pm.addControls) leafMap.pm.addControls({
                 position: 'topleft',
-                drawCircle: false,
+                drawCircle: false
             });
+
+            // leafMap.on("pm:remove", _onGragMarkers);
+            // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
+
+            // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
+            // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
+            // leafMap.on("layerremove", _onGragMarkers);
+            leafMap.on("pm:dragend", _onGragMarkers);
 
             __selectLeafletLayer(selectedLayerId);
 
@@ -1676,6 +1684,12 @@
         VD.Controller(reference.replace("#", ":"), '#main-container')
 
     });
+
+
+
+    function _onGragMarkers(a, b, c) {
+        console.log("_onGragMarkers: ", a, b, c);
+    }
 
 
     window.VBasMapLeafletWidget = VBasMapLeafletWidget();
