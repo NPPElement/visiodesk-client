@@ -8651,3 +8651,82 @@ input.group_role_name {
 .leaflet-top {
     top: 0;
 }
+
+.menu-top-left {
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    z-index: 1000;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 2px;
+}
+
+.menu-top-left:hover {
+    background-color: #f4f4f4;
+}
+
+.menu-top-left__button {
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/Menu.svg);
+    background-position: 3px 3px;
+    cursor: pointer;
+}
+
+#group_name_settings * {
+    font-family: 'SF-PRO-Regular';
+}
+#group_name_settings {
+    position: fixed;
+    left: 50px;
+    top: 12px;
+    /*width: 0;*/
+    /*height: 30px;*/
+    background: white;
+    overflow-x: hidden;
+    overflow-y: visible;
+    border-radius: 6px;
+    width: 300px;
+    display: none;
+}
+
+#group_name_settings input {
+    /*border: 1px solid #aaa;*/
+    color: #5B5B5B;
+}
+
+#group_name_settings.opened {
+    width: 300px;
+    display: block;
+}
+
+#group_name_settings > div {
+    padding: 8px;
+    /*border: 1px solid #5B5B5B;*/
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+#group_name_settings b {
+    line-height: 30px;
+    font-size: 19px;
+    font-weight: normal;
+    color: #5B5B5B;
+    margin-bottom: 19px;
+}
+
+#group_name_settings__shaddow {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#group_name_settings__shaddow.opened {
+    display: block;
+}

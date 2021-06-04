@@ -53,6 +53,20 @@
         <div id="tab-content-leaflet" style="left:0;right:0;top:0;bottom:0;position:absolute;"></div>
     </div>
 
+    <div class="menu-top-left" title="Редактировать управление и отображение">
+        <div class="menu-top-left__button"></div>
+    </div>
+    <div id="group_name_settings__shaddow"></div>
+    <div id="group_name_settings">
+        <div>
+            <b>Управление:</b>
+            <input class="group_role_name" id="group_role_name_pub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+            <b>Отображение:</b>
+            <input class="group_role_name" id="group_role_name_sub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+        </div>
+
+    </div>
+
 </div>
 
 
@@ -190,6 +204,36 @@
 
 <script>
     VBasMapLeafletWidget.create("tab-content-leaflet");
+
+    function isNumberKey(evt,inp) {
+        console.log($(inp).val());
+        let chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM/_*#";
+        let charCode = (evt.which) ? evt.which : event.keyCode;
+        let sym = String.fromCharCode(charCode);
+        if($(inp).val()==="" && sym==="/") return false;
+        if(chars.indexOf( String.fromCharCode(charCode))!==-1) return true;
+        return false;
+    }
+
+    $(".menu-top-left").click(function () {
+        $("#group_role_name_pub").val(WORKSPACE.group_pub);
+        $("#group_role_name_sub").val(WORKSPACE.group_sub);
+        $("#group_name_settings").addClass("opened");
+        $("#group_name_settings__shaddow").addClass("opened");
+    });
+
+    function  group_name_save() {
+        $("#group_name_settings").removeClass("opened");
+        $("#group_name_settings__shaddow").removeClass("opened");
+        let pub_value = $("#group_role_name_pub").val();
+        let sub_value = $("#group_role_name_sub").val();
+        Spliter.setGroupSub(sub_value);
+        Spliter.setGroupPub(pub_value);
+    }
+
+    $("#group_name_settings__shaddow").click(group_name_save)
+
+
 </script>
 
 
