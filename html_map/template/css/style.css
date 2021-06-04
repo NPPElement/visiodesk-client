@@ -8229,7 +8229,7 @@ label.input_group_title {
     }
 
     .leaflet-right {
-        right: 460px;
+        right: 10px;
     }
 
     #group_table_control {
@@ -8646,3 +8646,8 @@ input.group_role_name {
     display: none;
 }
 
+
+
+.leaflet-top {
+    top: 0;
+}

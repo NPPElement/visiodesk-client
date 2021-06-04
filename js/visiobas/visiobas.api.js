@@ -528,10 +528,10 @@
          * @return {string|null} return normalized reference or null if argument is not valid
          */
         function validateReference(reference) {
-            if(reference.indexOf("Map:")===0) return  reference;
-            if(reference.indexOf("Panel:")===0) return  reference;
-            if(reference.indexOf("Settings:")===0) return  reference;
-            if(reference.indexOf("Visio:")===0) return  reference;
+            if(reference.indexOf("Map")===0) return  reference;
+            if(reference.indexOf("Panel")===0) return  reference;
+            if(reference.indexOf("Settings")===0) return  reference;
+            if(reference.indexOf("Visio")===0) return  reference;
             if (_.isEmpty(reference)) {
                 return null;
             }
