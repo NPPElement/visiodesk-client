@@ -1,0 +1,371 @@
+/* Оставь надежду всяк сюда входящий */
+
+/* Стили флагов состояний */
+.hide {
+  display: none;
+}
+
+.normal {
+  fill: #4CD964;
+  color:#4CD964;
+}
+.fault {
+  fill: #E2E7E9;
+  color: #E2E7E9;
+}
+.in-alarm {
+  fill: #FF0000;
+  color: #FF0000;
+}
+.overridden,
+.out-of-service {
+  fill: #FFCC00;
+  color: #FFCC00;
+}
+
+/* Стили состояния курсора для элементов управления */
+.click:hover {
+  cursor: pointer;
+}
+
+/* Маркеры карты */
+#mapicon.sensor {
+  font-family: Antonio;
+  font-size: 24px;
+  text-align: center;
+}
+#mapicon.sensor.normal {
+  fill: #00FF00;
+  color:#00FF00;
+}
+
+/* Скрыть */
+.active .animation-hide,
+.inactive .animation-display,
+.array-1,
+.array-2,
+.array-3,
+.array-4,
+.array-5,
+.array-6,
+.array-7,
+.array-8,
+.array-9 {
+  display: none;
+}
+/* Отобразить */
+.inactive .animation-hide,
+.active .animation-display,
+.multi-state-1 .array-1,
+.multi-state-2 .array-2,
+.multi-state-3 .array-3,
+.multi-state-4 .array-4,
+.multi-state-5 .array-5,
+.multi-state-6 .array-6,
+.multi-state-7 .array-7,
+.multi-state-8 .array-8,
+.multi-state-9 .array-9 {
+  display: block;
+}
+
+/* Неактивные предупреждения */
+.inactive .animation-fail {
+  display: none;
+}
+/* Мигания предупреждений */
+.active .animation-fail {
+  display: block;
+  -webkit-animation: showhide .8s infinite; /* Safari 4+ */
+  -moz-animation: showhide .8s infinite; /* Fx 5+ */
+  -o-animation: showhide .8s infinite; /* Opera 12+ */
+  animation: showhide .8s infinite; /* IE 10+, Fx 29+ */
+}
+@-webkit-keyframes showhide {
+  25% { opacity: 0; }
+  75% { opacity: 1; }
+}
+@-moz-keyframes showhide {
+  25% { opacity: 0; }
+  75% { opacity: 1; }
+}
+@-o-keyframes showhide {
+  25% { opacity: 0; }
+  75% { opacity: 1; }
+}
+@keyframes showhide {
+  25% { opacity: 0; }
+  75% { opacity: 1; }
+}
+
+/* Вращения по часовой стрелки. */
+.active .animation-spin {
+  -webkit-animation-name: spin;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: spin;
+  -moz-animation-duration: 3s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+  -ms-animation-name: spin;
+  -ms-animation-duration: 3s;
+  -ms-animation-iteration-count: infinite;
+  -ms-animation-timing-function: linear;
+  animation-name: spin;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@-ms-keyframes spin {
+  from { -ms-transform: rotate(0deg); }
+  to { -ms-transform: rotate(359deg); }
+}
+@-moz-keyframes spin {
+  from { -moz-transform: rotate(0deg); }
+  to { -moz-transform: rotate(359deg); }
+}
+@-webkit-keyframes spin {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(359deg); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(359deg); }
+}
+/* Вращения против часовой стрелки. */
+.active .animation-revspin {
+  -webkit-animation-name: counterspin;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: counterspin;
+  -moz-animation-duration: 3s;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+  -ms-animation-name: counterspin;
+  -ms-animation-duration: 3s;
+  -ms-animation-iteration-count: infinite;
+  -ms-animation-timing-function: linear;
+  animation-name: counterspin;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@-ms-keyframes counterspin {
+  from { -ms-transform: rotate(0deg); }
+  to { -ms-transform: rotate(-359deg); }
+}
+@-moz-keyframes counterspin {
+  from { -moz-transform: rotate(0deg); }
+  to { -moz-transform: rotate(-359deg); }
+}
+@-webkit-keyframes counterspin {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(-359deg); }
+}
+@keyframes counterspin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-359deg); }
+}
+
+/* Центры вращения вентиляторов, крыльчаток и пр. */
+.animation-revspin,
+.animation-spin {
+  -webkit-transform-origin: 151px 170px;
+  -moz-transform-origin: 151px 170px;
+  -ms-transform-origin: 151px 170px;
+  transform-origin: 151px 170px;
+}
+
+/* Электроавтоматы */
+.animation-electric-on,
+.animation-electric-off,
+.animation-electric-inter,
+.animation-electric-fault {
+  display: none;
+}
+
+/* Включаем on off inter */
+.normal .active .animation-electric-on,
+.normal .inactive .animation-electric-off,
+.normal .active .inanimation-electric-inter {
+  display: block;
+}
+
+.out-of-service.active .animation-electric-on,
+.overridden.active .animation-electric-on,
+.out-of-service.inactive .animation-electric-off,
+.overridden.inactive .animation-electric-off {
+  display: block;
+  -webkit-animation: showhide 2s infinite; /* Safari 4+ */
+  -moz-animation: showhide 2s infinite; /* Fx 5+ */
+  -o-animation: showhide 2s infinite; /* Opera 12+ */
+  animation: showhide 2s infinite; /* IE 10+, Fx 29+ */
+}
+
+.in-alarm.active .animation-electric-on,
+.in-alarm.inactive .animation-electric-off {
+  display: block;
+  -webkit-animation: showhide .8s infinite; /* Safari 4+ */
+  -moz-animation: showhide .8s infinite; /* Fx 5+ */
+  -o-animation: showhide .8s infinite; /* Opera 12+ */
+  animation: showhide .8s infinite; /* IE 10+, Fx 29+ */
+}
+
+/* Включаем inter и отключаем on off */
+.active .animation-electric-inter {
+  display: block;
+  -webkit-animation: showhide .8s infinite; /* Safari 4+ */
+  -moz-animation: showhide .8s infinite; /* Fx 5+ */
+  -o-animation: showhide .8s infinite; /* Opera 12+ */
+  animation: showhide .8s infinite; /* IE 10+, Fx 29+ */
+}
+.active .active.animation-electric-status .animation-electric-on,
+.active .inactive.animation-electric-status .animation-electric-off {
+  display: none;
+}
+
+/* Включаем fault и отключаем on off inter */
+.fault .animation-electric-fault {
+  display: block;
+}
+.fault .animation-electric-on,
+.fault .animation-electric-off,
+.fault .animation-electric-inter {
+  display: none;
+}
+
+/* Цвета в зависимости от напряжения в кВ */
+.kV1150.normal,
+.kV1150.fault,
+.kV1150.overridden,
+.kV1150.out-of-service,
+.kV1150.in-alarm {
+  fill:  #cd8aff;
+  color: #cd8aff;
+}
+.kV800.normal,
+.kV800.fault,
+.kV800.overridden,
+.kV800.out-of-service,
+.kV800.in-alarm {
+  fill:  #0000c8;
+  color: #0000c8;
+}
+.kV750.normal,
+.kV750.fault,
+.kV750.overridden,
+.kV750.out-of-service,
+.kV750.in-alarm {
+  fill:  #0000c8;
+  color: #0000c8;
+}
+.kV500.normal,
+.kV500.fault,
+.kV500.overridden,
+.kV500.out-of-service,
+.kV500.in-alarm {
+  fill:  #a50f0a;
+  color: #a50f0a;
+}
+.kV400.normal,
+.kV400.fault,
+.kV400.overridden,
+.kV400.out-of-service,
+.kV400.in-alarm {
+  fill:  #f0961e;
+  color: #f0961e;
+}
+.kV330.normal,
+.kV330.fault,
+.kV330.overridden,
+.kV330.out-of-service,
+.kV330.in-alarm {
+  fill:  #008c00;
+  color: #008c00;
+}
+.kV220.normal,
+.kV220.fault,
+.kV220.overridden,
+.kV220.out-of-service,
+.kV220.in-alarm {
+  fill:  #c8c800;
+  color: #c8c800;
+}
+.kV150.normal,
+.kV150.fault,
+.kV150.overridden,
+.kV150.out-of-service,
+.kV150.in-alarm {
+  fill:  #aa9600;
+  color: #aa9600;
+}
+.kV110.normal,
+.kV110.fault,
+.kV110.overridden,
+.kV110.out-of-service,
+.kV110.in-alarm {
+  fill:  #00b4c8;
+  color: #00b4c8;
+}
+.kV35.normal,
+.kV35.fault,
+.kV35.overridden,
+.kV35.out-of-service,
+.kV35.in-alarm {
+  fill:  #826432;
+  color: #826432;
+}
+.kV20.normal,
+.kV20.fault,
+.kV20.overridden,
+.kV20.out-of-service,
+.kV20.in-alarm {
+  fill:  #826432;
+  color: #826432;
+}
+.kV10.normal,
+.kV10.fault,
+.kV10.overridden,
+.kV10.out-of-service,
+.kV10.in-alarm {
+  fill:  #640064;
+  color: #640064;
+}
+.kV6.normal,
+.kV6.fault,
+.kV6.overridden,
+.kV6.out-of-service,
+.kV6.in-alarm {
+  fill:  #c89664;
+  color: #c89664;
+}
+.kV1.normal,
+.kV1.fault,
+.kV1.overridden,
+.kV1.out-of-service,
+.kV1.in-alarm {
+  fill:  #bebebe;
+  color: #bebebe;
+}
+.generator.normal,
+.generator.fault,
+.generator.overridden,
+.generator.out-of-service,
+.generator.in-alarm {
+  fill:  #e646e6;
+  color: #e646e6;
+}
+
+
+/* Псевдокласс для отображения элемента FAULT   в эл.снабжение */
+.normal .qf,
+.in-alarm .qf
+{
+  display: none;
+}
+.fault .qf
+
+{
+  display: block;
+}

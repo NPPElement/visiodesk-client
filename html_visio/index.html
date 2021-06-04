@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html vd-theme='dark' vb-theme='dark' lang="ru">
 <head>
-    <title>visioDESK - Visio</title>
-
+    <title>Visualizations</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, height=device-height">
@@ -11,19 +10,15 @@
 
     <meta name="keywords" content="">
     <meta name="description" content="">
-
     <link rel="manifest" href="../manifest.json">
 
-    <meta name="apple-mobile-web-app-title" content="Visio">
+    <meta name="apple-mobile-web-app-title" content="Visualizations">
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="Visio">
+    <meta name="application-name" content="Visualizations">
 
-
-
-    <link href="/html_vdesk/template/css/fonts.css" rel="stylesheet">
-<!--    <link href="/html_vdesk/template/css/style.css" rel="stylesheet">-->
+    <link href="/html_visio/template/css/fonts.css" rel="stylesheet">
     <link href="/html_visio/template/css/style.css" rel="stylesheet">
-    <link href="/html_vdesk/template/css/svg.css" rel="stylesheet">
+    <link href="/html_visio/template/css/svg.css"   rel="stylesheet">
 </head>
 <body>
 <div id="wrapper">
@@ -36,13 +31,11 @@
                 </div>
                 <div class="text">
                     <span data-var="object_description"></span>
-<!--                    <em>[Тут будет название визуализации]</em>-->
                 </div>
                 <div class="bar for_submenu">
                     <a></a>
                     <a></a>
                 </div>
-
             </nav>
         </div>
 
@@ -55,7 +48,6 @@
 
                 <div class="text">
                     <span data-var="object_description"></span>
-<!--                    <em><%= object.description %></em>-->
                 </div>
                 <div class="bar">
                     <a class="edit_icon"></a>
@@ -63,55 +55,24 @@
                 </div>
             </nav>
         </div>
+
         <div class="visio-svg"></div>
 
     </div>
 
 </div>
 
-
-<!-- jQuery Library -->
+<!-- Library -->
 <script src="/js/jquery-3.1.1.min.js" type="text/javascript"></script>
-<script src="/js/jquery-ui-1.12.1.min.js"></script> <!-- jQuery UI -->
-<!--script src="/js/jquery-mobile/jquery.mobile-1.4.5.min.js"></script> --> <!-- jQuery Mobile -->
-<script src="/js/jquery.scrollTo.min.js"></script>
-
-
-
-
-
-
-
-<!-- well known library -->
-<script src="/js/underscore-min.js" type="text/javascript"></script>
-<script src="/js/underscore.string.min.js" type="text/javascript"></script>
-<script src="/js/sprintf.min.js" type="text/javascript"></script>
-<script src="/js/cookies.min.js" type="text/javascript"></script>
-<!--<script src="/js/flotr2.min.js" type="text/javascript" ></script>-->
-
-
-<script type="text/javascript" src="/js/daterangepicker/moment.min.js"></script>
-
-
-
-<!-- polyfills -->
-<script src="/js/polyfill/object.js" type="text/javascript"></script>
-<script src="/js/polyfill/array.js" type="text/javascript"></script>
-<script src="/js/polyfill/string.js" type="text/javascript"></script>
-<script src="/js/polyfill/add_wheel_listener.js" type="text/javascript"></script>
-
+<script src="/js/jquery-ui-1.12.1.min.js " type="text/javascript"></script>
+<script src="/js/daterangepicker/moment.min.js" type="text/javascript"></script>
 <script src="/js/js.settings.js" type="text/javascript"></script>
 
-
-
-<script src="Api.js"></script>
-<script src="Visio.js"></script>
-
-
+<!-- JS -->
+<script src="api.js" type="text/javascript"></script>
+<script src="visio.js" type="text/javascript"></script>
 <script>
-
-
-
+    
     $.fn.visio =  function() {
 
         function CreateVisio($selector) {
@@ -126,17 +87,14 @@
             })
         }
 
-
         return this.each(function(i, e) {
             CreateVisio($(e));
         });
     };
 
-
     $(function () {
         CreateVisio("#visualization");
     });
-
 
 </script>
 </body>
