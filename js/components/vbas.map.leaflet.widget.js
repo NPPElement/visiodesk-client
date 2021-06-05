@@ -185,6 +185,8 @@
 
         const _markerLoadTimeoutMs = 5000;
 
+        let is_dragged = false;
+
         const _vbUpdaterId = "vbas.map.leaflet.widget";
 
         let _timerLookRefs = false;
@@ -855,7 +857,9 @@
 
             const popup = __createSVGPopupContent(marker);
             leafMarker.bindPopup(popup);
-            leafMarker.on({click: function () {
+
+            leafMarker.on({
+                click: function () {
                     if(!$(".btn-show-full-obj").length) {
                         let $btnFull = $('<a class="leaflet-popup-close-button btn-show-full-obj fullscreen_icon" href="javascript:void(0)"  style="outline: none;right: 32px;" title="Во весь экран">&#x229E;</a>')
                         $(".leaflet-popup").append($btnFull);
@@ -1326,6 +1330,7 @@
         function __selectLeafletLayer(layerId) {
             const layer = _data.layers[layerId];
 
+
             if (layer.map.bounds) {
                 //leafMap.setMaxBounds(layer.map.bounds);
                 leafMap.setMaxBounds([
@@ -1354,7 +1359,6 @@
                 let overlays = {};
                 leafGroups.forEach((leafGroup) => {
                     let r = leafMap.addLayer(leafGroup);
-                    // console.log("R:",r);
                     overlays[leafGroup.options.caption] = leafGroup;
                 });
 
@@ -1508,6 +1512,27 @@
                         defLeafMarker.done(x=>{
                             if(marker.self) {
                                 Markers[marker.self] = x;
+
+                                // x.on("pm:remove", _onGragMarkers);
+                                // x.on("pm:edit", _onGragMarkers);
+
+                                x.on("pm:dragstart", function (e) {
+                                    // _onGragMarkers(e);
+                                    is_dragged = true;
+                                    leafMap.__is_dragged = true; //  Читаетсы ы leaflet-src
+                                });
+                                x.on("pm:dragend", function (e) {
+
+                                    // ._attributes.self.nodeValue
+                                    // return;
+                                    saveNewMarkerPos(e.target.options.icon.options.attributes.self, e.target._latlng);
+                                    is_dragged = false;
+                                    leafMap.__is_dragged = false;
+                                });
+
+                                window._Markers = Markers;
+
+
                                 if(marker.login) Markers[marker.self].login = marker.login;
                             }
                         });
@@ -1592,18 +1617,25 @@
 
             if(leafMap.pm && leafMap.pm.addControls) leafMap.pm.addControls({
                 position: 'topleft',
-                drawCircle: false
+                drawCircle: false,
+
+                drawControls: false,
+                editControls: true,
+                optionsControls: false,
+                customControls: false,
+                oneBlock: false,
             });
 
-            // leafMap.on("pm:remove", _onGragMarkers);
-            // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
+            // leafMap.pm.setLang('ru');
 
-            // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
+            // leafMap.on("pm:remove", _onGragMarkers);
+            // leafMap.on("pm:edit", _onGragMarkers);
+            // leafMap.on("pm:drag", _onGragMarkers);
             // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
             // leafMap.on("layerremove", _onGragMarkers);
-            leafMap.on("pm:dragend", _onGragMarkers);
 
             __selectLeafletLayer(selectedLayerId);
+
 
 
 
@@ -1629,6 +1661,17 @@
 
             leafMap.on("layeradd", (e) => {
                 __updateMarkerVisibility(leafMap, e.layer);
+            });
+
+
+
+
+            leafMap.on("pm:create", (e) => {
+                console.log("pm:create", e);
+                e.layer.on('pm:edit', ( layer ) => {
+
+                    console.log(e, layer);
+                })
             });
         }
 
@@ -1687,9 +1730,12 @@
 
 
 
-    function _onGragMarkers(a, b, c) {
-        console.log("_onGragMarkers: ", a, b, c);
+    function saveNewMarkerPos(reference, latlng) {
+        let crd = [latlng.lng, latlng.lat];
+        console.log("saveNewMarkerPos: ", reference, crd);
+        VB_API.saveNewMarkerPos(reference, crd);
     }
+
 
 
     window.VBasMapLeafletWidget = VBasMapLeafletWidget();

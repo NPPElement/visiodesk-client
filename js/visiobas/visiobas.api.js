@@ -51,6 +51,7 @@
 
             "getLibrary": getLibrary,
             "getMap": getMap,
+            "saveNewMarkerPos": saveNewMarkerPos,
             "getTrendLog": getTrendLog,
 
             "Test": Test,
@@ -118,6 +119,27 @@
 
             return def;
         }
+        
+        function saveNewMarkerPos(reference, crd) {
+            $.ajax({
+                method: "POST",
+                url: "/vbas/arm/saveMapCrd/"+urlReference(reference),
+                data: JSON.stringify(crd),
+                type: "json",
+                contentType: "application/json; charset=utf-8",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .done(function () {
+                    console.log("done: ", arguments);
+                })
+                .fail(function () {
+                    console.log("done: ", arguments);
+                });
+        }
+        
+        
 
         /**
          * Get trend logs of all objects
