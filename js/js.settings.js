@@ -21,6 +21,7 @@ window.WORKSPACE = {
 window.DEFAULT_OBJECT_REFERENCE = "Site:Engineering";
 
 window.IS_NEW_MAP_LAYER_TILE = false;
+window.MAP_BASE_LAYER = "base";
 
 
 // window.WORKSPACE.split = false;

@@ -1512,6 +1512,7 @@
                         defLeafMarker.done(x=>{
                             if(marker.self) {
                                 Markers[marker.self] = x;
+                                Markers[marker.self]._in_bound = false;
 
                                 x.on("pm:dragstart", function (e) {
                                     is_dragged = true;
@@ -1569,7 +1570,8 @@
         }
 
         function __createLeafletMap(containerId, data) {
-            const selectedLayerId = data.map.selectedLayerId;
+            // const selectedLayerId = data.map.selectedLayerId;
+            const selectedLayerId = MAP_BASE_LAYER;
             baseLayer = selectedLayerId;
             let selectedLayer = null;
             //let leafSelectedLayer = null;
@@ -1712,7 +1714,10 @@
 
 
         function SetMapIconCoords(reference, x, y) {
-            if(Markers[reference]) Markers[reference].setLatLng({lat: y, lng: x})
+            if(Markers[reference]) {
+                Markers[reference].setLatLng({lat: y, lng: x});
+                // checkMarker(reference);
+            }
         }
 
 
@@ -1721,10 +1726,10 @@
 
         function getPolygons() {
             let r = [];
-            if(leafMap.pm) return;
+            if(!leafMap.pm) return [];
             let pgs = leafMap.pm.getGeomanDrawLayers();
             for(let i=0;i<pgs.length;i++) {
-                let p = [],  v = pgs.getLatLngs();
+                let p = [],  v = pgs[i].getLatLngs();
                 for(let j=0;j<v.length;j++) p.push({x: v[j].lat, y: v[j].lng});
                 r.push(p);
             }
@@ -1733,19 +1738,37 @@
         }
 
         function checkMarker(reference) {
+
             let m = Markers[reference];
             if(!m) return;
+            if(!Markers[reference].hasOwnProperty("login")) return ;
             let mx = m._latlng.lat;
             let my = m._latlng.lng;
             let polygons = getPolygons();
-            for(let i=0;i<polygons.length;i++) if(contains_point(polygons[i], mx, my)) return true;
+            let new_in_bound = false;
+            for(let i=0;i<polygons.length;i++) if(contains_point(polygons[i], mx, my)) {
+                new_in_bound = true;
+                break;
+            }
+            if(new_in_bound!==Markers[reference]._in_bound) {
+                Markers[reference]._in_bound = new_in_bound;
+                if(new_in_bound) {
+                    console.log("IN BOUD: "+reference);
+                    Spliter.goMapUser(Markers[reference].login);
+                } else {
+                    console.log("OUT BOUD: "+reference);
+                    Spliter.goMapUser(Markers[reference].login);
+                }
+
+            }
             return false;
         }
 
 
         function checkMarkers() {
             for(let reference in Markers) {
-
+                if(!Markers[reference].hasOwnProperty("login")) continue;
+                checkMarker(reference);
             }
         }
 
