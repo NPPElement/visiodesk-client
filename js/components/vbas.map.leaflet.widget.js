@@ -1513,19 +1513,11 @@
                             if(marker.self) {
                                 Markers[marker.self] = x;
 
-                                // x.on("pm:remove", _onGragMarkers);
-                                // x.on("pm:edit", _onGragMarkers);
-
                                 x.on("pm:dragstart", function (e) {
-                                    // _onGragMarkers(e);
                                     is_dragged = true;
                                     leafMap.__is_dragged = true; //  Читаетсы ы leaflet-src
                                 });
                                 x.on("pm:dragend", function (e) {
-
-                                    // ._attributes.self.nodeValue
-                                    // console.log(e);
-                                    // return;
                                     saveNewMarkerPos(e.target.options.icon.options.attributes.self, e.target._latlng);
                                     is_dragged = false;
                                     leafMap.__is_dragged = false;
@@ -1584,8 +1576,8 @@
             let _unorderedLeafBaseLayers = {};
             for (let layerId in data.layers) {
                 const layer = data.layers[layerId];
-                // const layerUrl = `${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
-                const layerUrl = `/svg/tiles/${layerId}/{z}/{x}/{y}.png`;
+                const layerUrl = `${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
+                // const layerUrl = `/svg/tiles/${layerId}/{z}/{x}/{y}.png`;
                 let leafLayer = L.tileLayer(layerUrl, {
                     id: layerId,
                     minZoom: layer.map.minZoom,
@@ -1739,6 +1731,44 @@
         console.log("saveNewMarkerPos: ", reference, crd);
         VB_API.saveNewMarkerPos(reference, crd);
     }
+
+
+    // lat lng
+    function contains_point(bounds, px, py) {
+        //https://rosettacode.org/wiki/Ray-casting_algorithm
+        var count = 0;
+        for (var b = 0; b < bounds.length; b++) {
+            var vertex1 = bounds[b];
+            var vertex2 = bounds[(b + 1) % bounds.length];
+
+            if( vertex1.hasOwnProperty('x') ) vertex1.x = vertex1.lat;
+            if( vertex1.hasOwnProperty('y') ) vertex1.y = vertex1.lng;
+
+            if (west(vertex1, vertex2, px, py))
+                ++count;
+        }
+        return count % 2;
+
+        /**
+         * @return {boolean} true if (x,y) is west of the line segment connecting A and B
+         */
+        function west(A, B, x, y) {
+            if (A.y <= B.y) {
+                if (y <= A.y || y > B.y ||
+                    x >= A.x && x >= B.x) {
+                    return false;
+                } else if (x < A.x && x < B.x) {
+                    return true;
+                } else {
+                    return (y - A.y) / (x - A.x) > (B.y - A.y) / (B.x - A.x);
+                }
+            } else {
+                return west(B, A, x, y);
+            }
+        }
+    }
+
+
 
 
 
