@@ -1524,6 +1524,7 @@
                                 x.on("pm:dragend", function (e) {
 
                                     // ._attributes.self.nodeValue
+                                    // console.log(e);
                                     // return;
                                     saveNewMarkerPos(e.target.options.icon.options.attributes.self, e.target._latlng);
                                     is_dragged = false;
@@ -1583,7 +1584,8 @@
             let _unorderedLeafBaseLayers = {};
             for (let layerId in data.layers) {
                 const layer = data.layers[layerId];
-                const layerUrl = `${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
+                // const layerUrl = `${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
+                const layerUrl = `/svg/tiles/${layerId}/{z}/{x}/{y}.png`;
                 let leafLayer = L.tileLayer(layerUrl, {
                     id: layerId,
                     minZoom: layer.map.minZoom,
@@ -1615,18 +1617,20 @@
                 maxBoundsViscosity: 0.85
             });
 
-            if(leafMap.pm && leafMap.pm.addControls) leafMap.pm.addControls({
-                position: 'topleft',
-                drawCircle: false,
+            if(leafMap.pm && leafMap.pm.addControls) {
+                leafMap.pm.addControls({
+                    position: 'topleft',
+                    drawCircle: false,
 
-                drawControls: false,
-                editControls: true,
-                optionsControls: false,
-                customControls: false,
-                oneBlock: false,
-            });
+                    drawControls: true,
+                    editControls: true,
+                    optionsControls: false,
+                    customControls: false,
+                    oneBlock: false,
+                });
+                leafMap.pm.setLang('ru');
+            }
 
-            // leafMap.pm.setLang('ru');
 
             // leafMap.on("pm:remove", _onGragMarkers);
             // leafMap.on("pm:edit", _onGragMarkers);
