@@ -78,7 +78,7 @@
 
 
     $(document).ajaxError(function(e, xhr, settings, exception) {
-        if(xhr.status===403) window.location.href = "/#html_visio"+(window.location.hash.replace("#",":"));
+        if(xhr.status===403 || xhr.status===401) window.location.href = "/#html_visio"+(window.location.hash.replace("#",":"));
     });
 
 
