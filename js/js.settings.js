@@ -20,6 +20,9 @@ window.WORKSPACE = {
 
 window.DEFAULT_OBJECT_REFERENCE = "Site:Engineering";
 
+window.IS_NEW_MAP_LAYER_TILE = false;
+
+
 // window.WORKSPACE.split = false;
 
 $('g[reference^="User"]').keydown(function () {

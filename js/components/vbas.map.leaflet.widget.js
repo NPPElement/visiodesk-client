@@ -1576,8 +1576,10 @@
             let _unorderedLeafBaseLayers = {};
             for (let layerId in data.layers) {
                 const layer = data.layers[layerId];
-                const layerUrl = `${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
-                // const layerUrl = `/svg/tiles/${layerId}/{z}/{x}/{y}.png`;
+
+                const layerUrl = IS_NEW_MAP_LAYER_TILE
+                    ? `/svg/tiles/${layerId}/{z}/{x}/{y}.png`
+                    :`${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
                 let leafLayer = L.tileLayer(layerUrl, {
                     id: layerId,
                     minZoom: layer.map.minZoom,
@@ -1714,6 +1716,42 @@
         }
 
 
+
+
+
+        function getPolygons() {
+            let r = [];
+            if(leafMap.pm) return;
+            let pgs = leafMap.pm.getGeomanDrawLayers();
+            for(let i=0;i<pgs.length;i++) {
+                let p = [],  v = pgs.getLatLngs();
+                for(let j=0;j<v.length;j++) p.push({x: v[j].lat, y: v[j].lng});
+                r.push(p);
+            }
+
+            return r;
+        }
+
+        function checkMarker(reference) {
+            let m = Markers[reference];
+            if(!m) return;
+            let mx = m._latlng.lat;
+            let my = m._latlng.lng;
+            let polygons = getPolygons();
+            for(let i=0;i<polygons.length;i++) if(contains_point(polygons[i], mx, my)) return true;
+            return false;
+        }
+
+
+        function checkMarkers() {
+            for(let reference in Markers) {
+
+            }
+        }
+
+
+
+
     }
 
 
@@ -1743,6 +1781,8 @@
 
             if( vertex1.hasOwnProperty('x') ) vertex1.x = vertex1.lat;
             if( vertex1.hasOwnProperty('y') ) vertex1.y = vertex1.lng;
+            if( vertex2.hasOwnProperty('x') ) vertex2.x = vertex2.lat;
+            if( vertex2.hasOwnProperty('y') ) vertex2.y = vertex2.lng;
 
             if (west(vertex1, vertex2, px, py))
                 ++count;
@@ -1767,7 +1807,6 @@
             }
         }
     }
-
 
 
 
