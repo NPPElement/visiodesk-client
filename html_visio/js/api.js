@@ -1,10 +1,5 @@
 window.API = (function () {
 
-    $(document).ajaxError(function(e, xhr, settings, exception) {
-        if(xhr.status===403) checkNeedAuth(xhr);
-
-    });
-
     return {
         get: function (url) {
             return  serverApi(url);
@@ -30,9 +25,7 @@ window.API = (function () {
         return docCookies.getItem("user.token");
     }
     
-    function checkNeedAuth(xhr) {
-        window.location.href = "/#html_visio"+(window.location.hash.replace("#",":"));
-    }
+
 
     function serverApi(api_url, method = "GET", params = undefined) {
         let request = {

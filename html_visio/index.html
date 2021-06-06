@@ -77,6 +77,12 @@
 
 
 
+    $(document).ajaxError(function(e, xhr, settings, exception) {
+        if(xhr.status===403) window.location.href = "/#html_visio"+(window.location.hash.replace("#",":"));
+    });
+
+
+
 
     CreateVisio("#visualization");
     WORKSPACE.role = "visio";
