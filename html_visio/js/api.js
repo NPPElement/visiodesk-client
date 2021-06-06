@@ -1,10 +1,13 @@
 window.API = (function () {
 
+    $(document).ajaxError(function(e, xhr, settings, exception) {
+        if(xhr.status===403) checkNeedAuth(xhr);
 
+    });
 
     return {
         get: function (url) {
-            return serverApi(url);
+            return  serverApi(url);
         },
         post: function (url, data) {
             return serverApi(url, "POST", data);
@@ -26,6 +29,10 @@ window.API = (function () {
     function getToken() {
         return docCookies.getItem("user.token");
     }
+    
+    function checkNeedAuth(xhr) {
+        window.location.href = "/#html_visio"+(window.location.hash.replace("#",":"));
+    }
 
     function serverApi(api_url, method = "GET", params = undefined) {
         let request = {
@@ -42,13 +49,13 @@ window.API = (function () {
         let result = undefined;
         request.async = false;
         request.success = x=>{
-            // console.log(x);
             result=(x.data ? x.data : x)
         };
-        request.fail = x=>result=":error";
-
+        request.fail = x=>{
+            result=":error"
+        };
         let r = $.ajax(request);
-         // console.log(r);
+        console.log("AJAX RES: ", result);
         return result;
     }
 })();
