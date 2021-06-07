@@ -467,6 +467,7 @@
     "vocab.error":"Error",
     "vocab.information":"Information",
     "vocab.import":"Import",
+    "vocab.export":"Export",
     "vocab.close":"Close",
 
     "vocab.status_flags.in_alarm":"In alarm",

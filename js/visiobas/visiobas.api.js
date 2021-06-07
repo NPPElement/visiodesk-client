@@ -52,6 +52,7 @@
             "getLibrary": getLibrary,
             "getMap": getMap,
             "saveNewMarkerPos": saveNewMarkerPos,
+            "getCsv": getCsv,
             "getTrendLog": getTrendLog,
 
             "Test": Test,
@@ -119,7 +120,7 @@
 
             return def;
         }
-        
+
         function saveNewMarkerPos(reference, crd) {
             $.ajax({
                 method: "POST",
@@ -138,8 +139,31 @@
                     console.log("done: ", arguments);
                 });
         }
-        
-        
+
+        function getCsv(reference) {
+            let def = $.Deferred();
+            $.ajax({
+                method: "GET",
+                url: "/vbas/arm/getCSV/"+urlReference(reference),
+                type: "json",
+                contentType: "application/json; charset=utf-8",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .done(function (r) {
+                    console.log("done: ", r);
+                    def.resolve(r);
+                })
+                .fail(function () {
+                    def.reject(false);
+                    console.log("error: ", arguments);
+                });
+            return def;
+        }
+
+
+
 
         /**
          * Get trend logs of all objects
