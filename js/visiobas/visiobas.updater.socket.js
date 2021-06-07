@@ -23,7 +23,11 @@
          * @type WebSocket
          */
         let ws = null;
-        const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
+        let hst = window.location.host;
+        hst = hst.split(":");
+        hst = hst[0]+":9090";
+        let URL_WS = 'ws://'+hst+'/vbas/wsGetByFields';
+        // const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
         let _dbg = ()=>{};// console.log;
         let wait = false;
         let tryConnect = false;
