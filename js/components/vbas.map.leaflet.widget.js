@@ -244,7 +244,7 @@
 
         function goUser(login) {
             let reference = getMarkerByUserLogin(login);
-            console.log("found reference to map object: "+reference);
+            // console.log("found reference to map object: "+reference);
             if(reference) goMapObject(reference, false);
         }
 
@@ -373,7 +373,7 @@
                         objectReference = marker.object;
                     }
 
-                    console.log("marker.object: "+objectReference);
+                    // console.log("marker.object: "+objectReference);
 
                     const hasVisualization = (marker.hasOwnProperty("visualization") ? marker.visualization : true);
                     if (hasVisualization) {
@@ -1666,13 +1666,6 @@
 
 
 
-            leafMap.on("pm:create", (e) => {
-                console.log("pm:create", e);
-                e.layer.on('pm:edit', ( layer ) => {
-
-                    console.log(e, layer);
-                })
-            });
         }
 
         /**
@@ -1716,7 +1709,7 @@
         function SetMapIconCoords(reference, x, y) {
             if(Markers[reference]) {
                 Markers[reference].setLatLng({lat: y, lng: x});
-                // checkMarker(reference);
+                checkMarker(reference);
             }
         }
 
@@ -1729,8 +1722,9 @@
             if(!leafMap.pm) return [];
             let pgs = leafMap.pm.getGeomanDrawLayers();
             for(let i=0;i<pgs.length;i++) {
-                let p = [],  v = pgs[i].getLatLngs();
-                for(let j=0;j<v.length;j++) p.push({x: v[j].lat, y: v[j].lng});
+                let p = [],
+                    v = pgs[i].getLatLngs();
+                for(let k=0;k<v.length;k++) for(let j=0;j<v[k].length;j++) p.push({x: v[k][j].lat, y: v[k][j].lng});
                 r.push(p);
             }
 
@@ -1744,7 +1738,10 @@
             if(!Markers[reference].hasOwnProperty("login")) return ;
             let mx = m._latlng.lat;
             let my = m._latlng.lng;
+            // console.log("M["+reference+"] = "+mx+", "+my);
+
             let polygons = getPolygons();
+            // console.log("polygons: ", polygons);
             let new_in_bound = false;
             for(let i=0;i<polygons.length;i++) if(contains_point(polygons[i], mx, my)) {
                 new_in_bound = true;
@@ -1753,10 +1750,10 @@
             if(new_in_bound!==Markers[reference]._in_bound) {
                 Markers[reference]._in_bound = new_in_bound;
                 if(new_in_bound) {
-                    console.log("IN BOUD: "+reference);
+                    console.log("Объект: "+Markers[reference].login+" зашел в выделенную зону");
                     Spliter.goMapUser(Markers[reference].login);
                 } else {
-                    console.log("OUT BOUD: "+reference);
+                    console.log("Объект: "+Markers[reference].login+" вышел из зоны");
                     Spliter.goMapUser(Markers[reference].login);
                 }
 
@@ -1802,10 +1799,6 @@
             var vertex1 = bounds[b];
             var vertex2 = bounds[(b + 1) % bounds.length];
 
-            if( vertex1.hasOwnProperty('x') ) vertex1.x = vertex1.lat;
-            if( vertex1.hasOwnProperty('y') ) vertex1.y = vertex1.lng;
-            if( vertex2.hasOwnProperty('x') ) vertex2.x = vertex2.lat;
-            if( vertex2.hasOwnProperty('y') ) vertex2.y = vertex2.lng;
 
             if (west(vertex1, vertex2, px, py))
                 ++count;
