@@ -143,6 +143,7 @@ window.Spliter = (function () {
         setGroupSub: setGroupSub,
         goUser: goMapUser,
         isSplit: isSplit,
+        publishMessage: publishMessage,
     };
 
     function setRole(role) {
@@ -236,6 +237,10 @@ window.Spliter = (function () {
             if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
         }
 
+    }
+
+    function publishMessage(message) {
+        if(canPublish()) MqttSignal.publish(getTopicPub(), message);
     }
 
     function goChatUser(login) {

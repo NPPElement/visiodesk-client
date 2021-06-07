@@ -98,7 +98,7 @@
         });
 
     }
-    
+
 
     function DefManager() {
         let data = {};
@@ -248,7 +248,7 @@
             if(reference) goMapObject(reference, false);
         }
 
-        
+
         function goMapObject(reference, now_cash) {
             if(Markers[reference] && !now_cash) {
                 let x = Markers[reference]._latlng.lng;
@@ -1169,7 +1169,7 @@
                 });
             }
         }
-        
+
         function __update_special_methods(objects) {
             // console.log("__update_special_methods: ", objects);
             // data-value-method
@@ -1202,7 +1202,7 @@
 
 
         }
-        
+
         function __subscriber_for_update(objects) {
 
             // console.log("__subscriber_for_update: ", objects);
@@ -1314,7 +1314,7 @@
                 $dom.each((i, e)=>__set_dom($(e), object));
             });
         }
-        
+
 
         /**
          * Register data updater
@@ -1381,7 +1381,7 @@
 
 
             });
-             // __subscribeOnSignal();
+            // __subscribeOnSignal();
             // window.setTimeout(__subscribeOnSignal, 4000);
         }
 
@@ -1751,10 +1751,12 @@
                 Markers[reference]._in_bound = new_in_bound;
                 if(new_in_bound) {
                     console.log("Объект: "+Markers[reference].login+" зашел в выделенную зону");
-                    Spliter.goMapUser(Markers[reference].login);
+                    // Spliter.goMapUser(Markers[reference].login);
+                    Spliter.publishMessage({User: Markers[reference].login, action: "in", point: [my, mx]});
                 } else {
                     console.log("Объект: "+Markers[reference].login+" вышел из зоны");
-                    Spliter.goMapUser(Markers[reference].login);
+                    Spliter.publishMessage({User: Markers[reference].login, action: "out", point: [my, mx]});
+                    // Spliter.goMapUser(Markers[reference].login);
                 }
 
             }
