@@ -255,7 +255,7 @@
                 let y = Markers[reference]._latlng.lat;
                 // goPosition(x, y, 5);
                 goPosition(x, y, 5, baseLayer);
-                if(!$('[owner-reference="'+reference+'"]').length) $('[self="'+reference+'"]').trigger("click");
+                if(!$('[owner-reference="'+reference+'"]').length && !Markers[reference].login) $('[self="'+reference+'"]').trigger("click");
                 return;
             }
 
