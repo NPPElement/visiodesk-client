@@ -1,3 +1,4 @@
+/*
 window.WORKSPACE = {
     mqtt: {
         username: "user",
@@ -9,6 +10,7 @@ window.WORKSPACE = {
     group_sub: localStorage.getItem("group_name_sub") || ''
 };
 
+*/
 
 
 window.MqttSignal = (function () {
