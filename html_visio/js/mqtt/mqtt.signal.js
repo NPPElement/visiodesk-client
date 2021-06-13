@@ -1,3 +1,16 @@
+window.WORKSPACE = {
+    mqtt: {
+        username: "user",
+        password: "user",
+        broker_url: "ws://visiodesk.net:15675/ws",
+    },
+    role: 'visio',
+    group_pub: localStorage.getItem("group_name_pub") || '',
+    group_sub: localStorage.getItem("group_name_sub") || ''
+};
+
+
+
 window.MqttSignal = (function () {
 
     let conn = [];
@@ -134,14 +147,10 @@ window.Spliter = (function () {
     _init();
 
     return {
-        goMapSite: goMapSite,
-        goMapObject: goMapObject,
-        goMapUser: goMapUser,
         goVisualization: goVisualization,
         setRole: setRole,
         setGroupPub: setGroupPub,
         setGroupSub: setGroupSub,
-        goUser: goMapUser,
         openCamera: openCamera,
         isSplit: isSplit,
         publishMessage: publishMessage,
@@ -183,21 +192,21 @@ window.Spliter = (function () {
     }
 
     function isSplit() {
-        let r =  WORKSPACE && WORKSPACE.split && WORKSPACE.group_sub && WORKSPACE.group_sub;
+        let r =  WORKSPACE.group_sub;
         console.log("isSplit: " + r);
         return r;
     }
 
     function canSubscribe() {
-        return WORKSPACE && WORKSPACE.split && WORKSPACE.group_sub;
+        return WORKSPACE.group_sub;
     }
 
     function canPublish() {
-        return WORKSPACE && WORKSPACE.split && WORKSPACE.group_pub;
+        return WORKSPACE.group_pub;
     }
 
     function isRole(role) {
-        return WORKSPACE.role===role;
+        return "visio"===role;
     }
 
     function getTopicSub() {
@@ -208,59 +217,17 @@ window.Spliter = (function () {
         return "action/"+WORKSPACE.group_pub;
     }
 
-    function goMapSite(siteHref) {
-        // if(!isSplit()) return goMapSite_local(siteHref);
-        if(canPublish()) MqttSignal.publish(getTopicPub(), {call: "goSite", reference: siteHref});
-    }
-    function goMapSite_local(siteHref) {
-        VBasMapLeafletWidget.goMapSite(siteHref);
-    }
 
 
-    function goMapObject(mapHref) {
-        // if(!isSplit() || !isRole("map")) return goMapObject_local(mapHref);
-        if(canPublish()) MqttSignal.publish(getTopicPub(), {call: "goMapObject", reference: mapHref});
-    }
-    function goMapObject_local(mapHref) {
-        VBasMapLeafletWidget.goMapObject(mapHref);
-    }
 
-    //User:ekaterinna,Call:video
-    function goMapUser(login) {
-        // if(!isSplit() || !isRole("map")) return goMapUser_local(login);
 
-        if(login.indexOf(",")>0) {
-            let a = login.split(",");
-            login = a[0];
-            a = a[1].split(":");
-            let pn = a[0];
-            let pv = a[1];
-            let json = {User: login};
-            json[pn] = pv;
-            if(canPublish()) MqttSignal.publish(getTopicPub(), json);
-        } else {
-            if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
-        }
-
-    }
 
     function publishMessage(message) {
         if(canPublish()) MqttSignal.publish(getTopicPub(), message);
     }
 
-    function goChatUser(login) {
-        if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
-    }
 
-    function goMapUser_local(login) {
-        VBasMapLeafletWidget.goUser(login);
-    }
 
-    function goChatUser_local(login) {
-        VD_API.getUserByLogin(login).done(u=>{
-            if(u && u.id) window.location.href = "#UserEvents/"+u.id;
-        });
-    }
 
 
     function goVisualization(reference) {
@@ -270,22 +237,15 @@ window.Spliter = (function () {
     }
 
     function goVisualization_local(reference) {
-        VD_Visio.show(reference);
-        // VD.ShowVisiobasTabbar();
-        // VBasWidget.show("#visualization", reference);
+        window.location.href = "/html_visio/#"+reference;
     }
 
 
     function onMqttMessage(topic, messageText) {
         let message = JSON.parse(messageText);
-         console.log("onMqttMessage: ", messageText);
+        console.log("onMqttMessage: ", messageText);
         if(!message) return;
-        if(message['call']==='goSite' && isRole("map")) goMapSite_local(message.reference);
         if(message['call']==='goSite' && isRole("visio")) goVisualization_local(message.reference);
-        if(message['call']==='goMapObject' && isRole("map")) goMapObject_local(message.reference);
-        // if(message['call']==='goVisualization' && isRole("map")) goMapObject_local(message.reference);
-        if(message['User'] && isRole("map")) goMapUser_local(message.User);
-        if(message['User'] && isRole("vdesk")) goChatUser_local(message.User);
     }
 
     

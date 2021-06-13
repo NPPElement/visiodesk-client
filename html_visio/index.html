@@ -42,6 +42,7 @@
         <div class="window_header desktop">
             <nav>
                 <div class="bar_home">
+                    <a class="menu_icon"></a>
                     <a class="back_icon" href="javascript:history.go(-1)"></a>
                     <a class="home_icon" href="#Viso:home"></a>
                 </div>
@@ -60,15 +61,30 @@
 
     </div>
 
+    <div id="group_name_settings__shaddow"></div>
+    <div id="group_name_settings">
+        <div>
+            <b>Управление:</b>
+            <input class="group_role_name" id="group_role_name_pub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+            <b>Отображение:</b>
+            <input class="group_role_name" id="group_role_name_sub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+        </div>
+
+    </div>
+
 </div>
 
 <!-- Library -->
 <script src="/js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="/js/jquery-ui-1.12.1.min.js " type="text/javascript"></script>
 <script src="/js/daterangepicker/moment.min.js" type="text/javascript"></script>
+<script src="/js/underscore-min.js" type="text/javascript"></script>
 <script src="/js/cookies.min.js" type="text/javascript"></script>
 <script src="/js/sprintf.min.js" type="text/javascript"></script>
 <script src="/js/js.settings.js" type="text/javascript"></script>
+
+<script src="js/mqtt/browserMqtt.js" type="text/javascript"></script>
+<script src="js/mqtt/mqtt.signal.js" type="text/javascript"></script>
 
 <!-- JS -->
 <script src="js/api.js" type="text/javascript"></script>
@@ -82,6 +98,38 @@
     });
 
 
+
+    function isNumberKey(evt,inp) {
+        console.log($(inp).val());
+        let chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM/_*#";
+        let charCode = (evt.which) ? evt.which : event.keyCode;
+        let sym = String.fromCharCode(charCode);
+        if($(inp).val()==="" && sym==="/") return false;
+        if(chars.indexOf( String.fromCharCode(charCode))!==-1) return true;
+        return false;
+    }
+
+    $(".menu_icon").click(function () {
+        if(!$("#group_name_settings").hasClass("opened")) {
+            $("#group_role_name_pub").val(WORKSPACE.group_pub);
+            $("#group_role_name_sub").val(WORKSPACE.group_sub);
+            $("#group_name_settings").addClass("opened");
+            $("#group_name_settings__shaddow").addClass("opened");
+        } else {
+            group_name_save();
+        }
+    });
+
+    function  group_name_save() {
+        $("#group_name_settings").removeClass("opened");
+        $("#group_name_settings__shaddow").removeClass("opened");
+        let pub_value = $("#group_role_name_pub").val();
+        let sub_value = $("#group_role_name_sub").val();
+        Spliter.setGroupSub(sub_value);
+        Spliter.setGroupPub(pub_value);
+    }
+
+    $("#group_name_settings__shaddow").click(group_name_save)
 
 
     CreateVisio("#visualization");
