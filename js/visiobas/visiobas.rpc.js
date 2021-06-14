@@ -71,6 +71,7 @@
          */
         function __rpc(method, params, rpcUrl) {
 
+            let def = $.Deferred();
 
             let url = (typeof rpcUrl === "undefined") ? VB_SETTINGS.jsonRpcUrl : rpcUrl;
 
