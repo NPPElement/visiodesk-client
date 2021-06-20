@@ -249,7 +249,7 @@ function CreateVisio(selector) {
 
 
 // <svg width="400" height="110"><rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" /></svg>
-        let h= '<svg style__="background-color: #999" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
+        let h= '<svg style="transform:scale(1.0)" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
         h+='<g id="g_pan_0"></g>';
         h+='<g id="g_pan_1"></g>';
         h+='<g id="g_pan_2"></g>';
