@@ -26,7 +26,8 @@ function CreateVisio(selector) {
     let hst = window.location.host;
     hst = hst.split(":");
     hst = hst[0]+":9090";
-    let URL_WS = 'ws://'+hst+'/vbas/wsGetByFields';
+    // let URL_WS = 'ws://'+hst+'/vbas/wsGetByFields';
+    let URL_WS = hst.includes("localhost") ? 'ws://'+window.location.host+'/vbas/wsGetByFields' : 'ws://'+hst+'/vbas/wsGetByFields';
     // const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
 
 

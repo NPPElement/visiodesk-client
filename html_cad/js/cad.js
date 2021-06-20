@@ -3,7 +3,7 @@ function CreateVisio(selector) {
     // const VISIO_WIDTH = 1280;
     // const VISIO_HEIGHT = 720;
 
-    const VISIO_WIDTH = 1980;
+    const VISIO_WIDTH = 1920;
     const VISIO_HEIGHT = 1080;
 
     let SIZE_TX = 5;
@@ -59,7 +59,8 @@ function CreateVisio(selector) {
     let hst = window.location.host;
     hst = hst.split(":");
     hst = hst[0]+":9090";
-    let URL_WS = 'ws://'+hst+'/vbas/wsGetByFields';
+    // let URL_WS = 'ws://'+hst+'/vbas/wsGetByFields';
+    let URL_WS = hst.includes("localhost") ? 'ws://'+window.location.host+'/vbas/wsGetByFields' : 'ws://'+hst+'/vbas/wsGetByFields';
     // const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
 
 
@@ -381,7 +382,7 @@ function CreateVisio(selector) {
         for(let i=0;i<new_e.length;i++) if( !g_elements.includes(new_e[i]) ) add_G_Visio(new_e[i]);
 
         setCoords_Gs();
-
+        subscribeSignals();
     }
 
 
@@ -434,16 +435,18 @@ function CreateVisio(selector) {
 
     
     function init_Move() {
-        $selectorSvg.on("mousedown", function (e) {
+        // $selectorSvg.on("mousedown", function (e) {
+        $("body").on("mousedown", function (e) {
             MV.mx0 = e.pageX;
             MV.my0 = e.pageY;
             MV.x0 = px;
             MV.y0 = py;
             MV.active = true;
-            $("body").css("cursor", "move");
+            $(this).css("cursor", "move");
         });
 
-        $selectorSvg.on("mouseout", function (e) {
+        // $selectorSvg.on("mouseout", function (e) {
+        $("body").on("mouseout", function (e) {
             MV.active = false;
             $("body").css("cursor", "default");
         });
@@ -460,7 +463,8 @@ function CreateVisio(selector) {
 
                 px = MV.x0-MV.mx+MV.mx0;
                 py = MV.y0-MV.my+MV.my0;
-                repaint4();
+                window.setTimeout(repaint4, 0);
+                // repaint4();
 
             });
     }
