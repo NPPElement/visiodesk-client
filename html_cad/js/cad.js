@@ -387,6 +387,7 @@ function CreateVisio(selector) {
 
 
     function setSvgSize() {
+        return;
         const dH = 70;
         let $svg = $selectorSvg.find(".main_svg");
         let r1 = window.innerWidth / (window.innerHeight-dH);
