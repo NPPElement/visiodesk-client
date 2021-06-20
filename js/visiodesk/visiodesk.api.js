@@ -1,4 +1,4 @@
-let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
+window.VD_API = (function VisiodeskApi() {
     /** @const {string} apiContext - базоваый url для отправки запросов на сервер */
     const apiContext = VD_SETTINGS['API_CONTEXT'];
     /** @const {string} token - хеш авторизованного пользователя */

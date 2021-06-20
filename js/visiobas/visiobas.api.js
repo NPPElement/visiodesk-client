@@ -578,6 +578,7 @@
             if(reference.indexOf("Panel")===0) return  reference;
             if(reference.indexOf("Settings")===0) return  reference;
             if(reference.indexOf("Visio")===0) return  reference;
+            if(reference.indexOf("Cad")===0) return  reference;
             if (_.isEmpty(reference)) {
                 return null;
             }
@@ -667,7 +668,12 @@
                 return null;
             }
 
-            if (_ref[0].toLowerCase() != "site" && _ref[0].toLowerCase() != "map" && _ref[0].toLowerCase() != "panel" && _ref[0].toLowerCase() != "settings" && _ref[0].toLowerCase() != "visio") {
+            if (_ref[0].toLowerCase() != "site"
+                && _ref[0].toLowerCase() != "map"
+                && _ref[0].toLowerCase() != "panel"
+                && _ref[0].toLowerCase() != "settings"
+                && _ref[0].toLowerCase() != "visio"
+                && _ref[0].toLowerCase() != "cad") {
                 _ref = ["Site"].concat(_ref);
             }
 

@@ -1,7 +1,37 @@
 function CreateVisio(selector) {
 
-    const VISIO_WIDTH = 1280;
-    const VISIO_HEIGHT = 720;
+    // const VISIO_WIDTH = 1280;
+    // const VISIO_HEIGHT = 720;
+
+    const VISIO_WIDTH = 1980;
+    const VISIO_HEIGHT = 1080;
+
+    let SIZE_TX = 5;
+    let SIZE_TY = 5;
+
+    let px = 300;
+    let py = 100;
+
+    let tx = 0;
+    let ty = 0;
+
+    let dx = 0;
+    let dy = 0;
+
+    let g_elements = [false, false, false, false];
+
+
+    let MV = {
+        x0: 0,
+        y0: 0,
+        mx0: 0,
+        my0: 0,
+        mx: 0,
+        my: 0,
+        active: false
+    };
+
+
     let $selector = $(selector);
     let $selectorSvg = $(selector+" .visio-svg");
     if($selectorSvg.length===0) return error("Не найден "+selector);
@@ -9,14 +39,17 @@ function CreateVisio(selector) {
     let win_hash = "";
 
     let svgs = {};
+    let elements = {};
 
     let data = {};
+    let coordNames = {};
 
     setHtmlVariable("object_description", data.description);
 
     console.log("data: ", data);
 
     let values = {};
+
 
 
 
@@ -174,6 +207,12 @@ function CreateVisio(selector) {
         $("[data-var='"+name+"']").html(value);
     }
 
+    function getCoordByName(name) {
+        let coord = name.split(":");
+        coord[0] = parseInt(coord[0]);
+        coord[1] = parseInt(coord[1]);
+        return coord;
+    }
 
     function paint() {
 
@@ -181,19 +220,49 @@ function CreateVisio(selector) {
         win_hash =  window.location.hash;
         if(win_hash.length>5) data = API.get(apiUrl(win_hash));
 
-        if(!data.elements) {
+        if(!data.visualizations) {
             if(!win_hash) win_hash = " - не указано - ";
             $selectorSvg.html("<div class='visio_not_found'>Визуализация <u>\""+win_hash+"\"</u> не найдена</div>");
             return;
+        } else {
+            coordNames = {};
+            SIZE_TX = 0;
+            SIZE_TY = 0;
+            data.visualizations.forEach(function (vis) {
+                let coordName = vis.self.split(".");
+                coordName = coordName[coordName.length-1];
+                coordName = coordName.replace("&",":");
+                coordNames[coordName] = vis.self;
+                let coord = getCoordByName(coordName);
+                if(SIZE_TX<=coord[0]) SIZE_TX=coord[0]+1;
+                if(SIZE_TY<=coord[1]) SIZE_TY=coord[1]+1;
+                elements[vis.self] = vis;
+
+            });
+            console.log("SIZE: "+SIZE_TX+", "+SIZE_TY);
+            console.log("coordNames: ", coordNames);
         }
 
         setHtmlVariable("object_description", data.description);
 
 
-        let h= '<svg class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg"><g></g>';
-        data.elements.forEach(e=>svgs[e.iconUrl] = API.svg(e.iconUrl));
+
+// <svg width="400" height="110"><rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" /></svg>
+        let h= '<svg style__="background-color: #999" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
+        h+='<g id="g_pan_0"></g>';
+        h+='<g id="g_pan_1"></g>';
+        h+='<g id="g_pan_2"></g>';
+        h+='<g id="g_pan_3"></g>';
+        // h+='<g id="g_pan_0" transform="translate(0,0)"><svg width="500" height="500"><rect width="500" height="500" style="fill:rgb(0,0,255);" /></svg></g>';
+        h+='</svg>';
+        // data.elements.forEach(e=>svgs[e.iconUrl] = API.svg(e.iconUrl));
         $selectorSvg.html(h+'</svg>');
-        data.elements.forEach(e=>paintElement(e));
+        // data.elements.forEach(e=>paintElement(e));
+
+        init_Move();
+
+        repaint4();
+
 
         setSvgSize();
         $( window ).resize(setSvgSize);
@@ -201,13 +270,128 @@ function CreateVisio(selector) {
         subscribeSignals();
     }
 
+    function __getTileId(tx, ty) {
+        return ""+tx+":"+ty;
+    }
+
+    function _getTileColor(tx, ty) {
+        console.log("TX, TY = "+tx, ty);
+        let c1 = (tx+1)*60;
+        let c2 = (ty+1)*60;
+        return "rgb("+c1+","+c2+",0)";    }
+
+    function paint_G(index, name) {
+        console.log("paint_G: "+index+", "+name)
+        let _tx = name.split(":");
+        let _ty = parseInt( _tx[1]);
+        _tx =  parseInt(_tx[0]);
+        let $g = $("#g_pan_"+index);
+
+        let reference = coordNames[name];
+
+        if(!reference) {
+            console.log("!reference");
+            return ;
+        }
+
+        let element = elements[ reference ];
+
+        if(!svgs[element.iconUrl]) svgs[element.iconUrl] = API.svg(element.iconUrl);
+        if(!svgs[element.iconUrl]) {
+            $g.html('');
+            return false;
+        }
+
+        let svg_html = getSvgWithReplace(element.iconUrl, element.replace);
+
+
+
+        $g.html(svg_html);
+        // $g.html('<svg width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'"><rect width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" style="fill:'+_getTileColor(_tx, _ty)+';" /></svg>');
+
+        // let e = coordNames[name];
+
+        /*
+        let trX = dx;
+        let trY = dy;
+
+        if(tx<_tx) trX+=VISIO_WIDTH;
+        if(ty<_ty) trY+=VISIO_HEIGHT;
+        console.log("TR("+trX+","+trY+")");
+
+        $g.attr("transform", "translate("+trX+","+trY+")");
+        */
+
+    }
+
+    function setCoords_Gs() {
+        g_elements.forEach(function (name, index) {
+            if(!name) return;
+            let _tx = name.split(":");
+            let _ty =  parseInt(_tx[1]);
+            _tx =  parseInt(_tx[0]);
+            let trX = dx;
+            let trY = dy;
+
+            if(tx<_tx) trX+=VISIO_WIDTH;
+            if(ty<_ty) trY+=VISIO_HEIGHT;
+
+            $("#g_pan_"+index).attr("transform", "translate("+trX+","+trY+")");
+
+        });
+    }
+
+    function clear_G(index) {
+        $("#g_pan_"+index).html('');
+        // $("#g_pan_"+index).html('<svg width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'"><rect width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" style="fill:rgb(0,0,0);" /></svg>');
+    }
+
+    function add_G_Visio(name) {
+
+        for(let i=0;i<4;i++) if(g_elements[i]===false) {
+            g_elements[i]=name;
+            paint_G(i,name);
+            return;
+        }
+    }
+    
+    function remove_G_Visio(name) {
+        for(let i=0;i<4;i++) if(g_elements[i]===name) {
+            g_elements[i]=false;
+            clear_G(i);
+        }
+    }
+
+
+    function repaint4() {
+        tx = Math.trunc(px/VISIO_WIDTH);
+        ty = Math.trunc(py/VISIO_HEIGHT);
+
+        dx = (tx) * VISIO_WIDTH-px;
+        dy = (ty) * VISIO_HEIGHT-py;
+
+
+        let new_e = [];
+        new_e.push(__getTileId(tx, ty));
+        if(dx<0) new_e.push(__getTileId(tx+1, ty));
+        if(dy<0) new_e.push(__getTileId(tx, ty+1));
+        if(dy<0 && dy<0) new_e.push(__getTileId(tx+1, ty+1));
+
+        for(let i=0;i<4;i++) if( !new_e.includes(g_elements[i]) ) remove_G_Visio(g_elements[i]);
+        for(let i=0;i<new_e.length;i++) if( !g_elements.includes(new_e[i]) ) add_G_Visio(new_e[i]);
+
+        setCoords_Gs();
+
+    }
+
 
     function setSvgSize() {
+        const dH = 70;
         let $svg = $selectorSvg.find(".main_svg");
-        let r1 = window.innerWidth / (window.innerHeight-50);
+        let r1 = window.innerWidth / (window.innerHeight-dH);
         if(r1>VISIO_WIDTH/VISIO_HEIGHT) {
-            $svg.height(window.innerHeight-50);
-            $svg.width((window.innerHeight-50)*VISIO_WIDTH/VISIO_HEIGHT);
+            $svg.height(window.innerHeight-dH);
+            $svg.width((window.innerHeight-dH)*VISIO_WIDTH/VISIO_HEIGHT);
         } else {
             $svg.width(window.innerWidth);
             $svg.height(window.innerWidth/VISIO_WIDTH*VISIO_HEIGHT);
@@ -240,12 +424,47 @@ function CreateVisio(selector) {
         return true;
     }
 
+
+
     function getElementTransformAttributes(element) {
         let t = 'translate('+element.crd[0]+','+element.crd[1]+')';
         if(element.scale && (element.scale[0]!=1 || element.scale[1]!=1)) t+= ' scale('+element.scale[0]+','+element.scale[1]+')';
         return t;
     }
 
+    
+    function init_Move() {
+        $selectorSvg.on("mousedown", function (e) {
+            MV.mx0 = e.pageX;
+            MV.my0 = e.pageY;
+            MV.x0 = px;
+            MV.y0 = py;
+            MV.active = true;
+            $("body").css("cursor", "move");
+        });
+
+        $selectorSvg.on("mouseout", function (e) {
+            MV.active = false;
+            $("body").css("cursor", "default");
+        });
+
+        $("body")
+            .on("mouseup", function (e) {
+                MV.active = false;
+                $("body").css("cursor", "default");
+            })
+            .on("mousemove", function (e) {
+                if(!MV.active) return;
+                MV.mx = e.pageX;
+                MV.my = e.pageY;
+
+                px = MV.x0-MV.mx+MV.mx0;
+                py = MV.y0-MV.my+MV.my0;
+                repaint4();
+
+            });
+    }
+    
 
     function getSvgWithReplace(urlSvg, replaces) {
         let html = svgs[urlSvg];
@@ -263,7 +482,7 @@ function CreateVisio(selector) {
         let refUrl = reference.replace(":","/");
         refUrl = refUrl.replace(/\./g,"/");
         refUrl = refUrl.replace("#","");
-        return "/vbas/arm/getVisio/"+ refUrl;
+        return "/vbas/arm/getCad/"+ refUrl;
     }
 
     function subscribeSignals() {

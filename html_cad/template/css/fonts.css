@@ -1,0 +1,78 @@
+@font-face {
+    font-family: "SF-UI-Display-Bold";
+    font-weight: 700;
+    src: url("../fonts/SF/SF-UI-Display-Bold.otf");
+}
+
+@font-face {
+    font-family: "SF-UI-Display-Medium";
+    font-weight: 500;
+    src: url("../fonts/SF/SF-UI-Display-Medium.otf");
+}
+
+@font-face {
+    font-family: "SF-UI-Display-Regular";
+    font-weight: 500;
+    src: url("../fonts/SF/SF-UI-Display-Regular.otf");
+}
+
+@font-face {
+    font-family: "SF-UI-Display-Semibold";
+    font-weight: 600;
+    src: url("../fonts/SF/SF-UI-Display-Semibold.otf");
+}
+
+@font-face {
+    font-family: "SF-UI-Display-Thin";
+    font-weight: 300;
+    src: url("../fonts/SF/SF-UI-Display-Thin.otf");
+}
+
+@font-face {
+    font-family: "Montserrat-Regular";
+    src: url("../fonts/Monserrat/Montserrat-Regular.ttf");
+}
+
+@font-face {
+    font-family: "SF-PRO-Regular";
+    src: url("../fonts/SFPro/sf-pro-text_regular.ttf");
+}
+
+@font-face {
+    font-family: "SF-PRO-Semibold";
+    src: url("../fonts/SFPro/sf-pro-text_semibold.ttf");
+}
+
+@font-face {
+    font-family: "SF-PRO-Medium";
+    src: url("../fonts/SFPro/sf-pro-display_medium.ttf");
+}
+
+@font-face {
+    font-family: "SF-PRO-Bold";
+    src: url("../fonts/SFPro/sf-pro-text_bold.ttf");
+}
+
+@font-face {
+    font-family: "SF-PRO-Bold";
+    src: url("../fonts/SFPro/sf-pro-display_light.ttf");
+}
+
+@font-face {
+    font-family: 'Antonio-Light';
+    src: url('../fonts/Antonio/Antoniolight.ttf');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Antonio-Regular';
+    src: url('../fonts/Antonio/Antonioregular.ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Antonio-Bold';
+    src: url('../fonts/Antonio/Antoniobold.ttf');
+    font-weight: 700;
+    font-style: normal;
+}

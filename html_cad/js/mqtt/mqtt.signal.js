@@ -247,7 +247,7 @@ window.Spliter = (function () {
         let message = JSON.parse(messageText);
         console.log("onMqttMessage: ", messageText);
         if(!message) return;
-        if(message['call']==='goSite' && isRole("visio") && message.reference.startWith("Visio")) goVisualization_local(message.reference);
+        if(message['call']==='goSite' && isRole("visio") && message.reference.startWith("Cad")) goVisualization_local(message.reference);
     }
 
     
