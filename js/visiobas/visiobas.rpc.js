@@ -97,9 +97,9 @@
                 method: "POST",
                 url: url,
                 data: JSON.stringify(data),
-                timeout: 5000
-                //type: "json",
-                //contentType: "application/json; charset=utf-8"
+                timeout: 5000,
+                type: "json",
+                contentType: "application/json; charset=utf-8"
             }).done((obj, textStatus, jqXHR) => {
                 let result = Object.assign({
                     textStatus: textStatus,
