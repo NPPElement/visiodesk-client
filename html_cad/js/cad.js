@@ -7,8 +7,8 @@ function CreateVisio(selector) {
     let VISIO_HEIGHT = 1080;
 
 
-    let px = 300;
-    let py = 100;
+    let px = 0;
+    let py = 0;
 
 
 
