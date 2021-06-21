@@ -22,6 +22,9 @@ function CreateVisio(selector) {
         active: false
     };
 
+    let SCALES = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0];
+    let scale_index = 0;
+
 
     let $selector = $(selector);
     let $selectorSvg = $(selector+" .visio-svg");
@@ -239,7 +242,7 @@ function CreateVisio(selector) {
 
 
 
-        let h= '<svg style="transform:scale(1.0);" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
+        let h= '<svg style="transform:scale(1.0);" id="root_svg" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
         h+="<g id='main_g' transform='translate("+100+","+100+")'>";
         h+=h_g;
         h+='</g>';
@@ -341,19 +344,19 @@ function CreateVisio(selector) {
             MV.x0 = px;
             MV.y0 = py;
             MV.active = true;
-            $(this).css("cursor", "move");
+            $e.css("cursor", "move");
         });
 
         // $selectorSvg.on("mouseout", function (e) {
         $e.on("mouseout", function (e) {
             MV.active = false;
-            $("body").css("cursor", "default");
+            $e.css("cursor", "default");
         });
 
         $e
             .on("mouseup", function (e) {
                 MV.active = false;
-                $("body").css("cursor", "default");
+                $e.css("cursor", "default");
             })
             .on("mousemove", function (e) {
                 if(!MV.active) return;
@@ -367,6 +370,30 @@ function CreateVisio(selector) {
                 // repaint4();
 
             });
+
+        /*
+        $('body').mousewheel(function(event, delta, deltaX, deltaY) {
+            console.log(delta > 0?' up':' down');
+            return false;
+        })
+
+         */
+
+        $e[0].addEventListener("wheel", function (e) {
+            e = e || window.event;
+            // wheelDelta не даёт возможность узнать количество пикселей
+            var delta = e.deltaY || e.detail || e.wheelDelta;
+            if(delta<0 && scale_index>0) {
+                scale_index--;
+                $("#root_svg").css("transform", "scale("+SCALES[scale_index]+")");
+            } else if(delta>0 && scale_index<SCALES.length-1)  {
+                scale_index++;
+                $("#root_svg").css("transform", "scale("+SCALES[scale_index]+")");
+            }
+
+        });
+
+
     }
 
 
