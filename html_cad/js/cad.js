@@ -472,6 +472,11 @@ function CreateVisio(selector) {
     
 
     function getSvgWithReplace(urlSvg, replaces) {
+
+        if(replaces.length>0) {
+            console.log("replaces: ", replaces);
+        }
+
         let html = svgs[urlSvg];
         for(let key in replaces) html = html.replace(new RegExp("reference=\""+key+"\"","g"), "reference=\""+replaces[key]+"\"");
         return html;
