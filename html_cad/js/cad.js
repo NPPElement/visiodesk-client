@@ -363,8 +363,10 @@ function CreateVisio(selector) {
                 MV.mx = e.pageX;
                 MV.my = e.pageY;
 
-                px = MV.x0-MV.mx+MV.mx0;
-                py = MV.y0-MV.my+MV.my0;
+                // SCALES[scale_index]
+                px = MV.x0+(MV.mx0-MV.mx)/SCALES[scale_index];
+                py = MV.y0+(MV.my0-MV.my)/SCALES[scale_index];
+                // py = MV.y0-MV.my+MV.my0;
                 $("#main_g").attr("transform", "translate("+(-px)+","+(-py)+")");
                 // window.setTimeout(repaint4, 0);
                 // repaint4();
