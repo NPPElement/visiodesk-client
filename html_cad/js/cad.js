@@ -1,24 +1,15 @@
 function CreateVisio(selector) {
 
-    // const VISIO_WIDTH = 1280;
-    // const VISIO_HEIGHT = 720;
+    let CANVAS_WIDTH = 0;
+    let CANVAS_HEIGHT = 0;
 
-    const VISIO_WIDTH = 1920;
-    const VISIO_HEIGHT = 1080;
+    let VISIO_WIDTH = 1920;
+    let VISIO_HEIGHT = 1080;
 
-    let SIZE_TX = 5;
-    let SIZE_TY = 5;
 
     let px = 300;
     let py = 100;
 
-    let tx = 0;
-    let ty = 0;
-
-    let dx = 0;
-    let dy = 0;
-
-    let g_elements = [false, false, false, false];
 
 
     let MV = {
@@ -42,7 +33,7 @@ function CreateVisio(selector) {
     let elements = {};
 
     let data = {};
-    let coordNames = {};
+    let VISIBLE_CHANGE = false;
 
     setHtmlVariable("object_description", data.description);
 
@@ -208,12 +199,8 @@ function CreateVisio(selector) {
         $("[data-var='"+name+"']").html(value);
     }
 
-    function getCoordByName(name) {
-        let coord = name.split(":");
-        coord[0] = parseInt(coord[0]);
-        coord[1] = parseInt(coord[1]);
-        return coord;
-    }
+
+
 
     function paint() {
 
@@ -222,48 +209,48 @@ function CreateVisio(selector) {
         if(win_hash.length>5) data = API.get(apiUrl(win_hash));
 
         if(!data.visualizations) {
-            if(!win_hash) win_hash = " - не указано - ";
-            $selectorSvg.html("<div class='visio_not_found'>Визуализация <u>\""+win_hash+"\"</u> не найдена</div>");
+            if (!win_hash) win_hash = " - не указано - ";
+            $selectorSvg.html("<div class='visio_not_found'>Визуализация <u>\"" + win_hash + "\"</u> не найдена</div>");
             return;
-        } else {
-            coordNames = {};
-            SIZE_TX = 0;
-            SIZE_TY = 0;
-            data.visualizations.forEach(function (vis) {
-                let coordName = vis.self.split(".");
-                coordName = coordName[coordName.length-1];
-                coordName = coordName.replace("&",":");
-                coordNames[coordName] = vis.self;
-                let coord = getCoordByName(coordName);
-                if(SIZE_TX<=coord[0]) SIZE_TX=coord[0]+1;
-                if(SIZE_TY<=coord[1]) SIZE_TY=coord[1]+1;
-                elements[vis.self] = vis;
-
-            });
-            console.log("SIZE: "+SIZE_TX+", "+SIZE_TY);
-            console.log("coordNames: ", coordNames);
         }
+
+        let h_g = "";
+
+        data.visualizations.forEach(function (vis, idx) {
+            console.log("vis["+idx+"] = ", vis);
+            vis._correct = _visCorrent(vis);
+            data[idx] = vis;
+            if(!vis._correct) return;
+            vis._bound =  {
+                x: vis.translate.x,
+                y: vis.translate.y,
+                w: vis.iconSize[0],
+                h: vis.iconSize[1],
+                x1: vis.translate.x + vis.iconSize[0],
+                y1: vis.translate.y + vis.iconSize[1],
+            };
+            vis._visible = false;
+            data[idx] = vis;
+            h_g+= "<g reference='"+vis.self+"' transform='translate("+vis.translate.x+","+vis.translate.y+")'>"+_getVisualizationHtml(vis) + "</g>";
+        });
+        _calcCommonSize();
 
         setHtmlVariable("object_description", data.description);
 
 
 
-// <svg width="400" height="110"><rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" /></svg>
-        let h= '<svg style="transform:scale(1.0)" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
-        h+='<g id="g_pan_0"></g>';
-        h+='<g id="g_pan_1"></g>';
-        h+='<g id="g_pan_2"></g>';
-        h+='<g id="g_pan_3"></g>';
-        // h+='<g id="g_pan_0" transform="translate(0,0)"><svg width="500" height="500"><rect width="500" height="500" style="fill:rgb(0,0,255);" /></svg></g>';
+        let h= '<svg style="transform:scale(1.0);" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
+        h+="<g id='main_g' transform='translate("+100+","+100+")'>";
+        h+=h_g;
+        h+='</g>';
         h+='</svg>';
-        // data.elements.forEach(e=>svgs[e.iconUrl] = API.svg(e.iconUrl));
-        $selectorSvg.html(h+'</svg>');
-        // data.elements.forEach(e=>paintElement(e));
+        $selectorSvg.html(h);
 
         init_Move();
 
-        repaint4();
 
+
+        _calcVisible();
 
         setSvgSize();
         $( window ).resize(setSvgSize);
@@ -271,119 +258,52 @@ function CreateVisio(selector) {
         subscribeSignals();
     }
 
-    function __getTileId(tx, ty) {
-        return ""+tx+":"+ty;
+
+    function _getVisualizationHtml(vis) {
+        let h = '<svg class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
+        vis.elements.forEach(function (e) {
+            if(!e.iconUrl) return;
+            if(!svgs[e.iconUrl]) svgs[e.iconUrl] = API.svg(e.iconUrl);
+            if(!svgs[e.iconUrl]) return;
+            h+='<g reference="'+e.self+'" transform="'+getElementTransformAttributes(e)+'">';
+            h+= replaceSvgHtml(e.iconUrl, e.replace);
+            h+='</g>';
+        });
+        h+='</svg>';
+        return h;
     }
 
-    function _getTileColor(tx, ty) {
-        console.log("TX, TY = "+tx, ty);
-        let c1 = (tx+1)*60;
-        let c2 = (ty+1)*60;
-        return "rgb("+c1+","+c2+",0)";    }
+    function _calcVisible() {
+        let RX = px+VISIO_WIDTH;
+        let RY = py+VISIO_HEIGHT;
+        data.visualizations.forEach(function (vis, idx) {
+            if(!vis._correct) return;
 
-    function paint_G(index, name) {
-        console.log("paint_G: "+index+", "+name)
-        let _tx = name.split(":");
-        let _ty = parseInt( _tx[1]);
-        _tx =  parseInt(_tx[0]);
-        let $g = $("#g_pan_"+index);
+            let new_visible =    ((vis._bound.x <=px && vis._bound.x1 >=px) || (vis._bound.x <=RX && vis._bound.x1 >=RX))
+                                 && ((vis._bound.y <=py && vis._bound.y1 >=py) || (vis._bound.y <=RY && vis._bound.y1 >=RY));
+            VISIBLE_CHANGE = VISIBLE_CHANGE || (new_visible!==vis._visible);
 
-        let reference = coordNames[name];
-
-        if(!reference) {
-            console.log("!reference");
-            return ;
-        }
-
-        let element = elements[ reference ];
-
-        if(!svgs[element.iconUrl]) svgs[element.iconUrl] = API.svg(element.iconUrl);
-        if(!svgs[element.iconUrl]) {
-            $g.html('');
-            return false;
-        }
-
-        let svg_html = getSvgWithReplace(element.iconUrl, element.replace);
-
-
-
-        $g.html(svg_html);
-        // $g.html('<svg width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'"><rect width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" style="fill:'+_getTileColor(_tx, _ty)+';" /></svg>');
-
-        // let e = coordNames[name];
-
-        /*
-        let trX = dx;
-        let trY = dy;
-
-        if(tx<_tx) trX+=VISIO_WIDTH;
-        if(ty<_ty) trY+=VISIO_HEIGHT;
-        console.log("TR("+trX+","+trY+")");
-
-        $g.attr("transform", "translate("+trX+","+trY+")");
-        */
-
+        });
+        console.log("VISIBLE_CHANGE: ", VISIBLE_CHANGE);
     }
 
-    function setCoords_Gs() {
-        g_elements.forEach(function (name, index) {
-            if(!name) return;
-            let _tx = name.split(":");
-            let _ty =  parseInt(_tx[1]);
-            _tx =  parseInt(_tx[0]);
-            let trX = dx;
-            let trY = dy;
+    function _visCorrent(vis) {
+        return !!(vis.iconSize && vis.translate);
+    }
 
-            if(tx<_tx) trX+=VISIO_WIDTH;
-            if(ty<_ty) trY+=VISIO_HEIGHT;
-
-            $("#g_pan_"+index).attr("transform", "translate("+trX+","+trY+")");
-
+    function _calcCommonSize() {
+        let t;
+        data.visualizations.forEach(function (vis) {
+            if(!vis.iconSize || !vis.translate) return;
+            t = vis.translate.x + vis.iconSize[0]; if(CANVAS_WIDTH<t) CANVAS_WIDTH = t;
+            t = vis.translate.y + vis.iconSize[1]; if(CANVAS_HEIGHT<t) CANVAS_HEIGHT = t;
         });
     }
 
-    function clear_G(index) {
-        $("#g_pan_"+index).html('');
-        // $("#g_pan_"+index).html('<svg width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'"><rect width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" style="fill:rgb(0,0,0);" /></svg>');
-    }
-
-    function add_G_Visio(name) {
-
-        for(let i=0;i<4;i++) if(g_elements[i]===false) {
-            g_elements[i]=name;
-            paint_G(i,name);
-            return;
-        }
-    }
-    
-    function remove_G_Visio(name) {
-        for(let i=0;i<4;i++) if(g_elements[i]===name) {
-            g_elements[i]=false;
-            clear_G(i);
-        }
-    }
 
 
-    function repaint4() {
-        tx = Math.trunc(px/VISIO_WIDTH);
-        ty = Math.trunc(py/VISIO_HEIGHT);
-
-        dx = (tx) * VISIO_WIDTH-px;
-        dy = (ty) * VISIO_HEIGHT-py;
 
 
-        let new_e = [];
-        new_e.push(__getTileId(tx, ty));
-        if(dx<0) new_e.push(__getTileId(tx+1, ty));
-        if(dy<0) new_e.push(__getTileId(tx, ty+1));
-        if(dy<0 && dy<0) new_e.push(__getTileId(tx+1, ty+1));
-
-        for(let i=0;i<4;i++) if( !new_e.includes(g_elements[i]) ) remove_G_Visio(g_elements[i]);
-        for(let i=0;i<new_e.length;i++) if( !g_elements.includes(new_e[i]) ) add_G_Visio(new_e[i]);
-
-        setCoords_Gs();
-        subscribeSignals();
-    }
 
 
     function setSvgSize() {
@@ -401,34 +321,11 @@ function CreateVisio(selector) {
         $svg.position({left: 0, top: 0});
     }
 
-    function paintElement(e) {
-
-
-        if(!svgs[e.iconUrl]) svgs[e.iconUrl] = API.svg(e.iconUrl);
-        if(!svgs[e.iconUrl]) return false;
-
-
-        let $g = $("g[reference='"+e.self+"']");
-        if($g.length===0) {
-            $g = $selectorSvg.find(".main_svg g:eq(0)");
-
-            $g.parent().append($g
-                .clone()
-                .html(getSvgWithReplace(e.iconUrl, e.replace))
-                .attr("reference", e.self)
-                .attr("transform", getElementTransformAttributes(e))
-
-            )
-        } else {
-            $g.html(getSvgWithReplace(e.iconUrl, e.replace))
-                .attr("transform", getElementTransformAttributes(e))
-        }
-        return true;
-    }
 
 
 
     function getElementTransformAttributes(element) {
+        if(!element.crd) element.crd = [0,0];
         let t = 'translate('+element.crd[0]+','+element.crd[1]+')';
         if(element.scale && (element.scale[0]!=1 || element.scale[1]!=1)) t+= ' scale('+element.scale[0]+','+element.scale[1]+')';
         return t;
@@ -436,8 +333,9 @@ function CreateVisio(selector) {
 
     
     function init_Move() {
+        let $e = $selectorSvg;
         // $selectorSvg.on("mousedown", function (e) {
-        $("body").on("mousedown", function (e) {
+        $e.on("mousedown", function (e) {
             MV.mx0 = e.pageX;
             MV.my0 = e.pageY;
             MV.x0 = px;
@@ -447,12 +345,12 @@ function CreateVisio(selector) {
         });
 
         // $selectorSvg.on("mouseout", function (e) {
-        $("body").on("mouseout", function (e) {
+        $e.on("mouseout", function (e) {
             MV.active = false;
             $("body").css("cursor", "default");
         });
 
-        $("body")
+        $e
             .on("mouseup", function (e) {
                 MV.active = false;
                 $("body").css("cursor", "default");
@@ -464,20 +362,26 @@ function CreateVisio(selector) {
 
                 px = MV.x0-MV.mx+MV.mx0;
                 py = MV.y0-MV.my+MV.my0;
-                window.setTimeout(repaint4, 0);
+                $("#main_g").attr("transform", "translate("+(-px)+","+(-py)+")");
+                // window.setTimeout(repaint4, 0);
                 // repaint4();
 
             });
     }
-    
+
 
     function getSvgWithReplace(urlSvg, replaces) {
 
-        if(replaces.length>0) {
-            console.log("replaces: ", replaces);
-        }
-
         let html = svgs[urlSvg];
+        for(let key in replaces) html = html.replace(new RegExp("reference=\""+key+"\"","g"), "reference=\""+replaces[key]+"\"");
+        return html;
+    }
+
+    function replaceSvgHtml(svgUrl, replaces) {
+        if(svgs[svgUrl]===false) return false;
+        if(!svgs[svgUrl]) svgs[svgUrl] = API.svg(svgUrl);
+        if(svgs[svgUrl]===false) return false;
+        let html = svgs[svgUrl];
         for(let key in replaces) html = html.replace(new RegExp("reference=\""+key+"\"","g"), "reference=\""+replaces[key]+"\"");
         return html;
     }
