@@ -382,6 +382,9 @@ function CreateVisio(selector) {
                 // repaint4();
 
             });
+        $e.ondragstart = function() {
+            return false;
+        };
 
         /*
         $('body').mousewheel(function(event, delta, deltaX, deltaY) {
