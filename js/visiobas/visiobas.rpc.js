@@ -93,7 +93,8 @@
             console.log("POST " + url);
             console.log(JSON.stringify(data));
 
-            $._ajax({
+            let $ajax = $._ajax ? $._ajax : $.ajax;
+            $ajax({
                 method: "POST",
                 url: url,
                 data: JSON.stringify(data),
