@@ -129,10 +129,9 @@ window.Map_Simulation = (function MapSimulation() {
 
 
     window.setInterval(run, dT);
-    
 
-    $(function () {
-        $("body").on("click", "#formap-controller-9", function () {
+    function set_camera_post_tmp() {
+        $("body").on("click", "[data-value-object='Site:Engineering/LIGHTNING.BO_3906']", function () {
             $.ajax({
                 method: "POST",
                 url: "/vbas/external/camera_post",
@@ -141,7 +140,10 @@ window.Map_Simulation = (function MapSimulation() {
                 contentType: "application/json; charset=utf-8",
             }).done(console.log);
         });
+    }
 
+    $(function () {
+        set_camera_post_tmp();
     });
 
 })();
