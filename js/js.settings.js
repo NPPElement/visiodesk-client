@@ -25,6 +25,8 @@ window.DEFAULT_OBJECT_REFERENCE = "Site:Engineering";
 window.IS_NEW_MAP_LAYER_TILE = false;
 window.MAP_BASE_LAYER = "base";
 
+window.TEST_CAMERA_POST_URL = "http://127.0.0.1/stw‐cgi/ptzcontrol.cgi?msubmenu=absolute&action=control&Pan=90&Zoom=30&Tilt=25";
+
 
 // window.WORKSPACE.split = false;
 
