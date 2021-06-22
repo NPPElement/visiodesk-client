@@ -144,8 +144,15 @@ window.Map_Simulation = (function MapSimulation() {
 
     $(function () {
         set_camera_post_tmp();
+
+
         window.setTimeout(set_camera_post_tmp,1000);
-        window.setTimeout(set_camera_post_tmp,5000);
+        window.setTimeout(function () {
+            $(".leaflet-marker-icon").click(function () {
+                setTimeout(set_camera_post_tmp, 1000);
+            });
+
+        },5000);
         window.setTimeout(set_camera_post_tmp,15000);
     });
 
