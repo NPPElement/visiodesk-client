@@ -130,16 +130,18 @@ window.Map_Simulation = (function MapSimulation() {
 
     window.setInterval(run, dT);
     
-    
-    $("body").on("click", "#formap-controller-9", function () {
-        $.ajax({
-            method: "POST",
-            url: "/vbas/external/camera_post",
-            data: TEST_CAMERA_POST_URL,
-            type: "json",
-            contentType: "application/json; charset=utf-8",
-        }).done(console.log);
-    });
 
+    $(function () {
+        $("body").on("click", "#formap-controller-9", function () {
+            $.ajax({
+                method: "POST",
+                url: "/vbas/external/camera_post",
+                data: TEST_CAMERA_POST_URL,
+                type: "json",
+                contentType: "application/json; charset=utf-8",
+            }).done(console.log);
+        });
+
+    });
 
 })();
