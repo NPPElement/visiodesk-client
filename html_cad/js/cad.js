@@ -233,8 +233,11 @@ function CreateVisio(selector) {
                 y1: vis.translate.y + vis.iconSize[1],
             };
             vis._visible = false;
+            let g_inner_html = _getVisualizationHtml(vis);
+            vis._visualization_html = g_inner_html;
             data[idx] = vis;
-            h_g+= "<g reference='"+vis.self+"' transform='translate("+vis.translate.x+","+vis.translate.y+")'>"+_getVisualizationHtml(vis) + "</g>";
+            // class='no_visible'
+            h_g+= "<g reference='"+vis.self+"'  transform='translate("+vis.translate.x+","+vis.translate.y+")'>"+  "</g>";
         });
         _calcCommonSize();
 
@@ -243,7 +246,7 @@ function CreateVisio(selector) {
 
 
         let h= '<svg style="transform:scale(1.0);" id="root_svg" class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg">';
-        h+="<g id='main_g' transform='translate("+100+","+100+")'>";
+        h+="<g id='main_g' transform='translate("+px+","+px+")'>";
         h+=h_g;
         h+='</g>';
         h+='</svg>';
@@ -258,7 +261,7 @@ function CreateVisio(selector) {
         setSvgSize();
         $( window ).resize(setSvgSize);
 
-        subscribeSignals();
+        // subscribeSignals();
     }
 
 
@@ -279,13 +282,19 @@ function CreateVisio(selector) {
     function _calcVisible() {
         let RX = px+VISIO_WIDTH;
         let RY = py+VISIO_HEIGHT;
+        VISIBLE_CHANGE = false;
         data.visualizations.forEach(function (vis, idx) {
             if(!vis._correct) return;
 
             let new_visible =    ((vis._bound.x <=px && vis._bound.x1 >=px) || (vis._bound.x <=RX && vis._bound.x1 >=RX))
                                  && ((vis._bound.y <=py && vis._bound.y1 >=py) || (vis._bound.y <=RY && vis._bound.y1 >=RY));
             VISIBLE_CHANGE = VISIBLE_CHANGE || (new_visible!==vis._visible);
-
+            if(new_visible!==vis._visible) {
+                // $("g[reference='"+vis.self+"']").toggleClass("no_visible", !new_visible);
+                $("g[reference='"+vis.self+"']").html( new_visible ? vis._visualization_html : '' );
+            }
+            data[idx]._visible = new_visible;
+            if(VISIBLE_CHANGE) subscribeSignals();
         });
         console.log("VISIBLE_CHANGE: ", VISIBLE_CHANGE);
     }
@@ -368,6 +377,7 @@ function CreateVisio(selector) {
                 py = MV.y0+(MV.my0-MV.my)/SCALES[scale_index];
                 // py = MV.y0-MV.my+MV.my0;
                 $("#main_g").attr("transform", "translate("+(-px)+","+(-py)+")");
+                _calcVisible();
                 // window.setTimeout(repaint4, 0);
                 // repaint4();
 
@@ -430,7 +440,8 @@ function CreateVisio(selector) {
 
     function subscribeSignals() {
         let references = [];
-        $("#visualization [reference^='Site:']").each((i,e)=>{
+        // $("g:not(.no_visible) [reference^='Site:']").each((i,e)=>{
+        $("[reference^='Site:']").each((i,e)=>{
             let objectReference = $(e).attr("reference");
             console.log("SUBSCRIBE: "+objectReference);
             references.push(objectReference); // +"#77,79,85,111,4,46,110"
