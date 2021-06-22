@@ -130,6 +130,7 @@ window.Map_Simulation = (function MapSimulation() {
 
     window.setInterval(run, dT);
 
+    /*
     let set_camera = false;
 
     let sci = setInterval(set_camera_post_tmp, 1000);
@@ -150,6 +151,8 @@ window.Map_Simulation = (function MapSimulation() {
         clearInterval(sci);
 
     }
+
+     */
 
 
 

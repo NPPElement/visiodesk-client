@@ -796,8 +796,22 @@
                     defLeafMarker.resolve(leafMarker);
                 });
             } else if (marker.description) {
-                const popup = __createMarkerPopup(marker);
-                leafMarker.bindPopup(popup);
+
+                if(marker.description.includes("/stw‐cgi")) { // Камера, управление, тест на выставку в аэропорту
+                    $(leafMarker).click(function () {
+                        console.log("MARKER CLICK :" ,marker.description );
+                        $.ajax({
+                            method: "POST",
+                            url: "/vbas/external/camera_post",
+                            data: marker.description,
+                            type: "json",
+                            contentType: "application/json; charset=utf-8",
+                        }).done(console.log);
+                    });
+                } else {
+                    const popup = __createMarkerPopup(marker);
+                    leafMarker.bindPopup(popup);
+                }
                 defLeafMarker.resolve(leafMarker);
             }
 
