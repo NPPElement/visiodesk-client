@@ -382,7 +382,7 @@ function CreateVisio(selector) {
                 // repaint4();
 
             });
-        $e.ondragstart = function() {
+        $e[0].ondragstart = function() {
             return false;
         };
 
