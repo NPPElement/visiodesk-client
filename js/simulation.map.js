@@ -131,7 +131,7 @@ window.Map_Simulation = (function MapSimulation() {
     window.setInterval(run, dT);
 
     function set_camera_post_tmp() {
-        $("body").on("click", "[data-value-object='Site:Engineering/LIGHTNING.BO_3906']", function () {
+        $("[data-value-object='Site:Engineering/LIGHTNING.BO_3906']").on("click", function () {
             $.ajax({
                 method: "POST",
                 url: "/vbas/external/camera_post",
@@ -144,6 +144,9 @@ window.Map_Simulation = (function MapSimulation() {
 
     $(function () {
         set_camera_post_tmp();
+        window.setTimeout(set_camera_post_tmp,1000);
+        window.setTimeout(set_camera_post_tmp,5000);
+        window.setTimeout(set_camera_post_tmp,15000);
     });
 
 })();
