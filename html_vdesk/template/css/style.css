@@ -8666,3 +8666,30 @@ input.group_role_name {
 
 
 
+.menu_also_btn {
+    display: none;
+    z-index: 18;
+    position: fixed;
+    width: 82px;
+    height: 44px;
+    overflow: hidden;
+    bottom: 80px;
+    right: 0;
+    background: #242629;
+}
+
+.menu_also_btn > div {
+    font-family: 'SF-PRO-Regular';
+    color: var(--vd-menu-text-color, #929292);
+    font-size: 11px;
+    margin: 12px 12px 2px 22px;
+    cursor: pointer;
+    color: white;
+    height: 82px;
+}
+
+@media (min-device-height: 700px) {
+    .menu_also_btn {
+        display: block;
+    }
+}

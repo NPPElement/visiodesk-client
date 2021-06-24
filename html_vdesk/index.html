@@ -145,6 +145,10 @@
         <div></div>
     </div>
 
+    <div class="menu_also_btn">
+        <div>Меню...</div>
+    </div>
+
 
     <script>
         function isNumberKey(evt,inp) {
@@ -926,6 +930,16 @@
                 })
         }
     };
+    let menu_disp = 0;
+
+    $(".menu_also_btn").click(function () {
+        let $e = $(".menu-bar .b_pad");
+        // menu_disp = menu_disp>0 ? 0 : $(".menu-bar").height() - 480;
+        if(menu_disp<64*9) menu_disp+=64;
+        else menu_disp=0;
+        // $e.css("margin-top", ""+(-menu_disp)+"px");
+        $e.animate({"marginTop": ""+(-menu_disp)+"px"}, 300);
+    });
 
     // window.setTimeout(MS.init,2000);
     // MS.init();
