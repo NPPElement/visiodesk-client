@@ -344,7 +344,7 @@ function CreateVisio(selector) {
     }
 
     
-    function init_Move() {1
+    function init_Move() {
         let $e = $selectorSvg;
         // $selectorSvg.on("mousedown", function (e) {
         $e.on("mousedown", function (e) {

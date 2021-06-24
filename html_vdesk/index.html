@@ -880,7 +880,55 @@
         if(!login) return;
         login = login.replace("@","");
         Spliter.goUser(login);
-    })
+    });
+
+
+    let MS = {
+        selector: ".menu-bar .b_pad",
+        $selector: false,
+        count: 0,
+        height: 0,
+        canvasHeight: 0,
+        moving: false,
+        x0: 0,
+        m0: 0,
+        mY: 0,
+
+        init: function () {
+            MS.$selector = $(MS.selector);
+            MS.count = MS.$selector.find("a").length;
+            MS.height = MS.count  * 49;
+            MS.canvasHeight = $(".menu-bar").height();
+            var $e =  $(".menu-bar");
+            var $e =  MS.$selector;
+            // $e[0].ondragstart = function() {return false;};
+            $e
+                .on("mousedown", function (e) {
+                    console.log("mousedown");
+                    MS.moving = true;
+                    MS.m0 = e.pageY;
+                })
+                .on("mouseup", function (e) {
+                    console.log("mouseup");
+                    MS.moving = false;
+                    MS.x0 = MS.x0+MS.m0 - MS.mY;
+                    let newY =  MS.x0 + MS.m0 - e.pageY;
+                    MS.$selector.css("margin-top", ""+(-newY)+"px");
+                })
+                .on("mousemove", function (e) {
+                    if(!MS.moving) return;
+                    MS.moving = false;
+                    MS.mY = e.pageY;
+                    let newY =  MS.x0 + MS.m0 - MS.mY;
+                    console.log("newY: "+newY);
+                    // if(newY<0) return;
+                    MS.$selector.css("margin-top", ""+(-newY)+"px");
+                })
+        }
+    };
+
+    // window.setTimeout(MS.init,2000);
+    // MS.init();
 
 
 </script>
