@@ -75,6 +75,10 @@ b,strong {
     background: url("../images/Menu.svg") 50% 50% no-repeat;
     cursor: pointer;
 }
+.visualization .window_header .fullscreen_icon {
+    background: url("../images/fullscreen_icon_dark.svg") 50% 50% no-repeat;
+    cursor: pointer;
+}
 
 .visualization .window_header .text {
     flex-grow: 1;
@@ -336,3 +340,4 @@ input.group_role_name {
 #group_name_settings__shaddow {
     z-index: 998;
 }
+

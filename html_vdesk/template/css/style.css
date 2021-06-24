@@ -8296,10 +8296,10 @@ label.input_group_title {
         z-index: 19;
         position: fixed;
         width: 375px;
-        height: 420px;
+        height: 480px;
         overflow: hidden;
         bottom: 0;
-        right: -460px;
+        right: -480px;
         background: var(--vb-menu-background-color);
         transition:all 400ms ease-in-out;
         background: var(--vb-menu-background-color, #242629);
@@ -8405,9 +8405,9 @@ label.input_group_title {
         z-index: 19;
         position: fixed;
         width: 375px;
-        height: 420px;
+        height: 480px;
         overflow: hidden;
-        bottom: -420px;
+        bottom: -480px;
         right: 0;
         background: var(--vb-menu-background-color);
         transition:all 400ms ease-in-out;
@@ -8636,6 +8636,18 @@ input.group_role_name {
 
 }
 
+.fullscreen_on_off.on {
+    background-image: url("../images/checkmark.svg");
+    background-repeat: no-repeat;
+    background-position: 320px 20px;
+}
+
+.fullscreen_on_off {
+    font-family: 'SF-PRO-Regular';
+    padding: 12px 12px 2px 0;
+    cursor: pointer;
+}
+
 
 .pen-red {
     cursor: pointer;
@@ -8649,4 +8661,6 @@ input.group_role_name {
 {
     display: none;
 }
+
+
 

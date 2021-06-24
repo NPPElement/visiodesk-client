@@ -180,7 +180,12 @@ function CreateVisio(selector) {
 
 
         win_hash =  window.location.hash;
-        if(win_hash.length>5) data = API.get(apiUrl(win_hash));
+
+        if(win_hash.length>5) {
+            if(win_hash==="#Visio:home") win_hash = "#Visio/main/main/MAIN";
+            data = API.get(apiUrl(win_hash));
+        }
+        else return window.location.hash = "#Visio:home";
 
         if(!data.elements) {
             if(!win_hash) win_hash = " - не указано - ";
@@ -261,6 +266,7 @@ function CreateVisio(selector) {
     }
 
     function apiUrl(reference) {
+
         let refUrl = reference.replace(":","/");
         refUrl = refUrl.replace(/\./g,"/");
         refUrl = refUrl.replace("#","");

@@ -180,6 +180,8 @@
                 <div data-value="vdesk">Открыть задачи</div>
             </div>
 
+            <div class="fullscreen_on_off">Полноэкранный режим</div>
+
         </div>
     </div>
 
@@ -825,6 +827,42 @@
 
      });
 
+
+
+    let FS = {
+        isFullscreen: function () {
+            return !((document.fullScreenElement && document.fullScreenElement !== null) ||
+                (!document.mozFullScreen && !document.webkitIsFullScreen));
+        },
+
+        fullOn: function () {
+            if (document.documentElement.requestFullScreen) {
+                document.documentElement.requestFullScreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullScreen) {
+                document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        },
+        fullOff: function () {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        },
+
+        toggle: function () {
+            FS.isFullscreen() ? FS.fullOff(): FS.fullOn()
+        }
+    };
+
+    $(".fullscreen_on_off").click(function () {
+        FS.toggle();
+        $(this).toggleClass("on");
+    });
 
 
 

@@ -797,7 +797,25 @@
                 });
             } else if (marker.description) {
 
-                if(marker.description.includes("/stw‐cgi")) { // Камера, управление, тест на выставку в аэропорту
+                if(marker.description.includes("/stw-cgi")) { // Камера, управление, тест на выставку в аэропорту
+                    console.log("HERELLLLL");
+                    window.setTimeout(function () {
+                        let $m = $("[self='"+marker.self+"']");
+                        $m
+                            .on('mousedown', function (e) {
+                                $(this).addClass("pushed");
+                            })
+                            .on('mouseup', function (e) {
+                                $(this).removeClass("pushed");
+                            })
+                            .on('mouseout', function (e) {
+                                $(this).removeClass("pushed");
+                            });
+
+                    }, 1500);
+
+                    $("<img src='"+marker.description+"'>"); // Это суперкостыль. Нужно авторизация на камеру и это чтобы решал сервер(!)
+                    /*
                     $(leafMarker).click(function () {
                         console.log("MARKER CLICK :" ,marker.description );
                         $.ajax({
@@ -808,6 +826,7 @@
                             contentType: "application/json; charset=utf-8",
                         }).done(console.log);
                     });
+                     */
                 } else {
                     const popup = __createMarkerPopup(marker);
                     leafMarker.bindPopup(popup);

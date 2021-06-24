@@ -44,7 +44,7 @@
                 <div class="bar_home">
                     <a class="menu_icon"></a>
                     <a class="back_icon" href="javascript:history.go(-1)"></a>
-                    <a class="home_icon" href="#Viso:home"></a>
+                    <a class="home_icon" href="#Visio:home"></a>
                 </div>
 
                 <div class="text">
@@ -52,6 +52,7 @@
                 </div>
                 <div class="bar">
                     <a class="edit_icon"></a>
+                    <a class="fullscreen_icon"></a>
                     <a class="close_icon"></a>
                 </div>
             </nav>
@@ -119,6 +120,32 @@
             group_name_save();
         }
     });
+
+    function toggleFullScreen() {
+
+        if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+            (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+            if (document.documentElement.requestFullScreen) {
+                document.documentElement.requestFullScreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullScreen) {
+                document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        }
+    }
+
+
+    $(".fullscreen_icon").click(toggleFullScreen);
 
     function  group_name_save() {
         $("#group_name_settings").removeClass("opened");

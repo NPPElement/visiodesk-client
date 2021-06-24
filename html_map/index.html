@@ -63,6 +63,7 @@
             <input class="group_role_name" id="group_role_name_pub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
             <b>Отображение:</b>
             <input class="group_role_name" id="group_role_name_sub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+            <div class="fullscreen_on_off">Полноэкранный режим</div>
         </div>
 
     </div>
@@ -243,7 +244,44 @@
         Spliter.setGroupPub(pub_value);
     }
 
-    $("#group_name_settings__shaddow").click(group_name_save)
+    $("#group_name_settings__shaddow").click(group_name_save);
+
+
+    let FS = {
+        isFullscreen: function () {
+            return !((document.fullScreenElement && document.fullScreenElement !== null) ||
+                (!document.mozFullScreen && !document.webkitIsFullScreen));
+        },
+
+        fullOn: function () {
+            if (document.documentElement.requestFullScreen) {
+                document.documentElement.requestFullScreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullScreen) {
+                document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        },
+        fullOff: function () {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        },
+
+        toggle: function () {
+            FS.isFullscreen() ? FS.fullOff(): FS.fullOn()
+        }
+    };
+
+    $(".fullscreen_on_off").click(function () {
+        FS.toggle();
+        $(this).toggleClass("on");
+    });
+
 
     window.WORKSPACE.role = "map";
 
