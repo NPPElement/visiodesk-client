@@ -341,3 +341,6 @@ input.group_role_name {
     z-index: 998;
 }
 
+g[reference^="Visio:"] {
+    cursor: pointer;
+}

@@ -204,6 +204,14 @@ function CreateVisio(selector) {
         setSvgSize();
         $( window ).resize(setSvgSize);
 
+        $('g[reference^="Visio:"]').click(function (e) {
+
+            let reference = $(this).attr("reference");
+            console.log("GO:" + reference, apiHref(reference));
+            window.location.href = "#"+apiHref(reference);
+
+        });
+
         subscribeSignals();
     }
 
@@ -255,7 +263,10 @@ function CreateVisio(selector) {
 
     function getSvgWithReplace(urlSvg, replaces) {
         let html = svgs[urlSvg];
-        for(let key in replaces) html = html.replace(new RegExp("reference=\""+key+"\"","g"), "reference=\""+replaces[key]+"\"");
+        for(let key in replaces) {
+            html = html.replace(new RegExp(key,"g"), replaces[key]);
+            // html = html.replace(new RegExp("reference=\""+key+"\"","g"), "reference=\""+replaces[key]+"\"");
+        }
         return html;
     }
 
@@ -271,6 +282,14 @@ function CreateVisio(selector) {
         refUrl = refUrl.replace(/\./g,"/");
         refUrl = refUrl.replace("#","");
         return "/vbas/arm/getVisio/"+ refUrl;
+    }
+
+    function apiHref(reference) {
+
+        let refUrl = reference.replace(":","/");
+        refUrl = refUrl.replace(/\./g,"/");
+        refUrl = refUrl.replace("#","");
+        return refUrl;
     }
 
     function subscribeSignals() {
