@@ -204,9 +204,9 @@ function CreateVisio(selector) {
         setSvgSize();
         $( window ).resize(setSvgSize);
 
-        $('g[reference^="Visio:"]').click(function (e) {
+        $('g[href-reference]').click(function (e) {
 
-            let reference = $(this).attr("reference");
+            let reference = $(this).attr("href-reference");
             console.log("GO:" + reference, apiHref(reference));
             window.location.href = "#"+apiHref(reference);
 
@@ -236,12 +236,13 @@ function CreateVisio(selector) {
         if(!svgs[e.iconUrl]) return false;
 
 
+
         let $g = $("g[reference='"+e.self+"']");
         if($g.length===0) {
             $g = $selectorSvg.find(".main_svg g:eq(0)");
-
-            $g.parent().append($g
-                .clone()
+            let $ng =  $g.clone();
+            if(e.reference) $ng.attr("href-reference", e.reference);
+            $g.parent().append($ng
                 .html(getSvgWithReplace(e.iconUrl, e.replace))
                 .attr("reference", e.self)
                 .attr("transform", getElementTransformAttributes(e))

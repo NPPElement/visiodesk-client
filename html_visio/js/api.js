@@ -48,7 +48,7 @@ window.API = (function () {
             result=":error"
         };
         let r = $.ajax(request);
-        console.log("AJAX RES: ", result);
+        // console.log("AJAX RES: ", result);
         return result;
     }
 })();
