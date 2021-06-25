@@ -8444,6 +8444,10 @@ label.input_group_title {
         background-color: rgba(0, 0, 0, 0.45);
     }
 
+    .menu_also_btn {
+        display: none!important;
+    }
+
 }
 
 
