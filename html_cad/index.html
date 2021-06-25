@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html vd-theme='dark' vb-theme='dark' lang="ru">
+<head>
+    <title>Visualizations</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, height=device-height">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="../icon/icon-180.png">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="manifest" href="../manifest.json">
+
+    <meta name="apple-mobile-web-app-title" content="Visualizations">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Visualizations">
+
+    <link href="/html_cad/template/css/fonts.css" rel="stylesheet">
+    <link href="/html_cad/template/css/style.css" rel="stylesheet">
+    <link href="/html_cad/template/css/svg.css"   rel="stylesheet">
+</head>
+<body>
+<div id="wrapper">
+    <div class="visualization visioBAS" id="visualization">
+
+        <div class="caption t_pad mobile">
+            <nav>
+                <div class="bar">
+                    <a class="back">Назад</a>
+                </div>
+                <div class="text">
+                    <span data-var="object_description"></span>
+                </div>
+                <div class="bar for_submenu">
+                    <a></a>
+                    <a></a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="window_header desktop">
+            <nav>
+                <div class="bar_home">
+                    <a class="menu_icon"></a>
+                    <a class="back_icon" href="javascript:history.go(-1)"></a>
+                    <a class="home_icon" href="#Cad:home"></a>
+                </div>
+
+                <div class="text">
+                    <span data-var="object_description"></span>
+                </div>
+                <div class="bar">
+                    <a class="edit_icon"></a>
+                    <a class="close_icon"></a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="visio-svg"></div>
+
+    </div>
+
+    <div id="group_name_settings__shaddow"></div>
+    <div id="group_name_settings">
+        <div>
+            <b>Управление:</b>
+            <input class="group_role_name" id="group_role_name_pub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+            <b>Отображение:</b>
+            <input class="group_role_name" id="group_role_name_sub" value="dispatcher" onkeypress="return isNumberKey(event, this)">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Library -->
+<script src="/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script src="/js/jquery-ui-1.12.1.min.js " type="text/javascript"></script>
+<script src="/js/daterangepicker/moment.min.js" type="text/javascript"></script>
+<script src="/js/underscore-min.js" type="text/javascript"></script>
+<script src="/js/cookies.min.js" type="text/javascript"></script>
+<script src="/js/sprintf.min.js" type="text/javascript"></script>
+<script src="/js/js.settings.js" type="text/javascript"></script>
+
+<script src="js/mqtt/browserMqtt.js" type="text/javascript"></script>
+<script src="js/mqtt/mqtt.signal.js" type="text/javascript"></script>
+
+<!-- JS -->
+<script src="js/api.js" type="text/javascript"></script>
+<script src="js/cad.js" type="text/javascript"></script>
+<script>
+
+
+
+    $(document).ajaxError(function(e, xhr, settings, exception) {
+        if(xhr.status===403 || xhr.status===401) window.location.href = "/#html_visio"+(window.location.hash.replace("#",":"));
+    });
+
+
+
+    function isNumberKey(evt,inp) {
+        console.log($(inp).val());
+        let chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM/_*#";
+        let charCode = (evt.which) ? evt.which : event.keyCode;
+        let sym = String.fromCharCode(charCode);
+        if($(inp).val()==="" && sym==="/") return false;
+        if(chars.indexOf( String.fromCharCode(charCode))!==-1) return true;
+        return false;
+    }
+
+    $(".menu_icon").click(function () {
+        if(!$("#group_name_settings").hasClass("opened")) {
+            $("#group_role_name_pub").val(WORKSPACE.group_pub);
+            $("#group_role_name_sub").val(WORKSPACE.group_sub);
+            $("#group_name_settings").addClass("opened");
+            $("#group_name_settings__shaddow").addClass("opened");
+        } else {
+            group_name_save();
+        }
+    });
+
+    function  group_name_save() {
+        $("#group_name_settings").removeClass("opened");
+        $("#group_name_settings__shaddow").removeClass("opened");
+        let pub_value = $("#group_role_name_pub").val();
+        let sub_value = $("#group_role_name_sub").val();
+        Spliter.setGroupSub(sub_value);
+        Spliter.setGroupPub(pub_value);
+    }
+
+    $("#group_name_settings__shaddow").click(group_name_save)
+
+
+    CreateVisio("#visualization");
+    WORKSPACE.role = "visio";
+
+
+
+
+</script>
+</body>
+</html>

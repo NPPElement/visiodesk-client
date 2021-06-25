@@ -145,6 +145,10 @@
         <div></div>
     </div>
 
+    <div class="menu_also_btn">
+        <div>Меню...</div>
+    </div>
+
 
     <script>
         function isNumberKey(evt,inp) {
@@ -179,6 +183,8 @@
                 <div data-value="visio">Открыть визуализацию</div>
                 <div data-value="vdesk">Открыть задачи</div>
             </div>
+
+            <div class="fullscreen_on_off">Полноэкранный режим</div>
 
         </div>
     </div>
@@ -827,6 +833,42 @@
 
 
 
+    let FS = {
+        isFullscreen: function () {
+            return !((document.fullScreenElement && document.fullScreenElement !== null) ||
+                (!document.mozFullScreen && !document.webkitIsFullScreen));
+        },
+
+        fullOn: function () {
+            if (document.documentElement.requestFullScreen) {
+                document.documentElement.requestFullScreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullScreen) {
+                document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        },
+        fullOff: function () {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        },
+
+        toggle: function () {
+            FS.isFullscreen() ? FS.fullOff(): FS.fullOn()
+        }
+    };
+
+    $(".fullscreen_on_off").click(function () {
+        FS.toggle();
+        $(this).toggleClass("on");
+    });
+
+
 
     $("#screen").click(function () {
 
@@ -842,7 +884,68 @@
         if(!login) return;
         login = login.replace("@","");
         Spliter.goUser(login);
-    })
+    });
+
+
+    let MS = {
+        selector: ".menu-bar .b_pad",
+        $selector: false,
+        count: 0,
+        height: 0,
+        canvasHeight: 0,
+        moving: false,
+        x0: 0,
+        m0: 0,
+        mY: 0,
+
+        init: function () {
+            MS.$selector = $(MS.selector);
+            MS.count = MS.$selector.find("a").length;
+            MS.height = MS.count  * 49;
+            MS.canvasHeight = $(".menu-bar").height();
+            var $e =  $(".menu-bar");
+            var $e =  MS.$selector;
+            // $e[0].ondragstart = function() {return false;};
+            $e
+                .on("mousedown", function (e) {
+                    console.log("mousedown");
+                    MS.moving = true;
+                    MS.m0 = e.pageY;
+                })
+                .on("mouseup", function (e) {
+                    console.log("mouseup");
+                    MS.moving = false;
+                    MS.x0 = MS.x0+MS.m0 - MS.mY;
+                    let newY =  MS.x0 + MS.m0 - e.pageY;
+                    MS.$selector.css("margin-top", ""+(-newY)+"px");
+                })
+                .on("mousemove", function (e) {
+                    if(!MS.moving) return;
+                    MS.moving = false;
+                    MS.mY = e.pageY;
+                    let newY =  MS.x0 + MS.m0 - MS.mY;
+                    console.log("newY: "+newY);
+                    // if(newY<0) return;
+                    MS.$selector.css("margin-top", ""+(-newY)+"px");
+                })
+        }
+    };
+    let menu_disp = 0;
+
+    $(".menu_also_btn").click(function () {
+        let $e = $(".menu-bar .b_pad");
+        // menu_disp = menu_disp>0 ? 0 : $(".menu-bar").height() - 480;
+        if(menu_disp<64*9) menu_disp+=64;
+        else menu_disp=0;
+        // $e.css("margin-top", ""+(-menu_disp)+"px");
+        $e.animate({"marginTop": ""+(-menu_disp)+"px"}, 300);
+    });
+
+
+    // $( window ).resize(setSvgSize);
+
+    // window.setTimeout(MS.init,2000);
+    // MS.init();
 
 
 </script>

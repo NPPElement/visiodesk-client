@@ -20,11 +20,21 @@ function CreateVisio(selector) {
 
 
 
-    let _dbg =  console.log;
+    // let _dbg =  console.log;
+    let _dbg =  ()=>{};
+
+    let hst = window.location.host;
+    hst = hst.split(":");
+    hst = hst[0]+":9090";
+    // let URL_WS = 'ws://'+hst+'/vbas/wsGetByFields';
+    let URL_WS = hst.includes("localhost") ? 'ws://'+window.location.host+'/vbas/wsGetByFields' : 'ws://'+hst+'/vbas/wsGetByFields';
+    // const URL_WS = 'ws://'+window.location.host+'/vbas/wsGetByFields';
+
 
     let Updater = {
         ws: null,
-        URL_WS: 'ws://'+window.location.host+'/vbas/wsGetByFields',
+        URL_WS: URL_WS,
+        // URL_WS: 'ws://'+window.location.host+'/vbas/wsGetByFields',
         wait: false,
         tryConnect: false,
         isConnect: false,
@@ -170,7 +180,12 @@ function CreateVisio(selector) {
 
 
         win_hash =  window.location.hash;
-        if(win_hash.length>5) data = API.get(apiUrl(win_hash));
+
+        if(win_hash.length>5) {
+            if(win_hash==="#Visio:home") win_hash = "#Visio/main/main/MAIN";
+            data = API.get(apiUrl(win_hash));
+        }
+        else return window.location.hash = "#Visio:home";
 
         if(!data.elements) {
             if(!win_hash) win_hash = " - не указано - ";
@@ -188,6 +203,14 @@ function CreateVisio(selector) {
 
         setSvgSize();
         $( window ).resize(setSvgSize);
+
+        $('g[href-reference]').click(function (e) {
+
+            let reference = $(this).attr("href-reference");
+            console.log("GO:" + reference, apiHref(reference));
+            window.location.href = "#"+apiHref(reference);
+
+        });
 
         subscribeSignals();
     }
@@ -213,12 +236,13 @@ function CreateVisio(selector) {
         if(!svgs[e.iconUrl]) return false;
 
 
+
         let $g = $("g[reference='"+e.self+"']");
         if($g.length===0) {
             $g = $selectorSvg.find(".main_svg g:eq(0)");
-
-            $g.parent().append($g
-                .clone()
+            let $ng =  $g.clone();
+            if(e.reference) $ng.attr("href-reference", e.reference);
+            $g.parent().append($ng
                 .html(getSvgWithReplace(e.iconUrl, e.replace))
                 .attr("reference", e.self)
                 .attr("transform", getElementTransformAttributes(e))
@@ -240,7 +264,10 @@ function CreateVisio(selector) {
 
     function getSvgWithReplace(urlSvg, replaces) {
         let html = svgs[urlSvg];
-        for(let key in replaces) html = html.replace(new RegExp("reference=\""+key+"\"","g"), "reference=\""+replaces[key]+"\"");
+        for(let key in replaces) {
+            html = html.replace(new RegExp(key,"g"), replaces[key]);
+            // html = html.replace(new RegExp("reference=\""+key+"\"","g"), "reference=\""+replaces[key]+"\"");
+        }
         return html;
     }
 
@@ -251,10 +278,19 @@ function CreateVisio(selector) {
     }
 
     function apiUrl(reference) {
+
         let refUrl = reference.replace(":","/");
         refUrl = refUrl.replace(/\./g,"/");
         refUrl = refUrl.replace("#","");
         return "/vbas/arm/getVisio/"+ refUrl;
+    }
+
+    function apiHref(reference) {
+
+        let refUrl = reference.replace(":","/");
+        refUrl = refUrl.replace(/\./g,"/");
+        refUrl = refUrl.replace("#","");
+        return refUrl;
     }
 
     function subscribeSignals() {

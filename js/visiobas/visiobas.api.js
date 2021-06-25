@@ -51,6 +51,8 @@
 
             "getLibrary": getLibrary,
             "getMap": getMap,
+            "saveNewMarkerPos": saveNewMarkerPos,
+            "getCsv": getCsv,
             "getTrendLog": getTrendLog,
 
             "Test": Test,
@@ -118,6 +120,50 @@
 
             return def;
         }
+
+        function saveNewMarkerPos(reference, crd) {
+            $.ajax({
+                method: "POST",
+                url: "/vbas/arm/saveMapCrd/"+urlReference(reference),
+                data: JSON.stringify(crd),
+                type: "json",
+                contentType: "application/json; charset=utf-8",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .done(function () {
+                    console.log("done: ", arguments);
+                })
+                .fail(function () {
+                    console.log("done: ", arguments);
+                });
+        }
+
+        function getCsv(reference) {
+            let def = $.Deferred();
+            $.ajax({
+                method: "GET",
+                url: "/vbas/arm/getCSV/"+urlReference(reference),
+                type: "json",
+                contentType: "application/json; charset=utf-8",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .done(function (r) {
+                    console.log("done: ", r);
+                    def.resolve(r);
+                })
+                .fail(function () {
+                    def.reject(false);
+                    console.log("error: ", arguments);
+                });
+            return def;
+        }
+
+
+
 
         /**
          * Get trend logs of all objects
@@ -532,6 +578,7 @@
             if(reference.indexOf("Panel")===0) return  reference;
             if(reference.indexOf("Settings")===0) return  reference;
             if(reference.indexOf("Visio")===0) return  reference;
+            if(reference.indexOf("Cad")===0) return  reference;
             if (_.isEmpty(reference)) {
                 return null;
             }
@@ -621,7 +668,12 @@
                 return null;
             }
 
-            if (_ref[0].toLowerCase() != "site" && _ref[0].toLowerCase() != "map" && _ref[0].toLowerCase() != "panel" && _ref[0].toLowerCase() != "settings" && _ref[0].toLowerCase() != "visio") {
+            if (_ref[0].toLowerCase() != "site"
+                && _ref[0].toLowerCase() != "map"
+                && _ref[0].toLowerCase() != "panel"
+                && _ref[0].toLowerCase() != "settings"
+                && _ref[0].toLowerCase() != "visio"
+                && _ref[0].toLowerCase() != "cad") {
                 _ref = ["Site"].concat(_ref);
             }
 

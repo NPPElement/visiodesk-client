@@ -8732,3 +8732,25 @@ input.group_role_name {
 #group_name_settings__shaddow.opened {
     display: block;
 }
+
+
+.fullscreen_on_off.on {
+    background-image: url("../images/checkmark.svg");
+    background-repeat: no-repeat;
+    background-position: 260px 16px;
+}
+
+.fullscreen_on_off {
+    font-family: 'SF-PRO-Regular';
+    padding: 12px 12px 2px 0;
+    cursor: pointer;
+}
+
+
+
+
+.leaflet-marker-icon.pushed {
+    border: 3px solid rgba(0,0,0,0.2);
+    border-radius: 50%;
+}
+

@@ -1,4 +1,4 @@
-let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
+window.VD_API = (function VisiodeskApi() {
     /** @const {string} apiContext - базоваый url для отправки запросов на сервер */
     const apiContext = VD_SETTINGS['API_CONTEXT'];
     /** @const {string} token - хеш авторизованного пользователя */
@@ -2293,6 +2293,7 @@ let def = $.Deferred();window.VD_API = (function VisiodeskApi() {
                 docCookies.setItem("user.token", response.data.token, 60*60*24*30);
                 docCookies.setItem("user.user_id", response.data.user_id, 60*60*24*30);
                 def.resolve();
+                if(window.location.hash.length>5) VB_SETTINGS.htmlDir = window.location.hash.replace("#", "/").replace(":","#");
                 window.location = VB_SETTINGS.htmlDir + "/";
             } else {
                 def.reject(response.error || 'Сервер временно недоступен');

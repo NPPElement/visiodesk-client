@@ -14,6 +14,25 @@
         ModalObjectsImport.show();
     }
 
+    function __export_Csv() {
+        const selectedNodeReference = $(".bar .graphic").attr("data-reference");
+        console.log("Экспорт: "+selectedNodeReference);
+        VB_API.getCsv(selectedNodeReference).done(function (csv) {
+            const encodedUri = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURI(csv);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", selectedNodeReference + ".csv");
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        });
+
+
+
+
+        $(".submenu").removeClass("show");
+    }
+
     function __admin() {
         ModalAdminPanel.show();
     }
@@ -38,6 +57,7 @@
     function __doAction(action) {
         console.log("__doAction: ", action);
         switch (action) {
+            case "export_csv": return __export_Csv();
             case "export": return __export();
             case "reload": return __reload();
         }
@@ -80,6 +100,10 @@
                     "action": "import"
                 },
                 {
+                    "name": "Экспорт",
+                    "action": "export_csv"
+                },
+                {
                     "name": "Админ",
                     "action": "admin"
                 },
@@ -111,6 +135,9 @@
 
                     } else if (action === "import") {
                         __import();
+
+                    } else if (action === "export_csv") {
+                        __export_Csv();
 
                     } else if (action === "admin") {
                         __admin();

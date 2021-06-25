@@ -142,7 +142,9 @@ window.Spliter = (function () {
         setGroupPub: setGroupPub,
         setGroupSub: setGroupSub,
         goUser: goMapUser,
+        openCamera: openCamera,
         isSplit: isSplit,
+        publishMessage: publishMessage,
     };
 
     function setRole(role) {
@@ -174,6 +176,10 @@ window.Spliter = (function () {
             if(broker===false) _init();
             MqttSignal.subscribe(getTopicSub(), onMqttMessage, broker);
         }
+    }
+
+    function openCamera(reference, state) {
+        publishMessage({camera: state, reference: reference});
     }
 
     function isSplit() {
@@ -236,6 +242,10 @@ window.Spliter = (function () {
             if(canPublish()) MqttSignal.publish(getTopicPub(), {User: login});
         }
 
+    }
+
+    function publishMessage(message) {
+        if(canPublish()) MqttSignal.publish(getTopicPub(), message);
     }
 
     function goChatUser(login) {

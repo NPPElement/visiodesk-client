@@ -129,6 +129,32 @@ window.Map_Simulation = (function MapSimulation() {
 
 
     window.setInterval(run, dT);
-    
+
+    /*
+    let set_camera = false;
+
+    let sci = setInterval(set_camera_post_tmp, 1000);
+    function set_camera_post_tmp() {
+        if(set_camera) return;
+        let $cm = $("[data-value-object='Site:Engineering/LIGHTNING.BO_3906']");
+        if(!$cm.length) return;
+        $cm.on("click", function () {
+            $.ajax({
+                method: "POST",
+                url: "/vbas/external/camera_post",
+                data: TEST_CAMERA_POST_URL,
+                type: "json",
+                contentType: "application/json; charset=utf-8",
+            }).done(console.log);
+        });
+        set_camera = true;
+        clearInterval(sci);
+
+    }
+
+     */
+
+
+
 
 })();

@@ -120,6 +120,8 @@ window.VD_Users = (function () {
                 let touchedSwipeMenu = [];
 
                 $(".group_chain").each((i, e) => {
+                    // console.log(e);
+                    if(!e.attributes['id']) return;
                     const sm = SwipeMenu(e, {menuWidth: 375});
                     sm.on("select", (e) => {
                         const action = e.dataset.action;

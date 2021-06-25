@@ -98,7 +98,7 @@
         });
 
     }
-    
+
 
     function DefManager() {
         let data = {};
@@ -185,6 +185,8 @@
 
         const _markerLoadTimeoutMs = 5000;
 
+        let is_dragged = false;
+
         const _vbUpdaterId = "vbas.map.leaflet.widget";
 
         let _timerLookRefs = false;
@@ -242,18 +244,18 @@
 
         function goUser(login) {
             let reference = getMarkerByUserLogin(login);
-            console.log("found reference to map object: "+reference);
+            // console.log("found reference to map object: "+reference);
             if(reference) goMapObject(reference, false);
         }
 
-        
+
         function goMapObject(reference, now_cash) {
             if(Markers[reference] && !now_cash) {
                 let x = Markers[reference]._latlng.lng;
                 let y = Markers[reference]._latlng.lat;
                 // goPosition(x, y, 5);
                 goPosition(x, y, 5, baseLayer);
-                if(!$('[owner-reference="'+reference+'"]').length) $('[self="'+reference+'"]').trigger("click");
+                if(!$('[owner-reference="'+reference+'"]').length && !Markers[reference].login) $('[self="'+reference+'"]').trigger("click");
                 return;
             }
 
@@ -371,7 +373,7 @@
                         objectReference = marker.object;
                     }
 
-                    console.log("marker.object: "+objectReference);
+                    // console.log("marker.object: "+objectReference);
 
                     const hasVisualization = (marker.hasOwnProperty("visualization") ? marker.visualization : true);
                     if (hasVisualization) {
@@ -794,8 +796,41 @@
                     defLeafMarker.resolve(leafMarker);
                 });
             } else if (marker.description) {
-                const popup = __createMarkerPopup(marker);
-                leafMarker.bindPopup(popup);
+
+                if(marker.description.includes("/stw-cgi")) { // Камера, управление, тест на выставку в аэропорту
+                    console.log("HERELLLLL");
+                    window.setTimeout(function () {
+                        let $m = $("[self='"+marker.self+"']");
+                        $m
+                            .on('mousedown', function (e) {
+                                $(this).addClass("pushed");
+                            })
+                            .on('mouseup', function (e) {
+                                $(this).removeClass("pushed");
+                            })
+                            .on('mouseout', function (e) {
+                                $(this).removeClass("pushed");
+                            });
+
+                    }, 1500);
+
+                    $("<img src='"+marker.description+"'>"); // Это суперкостыль. Нужно авторизация на камеру и это чтобы решал сервер(!)
+                    /*
+                    $(leafMarker).click(function () {
+                        console.log("MARKER CLICK :" ,marker.description );
+                        $.ajax({
+                            method: "POST",
+                            url: "/vbas/external/camera_post",
+                            data: marker.description,
+                            type: "json",
+                            contentType: "application/json; charset=utf-8",
+                        }).done(console.log);
+                    });
+                     */
+                } else {
+                    const popup = __createMarkerPopup(marker);
+                    leafMarker.bindPopup(popup);
+                }
                 defLeafMarker.resolve(leafMarker);
             }
 
@@ -855,7 +890,9 @@
 
             const popup = __createSVGPopupContent(marker);
             leafMarker.bindPopup(popup);
-            leafMarker.on({click: function () {
+
+            leafMarker.on({
+                click: function () {
                     if(!$(".btn-show-full-obj").length) {
                         let $btnFull = $('<a class="leaflet-popup-close-button btn-show-full-obj fullscreen_icon" href="javascript:void(0)"  style="outline: none;right: 32px;" title="Во весь экран">&#x229E;</a>')
                         $(".leaflet-popup").append($btnFull);
@@ -1165,7 +1202,7 @@
                 });
             }
         }
-        
+
         function __update_special_methods(objects) {
             // console.log("__update_special_methods: ", objects);
             // data-value-method
@@ -1198,7 +1235,7 @@
 
 
         }
-        
+
         function __subscriber_for_update(objects) {
 
             // console.log("__subscriber_for_update: ", objects);
@@ -1310,7 +1347,7 @@
                 $dom.each((i, e)=>__set_dom($(e), object));
             });
         }
-        
+
 
         /**
          * Register data updater
@@ -1325,6 +1362,7 @@
 
         function __selectLeafletLayer(layerId) {
             const layer = _data.layers[layerId];
+
 
             if (layer.map.bounds) {
                 //leafMap.setMaxBounds(layer.map.bounds);
@@ -1354,7 +1392,6 @@
                 let overlays = {};
                 leafGroups.forEach((leafGroup) => {
                     let r = leafMap.addLayer(leafGroup);
-                    // console.log("R:",r);
                     overlays[leafGroup.options.caption] = leafGroup;
                 });
 
@@ -1377,7 +1414,7 @@
 
 
             });
-             // __subscribeOnSignal();
+            // __subscribeOnSignal();
             // window.setTimeout(__subscribeOnSignal, 4000);
         }
 
@@ -1508,6 +1545,21 @@
                         defLeafMarker.done(x=>{
                             if(marker.self) {
                                 Markers[marker.self] = x;
+                                Markers[marker.self]._in_bound = false;
+
+                                x.on("pm:dragstart", function (e) {
+                                    is_dragged = true;
+                                    leafMap.__is_dragged = true; //  Читаетсы ы leaflet-src
+                                });
+                                x.on("pm:dragend", function (e) {
+                                    saveNewMarkerPos(e.target.options.icon.options.attributes.self, e.target._latlng);
+                                    is_dragged = false;
+                                    leafMap.__is_dragged = false;
+                                });
+
+                                window._Markers = Markers;
+
+
                                 if(marker.login) Markers[marker.self].login = marker.login;
                             }
                         });
@@ -1551,14 +1603,18 @@
         }
 
         function __createLeafletMap(containerId, data) {
-            const selectedLayerId = data.map.selectedLayerId;
+            // const selectedLayerId = data.map.selectedLayerId;
+            const selectedLayerId = MAP_BASE_LAYER;
             baseLayer = selectedLayerId;
             let selectedLayer = null;
             //let leafSelectedLayer = null;
             let _unorderedLeafBaseLayers = {};
             for (let layerId in data.layers) {
                 const layer = data.layers[layerId];
-                const layerUrl = `${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
+
+                const layerUrl = IS_NEW_MAP_LAYER_TILE
+                    ? `/svg/tiles/${layerId}/{z}/{x}/{y}.png`
+                    :`${VB_SETTINGS.mapContext}${layerId}/{z}/{x}/{y}`;
                 let leafLayer = L.tileLayer(layerUrl, {
                     id: layerId,
                     minZoom: layer.map.minZoom,
@@ -1590,20 +1646,29 @@
                 maxBoundsViscosity: 0.85
             });
 
-            if(leafMap.pm && leafMap.pm.addControls) leafMap.pm.addControls({
-                position: 'topleft',
-                drawCircle: false
-            });
+            if(leafMap.pm && leafMap.pm.addControls) {
+                leafMap.pm.addControls({
+                    position: 'topleft',
+                    drawCircle: false,
+
+                    drawControls: true,
+                    editControls: true,
+                    optionsControls: false,
+                    customControls: false,
+                    oneBlock: false,
+                });
+                leafMap.pm.setLang('ru');
+            }
+
 
             // leafMap.on("pm:remove", _onGragMarkers);
-            // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
-
-            // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
+            // leafMap.on("pm:edit", _onGragMarkers);
+            // leafMap.on("pm:drag", _onGragMarkers);
             // leafMap.on("pm:globalremovalmodetoggled", _onGragMarkers);
             // leafMap.on("layerremove", _onGragMarkers);
-            leafMap.on("pm:dragend", _onGragMarkers);
 
             __selectLeafletLayer(selectedLayerId);
+
 
 
 
@@ -1630,6 +1695,10 @@
             leafMap.on("layeradd", (e) => {
                 __updateMarkerVisibility(leafMap, e.layer);
             });
+
+
+
+
         }
 
         /**
@@ -1671,8 +1740,71 @@
 
 
         function SetMapIconCoords(reference, x, y) {
-            if(Markers[reference]) Markers[reference].setLatLng({lat: y, lng: x})
+            if(Markers[reference]) {
+                Markers[reference].setLatLng({lat: y, lng: x});
+                checkMarker(reference);
+            }
         }
+
+
+
+
+
+        function getPolygons() {
+            let r = [];
+            if(!leafMap.pm) return [];
+            let pgs = leafMap.pm.getGeomanDrawLayers();
+            for(let i=0;i<pgs.length;i++) {
+                let p = [],
+                    v = pgs[i].getLatLngs();
+                for(let k=0;k<v.length;k++) for(let j=0;j<v[k].length;j++) p.push({x: v[k][j].lat, y: v[k][j].lng});
+                r.push(p);
+            }
+
+            return r;
+        }
+
+        function checkMarker(reference) {
+
+            let m = Markers[reference];
+            if(!m) return;
+            if(!Markers[reference].hasOwnProperty("login")) return ;
+            let mx = m._latlng.lat;
+            let my = m._latlng.lng;
+            // console.log("M["+reference+"] = "+mx+", "+my);
+
+            let polygons = getPolygons();
+            // console.log("polygons: ", polygons);
+            let new_in_bound = false;
+            for(let i=0;i<polygons.length;i++) if(contains_point(polygons[i], mx, my)) {
+                new_in_bound = true;
+                break;
+            }
+            if(new_in_bound!==Markers[reference]._in_bound) {
+                Markers[reference]._in_bound = new_in_bound;
+                if(new_in_bound) {
+                    console.log("Объект: "+Markers[reference].login+" зашел в выделенную зону");
+                    // Spliter.goMapUser(Markers[reference].login);
+                    Spliter.publishMessage({User: Markers[reference].login, action: "in", point: [my, mx]});
+                } else {
+                    console.log("Объект: "+Markers[reference].login+" вышел из зоны");
+                    Spliter.publishMessage({User: Markers[reference].login, action: "out", point: [my, mx]});
+                    // Spliter.goMapUser(Markers[reference].login);
+                }
+
+            }
+            return false;
+        }
+
+
+        function checkMarkers() {
+            for(let reference in Markers) {
+                if(!Markers[reference].hasOwnProperty("login")) continue;
+                checkMarker(reference);
+            }
+        }
+
+
 
 
     }
@@ -1687,9 +1819,47 @@
 
 
 
-    function _onGragMarkers(a, b, c) {
-        console.log("_onGragMarkers: ", a, b, c);
+    function saveNewMarkerPos(reference, latlng) {
+        let crd = [latlng.lng, latlng.lat];
+        console.log("saveNewMarkerPos: ", reference, crd);
+        VB_API.saveNewMarkerPos(reference, crd);
     }
+
+
+    // lat lng
+    function contains_point(bounds, px, py) {
+        //https://rosettacode.org/wiki/Ray-casting_algorithm
+        var count = 0;
+        for (var b = 0; b < bounds.length; b++) {
+            var vertex1 = bounds[b];
+            var vertex2 = bounds[(b + 1) % bounds.length];
+
+
+            if (west(vertex1, vertex2, px, py))
+                ++count;
+        }
+        return count % 2;
+
+        /**
+         * @return {boolean} true if (x,y) is west of the line segment connecting A and B
+         */
+        function west(A, B, x, y) {
+            if (A.y <= B.y) {
+                if (y <= A.y || y > B.y ||
+                    x >= A.x && x >= B.x) {
+                    return false;
+                } else if (x < A.x && x < B.x) {
+                    return true;
+                } else {
+                    return (y - A.y) / (x - A.x) > (B.y - A.y) / (B.x - A.x);
+                }
+            } else {
+                return west(B, A, x, y);
+            }
+        }
+    }
+
+
 
 
     window.VBasMapLeafletWidget = VBasMapLeafletWidget();

@@ -9900,6 +9900,10 @@ Layer.include({
 	},
 
 	_openPopup: function (e) {
+	    // console.log("_openPopup: ", e.target._map.__is_dragged ? "DRAG":"--");
+        // Не показываем попапы когда таскаем объекты
+	    if(e.target._map.__is_dragged) return;
+
 		var layer = e.layer || e.target;
 
 		if (!this._popup) {

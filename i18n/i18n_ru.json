@@ -459,6 +459,7 @@
     "vocab.error":"Ошибка",
     "vocab.information":"Информация",
     "vocab.import":"Импорт",
+    "vocab.export":"Экспорт",
     "vocab.close":"Закрыть",
 
     "vocab.status_flags.in_alarm":"Тревога",
