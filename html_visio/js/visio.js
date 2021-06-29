@@ -213,6 +213,7 @@ function CreateVisio(selector) {
                 if(!elements[reference]._selected) continue;
                 elements[reference].crd[0] = elements[reference]._crd0[0] + e.pageX - ED.mX0;
                 elements[reference].crd[1] = elements[reference]._crd0[1] + e.pageY - ED.mY0;
+                elements[reference]._changed = true;
                 $("g[reference='"+reference+"']").attr("transform", getElementTransformAttributes(elements[reference]));
 
             }
@@ -229,11 +230,23 @@ function CreateVisio(selector) {
                     elements[reference]._selected = false;
                     $("g[reference='"+reference+"']").removeClass("selected");
                     console.log("NEW COORD ["+reference+"] = ("+  elements[reference].crd.join(",")+")");
+                    ED.saveElement(reference);
                 }
             }
 
             ED.$element = null;
             return false;
+        },
+
+        saveElement: function(reference) {
+            API.saveCoord(reference, elements[reference].crd, function () {
+                elements[reference]._changed = false;
+            });
+        },
+
+        save: function() {
+            for(let reference in elements) if (elements[reference]._changed) ED.saveElement(reference);
+
         },
 
         init: function () {
@@ -257,10 +270,8 @@ function CreateVisio(selector) {
             
             $(".edit_icon").click(function () {
                 ED.active = !ED.active;
+                $(".edit_icon").toggleClass("selected", ED.active);
             });
-
-
-
 
         }
     };
@@ -296,6 +307,7 @@ function CreateVisio(selector) {
             elements[e.self] = e;
             elements[e.self]._changed = false;
             elements[e.self]._selected = false;
+            elements[e.self]._crd_origin =  Object.assign([], e.crd);
             svgs[e.iconUrl] = API.svg(e.iconUrl)
         });
         $selectorSvg.html(h+'</svg>');

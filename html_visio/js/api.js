@@ -7,6 +7,9 @@ window.API = (function () {
         post: function (url, data) {
             return serverApi(url, "POST", data);
         },
+
+        saveCoord: saveCoord,
+
         svg: function (url) {
             let r = false;
             $.ajax({
@@ -24,7 +27,23 @@ window.API = (function () {
     function getToken() {
         return docCookies.getItem("user.token");
     }
-    
+
+    function saveCoord(reference, coord, callback) {
+
+        $.ajax({
+            method: "POST",
+            url: "/vbas/arm/saveMapCrd/"+reference.split(/[:\.\\/]/).join("/"),
+            data: JSON.stringify(coord),
+            type: "json",
+            contentType: "application/json; charset=utf-8",
+            headers: {
+                'Authorization': 'Bearer ' + getToken()
+            }
+        }).done(function () {
+            callback(true);
+        });
+
+    }
 
 
     function serverApi(api_url, method = "GET", params = undefined) {
