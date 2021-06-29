@@ -184,6 +184,7 @@ function CreateVisio(selector) {
 
         on_mousedown: function(e){
             if(!ED.active) return true;
+            if(e.ctrlKey) return true;
             e.preventDefault();
             ED.$element = $(this);
             // console.log("ED.$element: ", ED.$element);
@@ -220,6 +221,32 @@ function CreateVisio(selector) {
             return false;
         },
 
+        on_click: function(e) {
+            if(!ED.active ) return true;
+            if(!e.ctrlKey) return true;
+            let $e1 = $(this);
+            let down = e.shiftKey;
+            let $e2 =  down ? $e1.prev() : $e1.next();
+            if($e2.length===0) return true;
+            e.preventDefault();
+            let ref1 = $e1.attr("reference");
+            let ref2 = $e2.attr("reference");
+            // console.log(ref1+" < - > "+ref2, API.swapOrder(ref1, ref2));
+            if(API.swapOrder(ref1, ref2)) {
+                // console.log("SWAP: ", $e1, $e2);
+                // $e1 = $("g[reference='"+ref1+"']");
+                // $e2 = $("g[reference='"+ref2+"']");
+                var c1 = $e1.clone(true);
+                var c2 = $e2.clone(true);
+
+                $e1.replaceWith(c2);
+                $e2.replaceWith(c1);
+            }
+
+
+            return  false;
+        },
+
         on_mouseup: function(e){
             // || ED.$element == null
             if(!ED.active ) return true;
@@ -249,6 +276,18 @@ function CreateVisio(selector) {
 
         },
 
+        out_panels: function() {
+            var ob = [{n: 2, order: 2},{n: 2, order: 2},{n: 1, order: 1}];
+            ob.sort(function (a,b) {
+                if(a.order>b.order) return 1;
+                if(a.order<b.order) return -1;
+                return 0;
+            })
+            
+            $("g[reference='Visio:ovik/ventilation.AHU_01.SF_TEMPERATURE']").after($("g[reference='Visio:ovik/ventilation.AHU_01.RF']"));
+            $("g[reference='Visio:ovik/ventilation.AHU_01.RF']").after($("g[reference='Visio:ovik/ventilation.AHU_01.SF_TEMPERATURE']"));
+        },
+
         init: function () {
 
             $(".visio-svg")[0].ondragstart = function() {
@@ -260,6 +299,7 @@ function CreateVisio(selector) {
                 .on("mouseenter", function () {
                     $(this).css("cursor", ED.active ? "move" : "default");
                 })
+                .on("click",    ED.on_click )
                 .on("mouseenter", function () {
                     $(".visio-svg").css("cursor", "default");
                 });
@@ -267,7 +307,7 @@ function CreateVisio(selector) {
             $(".visio-svg")
                 .on("mouseup",      ED.on_mouseup   )
                 .on("mousemove",    ED.on_mousemove );
-            
+
             $(".edit_icon").click(function () {
                 ED.active = !ED.active;
                 $(".edit_icon").toggleClass("selected", ED.active);

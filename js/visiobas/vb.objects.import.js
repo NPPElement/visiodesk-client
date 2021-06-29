@@ -68,12 +68,20 @@
 
         function __importChunk() {
             let chunk = [];
+
             for (let i = imported; i < objects.length; ++i) {
                 chunk.push(objects[i]);
                 if (chunk.length === chunkCount) {
                     break;
                 }
             }
+
+            chunk.sort(function (a, b) {
+                if(a.object_identifier>b.object_identifier) return 1;
+                if(a.object_identifier<b.object_identifier) return -1;
+                return 0;
+            });
+
 
             VB_API.importObjects(chunk).done((response) => {
                 imported += chunk.length;

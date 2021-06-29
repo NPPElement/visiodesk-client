@@ -8,6 +8,10 @@ window.API = (function () {
             return serverApi(url, "POST", data);
         },
 
+        swapOrder: function(ref1, ref2) {
+            return   serverApi("/vbas/arm/swapOrder", "POST", ref1+","+ref2);
+        },
+
         saveCoord: saveCoord,
 
         svg: function (url) {
@@ -27,6 +31,7 @@ window.API = (function () {
     function getToken() {
         return docCookies.getItem("user.token");
     }
+
 
     function saveCoord(reference, coord, callback) {
 
