@@ -198,10 +198,7 @@ function CreateVisio(selector) {
 
             elements[ED.reference]._selected = true;
 
-            for(let reference in elements) {
-                if (!elements[reference]._selected) continue;
-                elements[reference]._crd0 = Object.assign([], elements[reference].crd);
-            }
+            for(let reference in elements) if (elements[reference]._selected) elements[reference]._crd0 = Object.assign([], elements[reference].crd);
 
             ED.$element.addClass("selected");
             return false;
