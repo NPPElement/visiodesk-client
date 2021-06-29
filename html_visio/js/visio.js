@@ -12,7 +12,7 @@ function CreateVisio(selector) {
 
     let data = {};
 
-    let coords = {};
+    let elements = {};
 
     setHtmlVariable("object_description", data.description);
 
@@ -190,9 +190,20 @@ function CreateVisio(selector) {
             ED.mX0 = e.pageX;
             ED.mY0 = e.pageY;
             ED.reference = ED.$element.attr("reference");
-            // console.log("ED.reference: ", ED.reference);
-            ED.x0 = coords[ED.reference].x;
-            ED.y0 = coords[ED.reference].y;
+
+            // ED.x0 = elements[ED.reference].crd[0];
+            // ED.y0 = elements[ED.reference].crd[1];
+
+
+
+            elements[ED.reference]._selected = true;
+
+            for(let reference in elements) {
+                if (!elements[reference]._selected) continue;
+                elements[reference]._crd0 = Object.assign([], elements[reference].crd);
+            }
+
+            ED.$element.addClass("selected");
             return false;
         },
 
@@ -201,17 +212,27 @@ function CreateVisio(selector) {
             e.preventDefault();
 
 
-            coords[ED.reference].x = ED.x0+e.pageX-ED.mX0;
-            coords[ED.reference].y = ED.y0+e.pageY-ED.mY0;
-
-            // console.log("coords["+ED.reference+"]: ", coords[ED.reference]);
-            ED.$element.attr("transform", getTransformAttributes(coords[ED.reference]));
+            for(let reference in elements) {
+                if(!elements[reference]._selected) continue;
+                elements[reference].crd[0] = elements[reference]._crd0[0] + e.pageX - ED.mX0;
+                elements[reference].crd[1] = elements[reference]._crd0[1] + e.pageY - ED.mY0;
+                $("g[reference='"+reference+"']").attr("transform", getElementTransformAttributes(elements[reference]));
+            }
             return false;
         },
 
         on_mouseup: function(e){
-            if(!ED.active || ED.$element == null) return true;
+            // || ED.$element == null
+            if(!ED.active ) return true;
             e.preventDefault();
+            if(!e.shiftKey) {
+                for(let reference in elements) {
+                    if (!elements[reference]._selected) continue;
+                    elements[reference]._selected = false;
+                    $("g[reference='"+reference+"']").removeClass("selected");
+                }
+            }
+
             ED.$element = null;
             return false;
         },
@@ -272,7 +293,12 @@ function CreateVisio(selector) {
 
 
         let h= '<svg class="main_svg" width="'+VISIO_WIDTH+'" height="'+VISIO_HEIGHT+'" viewBox="0 0 '+VISIO_WIDTH+' '+VISIO_HEIGHT+'" fill="none" xmlns="http://www.w3.org/2000/svg"><g></g>';
-        data.elements.forEach(e=>svgs[e.iconUrl] = API.svg(e.iconUrl));
+        data.elements.forEach(e=>{
+            elements[e.self] = e;
+            elements[e.self]._changed = false;
+            elements[e.self]._selected = false;
+            svgs[e.iconUrl] = API.svg(e.iconUrl)
+        });
         $selectorSvg.html(h+'</svg>');
         data.elements.forEach(e=>paintElement(e));
 
@@ -289,7 +315,7 @@ function CreateVisio(selector) {
 
         subscribeSignals();
         ED.init();
-        console.log("PAINT: ", coords);
+        // console.log("PAINT: ", elements);
     }
 
 
@@ -330,13 +356,12 @@ function CreateVisio(selector) {
             $g.html(getSvgWithReplace(e.iconUrl, e.replace))
                 .attr("transform", getElementTransformAttributes(e))
         }
-        coords[e.self] = {x: e.crd[0], y: e.crd[1], scale: e.scale ? e.scale : 1};
         return true;
     }
 
     function getElementTransformAttributes(element) {
         let t = 'translate('+element.crd[0]+','+element.crd[1]+')';
-        if(element.scale && (element.scale[0]!=1 || element.scale[1]!=1)) t+= ' scale('+element.scale[0]+','+element.scale[1]+')';
+        if(element.scale && (element.scale[0]!=1 || element.scale[1]!=1)) t+= ' scale('+element.scale+','+element.scale+')';
         return t;
     }
 

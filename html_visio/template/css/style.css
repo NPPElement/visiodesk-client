@@ -344,3 +344,8 @@ input.group_role_name {
 g[href-reference] {
     cursor: pointer;
 }
+
+g.selected {
+    stroke: #ffff99;
+    stroke-width: 1;
+}
