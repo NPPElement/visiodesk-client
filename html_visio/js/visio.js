@@ -12,9 +12,10 @@ function CreateVisio(selector) {
 
     let data = {};
 
+    let coords = {};
+
     setHtmlVariable("object_description", data.description);
 
-    console.log("data: ", data);
 
     let values = {};
 
@@ -171,6 +172,80 @@ function CreateVisio(selector) {
 
     };
 
+
+    let ED = {
+        active: false,
+        x0: 0,
+        y0: 0,
+        mX0: 0,
+        mY0: 0,
+        $element: null,
+        reference: null,
+
+        on_mousedown: function(e){
+            if(!ED.active) return true;
+            e.preventDefault();
+            ED.$element = $(this);
+            // console.log("ED.$element: ", ED.$element);
+            ED.mX0 = e.pageX;
+            ED.mY0 = e.pageY;
+            ED.reference = ED.$element.attr("reference");
+            // console.log("ED.reference: ", ED.reference);
+            ED.x0 = coords[ED.reference].x;
+            ED.y0 = coords[ED.reference].y;
+            return false;
+        },
+
+        on_mousemove: function(e){
+            if(!ED.active || ED.$element == null) return true;
+            e.preventDefault();
+
+
+            coords[ED.reference].x = ED.x0+e.pageX-ED.mX0;
+            coords[ED.reference].y = ED.y0+e.pageY-ED.mY0;
+
+            // console.log("coords["+ED.reference+"]: ", coords[ED.reference]);
+            ED.$element.attr("transform", getTransformAttributes(coords[ED.reference]));
+            return false;
+        },
+
+        on_mouseup: function(e){
+            if(!ED.active || ED.$element == null) return true;
+            e.preventDefault();
+            ED.$element = null;
+            return false;
+        },
+
+        init: function () {
+
+            $(".visio-svg")[0].ondragstart = function() {
+                return false;
+            };
+
+            $("g[reference^='Visio:']")
+                .on("mousedown",    ED.on_mousedown )
+                .on("mouseenter", function () {
+                    $(this).css("cursor", ED.active ? "move" : "default");
+                })
+                .on("mouseenter", function () {
+                    $(".visio-svg").css("cursor", "default");
+                });
+
+            $(".visio-svg")
+                .on("mouseup",      ED.on_mouseup   )
+                .on("mousemove",    ED.on_mousemove );
+            
+            $(".edit_icon").click(function () {
+                ED.active = !ED.active;
+            });
+
+
+
+
+        }
+    };
+
+
     function setHtmlVariable(name, value) {
         $("[data-var='"+name+"']").html(value);
     }
@@ -213,10 +288,13 @@ function CreateVisio(selector) {
         });
 
         subscribeSignals();
+        ED.init();
+        console.log("PAINT: ", coords);
     }
 
 
     function setSvgSize() {
+        return;
         let $svg = $selectorSvg.find(".main_svg");
         let r1 = window.innerWidth / (window.innerHeight-50);
         if(r1>VISIO_WIDTH/VISIO_HEIGHT) {
@@ -252,12 +330,19 @@ function CreateVisio(selector) {
             $g.html(getSvgWithReplace(e.iconUrl, e.replace))
                 .attr("transform", getElementTransformAttributes(e))
         }
+        coords[e.self] = {x: e.crd[0], y: e.crd[1], scale: e.scale ? e.scale : 1};
         return true;
     }
 
     function getElementTransformAttributes(element) {
         let t = 'translate('+element.crd[0]+','+element.crd[1]+')';
         if(element.scale && (element.scale[0]!=1 || element.scale[1]!=1)) t+= ' scale('+element.scale[0]+','+element.scale[1]+')';
+        return t;
+    }
+
+    function getTransformAttributes(coord) {
+        let t = 'translate('+coord.x+','+coord.y+')';
+        // if(coord.scale && (coord.scale[0]!=1 || coord.scale[1]!=1)) t+= ' scale('+coord.scale[0]+','+coord.scale[1]+')';
         return t;
     }
 
@@ -297,7 +382,7 @@ function CreateVisio(selector) {
         let references = [];
         $("#visualization [reference^='Site:']").each((i,e)=>{
             let objectReference = $(e).attr("reference");
-            console.log("SUBSCRIBE: "+objectReference);
+            // console.log("SUBSCRIBE: "+objectReference);
             references.push(objectReference); // +"#77,79,85,111,4,46,110"
         });
         Updater.need(references, setNewData);
@@ -311,7 +396,7 @@ function CreateVisio(selector) {
             values[ref]=o;
             values[ref].isNew = is_new;
         });
-        console.log("setDatas: ", values);
+        // console.log("setDatas: ", values);
         setValuesToSBG();
     }
     
@@ -347,7 +432,7 @@ function CreateVisio(selector) {
         if (statusIsNormal) $dom.addClass("normal");
 
         if (objectType.indexOf("analog-")!==-1 || objectType === "accumulator") {
-            console.log("ANALOG: "+presentValue);
+            // console.log("ANALOG: "+presentValue);
             if ($dom.length) {
                 try {
                     let transformSet = (typeof $dom.data("transform-set") !== "undefined") ? $dom.data("transform-set") : void 0;
