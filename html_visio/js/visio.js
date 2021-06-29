@@ -214,6 +214,7 @@ function CreateVisio(selector) {
                 elements[reference].crd[0] = elements[reference]._crd0[0] + e.pageX - ED.mX0;
                 elements[reference].crd[1] = elements[reference]._crd0[1] + e.pageY - ED.mY0;
                 $("g[reference='"+reference+"']").attr("transform", getElementTransformAttributes(elements[reference]));
+
             }
             return false;
         },
@@ -227,6 +228,7 @@ function CreateVisio(selector) {
                     if (!elements[reference]._selected) continue;
                     elements[reference]._selected = false;
                     $("g[reference='"+reference+"']").removeClass("selected");
+                    console.log("NEW COORD ["+reference+"] = ("+  elements[reference].crd.join(",")+")");
                 }
             }
 
