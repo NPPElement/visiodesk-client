@@ -280,7 +280,7 @@ function CreateVisio(selector) {
         $( window ).resize(setSvgSize);
 
         $('g[href-reference]').click(function (e) {
-
+            if(ED.active) return;
             let reference = $(this).attr("href-reference");
             console.log("GO:" + reference, apiHref(reference));
             window.location.href = "#"+apiHref(reference);
