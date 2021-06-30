@@ -222,12 +222,16 @@ function CreateVisio(selector) {
 
 
 
-            elements[ED.reference]._selected = true;
-            ED.panel_open(ED.reference);
-
-            for(let reference in elements) if (elements[reference]._selected) elements[reference]._crd0 = Object.assign([], elements[reference].crd);
-
-            ED.$element.addClass("selected");
+            if(!elements[ED.reference]._selected) {
+                elements[ED.reference]._selected = true;
+                ED.panel_open(ED.reference);
+                for (let reference in elements) if (elements[reference]._selected) elements[reference]._crd0 = Object.assign([], elements[reference].crd);
+                ED.$element.addClass("selected");
+            } else {
+                elements[ED.reference]._selected = false;
+                ED.panel_close(ED.reference);
+                ED.$element.removeClass("selected");
+            }
             return false;
         },
 
