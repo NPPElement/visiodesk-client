@@ -222,7 +222,7 @@ function CreateVisio(selector) {
 
 
 
-            if(!elements[ED.reference]._selected) {
+            if(!elements[ED.reference]._selected || !e.shiftKey) {
                 elements[ED.reference]._selected = true;
                 ED.panel_open(ED.reference);
                 for (let reference in elements) if (elements[reference]._selected) elements[reference]._crd0 = Object.assign([], elements[reference].crd);
