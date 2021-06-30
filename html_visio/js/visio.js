@@ -14,11 +14,30 @@ function CreateVisio(selector) {
 
     let elements = {};
 
+    let REF_PREFIX = "";
+
     setHtmlVariable("object_description", data.description);
 
 
     let values = {};
 
+
+    let VAR_NAMES = {
+        LABEL: "Название в схеме",
+        LABEL1: "Название в схеме",
+        LABEL2: "Дополнительная подпись",
+        DATA: "Значение ",
+        DATA1: "Статус on/off",
+        DATA2: "Авария",
+        DATA3: "Управление дискретное",
+        DATA4: "Статус Ручн/Авто",
+        DATA5: "Управление цифровое",
+        DATA6: "Статус цифровой",
+        ON: "Эл. Автомат ON",
+        OFF: "Эл. Автомат OFF",
+        ALARM: "Эл. Автомат ALARM",
+        FAULT: "Эл. Автомат FAULT"
+    };
 
 
     // let _dbg =  console.log;
@@ -83,7 +102,6 @@ function CreateVisio(selector) {
                 data = JSON.parse(data);
 
                 if(data.length>0) {
-
                     Updater.setLastDate(data);
                     console.log(data);
                 }
@@ -182,6 +200,13 @@ function CreateVisio(selector) {
         $element: null,
         reference: null,
 
+
+        change_pos: function(reference, x, y) {
+            elements[reference].crd[0] = x;
+            elements[reference].crd[1] = y;
+            $("g[reference='"+reference+"']").attr("transform", getElementTransformAttributes(elements[reference]));
+        },
+
         on_mousedown: function(e){
             if(!ED.active) return true;
             if(e.ctrlKey) return true;
@@ -198,6 +223,7 @@ function CreateVisio(selector) {
 
 
             elements[ED.reference]._selected = true;
+            ED.panel_open(ED.reference);
 
             for(let reference in elements) if (elements[reference]._selected) elements[reference]._crd0 = Object.assign([], elements[reference].crd);
 
@@ -214,6 +240,7 @@ function CreateVisio(selector) {
                 if(!elements[reference]._selected) continue;
                 elements[reference].crd[0] = elements[reference]._crd0[0] + e.pageX - ED.mX0;
                 elements[reference].crd[1] = elements[reference]._crd0[1] + e.pageY - ED.mY0;
+                ED.panel_update(reference);
                 elements[reference]._changed = true;
                 $("g[reference='"+reference+"']").attr("transform", getElementTransformAttributes(elements[reference]));
 
@@ -255,8 +282,9 @@ function CreateVisio(selector) {
                 for(let reference in elements) {
                     if (!elements[reference]._selected) continue;
                     elements[reference]._selected = false;
+                    ED.panel_close(reference);
                     $("g[reference='"+reference+"']").removeClass("selected");
-                    console.log("NEW COORD ["+reference+"] = ("+  elements[reference].crd.join(",")+")");
+                    // console.log("NEW COORD ["+reference+"] = ("+  elements[reference].crd.join(",")+")");
                     ED.saveElement(reference);
                 }
             }
@@ -273,19 +301,26 @@ function CreateVisio(selector) {
 
         save: function() {
             for(let reference in elements) if (elements[reference]._changed) ED.saveElement(reference);
-
         },
 
-        out_panels: function() {
-            var ob = [{n: 2, order: 2},{n: 2, order: 2},{n: 1, order: 1}];
-            ob.sort(function (a,b) {
-                if(a.order>b.order) return 1;
-                if(a.order<b.order) return -1;
-                return 0;
-            })
-            
-            $("g[reference='Visio:ovik/ventilation.AHU_01.SF_TEMPERATURE']").after($("g[reference='Visio:ovik/ventilation.AHU_01.RF']"));
-            $("g[reference='Visio:ovik/ventilation.AHU_01.RF']").after($("g[reference='Visio:ovik/ventilation.AHU_01.SF_TEMPERATURE']"));
+        panel_open: function(reference) {
+            ED.panel_close(reference);
+            let title = reference.substring(REF_PREFIX.length+1);
+            let h = '<div class="panel" data-reference="'+reference+'">' +
+                '<div class="title">'+title+'</div>' +
+                '<label>(X,Y)</label><input type="number" class="coord" data-param="coord_x" value="'+elements[reference].crd[0]+'"> <input type="number" class="coord" data-param="coord_y" value="'+elements[reference].crd[1]+'">' +
+                '<div>'+elements[reference].iconUrl+'</div>';
+                '</div>';
+            $(".panels").append($(h));
+        },
+
+        panel_update: function(reference) {
+            $(".panel[data-reference='"+reference+"'] input[data-param='coord_x']").val(elements[reference].crd[0]);
+            $(".panel[data-reference='"+reference+"'] input[data-param='coord_y']").val(elements[reference].crd[1]);
+        },
+
+        panel_close: function(reference) {
+            $(".panel[data-reference='"+reference+"']").remove();
         },
 
         init: function () {
@@ -312,6 +347,21 @@ function CreateVisio(selector) {
                 ED.active = !ED.active;
                 $(".edit_icon").toggleClass("selected", ED.active);
             });
+
+            $("body").on("change paste keyup select", ".coord",function () {
+                let $i = $(this);
+                let c_attr = $i.attr("data-param");
+                let $panel = $i.closest(".panel");
+                // console.log($panel);
+                let reference = $panel.attr("data-reference");
+                let new_val = $i.val();
+                // console.log(c_attr+"["+reference+"]"+": " + $i.val());
+                let x = elements[reference].crd[0];
+                let y = elements[reference].crd[1];
+                if(c_attr==="coord_x") x = new_val;
+                if(c_attr==="coord_y") y = new_val;
+                ED.change_pos(reference, x, y);
+            })
 
         }
     };
@@ -363,6 +413,7 @@ function CreateVisio(selector) {
             window.location.href = "#"+apiHref(reference);
 
         });
+        calcPrefix();
 
         subscribeSignals();
         ED.init();
@@ -561,6 +612,33 @@ function CreateVisio(selector) {
         }
 
     }
+
+
+
+    function calcPrefix() {
+        let refs = [];
+        for(let ref in elements) refs.push(ref.split(/[:\.\\/]/));
+        let level = 0;
+        let pref = [];
+        let f = false;
+        let eq = true;
+        for(let lev=0;lev<refs[0].length;lev++) {
+            if(f!==false) pref.push(f);
+            f = refs[0][level];
+             for(let i=0;i<refs.length;i++) {
+                 if(f!==refs[i][lev]) {
+                     eq = false;
+                     break;
+                 }
+             }
+             if(!eq) break;
+             level++;
+        }
+        pref = pref.join("/");
+        REF_PREFIX = data.elements[0].self.substr(0, pref.length);
+        console.log("REF_PREFIX: ", REF_PREFIX );
+    }
+
 
     Updater.start();
 

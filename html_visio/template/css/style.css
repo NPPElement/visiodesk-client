@@ -369,3 +369,52 @@ g.selected {
         background-color: #999;
     }
 }
+
+.panels {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    width: 350px;
+    bottom: 100px;
+    z-index: 999;
+    background-color: rgba(150,150,150,0.5);
+}
+
+input.coord {
+    width: 50px;
+    border: none;
+    outline: none;
+    text-align: center;
+    background: #999;
+}
+
+.panel {
+    margin: 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding-top: 0;
+}
+
+.panel .title {
+    margin-top: 0;
+    background: #ddd;
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    line-height: 18px;
+}
+
+.panel > div,
+.panel > label {
+    color: #ddd;
+}
+
+.panel .title > span {
+    margin: 3px 6px;
+}
+
+.panel > div {
+    font-size: 12px;
+}
